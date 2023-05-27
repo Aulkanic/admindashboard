@@ -17,7 +17,3 @@ export const ScholarsRequest = {
     ALL_SCHOLARS: () => axiosInstance.get(Endpoints.FETCH_SCHOLARS)
 }
 
-export const login = {
-    ADMIN_LOGIN: (data) => axiosInstance.post(Endpoints.FETCH_ADMIN,data)
-}
-

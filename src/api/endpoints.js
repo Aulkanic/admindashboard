@@ -6,6 +6,7 @@ const Endpoints = {
     CREATE_SCHOLAR:"scholar/createScho",
     CREATE_NEWS:"news/create",
     FETCH_ADMIN:"admin/login",
+    LOGIN_USER:"/user/login"
 }
 
 export default Endpoints
