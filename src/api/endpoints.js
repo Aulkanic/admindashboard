@@ -5,7 +5,7 @@ const Endpoints = {
     FETCH_SCHOLAR_CATEGORY:"scholar/schoCat",
     CREATE_SCHOLAR:"scholar/createScho",
     CREATE_NEWS:"news/create",
-    FETCH_ADMIN:"admin/login"
+    FETCH_ADMIN:"admin/login",
 }
 
 export default Endpoints
