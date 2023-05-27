@@ -17,3 +17,7 @@ export const ScholarsRequest = {
     ALL_SCHOLARS: () => axiosInstance.get(Endpoints.FETCH_SCHOLARS)
 }
 
+export const UserLogin = {
+    ALL_USERS: () => axiosInstance.get(Endpoints.LOGIN_USER)
+}
+

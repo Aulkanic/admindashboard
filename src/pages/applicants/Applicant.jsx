@@ -25,7 +25,6 @@ const Applicant = () => {
   };
 
   useEffect( async () => {
-
     const response = await ApplicantsRequest.ALL_APPLICANTS()
     setPost(response.data.results);
 

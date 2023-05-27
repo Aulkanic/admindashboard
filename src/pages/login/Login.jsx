@@ -1,78 +1,55 @@
-import './login.scss';
 import { useState } from 'react';
-import axios from "axios";
+import './login.scss';
+import { UserLogin } from '../../api/request';
 
 const Login = () => {
 
-    const [email, setEmail] = useState('');
-    const [password, setPassword] = useState('');
+  const [username, setUsername] = useState('');
+  const [password, setPassword] = useState('');
 
-    const handleEmailChange = (e) => {
-      setEmail(e.target.value);
-    };
-    
-    const handlePasswordChange = (e) => {
-      setPassword(e.target.value);
-    };
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+  
+  try {
+    const response = await UserLogin.ALL_USERS();
+    console.log(response.data);
 
-    const handleSubmit = async(e) => {
-      e.preventDefault();
-
-      const response = await fetch('', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ email, password }),
-      });
-
-      if (response.ok){
-
-      } else {
-
-      }
-     
-    };
+    setUsername('');
+    setPassword('');
+  } catch (error) {
+    console.error(error);
+  }
+};
 
   return (
+    <div className="back">
+      <form onSubmit={handleSubmit}>
 
-    <>
-    <h3> Sign in </h3>
-    <form onSubmit={handleSubmit}>
-      
-      <div className="form-group">
-        <label> Email address </label>
+      <div className="container">
+        <span>Username</span>
         <input 
-        type='text' 
-        name="email"
-        className='form-control'
-        placeholder=''
-        value={email.email}     
-        onChange={(e) => setEmail({ email: e.target.value})} 
+        type="text"
+        id="username"
+        value={username}
+        onChange={(e) => setUsername(e.target.value)}
         />
       </div>
 
-      <div className="form-group">
-        <label> Password </label>
+      <div className="container">
+      <span> Password </span>
         <input 
         type="password"
-        name='password'
-        className='form-control'
-        placeholder=''
-        value={password.password}
-        onChange={(e) =>
-        setPassword({ password: e.target.value})
-        }
+        id="password"
+        value={password}
+        onChange={(e) => setPassword(e.target.value)}
         />
       </div>
 
-      <button type="submit" className="btn btn-primary btn-block">
-        Submit
-      </button>
-
+      <button type="submit"> Log in </button>
     </form>
-    </>
+    </div>
+  
   )
-}
+  }
 
 export default Login
