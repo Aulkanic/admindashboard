@@ -1,0 +1,50 @@
+.contact{
+    display: flex;
+
+    .contactContainer{
+        flex: 7;
+
+        .top{
+            -webkit-box-shadow: 2px 4px 10px 1px rgba(171, 248, 194, 0.47);
+            box-shadow: 2px 4px 10px 1px rgba(100, 236, 123, 0.47);
+            margin: 20px;
+            padding: 20px;
+            border-radius: 20px;
+
+            h1{
+                color: #005247;
+                margin-left: 10px;
+            }
+
+            .cards{
+                display: flex;
+                text-align: center;
+                gap: 20px;
+                height: 60vh;
+                justify-content: center;
+                
+                
+            .contact{
+                flex-basis: 38%;
+                -webkit-box-shadow: 2px 4px 10px 1px rgba(0, 0, 0, 0.47);
+                 box-shadow: 2px 4px 10px 1px rgba(201, 201, 201, 0.47);
+                 margin: 10px;
+                 padding: 10px;
+                 width: 100%;
+                 border-radius: 10px;
+                 border: 2px solid #005247;
+                 text-align: center;
+                 justify-content: center;
+
+                 h2{
+                    color: #005247;
+                    justify-content: center;
+                    margin: 5px;
+                   
+                }
+                    
+                }
+            }
+            }
+    }
+}

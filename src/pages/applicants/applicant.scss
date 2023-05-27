@@ -1,0 +1,43 @@
+.applicant{
+    display: flex;
+
+    .applicantContainer{
+        flex: 7;
+        
+        .top{
+        -webkit-box-shadow: 2px 4px 10px 1px rgba(0, 0, 0, 0.47);
+        box-shadow: 2px 4px 10px 1px rgba(201, 201, 201, 0.47);
+        margin: 20px;
+        padding: 20px;
+
+        h1{
+            padding: 10px;
+            color: #005427;
+            
+        }
+
+        }
+
+        .cellAction{
+            display: flex;
+            align-items: center;
+            margin-top: 15px;
+        
+            .viewButton{
+                padding: 2px 5px;
+                border-radius: 5px;
+                color: #005427;
+                cursor: pointer;
+            }
+        }
+
+        .Modal{
+            border: 5px solid #005427;
+            border-radius: 50px;
+        }
+        
+
+}
+
+}
+
