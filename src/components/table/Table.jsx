@@ -1,4 +1,5 @@
 import './table.scss';
+import { ApplicantsRequest } from '../../api/request';
 import Table from '@mui/material/Table';
 import TableBody from '@mui/material/TableBody';
 import TableCell from '@mui/material/TableCell';
@@ -13,15 +14,12 @@ import { Link } from 'react-router-dom';
 
 const List = () => {
   
-  const [post, setPost] = useState ([])
+  const [post, setPost] = useState ([]);
   console.log(post)
 
-  useEffect(() => {
-    axios.get('http://localhost:3006/api/v1/personalinfo/applicants')
-    .then((response) => {
-      console.log(response.data.results)
-      setPost(response.data.results);
-  });
+  useEffect( async () => {
+    const response = await ApplicantsRequest.ALL_APPLICANTS()
+    setPost(response.data.results);
 }, []);
 
   const list = post?.map((f) =>{

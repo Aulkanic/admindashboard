@@ -13,9 +13,8 @@ import LogoutIcon from '@mui/icons-material/Logout';
 
 import { Link } from 'react-router-dom';
 
-
-
 const Sidebar = () => {
+
   return (
     <div className='sidebar'>
 
@@ -114,8 +113,10 @@ const Sidebar = () => {
             </li>
 
             <li>
+              <Link to='/' style={{ textDecoration: "none"}}>
               <LogoutIcon className='icon'/>
               <span> Logout </span>
+              </Link>
             </li>
 
           </ul>

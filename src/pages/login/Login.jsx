@@ -1,46 +1,37 @@
-import './login.scss';
+import "./login.scss";
+
 import {login} from '../../api/request'
 import { useState } from 'react';
-import axios from "axios";
 import { useNavigate } from 'react-router-dom';
 
 const Login = () => {
 
-    const [email, setEmail] = useState('');
-    const [password, setPassword] = useState('');
     const [formData,setformData] = useState('');
     const navigate = useNavigate();
-
-    const handleEmailChange = (e) => {
-      setEmail(e.target.value);
-    };
-    
-    const handlePasswordChange = (e) => {
-      setPassword(e.target.value);
-    };
 
     const handleSubmit = async(e) => {
       e.preventDefault();
       await login.ADMIN_LOGIN(formData).then((res) =>{
       console.log(res.data)
       if(res.data.message === 'Success'){
-        navigate('/');
+        navigate('/home');
         alert(res.data.message)
       }
      else{
       alert(res.data.message);
-      navigate('/login');
+      navigate('/');
      }
      })
     };
-console.log(formData)
-  return (
+    console.log(formData)
 
-    <>
+  return (
+    <div className="login">
+      <div className="container">
     <h3> Sign in </h3>
     <form>
       <div className="form-group">
-        <label> Email address </label>
+        <label> Email </label> <br/>
         <input 
         type='text' 
         name="email"
@@ -52,7 +43,7 @@ console.log(formData)
       </div>
 
       <div className="form-group">
-        <label> Password </label>
+        <label> Password </label> <br/>
         <input 
         type="password"
         name='password'
@@ -60,7 +51,7 @@ console.log(formData)
         placeholder=''
         value={formData.password}
         onChange={(e) =>
-          setformData({ ...formData, password: e.target.value})
+        setformData({ ...formData, password: e.target.value})
         }
         />
       </div>
@@ -69,7 +60,8 @@ console.log(formData)
       </button>
 
     </form>
-    </>
+    </div>
+    </div>
   )
 }
 

@@ -17,20 +17,6 @@ const Widgets = ( {type} ) => {
   const diff = 20
 
   switch(type){
-    case "user":
-    data = {
-      title:"USERS",
-      isMoney: false,
-      link: "See all users",
-      icon: (
-      <PersonOutlineOutlinedIcon 
-      className="icon" style={{ backgroundColor: 'rgba(128, 0, 128, 0.2)', color: "green"}}
-      />
-      ),
-     
-    };
-    break;
-
     case "applicant":
     data = {
       title:"APPLICANTS",
@@ -39,27 +25,6 @@ const Widgets = ( {type} ) => {
       link: "See all users",
       icon: (
       <ApprovalOutlinedIcon className="icon" style={{ backgroundColor: "rgba(255, 0, 0, 0.2)", color: "darkblue"}}/>
-      ),
-    };
-    break;
-
-    case "schedule":
-    data = {
-      title:"SCHEDULES",
-      isMoney: false,
-      link: "See all users",
-      icon: (
-      <ScheduleOutlinedIcon className="icon" style={{ backgroundColor: "rgba(255, 0, 0, 0.2)", color: "red"}}/>
-      ),
-    };
-    break;
-
-    case "update":
-    data = {
-      title:"UPDATES",
-      isMoney: false,
-      link: "See all users",
-      icon: (<TipsAndUpdatesOutlinedIcon className="icon" style={{ backgroundColor: "rgba(218, 165, 32, 0.2)", color: "goldenrod"}}/>
       ),
     };
     break;
