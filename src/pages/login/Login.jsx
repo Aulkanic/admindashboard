@@ -40,7 +40,6 @@ const Login = () => {
     <h3> Sign in </h3>
     <form onSubmit={handleSubmit}>
       
-
       <div className="form-group">
         <label> Email address </label>
         <input 
@@ -48,8 +47,8 @@ const Login = () => {
         name="email"
         className='form-control'
         placeholder=''
-        value={formData.email}     
-        onChange={(e) => setformData({ ...formData, email: e.target.value})} 
+        value={email.email}     
+        onChange={(e) => setEmail({ email: e.target.value})} 
         />
       </div>
 
@@ -60,9 +59,9 @@ const Login = () => {
         name='password'
         className='form-control'
         placeholder=''
-        value={formData.password}
+        value={password.password}
         onChange={(e) =>
-          setformData({ ...formData, password: e.target.value})
+        setPassword({ password: e.target.value})
         }
         />
       </div>
