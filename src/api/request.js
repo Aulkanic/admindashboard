@@ -20,4 +20,9 @@ export const ScholarsRequest = {
 export const login = {
     ADMIN_LOGIN: (data) => axiosInstance.post(Endpoints.FETCH_ADMIN,data)
 }
-
+export const FetchNews = {
+    FETCH_NEWS: () => axiosInstance.get(Endpoints.FETCH_NEWS)
+}
+export const CreateNews = {
+    CREATE_NEWS: (data) => axiosInstance.post(Endpoints.CREATE_NEWS,data)
+}

@@ -9,7 +9,7 @@ import Applicant from './pages/applicants/Applicant';
 import Users from './pages/users/Users';
 import Appointment from './pages/appointments/Appointment';
 import Scholars from './pages/scholars/Scholars';
-
+import News from './pages/new/New';
 import { BrowserRouter, Routes, Route,} from "react-router-dom";
 import Single from './pages/single/Single';
 
@@ -29,7 +29,7 @@ function App() {
           <Route path='contact' element={<Contact />} />
           <Route path='faqs' element={<Faqs />} />
 
-
+          <Route path='news' element={<News/>} />
           <Route path='applicants' element={<Applicant/>} />
           <Route path='single' element={<Single/>} />
           <Route path='users' element={<Users/>} />

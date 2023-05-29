@@ -102,14 +102,18 @@ const Sidebar = () => {
 
             
             <li>
+            <Link to='/news' style={{ textDecoration: 'none'}}>
               <AddCircleIcon className='icon'/>
               <span> News </span>
+              </Link>
             </li>
 
             
             <li>
+           
               <AddCircleIcon className='icon'/>
               <span> Reports </span>
+          
             </li>
 
             <li>
