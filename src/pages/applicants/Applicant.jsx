@@ -2,15 +2,15 @@ import "./applicant.scss";
 import Sidebar from "../../components/sidebar/Sidebar";
 import Navbar from "../../components/navbar/Navbar";
 import { useState, useEffect } from "react";
-import { Tabs, Tab,Table, TableBody, TableCell, TableContainer, TableHead,TableRow, Paper, Box, Button, Typography, Modal, colors} from "@mui/material"; 
-import Endpoints from "../../api/endpoints";
+import { Tabs, Tab,Table, TableBody, TableCell, TableContainer, TableHead,TableRow, Paper, Box, Typography, Modal } from "@mui/material"; 
+
 import Radio from '@mui/material/Radio';
 import RadioGroup from '@mui/material/RadioGroup';
 import FormControlLabel from '@mui/material/FormControlLabel';
 
 import FormControl from '@mui/material/FormControl';
 import FormLabel from '@mui/material/FormLabel';
-import { ApplicantsRequest, UsersRequest, FetchingApplicantsInfo, ListofSub,
+import { ApplicantsRequest, FetchingApplicantsInfo, ListofSub,
           CheckingSubs, CheckingApplicants } from "../../api/request";
 import swal from "sweetalert";
 
@@ -184,7 +184,7 @@ const applicantInfoFB =
   const applicantInfoEdB = applicantsInfo?.map((data) =>{
     return (
       <>
-      <div className="PA">
+      <div className="PA" style={style}>
         <div className="info">
           <p>Current Year: {data.currentYear}</p>
           <p>Course: {data.course}</p>
@@ -260,7 +260,6 @@ const applicantInfoFB =
 
   return (
     <>
-    <div className="Modal">
     <Modal className="modalContainer"
         open={open}
         onClose={handleClose}
@@ -276,7 +275,6 @@ const applicantInfoFB =
           borderRadius: 5,
           width: 'max-content',
           height: 'max-content'
-          
         }}>
 
           <Typography id="modal-modal-title"
@@ -349,7 +347,7 @@ const applicantInfoFB =
 
         </Box>
       </Modal>
-      </div>
+     
 
     <div className="applicant">
       <Sidebar/>

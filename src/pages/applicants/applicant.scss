@@ -27,7 +27,6 @@
             }
         }
     }
-
         .cellAction{
             background-color: lightgreen;
             padding: 5px;
@@ -49,24 +48,9 @@
             }
         } 
 }
+
 }
 
-.Modal{
-    display: flex;
 
-    .modalContainer{
-        -webkit-box-shadow: 2px 4px 10px 1px rgba(9, 247, 1, 0.47);
-        box-shadow: 2px 4px 10px 1px rgba(2, 129, 30, 0.47);
-        margin: 20px;
-        padding: 20px;
-
-        .tabs{
-
-            .tabPanel{
-                font-size: 8px;
-            }
-        }
-    }
-}
 
 

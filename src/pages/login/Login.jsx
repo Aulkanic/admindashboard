@@ -31,31 +31,33 @@ const Login = () => {
     <h3> Sign in </h3>
     <form>
       <div className="form-group">
-        <label> Email </label> <br/>
         <input 
         type='text' 
         name="email"
         className='form-control'
-        placeholder=''
+        placeholder='Username'
+        style={{fontStyle: 'italic', fontSize: 15, color: '#005427'}} 
         value={formData.email}     
         onChange={(e) => setformData({ ...formData, email: e.target.value})} 
         />
       </div>
 
       <div className="form-group">
-        <label> Password </label> <br/>
         <input 
         type="password"
         name='password'
         className='form-control'
-        placeholder=''
+        placeholder='Password'
+        style={{fontStyle: 'italic', fontSize: 15}} 
         value={formData.password}
         onChange={(e) =>
         setformData({ ...formData, password: e.target.value})
         }
         />
       </div>
-      <button className="btn btn-primary btn-block" onClick={handleSubmit}>
+      <button className="btn btn-primary btn-block" 
+                onClick={handleSubmit}
+                >
         Submit
       </button>
 

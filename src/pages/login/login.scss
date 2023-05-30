@@ -3,25 +3,26 @@
     justify-content: center;
     text-align: center;
     align-items: center;
+    background-color: #0ddf6f;
 
     .container{
-        
-        -webkit-box-shadow: 2px 4px 10px 1px rgba(54, 223, 68, 0.47);
-        box-shadow: 2px 4px 10px 1px rgba(118, 233, 175, 0.47);
+        -webkit-box-shadow: 2px 4px 10px 1px rgba(17, 185, 31, 0.47);
+        box-shadow: 2px 4px 10px 1px rgba(5, 119, 62, 0.47);
         padding: 50px;
         width: 500px;
         height: 250px;
-        border: 1px solid #005427;
         border-radius: 10px;
-        flex-basis: 40%;
+        flex-basis: 30%;
         margin: 10%;
+        background-color: #fcf9f9;
         
 
         h3{
             text-align: center;
             color: #005427;
-            font-size: 25px;
-            font-weight: 600;
+            font-size: 35px;
+            font-weight: 1000;
+            text-shadow: 2px 1px #2be052;
         }
 
         form{
@@ -31,7 +32,7 @@
             
 
             .form-group{
-                margin: 10px;
+                margin: 20px;
 
                 label{
                     text-align: center;
@@ -42,25 +43,29 @@
                 }
 
                 input{
-                    height: 5px;
+                    height: 15px;
                     padding: 10px;
                     margin: 5px;
                     border-radius: 8px;
-                    border: 1px solid #005427;
+                    border: none;
+                    -webkit-box-shadow: 2px 4px 10px 1px rgba(54, 223, 68, 0.47);
+                    box-shadow: 2px 4px 10px 1px rgba(14, 163, 88, 0.47);
                     text-align: center;
-                    background-color: #dbf3e6;
-                    color: #005427;
+                    color: #fff;
+                    font-weight: 600;
                 }
             }
 
-            button{
+            .btn-primary{
                 margin: 15px;
                 padding: 9px;
                 width: 150px;
                 border: none;
-                background-color: #005427;
                 border-radius: 20px;
-                color: #fff;
+                color: #f5f102;
+                font-size: 14px;
+                font-weight: 1000;
+                background-image: linear-gradient(to right, #02751f, #1db944);
                 cursor: pointer;
             }
         }
