@@ -26,3 +26,15 @@ export const FetchNews = {
 export const CreateNews = {
     CREATE_NEWS: (data) => axiosInstance.post(Endpoints.CREATE_NEWS,data)
 }
+export const FetchingApplicantsInfo = {
+    FETCH_INFO: (data) => axiosInstance.get(Endpoints.FETCH_APPLICANTSINFO+data)
+}
+export const ListofSub = {
+    FETCH_SUB: (data) => axiosInstance.get(Endpoints.FETCH_SUBMITTED+data)
+}
+export const CheckingSubs = {
+    CHECK_SUB: (data) => axiosInstance.patch(Endpoints.CHECK_SUBMITTED,data)
+}
+export const CheckingApplicants = {
+    CHECK_APP: (data) => axiosInstance.patch(Endpoints.CHECK_APPLICANTS,data)
+}
