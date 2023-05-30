@@ -4,7 +4,7 @@ import "./scholarships.scss"
 import EditIcon from '@mui/icons-material/Edit';
 
 
-const Scholarships = ({inputs, title}) => {
+const Scholarships = () => {
 
   
   return (
