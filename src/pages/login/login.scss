@@ -5,11 +5,12 @@
     align-items: center;
 
     .container{
+        
         -webkit-box-shadow: 2px 4px 10px 1px rgba(54, 223, 68, 0.47);
         box-shadow: 2px 4px 10px 1px rgba(118, 233, 175, 0.47);
         padding: 50px;
         width: 500px;
-        height: 200px;
+        height: 250px;
         border: 1px solid #005427;
         border-radius: 10px;
         flex-basis: 40%;
@@ -53,12 +54,12 @@
             }
 
             button{
-                margin: 5px;
-                padding: 8px;
-                width: 100px;
+                margin: 15px;
+                padding: 9px;
+                width: 150px;
                 border: none;
                 background-color: #005427;
-                border-radius: 10px;
+                border-radius: 20px;
                 color: #fff;
                 cursor: pointer;
             }

@@ -1,9 +1,8 @@
 import "./widget.scss"
 import ArrowUpwardOutlinedIcon from '@mui/icons-material/ArrowUpwardOutlined';
-import PersonOutlineOutlinedIcon from '@mui/icons-material/PersonOutlineOutlined';
+
 import ApprovalOutlinedIcon from '@mui/icons-material/ApprovalOutlined';
-import ScheduleOutlinedIcon from '@mui/icons-material/ScheduleOutlined';
-import TipsAndUpdatesOutlinedIcon from '@mui/icons-material/TipsAndUpdatesOutlined';
+
 
 import { Link } from "react-router-dom";
 

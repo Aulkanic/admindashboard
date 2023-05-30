@@ -68,10 +68,12 @@ const Applicant = () => {
       >
         <Box sx={style}>
           <Typography id="modal-modal-title" variant="h6" component="h2">
-            {selectedInfo?.Name}
+            <label> Personal Info </label> <br/>
+            <span> Name: {selectedInfo?.Name}</span>
+            
           </Typography>
           <Typography id="modal-modal-description" sx={{ mt: 2 }}>
-            Duis mollis, est non commodo luctus, nisi erat porttitor ligula.
+          {selectedInfo.email}
           </Typography>
         </Box>
       </Modal>
