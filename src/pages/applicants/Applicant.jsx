@@ -2,17 +2,18 @@ import "./applicant.scss";
 import Sidebar from "../../components/sidebar/Sidebar";
 import Navbar from "../../components/navbar/Navbar";
 import { useState, useEffect } from "react";
-import { Tabs, Tab,Table, TableBody, TableCell, TableContainer, TableHead,TableRow, Paper, Box, Button, Typography, Modal} from "@mui/material"; 
+import { Tabs, Tab,Table, TableBody, TableCell, TableContainer, TableHead,TableRow, Paper, Box, Button, Typography, Modal, colors} from "@mui/material"; 
 import Endpoints from "../../api/endpoints";
 import Radio from '@mui/material/Radio';
 import RadioGroup from '@mui/material/RadioGroup';
 import FormControlLabel from '@mui/material/FormControlLabel';
-import TextField from '@mui/material/TextField';
+
 import FormControl from '@mui/material/FormControl';
 import FormLabel from '@mui/material/FormLabel';
 import { ApplicantsRequest, UsersRequest, FetchingApplicantsInfo, ListofSub,
           CheckingSubs, CheckingApplicants } from "../../api/request";
 import swal from "sweetalert";
+
 
 const Applicant = () => {
 
@@ -28,8 +29,6 @@ const Applicant = () => {
   const handleTabChange = (event, newValue) => {
     setTabValue(newValue);
   };
-
-
 
   const style = {
     position: 'absolute',
@@ -88,6 +87,7 @@ const Applicant = () => {
      )
     .catch(err => console.log(err));
   }
+
   const ApplicantCheck = async () =>{
     const applicantNum = applicantsInfo[0].applicantNum;
     console.log(applicantNum)
@@ -127,10 +127,8 @@ const Applicant = () => {
       )})
 
   const applicantInfoPA = applicantsInfo?.map((data) =>{
-          return (
-            <>
+      return (
         <div className="PA">
-          <h1>Personal Information</h1>
           <div className="info">
             <p>Applicant Number:{data.date}{data.applicantNum} </p>
             <p>Name: {data.firstName} {data.middleName} {data.lastName}</p>
@@ -145,15 +143,13 @@ const Applicant = () => {
             <p>Permanent Address: {data.paddress}</p>
           </div>
       </div>
-            </>
-          )
-      })
+          )});
+
 const applicantInfoFB = 
   applicantsInfo?.map((data) =>{
     return (
       <>
       <div className="PA">
-      <h1>Family Background</h1>
         <div className="info">
           <p>Mother Name:{data.motherName} {data.mothermName} {data.motherlName} </p>
           <p>Occupation: {data.motherOccu}</p>
@@ -174,7 +170,6 @@ const applicantInfoFB =
     return (
       <>
       <div className="PA">
-      <h1>Economic Background</h1>
         <div className="info">
           <p>Baranggay: {data.baranggay}</p>
           <p>How Long living in Marilao: {data.howLong}</p>
@@ -190,7 +185,6 @@ const applicantInfoFB =
     return (
       <>
       <div className="PA">
-      <h1>Educational Background</h1>
         <div className="info">
           <p>Current Year: {data.currentYear}</p>
           <p>Course: {data.course}</p>
@@ -266,50 +260,87 @@ const applicantInfoFB =
 
   return (
     <>
-    <Modal
+    <div className="Modal">
+    <Modal className="modalContainer"
         open={open}
         onClose={handleClose}
-        aria-labelledby="modal-modal-title"
-        aria-describedby="modal-modal-description"
       >
-        <Box sx={style}>
-          <Typography id="modal-modal-title" variant="h6" component="h2">
-            <label> Personal Info </label> <br/>
-            <span> Name: {selectedInfo?.Name}</span>
-            
+        <Box sx={{
+          justifyContent: 'center',
+          alignSelf: 'center',
+          margin: 'auto',
+          padding: 2,
+          backgroundColor: 'white',
+          border: 1 ,
+          color: '#005427',
+          borderRadius: 5,
+          width: 'max-content',
+          height: 'max-content'
+          
+        }}>
+
+          <Typography id="modal-modal-title"
+            style={{
+              margin: 8,
+            }}
+            sx={{ color: '#005427', fontSize: 20, fontWeight: 600}}          
+          >
+
+           <div className="buttonclosed" 
+            style={{
+              float: "right",
+              display: "flex",
+              height: 20,
+              border: "none"
+              }}
+              >
+            <button onClick={handleClose}> X </button>
+            </div>
+
+  {/* Header of Modal */}
+            <div className="header" 
+            style={{
+              marginLeft: 10
+            }}>
+            <label style={{
+              fontWeight: 600,
+              fontSize: 20,
+            }}> PERSONAL INFO </label> 
+            <br/>
+            <span style={{
+              fontSize: 14,
+              fontWeight: 600,
+              fontStyle: "italic",
+            }}
+            > Name: {selectedInfo?.Name}</span>
+            <br/>
+            <span style={{
+              fontSize: 14,
+              fontWeight: 600,
+              fontStyle: "italic",
+            }}> 
+            Email: {selectedInfo.email} </span>
+            </div>
           </Typography>
-          <Typography id="modal-modal-description" sx={{ mt: 2 }}>
-          {selectedInfo.email}
-          </Typography>
-          <div className="buttonclosed">
-            <button onClick={handleClose}>X</button>
-          </div>
-        <Tabs 
+
+        <Tabs className="tabs"
           value={tabValue} 
           onChange={handleTabChange}   
           variant="scrollable"
           scrollButtons="auto">
-        <Tab label="Personal Information" />
-        <Tab label="Family Background" />
-        <Tab label="Economic Background" />
-        <Tab label="Educational Background" />
-        <Tab label="Documents" />
+        
+        <Tab classname="labelInfo" label="Personal Information" />
+        <Tab classname="labelInfo" label="Family Background" />
+        <Tab classname="labelInfo" label="Economic Background" />
+        <Tab classname="labelInfo" label="Educational Background" />
+        <Tab classname="labelInfo" label="Documents" />
       </Tabs>
-      <TabPanel value={tabValue} index={0}>
-        {applicantInfoPA}
-      </TabPanel>
-      <TabPanel value={tabValue} index={1}>
-        {applicantInfoFB}
-      </TabPanel>
-      <TabPanel value={tabValue} index={2}>
-        {applicantInfoEcB}
-      </TabPanel>
-      <TabPanel value={tabValue} index={3}>
-        {applicantInfoEdB}
-      </TabPanel>
-      <TabPanel value={tabValue} index={4}>
-        {docusubmitted}
-      </TabPanel>
+      
+      <TabPanel value={tabValue} index={0} className="tabPanel"> {applicantInfoPA} </TabPanel>
+      <TabPanel value={tabValue} index={1} className="tabPanel"> {applicantInfoFB} </TabPanel>
+      <TabPanel value={tabValue} index={2} className="tabPanel"> {applicantInfoEcB}</TabPanel>
+      <TabPanel value={tabValue} index={3} className="tabPanel"> {applicantInfoEdB}</TabPanel>
+      <TabPanel value={tabValue} index={4} className="tabPanel"> {docusubmitted}   </TabPanel>
 
       <div className="buttonbacapp">
         <button onClick={handleClose}> Cancel </button>
@@ -318,6 +349,7 @@ const applicantInfoFB =
 
         </Box>
       </Modal>
+      </div>
 
     <div className="applicant">
       <Sidebar/>

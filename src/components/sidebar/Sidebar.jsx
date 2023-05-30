@@ -116,12 +116,12 @@ const Sidebar = () => {
           
             </li>
 
+<           Link to='/' style={{ textDecoration: "none"}}>
             <li>
-              <Link to='/' style={{ textDecoration: "none"}}>
               <LogoutIcon className='icon'/>
               <span> Logout </span>
-              </Link>
             </li>
+            </Link>
 
           </ul>
         </div>
