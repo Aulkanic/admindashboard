@@ -1,14 +1,16 @@
 import './sidebar.scss';
 import DashboardIcon from '@mui/icons-material/Dashboard';
+import InfoIcon from '@mui/icons-material/Info';
 import RecentActorsIcon from '@mui/icons-material/RecentActors';
-import DateRangeIcon from '@mui/icons-material/DateRange';
-import ApprovalIcon from '@mui/icons-material/Approval';
+import LiveHelpIcon from '@mui/icons-material/LiveHelp';
 import SchoolIcon from '@mui/icons-material/School';
-import SavingsIcon from '@mui/icons-material/Savings';
-import EmojiEventsIcon from '@mui/icons-material/EmojiEvents';
-import LeaderboardIcon from '@mui/icons-material/Leaderboard';
-import AddCircleIcon from '@mui/icons-material/AddCircle';
-import AccountCircleIcon from '@mui/icons-material/AccountCircle';
+import ViewListIcon from '@mui/icons-material/ViewList';
+import AccountBoxIcon from '@mui/icons-material/AccountBox';
+import CalendarMonthIcon from '@mui/icons-material/CalendarMonth';
+import HistoryEduIcon from '@mui/icons-material/HistoryEdu';
+import AnnouncementIcon from '@mui/icons-material/Announcement';
+import FeedIcon from '@mui/icons-material/Feed';
+import ReportIcon from '@mui/icons-material/Report';
 import LogoutIcon from '@mui/icons-material/Logout';
 
 import { Link } from 'react-router-dom';
@@ -37,28 +39,28 @@ const Sidebar = () => {
 
             <Link to="/scholarships" style={{ textDecoration: "none" }}>
             <li>
-              <RecentActorsIcon className='icon'/>
+              <SchoolIcon className='icon'/>
               <span> Scholarships </span>
             </li>
             </Link>
 
             <Link to='/about' style={{ textDecoration: "none" }}>
             <li>
-              <DateRangeIcon className='icon'/>
+              <InfoIcon className='icon'/>
               <span> About </span>
             </li>
             </Link>
 
             <Link to="/contact" style={{ textDecoration: "none" }}>
             <li>
-              <ApprovalIcon className='icon'/>
+              <RecentActorsIcon className='icon'/>
               <span> Contact </span>
             </li>
             </Link>
           
             <Link to='/faqs' style={{ textDecoration: "none" }}>
             <li>
-              <SchoolIcon className='icon'/>
+              <LiveHelpIcon className='icon'/>
               <span> FAQ's </span>
             </li>
             </Link>
@@ -67,28 +69,28 @@ const Sidebar = () => {
 
             <Link to="/applicants" style={{ textDecoration: "none" }}>
             <li>
-              <SavingsIcon className='icon'/>
+              <ViewListIcon className='icon'/>
               <span> Applicants </span>
             </li>
             </Link>
 
             <Link to="/users" style={{ textDecoration: "none" }}>
             <li>
-              <EmojiEventsIcon className='icon'/>
+              <AccountBoxIcon className='icon'/>
               <span> User Accounts</span>
             </li>
             </Link>
 
             <Link to="/appointments" style={{ textDecoration: "none" }}>
             <li>
-              <LeaderboardIcon className='icon'/>
+              <CalendarMonthIcon className='icon'/>
               <span> Appointments </span>
             </li>
             </Link>
 
             <Link to="/scholars" style={{ textDecoration: "none" }}>
             <li>
-              <AccountCircleIcon className='icon'/>
+              <HistoryEduIcon className='icon'/>
               <span> Scholars </span>
             </li>
             </Link>
@@ -96,32 +98,30 @@ const Sidebar = () => {
             <p className="title"> Maintenance </p>
 
             <li>
-              <AddCircleIcon className='icon'/>
+              <AnnouncementIcon className='icon'/>
               <span> Announcement </span>
             </li>
 
-            
-            <li>
             <Link to='/news' style={{ textDecoration: 'none'}}>
-              <AddCircleIcon className='icon'/>
+            <li>
+              <FeedIcon className='icon'/>
               <span> News </span>
-              </Link>
-            </li>
-
+            </li> 
+            </Link>
             
             <li>
-           
-              <AddCircleIcon className='icon'/>
+    
+              <ReportIcon className='icon'/>
               <span> Reports </span>
           
             </li>
 
+<           Link to='/' style={{ textDecoration: "none"}}>
             <li>
-              <Link to='/' style={{ textDecoration: "none"}}>
               <LogoutIcon className='icon'/>
               <span> Logout </span>
-              </Link>
             </li>
+            </Link>
 
           </ul>
         </div>

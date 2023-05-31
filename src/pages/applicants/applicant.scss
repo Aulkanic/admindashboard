@@ -5,39 +5,52 @@
         flex: 7;
         
         .top{
-        -webkit-box-shadow: 2px 4px 10px 1px rgba(0, 0, 0, 0.47);
-        box-shadow: 2px 4px 10px 1px rgba(201, 201, 201, 0.47);
+        -webkit-box-shadow: 2px 4px 10px 1px rgba(9, 247, 1, 0.47);
+        box-shadow: 2px 4px 10px 1px rgba(2, 129, 30, 0.47);
         margin: 20px;
         padding: 20px;
+        border-radius: 10px;
 
         h1{
             padding: 10px;
             color: #005427;
-            
         }
 
-        }
+        table{
+            border: 1px solid #005427;
 
+            .tableCell{
+                border: 1px solid #005427;
+                font-size: 12px;
+                color: #005427;
+                font-weight: 600;
+            }
+        }
+    }
         .cellAction{
-            display: flex;
-            align-items: center;
-            margin-top: 15px;
+            background-color: lightgreen;
+            padding: 5px;
+            border-radius: 5px;
+            text-align: center;
         
             .viewButton{
-                padding: 2px 5px;
-                border-radius: 5px;
                 color: #005427;
                 cursor: pointer;
             }
-        }
 
-        .Modal{
-            border: 5px solid #005427;
-            border-radius: 50px;
-        }
-        
+            .status{
+                padding: 5px;
 
+                &.Qualified{
+                    color: aqua;
+                    background-color: #798d82;
+                }
+            }
+        } 
 }
 
 }
+
+
+
 

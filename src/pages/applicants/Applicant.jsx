@@ -2,17 +2,18 @@ import "./applicant.scss";
 import Sidebar from "../../components/sidebar/Sidebar";
 import Navbar from "../../components/navbar/Navbar";
 import { useState, useEffect } from "react";
-import { Tabs, Tab,Table, TableBody, TableCell, TableContainer, TableHead,TableRow, Paper, Box, Button, Typography, Modal} from "@mui/material"; 
-import Endpoints from "../../api/endpoints";
+import { Tabs, Tab,Table, TableBody, TableCell, TableContainer, TableHead,TableRow, Paper, Box, Typography, Modal } from "@mui/material"; 
+
 import Radio from '@mui/material/Radio';
 import RadioGroup from '@mui/material/RadioGroup';
 import FormControlLabel from '@mui/material/FormControlLabel';
-import TextField from '@mui/material/TextField';
+
 import FormControl from '@mui/material/FormControl';
 import FormLabel from '@mui/material/FormLabel';
-import { ApplicantsRequest, UsersRequest, FetchingApplicantsInfo, ListofSub,
+import { ApplicantsRequest, FetchingApplicantsInfo, ListofSub,
           CheckingSubs, CheckingApplicants } from "../../api/request";
 import swal from "sweetalert";
+
 
 const Applicant = () => {
 
@@ -28,8 +29,6 @@ const Applicant = () => {
   const handleTabChange = (event, newValue) => {
     setTabValue(newValue);
   };
-
-
 
   const style = {
     position: 'absolute',
@@ -85,6 +84,7 @@ const Applicant = () => {
      )
     .catch(err => console.log(err));
   }
+
   const ApplicantCheck = async () =>{
     const applicantNum = applicantsInfo[0].applicantNum;
     console.log(applicantNum)
@@ -105,7 +105,7 @@ const Applicant = () => {
   console.log(post)
   const list = post?.map((f) =>{
     return (
-      <>
+      <> 
           <TableRow key ={f.applicantNum}>  
               <TableCell className="tableCell"> {f.applicantNum} </TableCell>  
               <TableCell className="tableCell"> {f.SchoIarshipApplied} </TableCell>  
@@ -113,18 +113,19 @@ const Applicant = () => {
               <TableCell className="tableCell"> {f.DateApplied} </TableCell>
               <TableCell className="tableCell"> {f.email} </TableCell>
               <TableCell className="tableCell"> {f.score} </TableCell>
-              <TableCell className="tableCell"> {f.status} </TableCell>
+              <TableCell className="tableCell"> {f.status}</TableCell>
+              <TableCell className="tableCell">
               <div className='cellAction'>
-                    <div className="viewButton" onClick={() => view(f)}>View</div>
+                <div className="viewButton" onClick={() => view(f)}> View </div>
             </div>
+            </TableCell>
           </TableRow>
       </>
       )})
+
   const applicantInfoPA = applicantsInfo?.map((data) =>{
-          return (
-            <>
+      return (
         <div className="PA">
-          <h1>Personal Information</h1>
           <div className="info">
             <p>Applicant Number:{data.date}{data.applicantNum} </p>
             <p>Name: {data.firstName} {data.middleName} {data.lastName}</p>
@@ -139,14 +140,13 @@ const Applicant = () => {
             <p>Permanent Address: {data.paddress}</p>
           </div>
       </div>
-            </>
-          )
-      })
-  const applicantInfoFB = applicantsInfo?.map((data) =>{
-        return (
-          <>
+          )});
+
+const applicantInfoFB = 
+  applicantsInfo?.map((data) =>{
+    return (
+      <>
       <div className="PA">
-      <h1>Family Background</h1>
         <div className="info">
           <p>Mother Name:{data.motherName} {data.mothermName} {data.motherlName} </p>
           <p>Occupation: {data.motherOccu}</p>
@@ -159,31 +159,29 @@ const Applicant = () => {
           <p>Relationship: {data.relationship}</p>
           <p>Number of Family Members: {data.famNum}</p>
         </div>
-    </div>
-          </>
-        )
-      })
+      </div>
+      </>
+        )})
+
   const applicantInfoEcB = applicantsInfo?.map((data) =>{
-        return (
-          <>
+    return (
+      <>
       <div className="PA">
-      <h1>Economic Background</h1>
         <div className="info">
           <p>Baranggay: {data.baranggay}</p>
           <p>How Long living in Marilao: {data.howLong}</p>
           <p>Living Type: {data.wereLive}</p>
           <p>House Ownership: {data.ownerShhip}</p>
           <p>Monthly Income of Parents/Guardian: {data.monthIncome}</p>
-        </div>
-    </div>
-          </>
-        )
-      })
+      </div>
+      </div>
+      </>
+        )})
+
   const applicantInfoEdB = applicantsInfo?.map((data) =>{
-        return (
-          <>
-      <div className="PA">
-      <h1>Educational Background</h1>
+    return (
+      <>
+      <div className="PA" style={style}>
         <div className="info">
           <p>Current Year: {data.currentYear}</p>
           <p>Course: {data.course}</p>
@@ -191,51 +189,52 @@ const Applicant = () => {
           <p>Type of School: {data.typeSchool}</p>
           <p>School Award: {data.elemAward},{data.highAward}</p>
         </div>
-    </div>
-          </>
-        )
-      })
+      </div>
+      </>
+        )})
+
   const docusubmitted = applicantsDocs?.map((data,index) =>{
     return (
       <>
       <div className="docu">
         <h1>{data.requirement_Name}</h1>
         <div className="sublist" key={index}>
-          <div className="subdocsprev">
-            <img style={{width: 100}} src={data.File} alt="" />
-          </div>
-          <div className="actions">
+        <div className="subdocsprev">
+          <img style={{width: 100}} src={data.File} alt="" />
+        </div>
+
+        <div className="actions">
         <FormControl>
-          <FormLabel id="demo-row-radio-buttons-group-label">Status</FormLabel>
-      <RadioGroup
-        row
-        aria-labelledby="demo-row-radio-buttons-group-label"
-        name="row-radio-buttons-group"
-        value={status[index]}
-        onChange={(e) =>{
-          const stat = [...status];
-          stat[index] = e.target.value;
-          setStatusCheck(stat);
-        }}  
-      >
+          <FormLabel id="demo-row-radio-buttons-group-label"> Status </FormLabel>
+        <RadioGroup
+          row
+          aria-labelledby="demo-row-radio-buttons-group-label"
+          name="row-radio-buttons-group"
+          value={status[index]}
+          onChange={(e) =>{
+            const stat = [...status];
+            stat[index] = e.target.value;
+            setStatusCheck(stat);
+          }}>
+
         <FormControlLabel value="Approved" control={<Radio />} label="Approved" />
         <FormControlLabel value="Reject" control={<Radio />} label="Reject" />
         <FormControlLabel value="For Further Evaluation" control={<Radio />} label="For Further Evaluation" />
           </RadioGroup>
          </FormControl><br/>
          <FormControl>
-          <FormLabel id="demo-row-radio-buttons-group-label">Comments</FormLabel>
-      <RadioGroup
-        row
-        aria-labelledby="demo-row-radio-buttons-group-label"
-        name="row-radio-buttons-group"
-        value={Comments[index]}
-        onChange={(e) =>{
-          const comm = [...Comments];
-          comm[index] = e.target.value;
-          setComments(comm);
-        }}  
-      >
+          <FormLabel id="demo-row-radio-buttons-group-label"> Comments </FormLabel>
+        <RadioGroup
+          row
+          aria-labelledby="demo-row-radio-buttons-group-label"
+          name="row-radio-buttons-group"
+          value={Comments[index]}
+          onChange={(e) =>{
+            const comm = [...Comments];
+            comm[index] = e.target.value;
+            setComments(comm);
+          }}>
+
         <FormControlLabel value="Blurred Images" control={<Radio />} label="Blurred Images" />
         <FormControlLabel value="Invalid File Image" control={<Radio />} label="Invalid File Image" />
         <FormControlLabel value="No Comments" control={<Radio />} label="No Comments" />
@@ -243,62 +242,109 @@ const Applicant = () => {
          </FormControl>
           </div>
           <div>
-            <button onClick={() =>check(data,index)}>Save</button>
+            <button onClick={() =>check(data,index)}> Save </button>
           </div>
         </div>
       </div>
       </>
-    )
-  })
+    )})
+
       const TabPanel = ({ children, value, index }) => (
         <div role="tabpanel" hidden={value !== index}>
           {value === index && <Box p={3}>{children}</Box>}
         </div>
       );
+
   return (
     <>
-    <Modal
+    <Modal className="modalContainer"
         open={open}
         onClose={handleClose}
-        aria-labelledby="modal-modal-title"
-        aria-describedby="modal-modal-description"
       >
-        <Box sx={style}>
-          <div className="buttonclosed">
-            <button onClick={handleClose}>X</button>
-          </div>
-        <Tabs 
+        <Box sx={{
+          justifyContent: 'center',
+          alignSelf: 'center',
+          margin: 'auto',
+          padding: 2,
+          backgroundColor: 'white',
+          border: 1 ,
+          color: '#005427',
+          borderRadius: 5,
+          width: 'max-content',
+          height: 'max-content'
+        }}>
+
+          <Typography id="modal-modal-title"
+            style={{
+              margin: 8,
+            }}
+            sx={{ color: '#005427', fontSize: 20, fontWeight: 600}}          
+          >
+
+           <div className="buttonclosed" 
+            style={{
+              float: "right",
+              display: "flex",
+              height: 20,
+              border: "none"
+              }}
+              >
+            <button onClick={handleClose}> X </button>
+            </div>
+
+  {/* Header of Modal */}
+            <div className="header" 
+            style={{
+              marginLeft: 10
+            }}>
+            <label style={{
+              fontWeight: 600,
+              fontSize: 20,
+            }}> PERSONAL INFO </label> 
+            <br/>
+            <span style={{
+              fontSize: 14,
+              fontWeight: 600,
+              fontStyle: "italic",
+            }}
+            > Name: {selectedInfo?.Name}</span>
+            <br/>
+            <span style={{
+              fontSize: 14,
+              fontWeight: 600,
+              fontStyle: "italic",
+            }}> 
+            Email: {selectedInfo.email} </span>
+            </div>
+          </Typography>
+
+        <Tabs className="tabs"
           value={tabValue} 
           onChange={handleTabChange}   
           variant="scrollable"
           scrollButtons="auto">
-        <Tab label="Personal Information" />
-        <Tab label="Family Background" />
-        <Tab label="Economic Background" />
-        <Tab label="Educational Background" />
-        <Tab label="Documents" />
+        
+        <Tab classname="labelInfo" label="Personal Information" />
+        <Tab classname="labelInfo" label="Family Background" />
+        <Tab classname="labelInfo" label="Economic Background" />
+        <Tab classname="labelInfo" label="Educational Background" />
+        <Tab classname="labelInfo" label="Documents" />
       </Tabs>
-      <TabPanel value={tabValue} index={0}>
-        {applicantInfoPA}
-      </TabPanel>
-      <TabPanel value={tabValue} index={1}>
-        {applicantInfoFB}
-      </TabPanel>
-      <TabPanel value={tabValue} index={2}>
-        {applicantInfoEcB}
-      </TabPanel>
-      <TabPanel value={tabValue} index={3}>
-        {applicantInfoEdB}
-      </TabPanel>
-      <TabPanel value={tabValue} index={4}>
-        {docusubmitted}
-      </TabPanel>
+      
+      <TabPanel value={tabValue} index={0} className="tabPanel"> {applicantInfoPA} </TabPanel>
+      <TabPanel value={tabValue} index={1} className="tabPanel"> {applicantInfoFB} </TabPanel>
+      <TabPanel value={tabValue} index={2} className="tabPanel"> {applicantInfoEcB}</TabPanel>
+      <TabPanel value={tabValue} index={3} className="tabPanel"> {applicantInfoEdB}</TabPanel>
+      <TabPanel value={tabValue} index={4} className="tabPanel"> {docusubmitted}   </TabPanel>
+
       <div className="buttonbacapp">
-        <button onClick={handleClose}>Cancel</button>
-        <button  onClick={() => ApplicantCheck()}>ADD</button>
+        <button onClick={handleClose}> Cancel </button>
+        <button  onClick={() => ApplicantCheck()}> Add </button>
       </div>
+
         </Box>
       </Modal>
+     
 
     <div className="applicant">
       <Sidebar/>
