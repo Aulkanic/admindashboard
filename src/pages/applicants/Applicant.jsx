@@ -46,9 +46,6 @@ const Applicant = () => {
     const response = await ApplicantsRequest.ALL_APPLICANTS()
     console.log(response)
     setPost(response.data.results);
-
-    // const userinfo = await UsersRequest.ALL_USERS(2)
-    // console.log(userinfo.data);
   }, []);
 
 // fucntions
@@ -354,8 +351,7 @@ const applicantInfoFB =
       <div className="applicantContainer">
       <Navbar/>
       <div className="top" >
-      <h1> Applicants </h1> 
-              
+      <h1> Applicants </h1>         
       <TableContainer component={Paper} className="table">
         <Table sx={{ minWidth: 650 }} aria-label="simple table">
 

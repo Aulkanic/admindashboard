@@ -38,3 +38,28 @@ export const CheckingSubs = {
 export const CheckingApplicants = {
     CHECK_APP: (data) => axiosInstance.patch(Endpoints.CHECK_APPLICANTS,data)
 }
+export const FetchingQualified = {
+    FETCH_QUALIFIED: () => axiosInstance.get(Endpoints.FETCH_QUALIFIED)
+}
+export const CreateAppointment = {
+    CREATE_APPOINT: (data) => axiosInstance.post(Endpoints.CREATE_APPOINT,data)
+}
+export const FetchingAppointList = {
+    FETCH_LISTAPPOINT: () => axiosInstance.get(Endpoints.FETCH_APPOINTLIST)
+}
+export const FetchingSchoProg = {
+    FETCH_SCHOPROG: () => axiosInstance.get(Endpoints.FETCH_SCHOPROG)
+}
+export const CreateSchoProg = {
+    CREATE_SCHOPROG: (data) => axiosInstance.post(Endpoints.CREATE_SCHOLAR,data)
+}
+export const UpdateSchoProg = {
+    UPDATE_SCHOPROG: (data) => axiosInstance.patch(Endpoints.UPDATE_SCHOPROG,data)
+}
+export const Reaapointed = {
+    RE_APPOINT: (data) => axiosInstance.patch(Endpoints.RE_APPOINT,data)
+}
+export const SetApproved = {
+    SET_APPROVE: (data) => axiosInstance.patch(Endpoints.SET_APPROVED,data)
+}
+
