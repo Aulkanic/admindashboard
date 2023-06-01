@@ -2,7 +2,8 @@ import "./appointment.scss";
 import Sidebar from "../../components/sidebar/Sidebar";
 import Navbar from "../../components/navbar/Navbar";    
 import { Tabs, Tab,Table, TableBody, TableCell, TableContainer, TableHead,TableRow, Paper, Box, Button, Typography, Modal} from "@mui/material"; 
-import { FetchingQualified, CreateAppointment,FetchingAppointList, Reaapointed, SetApproved } from "../../api/request";
+import { FetchingQualified, CreateAppointment,FetchingAppointList
+  , Reaapointed, SetApproved,FetchingApplicantsInfo } from "../../api/request";
 import FormControlLabel from '@mui/material/FormControlLabel';
 import DatePicker from 'react-datepicker';
 import Checkbox from '@mui/material/Checkbox';
@@ -21,6 +22,17 @@ const Appointment = () => {
   const [endTime, setEndTime] = useState('');
   const [selectAll, setSelectAll] = useState(false);
   const [selectedUsers, setSelectedUsers] = useState([]);
+  const [filteredData, setFilteredData] = useState([]);
+
+  const handleFilter = async (filterValue) => {
+    const filtered = Qualified.filter(item =>
+      Object.values(item).some(value =>
+        value && value.toString().toLowerCase().includes(filterValue.toLowerCase())
+      )
+    );
+    setFilteredData(filtered);
+    
+  };
 
   const handleStartTimeChange = (event) => {
     setStartTime(event.target.value);
@@ -88,9 +100,21 @@ const Appointment = () => {
       .catch(err => console.log(err));
 
   };
-  const Approved = (data) => {
+  const Approved = async (data) => {
     console.log(data)
-    SetApproved.SET_APPROVE(data)
+    try {
+      const response = await Promise.all([
+        FetchingApplicantsInfo.FETCH_INFO(data.applicantNum)
+      ]);
+      console.log(response)
+      const dataappinfo = response[0].data.results[0];
+      const Name = `${dataappinfo.firstName} ${dataappinfo.middleName} ${dataappinfo.lastName}`;
+      const applicantNum = dataappinfo.applicantNum;
+      const yearLevel =dataappinfo.currentYear;
+      const baranggay = dataappinfo.baranggay;
+      const scholarshipApplied = dataappinfo.SchoIarshipApplied;
+      console.log(dataappinfo)
+      SetApproved.SET_APPROVE({data,Name,applicantNum,yearLevel,baranggay,scholarshipApplied})
     .then(res => {
       console.log(res)
       setQualified(res.data.results.data1);
@@ -99,6 +123,11 @@ const Appointment = () => {
     }
      )
     .catch(err => console.log(err));
+    } catch (error) {
+      console.error('Error fetching data:', error);
+    }
+
+    
 
 };
   useEffect( async () => {
@@ -185,6 +214,8 @@ const Appointment = () => {
       </div>
 
       <h3>Applicants List</h3>
+      <label htmlFor="">Search:</label>
+      <input type="text" onChange={(e) => handleFilter(e.target.value)} />  
       <TableContainer component={Paper} className="table">
         <Table sx={{ minWidth: 650 }} aria-label="simple table">
           <TableHead>
@@ -204,9 +235,29 @@ const Appointment = () => {
             </TableRow>
           </TableHead>
 
-          <TableBody>
+          {filteredData.length > 0 ? (
+            filteredData?.map((data,index) =>{
+              return (
+                <>
+                <TableBody>
+                {!data.isAppointed || data.isAppointed === 'No' ? (<TableRow key ={index}>  
+              <TableCell className="tableCell"><FormControlLabel required control={<Checkbox
+            checked={selectedUsers.some((item) => item.userId === data.applicantNum) || selectAll}
+            onChange={() => handleUserSelection(data.applicantNum,data.Name,data.email,data.status,data.DateApplied)} />}/></TableCell> 
+              <TableCell className="tableCell"> {data.applicantNum} </TableCell>  
+              <TableCell className="tableCell"> {data.SchoIarshipApplied} </TableCell>  
+              <TableCell className="tableCell"> {data.Name} </TableCell>
+              <TableCell className="tableCell"> {data.DateApplied} </TableCell>
+              <TableCell className="tableCell"> {data.email} </TableCell>
+              <TableCell className="tableCell"> {data.status} </TableCell>
+        </TableRow>) : null}                  
+                </TableBody>
+                </>
+              )
+            })
+          ) : (<TableBody>
             {listqua}
-          </TableBody>
+          </TableBody>)}
         </Table>
       </TableContainer>
             </div>

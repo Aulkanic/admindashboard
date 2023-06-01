@@ -25,6 +25,17 @@ const Applicant = () => {
   const [Comments,setComments] = useState('');
   const [status,setStatusCheck] = useState('');
   const [tabValue, setTabValue] = useState(0);
+  const [filteredData, setFilteredData] = useState([]);
+
+  const handleFilter = async (filterValue) => {
+    const filtered = post.filter(item =>
+      Object.values(item).some(value =>
+        value && value.toString().toLowerCase().includes(filterValue.toLowerCase())
+      )
+    );
+    setFilteredData(filtered);
+    
+  };
 
   const handleTabChange = (event, newValue) => {
     setTabValue(newValue);
@@ -54,6 +65,7 @@ const Applicant = () => {
         FetchingApplicantsInfo.FETCH_INFO(applicantNum),
         ListofSub.FETCH_SUB(applicantNum)
       ]);
+      console.log(response)
       setApplicantInfo(response[0].data.results);
       setApplicantDocs(response[1].data.Document);
       setSelectedInfo(data)
@@ -100,7 +112,7 @@ const Applicant = () => {
   
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
-  console.log(post)
+  console.log(filteredData)
   const list = post?.map((f) =>{
     return (
       <> 
@@ -316,7 +328,9 @@ const applicantInfoFB = applicantsInfo?.map((data) =>{
       <div className="applicantContainer">
       <Navbar/>
       <div className="top" >
-      <h1> Applicants </h1>         
+      <h1> Applicants </h1>  
+      <label htmlFor="">Search:</label>
+      <input type="text" onChange={(e) => handleFilter(e.target.value)} />       
       <TableContainer component={Paper} className="table">
         <Table sx={{ minWidth: 650 }} aria-label="simple table">
 
@@ -333,9 +347,32 @@ const applicantInfoFB = applicantsInfo?.map((data) =>{
             </TableRow>
           </TableHead>
 
-          <TableBody>
+          {filteredData.length > 0 ? (
+            filteredData?.map((data,index) =>{
+              return (
+                <>
+                <TableBody>
+              <TableRow key ={index}>  
+              <TableCell className="tableCell"> {data.applicantNum} </TableCell>  
+              <TableCell className="tableCell"> {data.SchoIarshipApplied} </TableCell>  
+              <TableCell className="tableCell"> {data.Name} </TableCell>
+              <TableCell className="tableCell"> {data.DateApplied} </TableCell>
+              <TableCell className="tableCell"> {data.email} </TableCell>
+              <TableCell className="tableCell"> {data.score} </TableCell>
+              <TableCell className="tableCell"> {data.status}</TableCell>
+              <TableCell className="tableCell">
+              <div className='cellAction'>
+                <div className="viewButton" onClick={() => view(data)}> View </div>
+            </div>
+            </TableCell>
+          </TableRow>   
+          </TableBody>             
+                </>
+              )
+            })
+          ) : (<TableBody>
             {list}
-          </TableBody>
+          </TableBody>)}
         </Table>
       </TableContainer>
 

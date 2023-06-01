@@ -12,9 +12,12 @@ import Scholars from './pages/scholars/Scholars';
 import News from './pages/new/New';
 import { BrowserRouter, Routes, Route,} from "react-router-dom";
 import Single from './pages/single/Single';
+import io from 'socket.io-client';
+import { useEffect } from 'react';
 
 
 function App() {
+  
   return (
     <div className="App">
         <BrowserRouter>
