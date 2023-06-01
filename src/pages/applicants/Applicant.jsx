@@ -31,13 +31,11 @@ const Applicant = () => {
   };
 
   const style = {
-    position: 'absolute',
     top: '50%',
     left: '50%',
     transform: 'translate(-50%, -50%)',
-    width: '90%',
+    width: 'max-content',
     height: '80%',
-    bgcolor: 'background.paper',
     border: '2px solid #000',
     boxShadow: 24,
   };
@@ -126,8 +124,8 @@ const Applicant = () => {
   const applicantInfoPA = applicantsInfo?.map((data) =>{
       return (
         <div className="PA">
-          <div className="info">
-            <p>Applicant Number:{data.date}{data.applicantNum} </p>
+          <div className="Pinfo">
+            <p>Applicant Number: {data.date}{data.applicantNum} </p>
             <p>Name: {data.firstName} {data.middleName} {data.lastName}</p>
             <p>Gender: {data.gender}</p>
             <p>Citizenship: {data.citizenship}</p>
@@ -142,12 +140,11 @@ const Applicant = () => {
       </div>
           )});
 
-const applicantInfoFB = 
-  applicantsInfo?.map((data) =>{
+const applicantInfoFB = applicantsInfo?.map((data) =>{
     return (
       <>
       <div className="PA">
-        <div className="info">
+        <div className="Finfo">
           <p>Mother Name:{data.motherName} {data.mothermName} {data.motherlName} </p>
           <p>Occupation: {data.motherOccu}</p>
           <p>Highest Educational Attainment: {data.motherEduc}</p>
@@ -167,7 +164,7 @@ const applicantInfoFB =
     return (
       <>
       <div className="PA">
-        <div className="info">
+        <div className="Einfo">
           <p>Baranggay: {data.baranggay}</p>
           <p>How Long living in Marilao: {data.howLong}</p>
           <p>Living Type: {data.wereLive}</p>
@@ -181,8 +178,8 @@ const applicantInfoFB =
   const applicantInfoEdB = applicantsInfo?.map((data) =>{
     return (
       <>
-      <div className="PA" style={style}>
-        <div className="info">
+      <div className="PA">
+        <div className="Eduinfo">
           <p>Current Year: {data.currentYear}</p>
           <p>Course: {data.course}</p>
           <p>Current School: {data.currentSchool}</p>
@@ -196,11 +193,13 @@ const applicantInfoFB =
   const docusubmitted = applicantsDocs?.map((data,index) =>{
     return (
       <>
-      <div className="docu">
+      <div className="PA">
+      <div className="Docuinfo">
         <h1>{data.requirement_Name}</h1>
         <div className="sublist" key={index}>
         <div className="subdocsprev">
           <img style={{width: 100}} src={data.File} alt="" />
+        </div>
         </div>
 
         <div className="actions">
@@ -218,7 +217,7 @@ const applicantInfoFB =
           }}>
 
         <FormControlLabel value="Approved" control={<Radio />} label="Approved" />
-        <FormControlLabel value="Reject" control={<Radio />} label="Reject" />
+        <FormControlLabel value="Reject"   control={<Radio />} label="Reject" />
         <FormControlLabel value="For Further Evaluation" control={<Radio />} label="For Further Evaluation" />
           </RadioGroup>
          </FormControl><br/>
@@ -262,84 +261,50 @@ const applicantInfoFB =
         onClose={handleClose}
       >
         <Box sx={{
-          justifyContent: 'center',
-          alignSelf: 'center',
           margin: 'auto',
           padding: 2,
           backgroundColor: 'white',
           border: 1 ,
           color: '#005427',
           borderRadius: 5,
-          width: 'max-content',
-          height: 'max-content'
         }}>
-
-          <Typography id="modal-modal-title"
-            style={{
-              margin: 8,
-            }}
-            sx={{ color: '#005427', fontSize: 20, fontWeight: 600}}          
-          >
-
-           <div className="buttonclosed" 
-            style={{
-              float: "right",
-              display: "flex",
-              height: 20,
-              border: "none"
-              }}
-              >
+       
+           <div className="buttonclosed" >
             <button onClick={handleClose}> X </button>
             </div>
 
   {/* Header of Modal */}
-            <div className="header" 
-            style={{
-              marginLeft: 10
-            }}>
-            <label style={{
-              fontWeight: 600,
-              fontSize: 20,
-            }}> PERSONAL INFO </label> 
+            <div className="header">
+            <label> PERSONAL INFO </label> 
             <br/>
-            <span style={{
-              fontSize: 14,
-              fontWeight: 600,
-              fontStyle: "italic",
-            }}
-            > Name: {selectedInfo?.Name}</span>
+            <span> Name: {selectedInfo?.Name}</span>
             <br/>
-            <span style={{
-              fontSize: 14,
-              fontWeight: 600,
-              fontStyle: "italic",
-            }}> 
-            Email: {selectedInfo.email} </span>
+            <span> Email: {selectedInfo.email} </span>
             </div>
-          </Typography>
+          
 
-        <Tabs className="tabs"
+        <Tabs
           value={tabValue} 
           onChange={handleTabChange}   
           variant="scrollable"
           scrollButtons="auto">
         
-        <Tab classname="labelInfo" label="Personal Information" />
-        <Tab classname="labelInfo" label="Family Background" />
-        <Tab classname="labelInfo" label="Economic Background" />
-        <Tab classname="labelInfo" label="Educational Background" />
-        <Tab classname="labelInfo" label="Documents" />
+        <Tab label="Personal Information" />
+        <Tab label="Family Background" />
+        <Tab label="Economic Background" />
+        <Tab label="Educational Background" />
+        <Tab label="Documents" />
       </Tabs>
       
-      <TabPanel value={tabValue} index={0} className="tabPanel"> {applicantInfoPA} </TabPanel>
-      <TabPanel value={tabValue} index={1} className="tabPanel"> {applicantInfoFB} </TabPanel>
-      <TabPanel value={tabValue} index={2} className="tabPanel"> {applicantInfoEcB}</TabPanel>
-      <TabPanel value={tabValue} index={3} className="tabPanel"> {applicantInfoEdB}</TabPanel>
-      <TabPanel value={tabValue} index={4} className="tabPanel"> {docusubmitted}   </TabPanel>
+      <TabPanel value={tabValue} index={0}>{applicantInfoPA}</TabPanel>
+      <TabPanel value={tabValue} index={1}>{applicantInfoFB}</TabPanel>
+      <TabPanel value={tabValue} index={2}>{applicantInfoEcB}</TabPanel>
+      <TabPanel value={tabValue} index={3}>{applicantInfoEdB}</TabPanel>
+      <TabPanel value={tabValue} index={4}>{docusubmitted}</TabPanel>
 
       <div className="buttonbacapp">
-        <button onClick={handleClose}> Cancel </button>
-        <button  onClick={() => ApplicantCheck()}> Add </button>
+        <button onClick={handleClose}> CANCEL </button>
+        <button onClick={() => ApplicantCheck()}> ADD </button>
       </div>
 
         </Box>
