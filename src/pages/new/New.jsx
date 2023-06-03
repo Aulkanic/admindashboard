@@ -3,9 +3,9 @@ import './new.scss'
 import Navbar from '../../components/navbar/Navbar';
 import Sidebar from '../../components/sidebar/Sidebar';
 import { FetchNews,CreateNews } from '../../api/request';
-import TextField from '@mui/material/TextField';
 import { useState } from 'react';
 import swal from 'sweetalert';
+
 
 const News = () => {
   const [news,setNews] = useState([]);
@@ -100,7 +100,6 @@ const News = () => {
       <div className='newscontainer'>
        <Navbar/>
       <div className="newsCon">
-
        <div className='headnews'>
        <h1>Recent News</h1>
        <button onClick={togglePopup}>Add News</button>
@@ -108,44 +107,52 @@ const News = () => {
 
      {isOpen && (
         <div className="create_news">
-
           <div className='xbtn'> 
           <button onClick={togglePopup}>X</button>
           </div>
+          <br/>
 
-          <form onSubmit={Create}>
+          <form onSubmit={Create}><br/>
             <div className='field'>
-            <TextField 
-            style={{width: 500}}
-            size='small' 
-            id="outlined-basic" 
-            label="News Title" 
-            variant="outlined"
-            onChange={e=> setNewstitle(e.target.value)} />
+            <input type="text" 
+              className="field" 
+              size='small' 
+              onChange={e=> setNewstitle(e.target.value)} />
             </div>
+            <br/>
 
             <div className='field'>
-            <TextField 
-            style={{width: 500}}
-            size='small' 
-            id="outlined-basic" 
-            label="Content" 
-            variant="outlined"
-            onChange={e=> setNewsdesc(e.target.value)} />
+            <br/>
+            <textarea  
+              className="textArea" 
+              size='small' 
+              onChange={e=> setNewsdesc(e.target.value)} />
             </div>
-
+            <br/>
+            
             <div className='chooseimgnews'>
-
+             
               <div className="newsimgprev">
-              {picture &&  <img className='previmg' src={newsprev} alt=''/> }
-              </div>
+             
+              <label className='label'> News Images: </label>
+             
+              <input type="file" 
+                  className='file'
+                  onChange={e=> setNewsimg(e.target.files[0])} 
+                />
+                
+              {picture &&  
+                <img className='previmg' 
+                src={newsprev} 
+                width={300} 
+                height={110}
+                alt=''
+                /> }
 
-              <label> News Images: </label>
-      
-              <input type="file" onChange={e=> setNewsimg(e.target.files[0])} />
+            </div>
             </div>
 
-            <button type='submit'>Create News</button>
+            <button type='submit' className='submitbtn'> Create News</button>
 
           </form>
         </div>
