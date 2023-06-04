@@ -11,7 +11,7 @@
             margin: 20px;
             padding: 20px;
             border-radius: 10px;
-            height: max-content;
+           
 
             .headnews{
 
@@ -40,7 +40,6 @@
 
     .content{
         margin: 5px;
-        padding: 10px;
         height: max-content;
         display: flex;
         justify-content: center;
@@ -105,12 +104,7 @@
             }
         }
     }
-
-        
-
-
-
-      
+     
 
     .create_news{
         position: fixed;
@@ -119,24 +113,43 @@
         top: 50%;
         left: 55%;
         transform: translate(-50%, -50%);
-        background: rgb(167, 233, 178);
+        background: #bed6ca;
         width: 40%;
         border-radius: 20px;
-        padding: 10px;
+        z-index: 1;
+        -webkit-box-shadow: 2px 4px 10px 1px rgba(0, 0, 0, 0.47);
+        box-shadow: 2px 4px 10px 1px rgba(58, 46, 46, 0.47);
+
     }
 
-   form{
+    form{
         display: flex;
-        height: 400px;
+        height: 450px;
         align-items: center;
-        justify-content: space-around;
         flex-direction: column;
+        
 
         .field{
-            border: 1px solid #005427;
+            width: 400px;
+            height: 25px;
+            font-size: 14px;
+            padding: 5px;
             border-radius: 10px;
+            border: none;
+            justify-content: center;
+            align-items: center;
         }
 
+        .textArea{
+            padding: 5px;
+            width: 400px;
+            height: 25px;
+            font-size: 15px;
+            border-radius: 10px;
+            justify-content: center;
+            align-items: center;
+        }
+ 
         button{
             width: 150px;
             height: 40px;
@@ -147,23 +160,51 @@
             font-weight: 600;
         }
 
+        .chooseimgnews{
+            display: flex;
+            gap: 20px;
+            text-align: center;
+            justify-content: center;
+            align-items: center;
+            margin: 5px;
+    
+            .newsimgprev{
+                gap: 20px;
+                justify-content: center;
+                align-items: center;
+                text-align: center;
+
+                .label{
+                    display: flex;
+                    margin: 10px;
+                    padding: 10px;
+                    text-align: center;
+                    justify-content: center;
+                    align-items: center;
+                }
+
+              
+            .file{
+                color: #005427;
+                font-size: 14px;
+                margin: 20px;
+                padding: 10px;
+                display: flex;
+                justify-content: center;
+                }
+     
+            .previmg{
+               margin: 0;
+               padding: 0;
+               border-radius: 10px;
+            }
+        }
+        }
+
+
     }
 
-    .chooseimgnews{
-        display: flex;
-        flex-basis: 20%;
-        gap: 20;
-        margin: 10px;
-
-        .newsimgprev{
-            border-radius: 10px;
-        }
-    }
-
-        .previmg{
-            width: 250px;
-           
-        }
+    
 
 
 .xbtn button{
@@ -179,4 +220,7 @@
     height: 30px;
     width: 30px;
 }
+
+
+
 }

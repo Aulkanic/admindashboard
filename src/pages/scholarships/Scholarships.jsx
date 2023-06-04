@@ -2,15 +2,14 @@ import Navbar from "../../components/navbar/Navbar"
 import Sidebar from "../../components/sidebar/Sidebar"
 import "./scholarships.scss"
 import { Tabs, Tab,Table, TableBody, TableCell, TableContainer, TableHead,TableRow, Paper, Box, Button, Typography, Modal} from "@mui/material"; 
-import EditIcon from '@mui/icons-material/Edit';
+
 import { FetchingSchoProg, CreateSchoProg, UpdateSchoProg } from "../../api/request";
 import { useEffect } from "react";
 import { useState } from "react";
 import Radio from '@mui/material/Radio';
 import RadioGroup from '@mui/material/RadioGroup';
 import FormControlLabel from '@mui/material/FormControlLabel';
-import TextField from '@mui/material/TextField';
-import FormControl from '@mui/material/FormControl';
+
 import FormLabel from '@mui/material/FormLabel';
 import swal from "sweetalert";
 
@@ -40,6 +39,7 @@ const Scholarships = () => {
   }
   const handleClose1 = () => setOpen1(false);
 console.log(oldicon)
+
   const style = {
     position: 'absolute',
     top: '50%',
@@ -102,6 +102,7 @@ console.log(oldicon)
      )
     .catch(err => console.log(err));
 }
+
 function Edit(event){
   event.preventDefault();
   const schoid = olddata.schoProgId
@@ -141,10 +142,10 @@ function Edit(event){
    )
   .catch(err => console.log(err));
 }
+
 const scholarshipprogram = schocat?.map((f,index) =>{
   return (
-    <>
-        <TableRow key ={f.applicantNum}>  
+        <TableRow key ={f.applicantNum} className="row">  
             <TableCell className="tableCell"> <img style={{width: 100}} src={f.icon} alt="" /> </TableCell>  
             <TableCell className="tableCell"> {f.name} </TableCell>  
             <TableCell className="tableCell"> {f.description} </TableCell>
@@ -153,12 +154,12 @@ const scholarshipprogram = schocat?.map((f,index) =>{
                   <button className="editButton" onClick={() =>handleOpen1(f,index)}>Edit</button>
           </div>
         </TableRow>
-    </>
-    )
-})
+    )})
+
 console.log(status)
   return (
     <>
+    {/* Modal for edit button */}
         <Modal
         open={open}
         onClose={handleClose}
@@ -169,6 +170,7 @@ console.log(status)
           <div className="buttonclosed">
             <button onClick={handleClose}>X</button>
           </div>
+
           <div className="content-scho">
             <form action="">
             <div className="newsimgprev">
@@ -180,6 +182,7 @@ console.log(status)
                 <input onChange={e=> setSchotitle(e.target.value)} type="text" /><br/>
                 <label htmlFor="">Write a Description</label>
                 <input onChange={e=> setSchodesc(e.target.value)} type="text" /><br/>
+
                 <FormLabel id="demo-row-radio-buttons-group-label">Status</FormLabel>
                 <RadioGroup
                     row
@@ -196,12 +199,16 @@ console.log(status)
                 </RadioGroup>
             </form>
           </div>
+
       <div className="buttonbacapp">
         <button >Cancel</button>
-        <button onClick={Create}>ADD</button>
+        <button onClick={Create}> ADD </button>
       </div>
+
         </Box>
       </Modal>
+
+{/* Modal for Add button */}
       <Modal
         open={open1}
         onClose={handleClose1}
@@ -241,21 +248,25 @@ console.log(status)
                 </RadioGroup>
             </form>
           </div>
+    
       <div className="buttonbacapp">
         <button onClick={handleClose1}>Cancel</button>
         <button onClick={Edit}>Save Changes</button>
       </div>
+
         </Box>
       </Modal>
+      
     <div className="scholarships">
         <Sidebar/>
     <div className="scholarshipsContainer">
         <Navbar/>
         <div className="top">
-          <div style={{display:'flex',justifyContent:'space-between'}}>
-          <h1>Scholarships Program</h1>
-          <button onClick={handleOpen}>ADD</button>
-          </div>
+          <h1>Scholarships Program 
+          <button className="addbtn" onClick={handleOpen}>ADD</button>
+          </h1>
+          
+          
         <TableContainer component={Paper} className="table">
         <Table sx={{ minWidth: 650 }} aria-label="simple table">
 
