@@ -45,8 +45,8 @@ console.log(oldicon)
     top: '50%',
     left: '50%',
     transform: 'translate(-50%, -50%)',
-    width: '50%',
-    height: '80%',
+    width: '100%',
+    height: '100%',
     bgcolor: 'background.paper',
     border: '2px solid #000',
     boxShadow: 24,
@@ -93,6 +93,10 @@ console.log(oldicon)
         icon: "success",
         button: "OK",
       });
+      setSchodesc('')
+      setSchoimg('')
+      setStatusCheck('');
+      setSchotitle('')
       setOpen(false)
     }
      )
@@ -100,11 +104,26 @@ console.log(oldicon)
 }
 function Edit(event){
   event.preventDefault();
-  const title = title1;
-  const icon = icon1
-  const description = description1;
-  const status = status1;
-  const schoid = olddata.schoProgId;
+  const schoid = olddata.schoProgId
+  if(title1 === ' '){
+    setSchotitle(olddata.title)
+  }
+  else{
+    setSchotitle(title1)
+  }
+  if(description1 === ' '){
+    setSchodesc(olddata.description)
+  }
+  else{
+    setSchodesc(description1)
+  }
+  if(status1 === ''){
+    setStatusCheck(olddata.status)
+  }
+  else{
+    setStatusCheck(status1)
+  }
+
   const data = {title,description,status,schoid,icon}
   console.log(data)
   UpdateSchoProg.UPDATE_SCHOPROG(data)
@@ -153,7 +172,7 @@ console.log(status)
           <div className="content-scho">
             <form action="">
             <div className="newsimgprev">
-              {icon &&  <img className='previmg' src={iconprev} alt=''/> }
+              {icon &&  <img style={{width: 100, height:100}} className='previmg' src={iconprev} alt=''/> }
               </div>
                 <label htmlFor="">Scholarship Icon</label>
                 <input onChange={e=> setSchoimg(e.target.files[0])}  type="file" /><br/>

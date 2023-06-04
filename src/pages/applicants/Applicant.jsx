@@ -265,7 +265,10 @@ const applicantInfoFB = applicantsInfo?.map((data) =>{
           {value === index && <Box p={3}>{children}</Box>}
         </div>
       );
-
+      const sortedData = [...post].sort((a, b) => a.applicantNum - b.applicantNum);
+      console.log(sortedData);
+      const sortedDataNumericReverse = [...post].sort((a, b) => b.applicantNum - a.applicantNum);
+console.log(sortedDataNumericReverse);
   return (
     <>
     <Modal className="modalContainer"
