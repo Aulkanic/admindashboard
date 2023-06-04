@@ -27,10 +27,14 @@ const Scholars = () => {
     
   };
   console.log(filteredData)
-  useEffect( async() => {
-    const scholars = await FetchingBmccScho.FETCH_SCHOLARS()
-    console.log(scholars)
-    setData(scholars.data.Scholars)
+  useEffect(() => {
+
+    async function Fetch(){
+      const scholars = await FetchingBmccScho.FETCH_SCHOLARS()
+      console.log(scholars)
+      setData(scholars.data.Scholars)
+    }
+    Fetch();
   }, []);
 
   const list = data?.map((data,index) => {

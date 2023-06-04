@@ -130,13 +130,16 @@ const Appointment = () => {
     
 
 };
-  useEffect( async () => {
-    const response = await FetchingQualified.FETCH_QUALIFIED();
-    const listing  = await FetchingAppointList.FETCH_LISTAPPOINT();
-    console.log(response);
-    console.log(listing)
-    setQualified(response.data.List);
-    setAppointedList(listing.data.AppointmentList)
+  useEffect(() => {
+    async function Fetch(){
+      const response = await FetchingQualified.FETCH_QUALIFIED();
+      const listing  = await FetchingAppointList.FETCH_LISTAPPOINT();
+      console.log(response);
+      console.log(listing)
+      setQualified(response.data.List);
+      setAppointedList(listing.data.AppointmentList)
+    }
+    Fetch();
 
   }, []);
 

@@ -13,10 +13,12 @@ const Users = () => {
   // const [selectedInfo, setSelectedInfo] = useState({})
   
 
-  useEffect( async () => {
-    
-    const userinfo = await UsersRequest.ALL_USERS()
-    setDisplay(userinfo.data.UserAccounts);
+  useEffect(() => {
+    async function Fetch(){
+      const userinfo = await UsersRequest.ALL_USERS()
+      setDisplay(userinfo.data.UserAccounts);
+    }
+    Fetch();
    
   }, []);
   

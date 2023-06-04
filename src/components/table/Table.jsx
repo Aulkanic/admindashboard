@@ -17,9 +17,12 @@ const List = () => {
   const [post, setPost] = useState ([]);
   console.log(post)
 
-  useEffect( async () => {
-    const response = await ApplicantsRequest.ALL_APPLICANTS()
-    setPost(response.data.results);
+  useEffect(() => {
+    async function Fetch(){
+      const response = await ApplicantsRequest.ALL_APPLICANTS()
+      setPost(response.data.results);
+    }
+    Fetch();
 }, []);
 
   const list = post?.map((f) =>{

@@ -51,10 +51,13 @@ const Applicant = () => {
     boxShadow: 24,
   };
 
-  useEffect( async () => {
-    const response = await ApplicantsRequest.ALL_APPLICANTS()
-    console.log(response)
-    setPost(response.data.results);
+  useEffect(() => {
+
+    async function Fetch(){
+      const response = await ApplicantsRequest.ALL_APPLICANTS()
+      setPost(response.data.results);
+    }
+    Fetch();
   }, []);
 
 // fucntions
