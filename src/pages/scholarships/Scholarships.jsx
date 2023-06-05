@@ -197,42 +197,69 @@ console.log(status)
                 <FormControlLabel value="Open" control={<Radio />} label="Open" />
                 <FormControlLabel value="Close" control={<Radio />} label="Close" />
                 </RadioGroup>
+
+                <div className="buttonscholarpp">
+                  <button className="btn">Cancel</button>
+                  <button className="btn" onClick={Create}> ADD </button>
+                </div>
+
             </form>
           </div>
-
-      <div className="buttonbacapp">
-        <button >Cancel</button>
-        <button onClick={Create}> ADD </button>
-      </div>
-
+          
         </Box>
       </Modal>
 
 {/* Modal for Add button */}
       <Modal
+        className="modalAddbtn"
         open={open1}
         onClose={handleClose1}
-        aria-labelledby="modal-modal-title"
-        aria-describedby="modal-modal-description"
       >
-        <Box sx={style}>
+        <Box className="box">
+
           <div className="buttonclosed">
-            <button onClick={handleClose1}>X</button>
+            <button classname='btnClose' onClick={handleClose1}> X </button>
           </div>
+
           <div className="content-scho">
             <form action="">
+
             <div className="imgprev">
-              <label htmlFor=""></label>
-              {olddata.icon &&  <img className='previmg' src={olddata.icon} alt=''/> }
-              </div>
+
+              <label htmlFor=""> </label>
+              {olddata.icon &&  
+              <img className='previmg' 
+                   src={olddata.icon} 
+                   alt='' 
+                   height={60} 
+                   width={100}/> }
+            </div>
+
                 <label htmlFor="">Scholarship Icon</label>
-                <input onChange={e=> setSchoimg1(e.target.files[0])}  type="file" /><br/>
-                <label htmlFor="">Scholarshhip Program Name</label>
-                <input defaultValue={olddata.name} onChange={e=> setSchotitle1(e.target.value)} type="text" /><br/>
+                <input type="file" 
+                       className="imgS" 
+                       onChange={e=> setSchoimg1(e.target.files[0])}
+                />
+
+                <label htmlFor="">Scholarship Name</label>
+                <input type="text" 
+                       className="inputs" 
+                       defaultValue={olddata.name} 
+                       onChange={e=> setSchotitle1(e.target.value)}                     
+                       />
+                <br/>
+
                 <label htmlFor="">Write a Description</label>
-                <input defaultValue={olddata.description} onChange={e=> setSchodesc1(e.target.value)} type="text" /><br/>
-                <FormLabel id="demo-row-radio-buttons-group-label">Status</FormLabel>
-                <RadioGroup
+                <input 
+                  type="text" 
+                  className="input" 
+                  defaultValue={olddata.description} 
+                  onChange={e=> setSchodesc1(e.target.value)} 
+                  />
+                <br/>
+
+              <FormLabel id="demo-row-radio-buttons-group-label">Status</FormLabel>
+              <RadioGroup
                     row
                     aria-labelledby="demo-row-radio-buttons-group-label"
                     name="row-radio-buttons-group"
@@ -246,13 +273,18 @@ console.log(status)
                 <FormControlLabel value="open" control={<Radio />} label="Open" />
                 <FormControlLabel value="closed" control={<Radio />} label="Close" />
                 </RadioGroup>
+
+            <div className="buttonscholarapp">
+              <button className="btn" onClick={handleClose1}> Cancel </button>
+              <button className="btn" onClick={Edit}> Save Changes </button>
+            </div>
             </form>
+
+          
+
           </div>
     
-      <div className="buttonbacapp">
-        <button onClick={handleClose1}>Cancel</button>
-        <button onClick={Edit}>Save Changes</button>
-      </div>
+      
 
         </Box>
       </Modal>

@@ -114,10 +114,101 @@
             color: #005427;
             font-weight: 600;
             font-size: 12px;
+            
     }
     }
     
 }
 
+.modalAddbtn{
+    border: none;
+
+    .box{
+        border: none;
+    }
+}
+
+.buttonclosed{
+    float: right;
+    padding: 10px;
+    overflow: auto;
+    
+    button{
+        border: none;
+        border-radius: 5px;
+        background-color: #005247;
+        color: #fff;
+        font-weight: 600;
+        height: 20px;
+        width: 20px;
+        text-align: center;
+        justify-content: center;
+        align-items: center;
+        padding: 2px;
+    }
+}
+
+.content-scho{
+    display: flex;
+    text-align: center;
+    justify-content: center;
+    align-items: center;
+    margin: 35px;
+    border: 2px solid;
+    
+    form{
+        display: flex;
+        text-align: center;
+        justify-content: center;
+        align-items: center;
+        flex-direction: column;
+        margin: 10px;
+
+        .inputs{
+            height: 30px;
+            width: 250px;
+            justify-content: center;
+            align-items: center;
+            padding-left: 10px;
+            border: none;
+        }
+
+        .imgS{
+            border: none;
+        }
+        
+        .imgprev{
+            display: flex;           
+        }
+
+        .previmg{
+            display: flex;
+            flex-basis: 60%;
+            height: 70px;
+            width: 70px;
+        }
+
+        label{
+            color: #005427;
+            font-size: 20px;
+            font-weight: 600;
+        }
+
+        .buttonscholarapp{
+            display: flex;
+            gap: 20px;
+            justify-content: center;
+        
+            .btn{
+                border: none;
+                height: 20px;
+            }
+        }
+        
+    }
+
+    
+
+}
 
 
