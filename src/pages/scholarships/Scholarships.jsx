@@ -208,45 +208,40 @@ const scholarshipprogram = schocat?.map((f,index) =>{
                 <FormControlLabel value="Open" control={<Radio />} label="Open" />
                 <FormControlLabel value="Close" control={<Radio />} label="Close" />
                 </RadioGroup>
-                </div>
-
+            </form>
           </div>
 
-          <div className="buttonbacapp">
+      <div className="buttonbacapp">
         <button >Cancel</button>
         <button onClick={Create}> ADD </button>
       </div>
-      </div>
+
         </Box>
       </Modal>
 
 {/* Modal for Edit button */}
       <Modal
+        className="modalAddbtn"
         open={open1}
         onClose={handleClose1}
-        aria-labelledby="modal-modal-title"
-        aria-describedby="modal-modal-description"
       >
         <Box sx={style}>
-
           <div className="buttonclosed">
-            <button onClick={handleClose1}>X</button>
+            <button classname='btnClose' onClick={handleClose1}> X </button>
           </div>
+
           <div className="content-scho">
-        
+            <form action="">
             <div className="imgprev">
               <label htmlFor=""></label>
-          {icon1 ? (<img style={{width: 100}} className='previmg' src={iconprev1} alt=''/>) : (<img style={{width: 100}} className='previmg' src={olddata.icon} alt=''/>)}
+              {olddata.icon &&  <img className='previmg' src={olddata.icon} alt=''/> }
               </div>
-              <div className="schocredet">
                 <label htmlFor="">Scholarship Icon</label>
                 <input onChange={e=> setSchoimg1(e.target.files[0])}  type="file" /><br/>
-                <label htmlFor="title1">Scholarship Program Name</label>
-                <input defaultValue={olddata.name} placeholder={olddata.name} name="title1" value={title1} onChange={(e) => {
-                  setSchotitle1(e.target.value);
-                }} type="text" /><br/>
+                <label htmlFor="">Scholarshhip Program Name</label>
+                <input defaultValue={olddata.name} onChange={e=> setSchotitle1(e.target.value)} type="text" /><br/>
                 <label htmlFor="">Write a Description</label>
-                <input defaultValue={olddata.description} placeholder={olddata.description} value={description1} onChange={e => setSchodesc1(e.target.value)} type="text" /><br/>
+                <input defaultValue={olddata.description} onChange={e=> setSchodesc1(e.target.value)} type="text" /><br/>
                 <FormLabel id="demo-row-radio-buttons-group-label">Status</FormLabel>
                 <RadioGroup
                     row
@@ -262,25 +257,10 @@ const scholarshipprogram = schocat?.map((f,index) =>{
                 <FormControlLabel value="Open" control={<Radio />} label="Open" />
                 <FormControlLabel value="closed" control={<Radio />} label="Close" />
                 </RadioGroup>
-                </div>
-                <div className="schoreq">
-                  <label htmlFor="">Scholarship Requirement</label>
-                  <div className="reqcontainer">
-                  {req.map((item, index) => (
-                    <div key={index}>
-                      <input
-                        type="text"
-                        value={item.value}
-                        onChange={(e) => handleChangeReq(index, e)}
-                      />
-                      <button onClick={() => handleDeleteReq(index)}>Delete</button>
-                    </div>
-                  ))}
-                </div>
-                <button onClick={handleAddReq}>Add Requirements</button>
-                </div>
+            </form>
           </div>
-          <div className="buttonbacapp">
+    
+      <div className="buttonbacapp">
         <button onClick={handleClose1}>Cancel</button>
         <button onClick={Edit}>Save Changes</button>
       </div>
