@@ -1,32 +1,17 @@
 import './scholars.scss';
 import Sidebar from '../../components/sidebar/Sidebar'
 import Navbar from '../../components/navbar/Navbar'
-
-import Table from '@mui/material/Table';
-import TableBody from '@mui/material/TableBody';
+import { Tabs, Tab, Box, Modal } from "@mui/material"; 
+import { DataGrid} from '@mui/x-data-grid';
 import TableCell from '@mui/material/TableCell';
-import TableContainer from '@mui/material/TableContainer';
-import TableHead from '@mui/material/TableHead';
 import TableRow from '@mui/material/TableRow';
-import Paper from '@mui/material/Paper';
+
 
 import { useState, useEffect } from 'react';
 import { FetchingBmccScho } from '../../api/request';
 
 const Scholars = () => {
   const [data, setData] = useState([]);
-  const [filteredData, setFilteredData] = useState([]);
-
-  const handleFilter = async (filterValue) => {
-    const filtered = data.filter(item =>
-      Object.values(item).some(value =>
-        value && value.toString().toLowerCase().includes(filterValue.toLowerCase())
-      )
-    );
-    setFilteredData(filtered);
-    
-  };
-  console.log(filteredData)
   useEffect(() => {
 
     async function Fetch(){
@@ -36,22 +21,55 @@ const Scholars = () => {
     }
     Fetch();
   }, []);
+  const columns = [
+    { 
+      field: 'scholarId', 
+      headerName: 'Scholar ID',
+      width: 100
+     },
+     {
+       field: 'scholarCode', 
+        headerName: 'Scholar Code',
+      width: 100
+      },
+    {
+      field: 'scholarshipApplied',
+      headerName: 'Scholarship Applied',
+      width: 150,
+      editable: false,
+    },
+    {
+      field: 'Name',
+      headerName: 'Name',
+      width: 250,
+      editable: false,
+    },
+    {
+      field: 'yearLevel',
+      headerName: 'Year Level',
+      width: 150,
+      editable: false,
+    },
+    {
+      field: 'Baranggay',
+      headerName: 'Baranggay',
+      width: 150,
+      editable: false,
+    },
+    {
+      field: 'status',
+      headerName: 'Status',
+      width: 100,
+      editable: false,
+    },
+    {
+      field: 'Batch',
+      headerName: 'Batch',
+      width: 110,
+      editable: false,
+    },
 
-  const list = data?.map((data,index) => {
-  return (
-    <>
-    <TableRow key={index}>
-        <TableCell className="tableCell">{data.scholarId}</TableCell>
-        <TableCell className="tableCell">{data.scholarCode}</TableCell>
-        <TableCell className="tableCell">{data.Name}</TableCell>
-        <TableCell className="tableCell">{data.scholarshipApplied}</TableCell>
-        <TableCell className="tableCell">{data.yearLevel}</TableCell>
-        <TableCell className="tableCell">{data.Baranggay}</TableCell>
-        <TableCell className="tableCell">{data.Batch}</TableCell>
-        <TableCell className="tableCell">{data.status}</TableCell>
-    </TableRow>
-    </>
-  )})
+  ];
 
   return (
     <>
@@ -62,45 +80,24 @@ const Scholars = () => {
             <div className="top">
             
               <h1>Scholars</h1>
-              <label htmlFor="">Search:</label>
-              <input type="text" onChange={(e) => handleFilter(e.target.value)} />
-              <TableContainer component={Paper} className="table">
-      <Table sx={{ minWidth: 650 }} aria-label="simple table">
-        <TableHead>
-          <TableRow>
-            <TableCell className="tableCell"> Scholar ID</TableCell>
-            <TableCell className="tableCell"> Scholarship Number </TableCell>
-            <TableCell className="tableCell"> Name </TableCell>
-            <TableCell className="tableCell"> Scholarship Applied </TableCell>
-            <TableCell className="tableCell"> Year Level </TableCell>
-            <TableCell className="tableCell"> Baranggay </TableCell>
-            <TableCell className="tableCell"> Batch </TableCell>
-            <TableCell className="tableCell"> Status </TableCell>
-            <TableCell className="tableCell"> Actions </TableCell>
-          </TableRow>
-        </TableHead>
-        {filteredData.length > 0 ? (<TableBody> 
-             {filteredData?.map((data,index) =>{
-return (
-  <>
-  <TableRow key={index}>
-      <TableCell className="tableCell">{data.scholarId}</TableCell>
-      <TableCell className="tableCell">{data.scholarCode}</TableCell>
-      <TableCell className="tableCell">{data.Name}</TableCell>
-      <TableCell className="tableCell">{data.scholarshipApplied}</TableCell>
-      <TableCell className="tableCell">{data.yearLevel}</TableCell>
-      <TableCell className="tableCell">{data.Baranggay}</TableCell>
-      <TableCell className="tableCell">{data.Batch}</TableCell>
-      <TableCell className="tableCell">{data.status}</TableCell>
-  </TableRow>
-  </>
-)
-             })}
-        </TableBody>) : (<TableBody> 
-             {list}
-        </TableBody>)}
-      </Table>
-    </TableContainer>
+              <Box sx={{ height: 400, width: '100%' }}>
+      <DataGrid
+        rows={data}
+        columns={columns}
+        getRowId={(row) => row.scholarId}
+        scrollbarSize={10}
+        initialState={{
+          pagination: {
+            paginationModel: {
+              pageSize: 5,
+            },
+          },
+        }}
+        pageSizeOptions={[25]}
+        checkboxSelection
+        disableRowSelectionOnClick
+      />
+    </Box>
               
             </div>
         </div>

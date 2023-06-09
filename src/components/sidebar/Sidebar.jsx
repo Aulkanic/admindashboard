@@ -47,7 +47,7 @@ const Sidebar = () => {
             <Link to='/about' style={{ textDecoration: "none" }}>
             <li>
               <InfoIcon className='icon'/>
-              <span> About </span>
+              <span> Score Card </span>
             </li>
             </Link>
 

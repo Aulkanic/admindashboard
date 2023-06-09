@@ -18,7 +18,9 @@ const Endpoints = {
     UPDATE_SCHOPROG: 'scholar/UpdateStatus',
     RE_APPOINT: 'Appointment/Reappointed',
     SET_APPROVED: 'Appointment/SetApproved',
-    FETCH_BMCCSCHOLAR: 'BMCCScholar/Scholars'
+    FETCH_BMCCSCHOLAR: 'BMCCScholar/Scholars',
+    CREATE_SCORECARD: 'Scorecard/score',
+    FETCH_SCORECARD: 'Scorecard/getScore/',
 }
 
 export default Endpoints

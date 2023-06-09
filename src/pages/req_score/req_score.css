@@ -1,0 +1,21 @@
+.sheets{
+    width: 100%;
+    height: 100vh;
+}
+.quescontainer{
+    display: flex;
+    width: 100%;
+}
+.hshe{
+    width: 100%;
+    display: flex;
+}
+.hshe input{
+    width: 40px;
+}
+.quesco{
+    margin: 10px;
+}
+.quesco{
+    border: 2px solid black;
+}

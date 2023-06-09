@@ -2,7 +2,7 @@ import Navbar from "../../components/navbar/Navbar"
 import Sidebar from "../../components/sidebar/Sidebar"
 import "./scholarships.scss"
 import { Tabs, Tab,Table, TableBody, TableCell, TableContainer, TableHead,TableRow, Paper, Box, Button, Typography, Modal} from "@mui/material"; 
-
+import './scholarship.css'
 import { FetchingSchoProg, CreateSchoProg, UpdateSchoProg } from "../../api/request";
 import { useEffect } from "react";
 import { useState } from "react";
@@ -29,6 +29,9 @@ const Scholarships = () => {
     const [olddata, setOlddata] = useState([]);
     const [oldicon, setOldicon] = useState('');
     const [iconprev, setSchoprev] = useState();
+    const [iconprev1, setSchoprev1] = useState();
+    const [req, setReq] = useState([]);
+    const [percentage, setPercentage] = useState('');
 
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
@@ -38,7 +41,24 @@ const Scholarships = () => {
     setOpen1(true);
   }
   const handleClose1 = () => setOpen1(false);
-console.log(oldicon)
+
+  const handleAddReq = () => {
+    setReq([...req, { value: '' }]);
+  };
+  const handleDeleteReq = (index) => {
+    setReq(req.filter((_, i) => i !== index));
+  };
+  const handleChangeReq = (index, event) => {
+    const newData = [...req];
+    newData[index].value = event.target.value;
+    setReq(newData);
+  };
+  const handlePercentageChange = (event) => {
+    const inputValue = event.target.value;
+    // Remove any non-numeric characters
+    const numericValue = inputValue.replace(/[^0-9.]/g, '%');
+    setPercentage(numericValue);
+  };
 
   const style = {
     position: 'absolute',
@@ -50,6 +70,7 @@ console.log(oldicon)
     bgcolor: 'background.paper',
     border: '2px solid #000',
     boxShadow: 24,
+    overflow: 'auto',
   };
   useEffect(() => {
     const fetchData = async () => {
@@ -78,6 +99,16 @@ console.log(oldicon)
   
     return () => URL.revokeObjectURL(objectUrl)
   }, [icon])
+  useEffect(() => {
+    if (!icon1) {
+      setSchoprev1(undefined)
+        return
+    }
+    const objectUrl = URL.createObjectURL(icon1);
+    setSchoprev1(objectUrl)
+  
+    return () => URL.revokeObjectURL(objectUrl)
+  }, [icon1])
 
   function Create(event){
     event.preventDefault();
@@ -105,27 +136,9 @@ console.log(oldicon)
 
 function Edit(event){
   event.preventDefault();
-  const schoid = olddata.schoProgId
-  if(title1 === ' '){
-    setSchotitle(olddata.title)
-  }
-  else{
-    setSchotitle(title1)
-  }
-  if(description1 === ' '){
-    setSchodesc(olddata.description)
-  }
-  else{
-    setSchodesc(description1)
-  }
-  if(status1 === ''){
-    setStatusCheck(olddata.status)
-  }
-  else{
-    setStatusCheck(status1)
-  }
-
-  const data = {title,description,status,schoid,icon}
+  const schoid = olddata.schoProgId;
+  const icon = icon1;
+  const data = {title1,description1,status1,schoid,icon}
   console.log(data)
   UpdateSchoProg.UPDATE_SCHOPROG(data)
   .then(res => {
@@ -151,29 +164,28 @@ const scholarshipprogram = schocat?.map((f,index) =>{
             <TableCell className="tableCell"> {f.description} </TableCell>
             <TableCell className="tableCell"> {f.status} </TableCell>
             <div>
-                  <button className="editButton" onClick={() =>handleOpen1(f,index)}>Edit</button>
+          <button className="editButton" onClick={() =>handleOpen1(f,index)}>Edit</button>
           </div>
         </TableRow>
     )})
-
-console.log(status)
   return (
     <>
-    {/* Modal for edit button */}
-        <Modal
+    {/* Modal for Add button */}
+      <Modal
         open={open}
         onClose={handleClose}
         aria-labelledby="modal-modal-title"
         aria-describedby="modal-modal-description"
       >
-        <Box sx={style}>
+        <Box sx={style} >
           <div className="buttonclosed">
             <button onClick={handleClose}>X</button>
           </div>
-
-          <div className="content-scho">
-            <form action="">
-            <div className="newsimgprev">
+            
+      <div className="contentscho">
+          <div className="formleft">
+              <div className="schodetails">
+              <div className="newsimgprev">
               {icon &&  <img style={{width: 100, height:100}} className='previmg' src={iconprev} alt=''/> }
               </div>
                 <label htmlFor="">Scholarship Icon</label>
@@ -182,7 +194,6 @@ console.log(status)
                 <input onChange={e=> setSchotitle(e.target.value)} type="text" /><br/>
                 <label htmlFor="">Write a Description</label>
                 <input onChange={e=> setSchodesc(e.target.value)} type="text" /><br/>
-
                 <FormLabel id="demo-row-radio-buttons-group-label">Status</FormLabel>
                 <RadioGroup
                     row
@@ -197,18 +208,19 @@ console.log(status)
                 <FormControlLabel value="Open" control={<Radio />} label="Open" />
                 <FormControlLabel value="Close" control={<Radio />} label="Close" />
                 </RadioGroup>
-            </form>
+                </div>
+
           </div>
 
-      <div className="buttonbacapp">
+          <div className="buttonbacapp">
         <button >Cancel</button>
         <button onClick={Create}> ADD </button>
       </div>
-
+      </div>
         </Box>
       </Modal>
 
-{/* Modal for Add button */}
+{/* Modal for Edit button */}
       <Modal
         open={open1}
         onClose={handleClose1}
@@ -216,43 +228,64 @@ console.log(status)
         aria-describedby="modal-modal-description"
       >
         <Box sx={style}>
+
           <div className="buttonclosed">
             <button onClick={handleClose1}>X</button>
           </div>
           <div className="content-scho">
-            <form action="">
+        
             <div className="imgprev">
               <label htmlFor=""></label>
-              {olddata.icon &&  <img className='previmg' src={olddata.icon} alt=''/> }
+          {icon1 ? (<img style={{width: 100}} className='previmg' src={iconprev1} alt=''/>) : (<img style={{width: 100}} className='previmg' src={olddata.icon} alt=''/>)}
               </div>
+              <div className="schocredet">
                 <label htmlFor="">Scholarship Icon</label>
                 <input onChange={e=> setSchoimg1(e.target.files[0])}  type="file" /><br/>
-                <label htmlFor="">Scholarshhip Program Name</label>
-                <input defaultValue={olddata.name} onChange={e=> setSchotitle1(e.target.value)} type="text" /><br/>
+                <label htmlFor="title1">Scholarship Program Name</label>
+                <input defaultValue={olddata.name} placeholder={olddata.name} name="title1" value={title1} onChange={(e) => {
+                  setSchotitle1(e.target.value);
+                }} type="text" /><br/>
                 <label htmlFor="">Write a Description</label>
-                <input defaultValue={olddata.description} onChange={e=> setSchodesc1(e.target.value)} type="text" /><br/>
+                <input defaultValue={olddata.description} placeholder={olddata.description} value={description1} onChange={e => setSchodesc1(e.target.value)} type="text" /><br/>
                 <FormLabel id="demo-row-radio-buttons-group-label">Status</FormLabel>
                 <RadioGroup
                     row
                     aria-labelledby="demo-row-radio-buttons-group-label"
                     name="row-radio-buttons-group"
                     defaultValue={olddata.status}
-                    value={status || olddata.status}
+                    value={status1 || olddata.status}
                     onChange={(e) =>{
                      const stat = e.target.value;
                       setStatusCheck1(stat);
                     }}  
                   >
-                <FormControlLabel value="open" control={<Radio />} label="Open" />
+                <FormControlLabel value="Open" control={<Radio />} label="Open" />
                 <FormControlLabel value="closed" control={<Radio />} label="Close" />
                 </RadioGroup>
-            </form>
+                </div>
+                <div className="schoreq">
+                  <label htmlFor="">Scholarship Requirement</label>
+                  <div className="reqcontainer">
+                  {req.map((item, index) => (
+                    <div key={index}>
+                      <input
+                        type="text"
+                        value={item.value}
+                        onChange={(e) => handleChangeReq(index, e)}
+                      />
+                      <button onClick={() => handleDeleteReq(index)}>Delete</button>
+                    </div>
+                  ))}
+                </div>
+                <button onClick={handleAddReq}>Add Requirements</button>
+                </div>
           </div>
-    
-      <div className="buttonbacapp">
+          <div className="buttonbacapp">
         <button onClick={handleClose1}>Cancel</button>
         <button onClick={Edit}>Save Changes</button>
       </div>
+
+
 
         </Box>
       </Modal>
@@ -287,7 +320,7 @@ console.log(status)
         </TableContainer>
           </div>
             </div>
-          </div>
+    </div>
           </>
   )
 }

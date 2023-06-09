@@ -1,10 +1,9 @@
 import Home from './pages/home/Home';
 import Login from './pages/login/Login';
-import { About } from './pages/about/About';
+import { About } from './pages/req_score/About';
 import Contact from './pages/contact/Contact';
 import Scholarships from './pages/scholarships/Scholarships';
 import Faqs from './pages/faqs/Faqs';
-
 import Applicant from './pages/applicants/Applicant';
 import Users from './pages/users/Users';
 import Appointment from './pages/appointments/Appointment';
@@ -39,7 +38,7 @@ function App() {
           <Route path='appointments' element={<Appointment/>} />
           <Route path='scholars' element={<Scholars/>} />
           
-
+          
           {/* <Route path='users'>
             <Route index element={<List/>} />
             <Route path=':userId' element = {<Single/>} />

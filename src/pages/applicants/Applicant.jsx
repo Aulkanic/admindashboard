@@ -2,18 +2,17 @@ import "./applicant.scss";
 import Sidebar from "../../components/sidebar/Sidebar";
 import Navbar from "../../components/navbar/Navbar";
 import { useState, useEffect } from "react";
-import { Tabs, Tab,Table, TableBody, TableCell, TableContainer, TableHead,TableRow, Paper, Box, Typography, Modal } from "@mui/material"; 
-
+import { Tabs, Tab, Box, Modal } from "@mui/material"; 
+import { DataGrid} from '@mui/x-data-grid';
 import Radio from '@mui/material/Radio';
 import RadioGroup from '@mui/material/RadioGroup';
 import FormControlLabel from '@mui/material/FormControlLabel';
-
 import FormControl from '@mui/material/FormControl';
 import FormLabel from '@mui/material/FormLabel';
 import { ApplicantsRequest, FetchingApplicantsInfo, ListofSub,
           CheckingSubs, CheckingApplicants } from "../../api/request";
 import swal from "sweetalert";
-
+import { styled } from '@mui/material/styles';
 
 const Applicant = () => {
 
@@ -25,22 +24,16 @@ const Applicant = () => {
   const [Comments,setComments] = useState('');
   const [status,setStatusCheck] = useState('');
   const [tabValue, setTabValue] = useState(0);
-  const [filteredData, setFilteredData] = useState([]);
-
-  const handleFilter = async (filterValue) => {
-    const filtered = post.filter(item =>
-      Object.values(item).some(value =>
-        value && value.toString().toLowerCase().includes(filterValue.toLowerCase())
-      )
-    );
-    setFilteredData(filtered);
-    
-  };
-
   const handleTabChange = (event, newValue) => {
     setTabValue(newValue);
   };
 
+  const CustomDataGrid = styled(DataGrid)({
+    '& .MuiDataGrid-columnHeaders': {
+      backgroundColor: 'green', 
+      color: 'white', 
+    },
+  });
   const style = {
     top: '50%',
     left: '50%',
@@ -55,6 +48,7 @@ const Applicant = () => {
 
     async function Fetch(){
       const response = await ApplicantsRequest.ALL_APPLICANTS()
+      console.log(response)
       setPost(response.data.results);
     }
     Fetch();
@@ -62,6 +56,7 @@ const Applicant = () => {
 
 // fucntions
   const view = async (data) => {
+    console.log(data)
     const applicantNum = data.applicantNum;
     try {
       const response = await Promise.all([
@@ -112,30 +107,57 @@ const Applicant = () => {
      )
     .catch(err => console.log(err));
   }
-  
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
-  console.log(filteredData)
-  const list = post?.map((f) =>{
-    return (
-      <> 
-          <TableRow key ={f.applicantNum}>  
-              <TableCell className="tableCell"> {f.applicantNum} </TableCell>  
-              <TableCell className="tableCell"> {f.SchoIarshipApplied} </TableCell>  
-              <TableCell className="tableCell"> {f.Name} </TableCell>
-              <TableCell className="tableCell"> {f.DateApplied} </TableCell>
-              <TableCell className="tableCell"> {f.email} </TableCell>
-              <TableCell className="tableCell"> {f.score} </TableCell>
-              <TableCell className="tableCell"> {f.status}</TableCell>
-              <TableCell className="tableCell">
-              <div className='cellAction'>
-                <div className="viewButton" onClick={() => view(f)}> View </div>
-            </div>
-            </TableCell>
-          </TableRow>
-      </>
-      )})
 
+
+  const columns = [
+    { field: 'applicantNum', headerName: 'Applicant ID', width: 100 },
+    {
+      field: 'SchoIarshipApplied',
+      headerName: 'Scholarship Applied',
+      width: 150,
+      editable: true,
+    },
+    {
+      field: 'Name',
+      headerName: 'Name',
+      width: 250,
+      editable: true,
+    },
+    {
+      field: 'email',
+      headerName: 'Email',
+      width: 250,
+      editable: false,
+    },
+    {
+      field: 'status',
+      headerName: 'Status',
+      width: 150,
+      editable: false,
+    },
+    {
+      field: 'score',
+      headerName: 'Score',
+      width: 110,
+      editable: true,
+    },
+    {
+      field: 'Batch',
+      headerName: 'Batch',
+      width: 110,
+      editable: false,
+    },
+    {
+      field: 'insert',
+      headerName: 'Insert',
+      width: 90,
+      renderCell: (params) => (
+        <button onClick={() => view(params.row)}>View</button>
+      ),
+    },
+  ];
   const applicantInfoPA = applicantsInfo?.map((data) =>{
       return (
         <div className="PA">
@@ -268,10 +290,7 @@ const applicantInfoFB = applicantsInfo?.map((data) =>{
           {value === index && <Box p={3}>{children}</Box>}
         </div>
       );
-      const sortedData = [...post].sort((a, b) => a.applicantNum - b.applicantNum);
-      console.log(sortedData);
-      const sortedDataNumericReverse = [...post].sort((a, b) => b.applicantNum - a.applicantNum);
-console.log(sortedDataNumericReverse);
+
   return (
     <>
     <Modal className="modalContainer"
@@ -334,53 +353,25 @@ console.log(sortedDataNumericReverse);
       <div className="applicantContainer">
       <Navbar/>
       <div className="top" >
-      <h1> Applicants </h1>  
-      <label htmlFor="">Search:</label>
-      <input type="text" onChange={(e) => handleFilter(e.target.value)} />       
-      <TableContainer component={Paper} className="table">
-        <Table sx={{ minWidth: 650 }} aria-label="simple table">
-
-          <TableHead>
-            <TableRow>
-              <TableCell className="tableCell"> Applicant Number </TableCell>
-              <TableCell className="tableCell"> Scholarship Applied </TableCell>
-              <TableCell className="tableCell"> Full Name </TableCell>
-              <TableCell className="tableCell"> Date Applied </TableCell>
-              <TableCell className="tableCell"> Email </TableCell>
-              <TableCell className="tableCell"> Score </TableCell>  
-              <TableCell className="tableCell"> Status </TableCell>  
-              <TableCell className="tableCell">  </TableCell>
-            </TableRow>
-          </TableHead>
-
-          {filteredData.length > 0 ? (
-            filteredData?.map((data,index) =>{
-              return (
-                <>
-                <TableBody>
-              <TableRow key ={index}>  
-              <TableCell className="tableCell"> {data.applicantNum} </TableCell>  
-              <TableCell className="tableCell"> {data.SchoIarshipApplied} </TableCell>  
-              <TableCell className="tableCell"> {data.Name} </TableCell>
-              <TableCell className="tableCell"> {data.DateApplied} </TableCell>
-              <TableCell className="tableCell"> {data.email} </TableCell>
-              <TableCell className="tableCell"> {data.score} </TableCell>
-              <TableCell className="tableCell"> {data.status}</TableCell>
-              <TableCell className="tableCell">
-              <div className='cellAction'>
-                <div className="viewButton" onClick={() => view(data)}> View </div>
-            </div>
-            </TableCell>
-          </TableRow>   
-          </TableBody>             
-                </>
-              )
-            })
-          ) : (<TableBody>
-            {list}
-          </TableBody>)}
-        </Table>
-      </TableContainer>
+      <h1> Applicants </h1>        
+      <Box sx={{ height: 400, width: '100%' }}>
+      <CustomDataGrid
+        rows={post}
+        columns={columns}
+        getRowId={(row) => row.applicantNum}
+        scrollbarSize={10}
+        initialState={{
+          pagination: {
+            paginationModel: {
+              pageSize: 5,
+            },
+          },
+        }}
+        pageSizeOptions={[25]}
+        checkboxSelection
+        disableRowSelectionOnClick
+      />
+    </Box>
 
         </div>
       </div>
