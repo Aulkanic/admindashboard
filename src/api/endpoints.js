@@ -21,6 +21,8 @@ const Endpoints = {
     FETCH_BMCCSCHOLAR: 'BMCCScholar/Scholars',
     CREATE_SCORECARD: 'Scorecard/score',
     FETCH_SCORECARD: 'Scorecard/getScore/',
+    LIST_REQUIREMENTS: 'documents/Requirements',
+    ADD_REQUIREMENTS: 'documents/AddRequirements',
 }
 
 export default Endpoints

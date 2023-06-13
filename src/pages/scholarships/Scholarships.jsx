@@ -31,7 +31,6 @@ const Scholarships = () => {
     const [iconprev, setSchoprev] = useState();
     const [iconprev1, setSchoprev1] = useState();
     const [req, setReq] = useState([]);
-    const [percentage, setPercentage] = useState('');
 
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
@@ -53,12 +52,7 @@ const Scholarships = () => {
     newData[index].value = event.target.value;
     setReq(newData);
   };
-  const handlePercentageChange = (event) => {
-    const inputValue = event.target.value;
-    // Remove any non-numeric characters
-    const numericValue = inputValue.replace(/[^0-9.]/g, '%');
-    setPercentage(numericValue);
-  };
+
 
   const style = {
     position: 'absolute',
@@ -242,11 +236,11 @@ const scholarshipprogram = schocat?.map((f,index) =>{
                 <label htmlFor="">Scholarship Icon</label>
                 <input onChange={e=> setSchoimg1(e.target.files[0])}  type="file" /><br/>
                 <label htmlFor="title1">Scholarship Program Name</label>
-                <input defaultValue={olddata.name} placeholder={olddata.name} name="title1" value={title1} onChange={(e) => {
+                <input placeholder={olddata.name} name="title1" value={title1} onChange={(e) => {
                   setSchotitle1(e.target.value);
                 }} type="text" /><br/>
                 <label htmlFor="">Write a Description</label>
-                <input defaultValue={olddata.description} placeholder={olddata.description} value={description1} onChange={e => setSchodesc1(e.target.value)} type="text" /><br/>
+                <input placeholder={olddata.description} value={description1} onChange={e => setSchodesc1(e.target.value)} type="text" /><br/>
                 <FormLabel id="demo-row-radio-buttons-group-label">Status</FormLabel>
                 <RadioGroup
                     row

@@ -54,7 +54,7 @@ const Sidebar = () => {
             <Link to="/contact" style={{ textDecoration: "none" }}>
             <li>
               <RecentActorsIcon className='icon'/>
-              <span> Contact </span>
+              <span> Requirements </span>
             </li>
             </Link>
           

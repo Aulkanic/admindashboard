@@ -71,4 +71,9 @@ export const CreatingScore = {
 export const FetchingScore = {
     FETCH_SCORECARD: (data) => axiosInstance.get(Endpoints.FETCH_SCORECARD+data)
 }
-
+export const ListofReq = {
+    FETCH_REQUIREMENTS: () => axiosInstance.get(Endpoints.LIST_REQUIREMENTS)
+}
+export const Addrequirements = {
+    ADD_REQUIREMENTS: (data) => axiosInstance.post(Endpoints.ADD_REQUIREMENTS,data)
+}

@@ -24,6 +24,14 @@ const Applicant = () => {
   const [Comments,setComments] = useState('');
   const [status,setStatusCheck] = useState('');
   const [tabValue, setTabValue] = useState(0);
+  const [selectedRows, setSelectedRows] = useState([]);
+
+  const handleSelectionModelChange = (newSelectionModel) => {
+    console.log(newSelectionModel)
+    setSelectedRows(newSelectionModel);
+    console.log(selectedRows)
+  };
+
   const handleTabChange = (event, newValue) => {
     setTabValue(newValue);
   };
@@ -101,7 +109,6 @@ const Applicant = () => {
     .then(res => {
       console.log(res)
       setOpen(false)
-      setPost(res.data.Applicants);
       swal('Added Successfully')
     }
      )
@@ -151,7 +158,7 @@ const Applicant = () => {
     },
     {
       field: 'insert',
-      headerName: 'Insert',
+      headerName: 'Actions',
       width: 90,
       renderCell: (params) => (
         <button onClick={() => view(params.row)}>View</button>
@@ -368,8 +375,10 @@ const applicantInfoFB = applicantsInfo?.map((data) =>{
           },
         }}
         pageSizeOptions={[25]}
-        checkboxSelection
+        checkboxSelection   
         disableRowSelectionOnClick
+        rowSelectionModel={selectedRows}
+        onRowSelectionModelChange={handleSelectionModelChange}
       />
     </Box>
 
