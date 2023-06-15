@@ -7,32 +7,21 @@ import CardActions from '@mui/material/CardActions';
 import CardContent from '@mui/material/CardContent';
 import Button from '@mui/material/Button';
 import Typography from '@mui/material/Typography';
-import { FetchingBmccScho } from '../../api/request';
+import { FetchingBmccScho,ApplicantsRequest } from '../../api/request';
 import { useState } from "react";
 import { useEffect } from "react";
-import { Bar } from 'react-chartjs-2';
+import { DataGrid} from '@mui/x-data-grid';
+import { styled } from '@mui/material/styles';
 
-const data = {
-  labels: ['Area 1', 'Area 2', 'Area 3', 'Area 4'],
-  datasets: [
-    {
-      label: 'Number of People',
-      data: [25, 18, 30, 12],
-      backgroundColor: 'rgba(54, 162, 235, 0.5)',
-    },
-  ],
-};
-
-const options = {
-  scales: {
-    y: {
-      beginAtZero: true,
-    },
+const CustomDataGrid = styled(DataGrid)({
+  '& .MuiDataGrid-columnHeaders': {
+    backgroundColor: 'green', 
+    color: 'white', 
   },
-};
-
+});
 const Home = () => {
   const [totalscho,setTotalscho] = useState([]);
+  const [post , setPost] = useState([]);
 
   useEffect(() => {
 
@@ -40,9 +29,53 @@ const Home = () => {
       const scholars = await FetchingBmccScho.FETCH_SCHOLARS()
       console.log(scholars)
       setTotalscho(scholars.data.Scholars)
+      const response = await ApplicantsRequest.ALL_APPLICANTS()
+      const appdatali = response.data.results;
+      console.log(appdatali)
+      setPost(appdatali.reverse());
     }
     Fetch();
   }, []);
+  const columns = [
+    { field: 'applicantNum', headerName: 'Applicant ID', width: 100 },
+    {
+      field: 'SchoIarshipApplied',
+      headerName: 'Scholarship Applied',
+      width: 150,
+      editable: true,
+    },
+    {
+      field: 'Name',
+      headerName: 'Name',
+      width: 250,
+      editable: true,
+    },
+    {
+      field: 'email',
+      headerName: 'Email',
+      width: 250,
+      editable: false,
+    },
+    {
+      field: 'status',
+      headerName: 'Status',
+      width: 150,
+      editable: false,
+    },
+    {
+      field: 'score',
+      headerName: 'Score',
+      width: 110,
+      editable: true,
+    },
+    {
+      field: 'DateApplied',
+      headerName: 'Date Applied',
+      width: 190,
+      editable: false,
+    },
+
+  ];
   return (
     <div className="home">
       <Sidebar />
@@ -118,9 +151,28 @@ const Home = () => {
       </CardActions>
     </Card>
     </Box>
-      <div>
-      <Bar data={data} options={options} />
-      </div>
+
+      <Box 
+            sx={{
+              margin:'15px',
+            }}>
+      <h1>Recent Applicants</h1>
+      <CustomDataGrid
+        rows={post}
+        columns={columns}
+        getRowId={(row) => row.applicantNum}
+        scrollbarSize={10}
+        initialState={{
+          pagination: {
+            paginationModel: {
+              pageSize: 5,
+            },
+          },
+        }}
+        pageSizeOptions={[25]}  
+        disableRowSelectionOnClick
+      />
+      </Box>
       </div>
       </div>
   )

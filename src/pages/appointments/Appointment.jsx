@@ -91,8 +91,9 @@ const Appointment = () => {
     })
   };
   const Reapp = (data) => {
-      console.log(data)
-      Reaapointed.RE_APPOINT(data)
+    const adminName = user.name;
+    const applicantNum = data.applicantNum
+      Reaapointed.RE_APPOINT({applicantNum,adminName})
       .then(res => {
         console.log(res)
         setQualified(res.data.results.data1);

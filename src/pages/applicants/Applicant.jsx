@@ -13,9 +13,11 @@ import { ApplicantsRequest, FetchingApplicantsInfo, ListofSub,
           CheckingSubs, CheckingApplicants } from "../../api/request";
 import swal from "sweetalert";
 import { styled } from '@mui/material/styles';
+import { useContext } from "react";
+import { admininfo } from "../../App";
 
 const Applicant = () => {
-
+  const { loginUser,user } = useContext(admininfo);
   const [open, setOpen] = useState(false);
   const [post , setPost] = useState([]);
   const [selectedInfo, setSelectedInfo] = useState({});
@@ -83,14 +85,18 @@ const Applicant = () => {
 
   }
   const check = async (data,index) =>{
+    console.log(selectedInfo)
     const requirement_Name = data.requirement_Name;
-    const applicantNum = applicantsInfo[0].applicantNum;
+    const applicantNum = applicantsInfo[0].applicantNum;   
+    const adminName = user.name;
+    const applicantCode = selectedInfo.applicantCode;
     const formData = new FormData();
     formData.append(`Comments`, Comments[index]);
     formData.append(`requirement_Name`, requirement_Name);
     formData.append(`applicantNum`, applicantNum);
     formData.append(`status`, status[index]);
-    CheckingSubs.CHECK_SUB({requirement_Name,applicantNum,status,Comments})
+    formData.append(`adminName`, adminName);
+    CheckingSubs.CHECK_SUB({requirement_Name,applicantNum,status,Comments,adminName,applicantCode})
     .then(res => {
       console.log(res)
       setComments('');
@@ -100,12 +106,12 @@ const Applicant = () => {
      )
     .catch(err => console.log(err));
   }
-
   const ApplicantCheck = async () =>{
     const applicantNum = applicantsInfo[0].applicantNum;
-    console.log(applicantNum)
+    const applicantCode = selectedInfo.applicantCode;
     const status = 'Qualified';
-    CheckingApplicants.CHECK_APP({applicantNum,status})
+    const adminName = user.name;
+    CheckingApplicants.CHECK_APP({adminName,applicantNum,status,applicantCode})
     .then(res => {
       console.log(res)
       setOpen(false)
