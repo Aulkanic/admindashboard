@@ -10,9 +10,11 @@ import Checkbox from '@mui/material/Checkbox';
 import swal from "sweetalert";
 import { useState } from "react";
 import { useEffect } from "react";
-
+import { useContext } from "react";
+import { admininfo } from "../../App";
 
 const Appointment = () => {
+  const { loginUser,user } = useContext(admininfo);
   const [Qualified, setQualified] = useState([]);
   const [appointedList, setAppointedList] = useState([]);
   const [appointmentDate, setAppointmentDate] = useState('');
@@ -33,20 +35,19 @@ const Appointment = () => {
     setFilteredData(filtered);
     
   };
-
   const handleStartTimeChange = (event) => {
     setStartTime(event.target.value);
   };
   const handleEndTimeChange = (event) => {
     setEndTime(event.target.value);
   };
-  const handleUserSelection = (userId,name,email,scho,date) => {
+  const handleUserSelection = (userId,name,email,scho,date,code) => {
     const currentIndex = selectedUsers.indexOf(userId);
     const newChecked = [...selectedUsers];
-    const isSelected = selectedUsers.includes({userId,name,email,scho,date});
+    const isSelected = selectedUsers.includes({userId,name,email,scho,date,code});
     console.log(currentIndex)
     if (currentIndex === -1) {
-      newChecked.push({userId,name,email,scho,date});
+      newChecked.push({userId,name,email,scho,date,code});
     } else {
       newChecked.splice(currentIndex, 1);
     }
@@ -71,11 +72,14 @@ const Appointment = () => {
   };
   const handleSave = () => {
     selectedUsers.forEach((data,index) =>{
-      const applicantNum = data.userId || data.applicantNum;
+      console.log(data)
+      const applicantNum = data.code || data.code;
       const Name = data.name || data.Name;
       const Email = data.email || data.email;
       const Status = data.scho || data.status;
-      CreateAppointment.CREATE_APPOINT({applicantNum,Name,Email,Status,endTime,startTime,appointmentDate,Location,Agenda})
+      console.log(user)
+      const adminName = user.name;
+      CreateAppointment.CREATE_APPOINT({adminName,applicantNum,Name,Email,Status,endTime,startTime,appointmentDate,Location,Agenda})
       .then(res => {
         console.log(res)
         setQualified(res.data.List.data1);
@@ -106,10 +110,9 @@ const Appointment = () => {
       const response = await Promise.all([
         FetchingApplicantsInfo.FETCH_INFO(data.applicantNum)
       ]);
-      console.log(response)
       const dataappinfo = response[0].data.results[0];
       const Name = `${dataappinfo.firstName} ${dataappinfo.middleName} ${dataappinfo.lastName}`;
-      const applicantNum = dataappinfo.applicantNum;
+      const applicantNum = dataappinfo.applicantCode;
       const yearLevel =dataappinfo.currentYear;
       const baranggay = dataappinfo.baranggay;
       const scholarshipApplied = dataappinfo.SchoIarshipApplied;
@@ -150,7 +153,7 @@ const Appointment = () => {
        {!data.isAppointed || data.isAppointed === 'No' ? (<TableRow key ={data.applicantNum}>  
               <TableCell className="tableCell"><FormControlLabel required control={<Checkbox
             checked={selectedUsers.some((item) => item.userId === data.applicantNum) || selectAll}
-            onChange={() => handleUserSelection(data.applicantNum,data.Name,data.email,data.status,data.DateApplied)} />}/></TableCell> 
+            onChange={() => handleUserSelection(data.applicantNum,data.Name,data.email,data.status,data.DateApplied,data.applicantCode)} />}/></TableCell> 
               <TableCell className="tableCell"> {data.applicantNum} </TableCell>  
               <TableCell className="tableCell"> {data.SchoIarshipApplied} </TableCell>  
               <TableCell className="tableCell"> {data.Name} </TableCell>
@@ -165,7 +168,7 @@ const Appointment = () => {
     console.log(data.isInterview)
     return(
       <>
-       {!data.isInterview || data.isInterview === 'No' || data.isInterview === '' ? (<TableRow key ={index}>  
+       {!data.isInterview || data.isInterview === 'No' || data.isInterview === '' || data.isInterview === 'Appointed' ? (<TableRow key ={index}>  
               <TableCell className="tableCell"> {data.applicantNum} </TableCell>  
               <TableCell className="tableCell"> {data.Name} </TableCell>
               <TableCell className="tableCell"> {data.Status} </TableCell>

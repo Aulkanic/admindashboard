@@ -1,11 +1,12 @@
 import "./login.scss";
-
+import { admininfo } from "../../App";
 import {login} from '../../api/request'
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { useContext } from "react";
 
 const Login = () => {
-
+    const { loginUser } = useContext(admininfo);
     const [email, setEmail] = useState('')
     const [password, setPassword] = useState('')
     const navigate = useNavigate();
@@ -15,6 +16,7 @@ const Login = () => {
       await login.ADMIN_LOGIN({email,password}).then((res) =>{
       console.log(res.data)
       if(res.data.message === 'Success'){
+        loginUser(res.data.userDetails)
         navigate('/home');
         alert(res.data.message)
       }

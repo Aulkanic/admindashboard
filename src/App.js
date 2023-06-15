@@ -11,20 +11,27 @@ import Scholars from './pages/scholars/Scholars';
 import News from './pages/new/New';
 import { BrowserRouter, Routes, Route,} from "react-router-dom";
 import Single from './pages/single/Single';
-import io from 'socket.io-client';
-import { useEffect } from 'react';
+import { createContext } from 'react';
+import { useState } from 'react';
 
 
+export const admininfo = createContext();
 function App() {
-  
+  const storedUser = JSON.parse(localStorage.getItem('user'));
+  const [user, setUser] = useState(storedUser || null);
+  const loginUser = (userData) => {
+    setUser(userData);
+    localStorage.setItem('user', JSON.stringify(userData));
+  };
+  console.log(user)
   return (
     <div className="App">
         <BrowserRouter>
+        <admininfo.Provider value={{ user, loginUser }}>
       <Routes>
         <Route path="/">
 
           <Route index element={<Login/>} />
-
           <Route path='home' element={<Home/>} />
           <Route path='scholarships' element={<Scholarships/>}/>
           <Route path='about' element={<About />} />
@@ -48,6 +55,7 @@ function App() {
 
         </Route>
       </Routes>
+      </admininfo.Provider>
     </BrowserRouter>
     </div>
   );

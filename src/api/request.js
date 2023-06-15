@@ -77,3 +77,12 @@ export const ListofReq = {
 export const Addrequirements = {
     ADD_REQUIREMENTS: (data) => axiosInstance.post(Endpoints.ADD_REQUIREMENTS,data)
 }
+export const AddBMCC = {
+    ADD_BMCC: (data) => axiosInstance.post(Endpoints.BMCC_ADD,data)
+}
+export const FetchingBMCC = {
+    FETCH_BMCC: () => axiosInstance.get(Endpoints.BMCC_FETCH)
+}
+export const Activitylog = {
+    ACTIVITY_LOG: () => axiosInstance.get(Endpoints.ACTIVITY_LOG)
+}

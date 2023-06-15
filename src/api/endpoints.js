@@ -23,6 +23,9 @@ const Endpoints = {
     FETCH_SCORECARD: 'Scorecard/getScore/',
     LIST_REQUIREMENTS: 'documents/Requirements',
     ADD_REQUIREMENTS: 'documents/AddRequirements',
+    BMCC_ADD: 'admin/Create',
+    BMCC_FETCH: 'admin/BMCCmembers',
+    ACTIVITY_LOG: 'admin/Activitylog',
 }
 
 export default Endpoints
