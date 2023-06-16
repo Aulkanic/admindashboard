@@ -32,7 +32,8 @@
     "sass": "^1.60.0",
     "socket.io-client": "^4.6.2",
     "sweetalert": "^2.1.2",
-    "web-vitals": "^2.1.4"
+    "web-vitals": "^2.1.4",
+    "@babel/plugin-proposal-private-property-in-object": "^7.16.5"
   },
   "scripts": {
     "start": "env-cmd -f .env.local react-scripts start",

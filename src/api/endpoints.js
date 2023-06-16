@@ -26,6 +26,7 @@ const Endpoints = {
     BMCC_ADD: 'admin/Create',
     BMCC_FETCH: 'admin/BMCCmembers',
     ACTIVITY_LOG: 'admin/Activitylog',
+    UPDATE_EMP: 'admin/Update',
 }
 
 export default Endpoints

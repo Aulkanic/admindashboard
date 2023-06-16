@@ -86,3 +86,6 @@ export const FetchingBMCC = {
 export const Activitylog = {
     ACTIVITY_LOG: () => axiosInstance.get(Endpoints.ACTIVITY_LOG)
 }
+export const UpdateEmp = {
+    UPDATE_EMP: (data) => axiosInstance.patch(Endpoints.UPDATE_EMP,data)
+}

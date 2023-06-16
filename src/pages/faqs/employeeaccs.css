@@ -16,7 +16,9 @@
 }
 .emplycon{
     width: 95%;
+    display: flex;
+    justify-content: space-between;
     margin: 10px;
-    height: 50px;
+    height: 100%;
     background-color: aqua;
 }

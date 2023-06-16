@@ -3,13 +3,18 @@ import Sidebar from '../../components/sidebar/Sidebar';
 import './faqs.scss';
 import './employeeaccs.css'
 import { useEffect, useState } from 'react';
-import { AddBMCC,FetchingBMCC,Activitylog } from '../../api/request';
+import { AddBMCC,FetchingBMCC,Activitylog,UpdateEmp } from '../../api/request';
 import { Box, Modal} from "@mui/material"; 
 import TextField from '@mui/material/TextField';
 import { useContext } from "react";
 import { admininfo } from "../../App";
 import { DataGrid} from '@mui/x-data-grid';
 import { styled } from '@mui/material/styles';
+import BMCC from '../../Images/logo.jpg';
+import Radio from '@mui/material/Radio';
+import RadioGroup from '@mui/material/RadioGroup';
+import FormControlLabel from '@mui/material/FormControlLabel';
+import FormLabel from '@mui/material/FormLabel';
 
 const Faqs = () => {
   const { loginUser,user } = useContext(admininfo);
@@ -17,9 +22,13 @@ const Faqs = () => {
   const [email,setEmail] = useState('');
   const [password,setPassword] = useState('');
   const [jobDes, setJobdes] = useState('');
+  const [upjobDes, setUpJobdes] = useState('');
+  const[status,setStatus] = useState('');
+  const[olddata,setOlddata] = useState([]);
   const [bmcc,setBmcc] = useState([]);
   const [actlog,setActlog] = useState([]);
   const [open, setOpen] = useState(false);
+  const [open1, setOpen1] = useState(false);
   const [errors, setErrors] = useState({});
 console.log(user)
 
@@ -68,6 +77,15 @@ const CustomDataGrid = styled(DataGrid)({
       editable: false,
     }
   ];
+  const handleOpen = () => setOpen(true);
+  const handleClose = () => setOpen(false);
+  const handleOpen1 = (data) => {
+    console.log(data)
+    setOlddata(data)
+        setOpen1(true);
+  } 
+
+  const handleClose1 = () => setOpen1(false);
   useEffect(() =>{
         async function Fetch(){
         const list = await FetchingBMCC.FETCH_BMCC()
@@ -80,12 +98,25 @@ const CustomDataGrid = styled(DataGrid)({
         }
         Fetch();
   },[])
-  console.log(actlog)
  const bmccemp = bmcc?.map((data) =>{
     return (
       <>
       <div className='emplycon'>
-        Name:{data.name} Email:{data.email} Job:{data.jobDescription}
+        <div className="profemp">
+          {data.profile === '' ? (<img style={{width:'50px'}} src={BMCC} alt="" />) : (<img src={data.profile} alt="" />)}
+        </div>
+        <div className="detemp">
+          <p>Name:{data.name}</p>
+          <p>Email:{data.email}</p>
+
+        </div>
+        <div>
+        <p>Job:{data.jobDescription}</p>
+        <p>Status:{data.status}</p>
+        </div>
+        <div>
+          <button onClick={() =>{handleOpen1(data)}}>Edit</button>
+        </div>
       </div>
       </>
     )
@@ -127,8 +158,25 @@ const CustomDataGrid = styled(DataGrid)({
    )
   .catch(err => console.log(err));
 }
- const handleOpen = () => setOpen(true);
- const handleClose = () => setOpen(false);
+const UpdateBMCC = (event) =>{
+  event.preventDefault()
+  let updatedstatus = status || olddata.status;
+  let updatedjob = upjobDes || olddata.jobDescription;
+  let id = olddata.id;
+  const formData = new FormData();
+  formData.append('updatedstatus',updatedstatus)
+  formData.append('updatedjob',updatedjob)
+  formData.append('id',id)
+  UpdateEmp.UPDATE_EMP(formData)
+  .then(res => {
+    console.log(res)
+    setBmcc(res.data.employees);
+    setOpen1(false)
+  }
+   )
+  .catch(err => console.log(err));
+}
+
  console.log(open)
   return (
     <div className="faqs">
@@ -186,6 +234,43 @@ const CustomDataGrid = styled(DataGrid)({
                 <button onClick={AddbMCC}>Add</button>
                 </Box>
             </Modal>
+            <Modal
+                      open={open1}
+                      aria-labelledby="modal-modal-title"
+                      aria-describedby="modal-modal-description">
+                <Box sx={style}>
+                <div className="buttonclosed">
+                <button onClick={handleClose1}>X</button>
+                </div>
+                {olddata ? (<h1>Name: {olddata.name}</h1>) : (null)}
+                <div style={{margin: 20}} className="form">
+                <TextField
+                   label='Job Description' 
+                    margin='normal' 
+                    variant='outlined'
+                    size='large'
+                    fullWidth
+                    onChange={(e) =>setUpJobdes(e.target.value)}  
+                    color='secondary'
+                    />
+                <FormLabel id="demo-row-radio-buttons-group-label">Account Status</FormLabel>
+                <RadioGroup
+                    row
+                    aria-labelledby="demo-row-radio-buttons-group-label"
+                    name="row-radio-buttons-group"
+                    onChange={(e) =>{
+                     const stat = e.target.value;
+                      setStatus(stat);
+                    }}  
+                  >
+                <FormControlLabel value="Active" control={<Radio />} label="Active" />
+                <FormControlLabel value="Inactive" control={<Radio />} label="Inactive" />
+                </RadioGroup>
+                </div>
+                <button onClick={handleClose1}>Cancel</button>
+                <button onClick={UpdateBMCC}>Save Changes</button>
+                </Box>
+            </Modal>
             <div className="top">
               <div>
               <h1>Employee Accounts</h1>
@@ -209,7 +294,7 @@ const CustomDataGrid = styled(DataGrid)({
         initialState={{
           pagination: {
             paginationModel: {
-              pageSize: 5,
+              pageSize: 10,
             },
           },
         }}
