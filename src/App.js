@@ -30,29 +30,18 @@ function App() {
         <admininfo.Provider value={{ user, loginUser }}>
       <Routes>
         <Route path="/">
-
           <Route index element={<Login/>} />
           <Route path='home' element={<Home/>} />
           <Route path='scholarships' element={<Scholarships/>}/>
           <Route path='about' element={<About />} />
           <Route path='contact' element={<Contact />} />
           <Route path='faqs' element={<Faqs />} />
-
           <Route path='news' element={<News/>} />
           <Route path='applicants' element={<Applicant/>} />
           <Route path='single' element={<Single/>} />
           <Route path='users' element={<Users/>} />
           <Route path='appointments' element={<Appointment/>} />
           <Route path='scholars' element={<Scholars/>} />
-          
-          
-          {/* <Route path='users'>
-            <Route index element={<List/>} />
-            <Route path=':userId' element = {<Single/>} />
-            <Route path='new' element = {<New/>} />
-          </Route> */}
-
-
         </Route>
       </Routes>
       </admininfo.Provider>

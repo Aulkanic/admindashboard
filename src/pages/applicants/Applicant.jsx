@@ -15,6 +15,7 @@ import swal from "sweetalert";
 import { styled } from '@mui/material/styles';
 import { useContext } from "react";
 import { admininfo } from "../../App";
+import './applicant.css'
 
 const Applicant = () => {
   const { loginUser,user } = useContext(admininfo);
@@ -27,11 +28,11 @@ const Applicant = () => {
   const [status,setStatusCheck] = useState('');
   const [tabValue, setTabValue] = useState(0);
   const [selectedRows, setSelectedRows] = useState([]);
+  const [datarows,setDatarows] = useState([]);
 
   const handleSelectionModelChange = (newSelectionModel) => {
-    console.log(newSelectionModel)
     setSelectedRows(newSelectionModel);
-    console.log(selectedRows)
+
   };
 
   const handleTabChange = (event, newValue) => {
@@ -124,6 +125,20 @@ const Applicant = () => {
   const handleClose = () => setOpen(false);
 
 
+  const checkedrows = async () => {
+    const selectedRowsData = selectedRows.map((rowId) => {
+      return post.find((row) => row.applicantNum === rowId);
+    });
+    setDatarows(selectedRowsData)
+    selectedRowsData.forEach((row) => {
+      const paramName = row.applicantNum; // Replace "paramName" with the actual parameter name
+      const paramValue = row;
+
+    });
+
+    // ...
+  };
+console.log(datarows)
   const columns = [
     { field: 'applicantNum', headerName: 'Applicant ID', width: 100 },
     {
@@ -303,7 +318,7 @@ const applicantInfoFB = applicantsInfo?.map((data) =>{
           {value === index && <Box p={3}>{children}</Box>}
         </div>
       );
-
+      const filteredRows = post.filter((row) => row.status === 'For Evaluation');
   return (
     <>
     <Modal className="modalContainer"
@@ -358,7 +373,7 @@ const applicantInfoFB = applicantsInfo?.map((data) =>{
       </div>
 
         </Box>
-      </Modal>
+    </Modal>
      
 
     <div className="applicant">
@@ -366,10 +381,13 @@ const applicantInfoFB = applicantsInfo?.map((data) =>{
       <div className="applicantContainer">
       <Navbar/>
       <div className="top" >
-      <h1> Applicants </h1>        
+      <h1> Applicants </h1>   
+      <button id="checkButton" onClick={checkedrows}>
+        Check
+      </button>     
       <Box sx={{ height: 400, width: '100%' }}>
       <CustomDataGrid
-        rows={post}
+        rows={filteredRows}
         columns={columns}
         getRowId={(row) => row.applicantNum}
         scrollbarSize={10}

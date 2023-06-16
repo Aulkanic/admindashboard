@@ -15,6 +15,7 @@ import Radio from '@mui/material/Radio';
 import RadioGroup from '@mui/material/RadioGroup';
 import FormControlLabel from '@mui/material/FormControlLabel';
 import FormLabel from '@mui/material/FormLabel';
+import Avatar from '@mui/material/Avatar';
 
 const Faqs = () => {
   const { loginUser,user } = useContext(admininfo);
@@ -103,7 +104,15 @@ const CustomDataGrid = styled(DataGrid)({
       <>
       <div className='emplycon'>
         <div className="profemp">
-          {data.profile === '' ? (<img style={{width:'50px'}} src={BMCC} alt="" />) : (<img src={data.profile} alt="" />)}
+          {data.profile === '' ? (<Avatar
+        alt="No Image"
+        src={BMCC}
+        sx={{ width: 45, height: 45 }}
+      />) : (<Avatar
+        alt="No Image"
+        src={data.profle}
+        sx={{ width: 45, height: 45 }}
+      />)}
         </div>
         <div className="detemp">
           <p>Name:{data.name}</p>

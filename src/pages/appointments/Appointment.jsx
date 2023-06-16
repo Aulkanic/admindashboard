@@ -73,13 +73,14 @@ const Appointment = () => {
   const handleSave = () => {
     selectedUsers.forEach((data,index) =>{
       console.log(data)
-      const applicantNum = data.code || data.code;
+      const applicantCode = data.code || data.code;
+      const applicantNum = data.userId
       const Name = data.name || data.Name;
       const Email = data.email || data.email;
       const Status = data.scho || data.status;
       console.log(user)
       const adminName = user.name;
-      CreateAppointment.CREATE_APPOINT({adminName,applicantNum,Name,Email,Status,endTime,startTime,appointmentDate,Location,Agenda})
+      CreateAppointment.CREATE_APPOINT({applicantCode,adminName,applicantNum,Name,Email,Status,endTime,startTime,appointmentDate,Location,Agenda})
       .then(res => {
         console.log(res)
         setQualified(res.data.List.data1);
@@ -91,9 +92,15 @@ const Appointment = () => {
     })
   };
   const Reapp = (data) => {
+    console.log(data)
     const adminName = user.name;
-    const applicantNum = data.applicantNum
-      Reaapointed.RE_APPOINT({applicantNum,adminName})
+    const applicantNum = data.applicantNum;
+    const applicantCode = data.applicantCode;
+    const formData = new FormData();
+    formData.append('adminName',adminName);
+    formData.append('applicantNum',applicantNum);
+    formData.append('applicantCode',applicantCode)
+      Reaapointed.RE_APPOINT(formData)
       .then(res => {
         console.log(res)
         setQualified(res.data.results.data1);
@@ -111,7 +118,9 @@ const Appointment = () => {
       const response = await Promise.all([
         FetchingApplicantsInfo.FETCH_INFO(data.applicantNum)
       ]);
+      console.log(response)
       const dataappinfo = response[0].data.results[0];
+      console.log(dataappinfo)
       const Name = `${dataappinfo.firstName} ${dataappinfo.middleName} ${dataappinfo.lastName}`;
       const applicantNum = dataappinfo.applicantCode;
       const yearLevel =dataappinfo.currentYear;
