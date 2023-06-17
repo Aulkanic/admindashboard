@@ -122,12 +122,14 @@ const Appointment = () => {
       const dataappinfo = response[0].data.results[0];
       console.log(dataappinfo)
       const Name = `${dataappinfo.firstName} ${dataappinfo.middleName} ${dataappinfo.lastName}`;
-      const applicantNum = dataappinfo.applicantCode;
+      const applicantNum = data.applicantNum;
+      const applicantCode = data.applicantCode
       const yearLevel =dataappinfo.currentYear;
       const baranggay = dataappinfo.baranggay;
       const scholarshipApplied = dataappinfo.SchoIarshipApplied;
+      const adminName = user.name;
       console.log(dataappinfo)
-      SetApproved.SET_APPROVE({data,Name,applicantNum,yearLevel,baranggay,scholarshipApplied})
+      SetApproved.SET_APPROVE({applicantCode,adminName,data,Name,applicantNum,yearLevel,baranggay,scholarshipApplied})
     .then(res => {
       console.log(res)
       setQualified(res.data.results.data1);
@@ -170,6 +172,7 @@ const Appointment = () => {
               <TableCell className="tableCell"> {data.DateApplied} </TableCell>
               <TableCell className="tableCell"> {data.email} </TableCell>
               <TableCell className="tableCell"> {data.status} </TableCell>
+              <TableCell className="tableCell"> {data.checkedBy} </TableCell>
         </TableRow>) : null}
       </>
     )
@@ -187,6 +190,7 @@ const Appointment = () => {
               <TableCell className="tableCell"> {data.timeStart} - {data.timeEnd} </TableCell>
               <TableCell className="tableCell"> {data.Location} </TableCell>
               <TableCell className="tableCell"> {data.Reason} </TableCell>
+              <TableCell className="tableCell"> {data.appointedBy} </TableCell>
               <TableCell className="tableCell"><button onClick={() => Reapp(data)}>Re-appoint</button> <button onClick={() => Approved(data)}>Approved</button>  </TableCell>
         </TableRow>) : null}
       </>
@@ -247,7 +251,7 @@ const Appointment = () => {
               <TableCell className="tableCell"> Date Applied </TableCell>
               <TableCell className="tableCell"> Email </TableCell>
               <TableCell className="tableCell"> Status </TableCell>  
-              <TableCell className="tableCell">  </TableCell>
+              <TableCell className="tableCell"> Added By </TableCell>
             </TableRow>
           </TableHead>
 
@@ -293,6 +297,8 @@ const Appointment = () => {
               <TableCell className="tableCell"> Time </TableCell>
               <TableCell className="tableCell"> Location </TableCell>
               <TableCell className="tableCell"> Agenda </TableCell>
+              <TableCell className="tableCell"> Appointed By </TableCell>
+              <TableCell className="tableCell"> Action </TableCell>
             </TableRow>
           </TableHead>
           <TableBody>

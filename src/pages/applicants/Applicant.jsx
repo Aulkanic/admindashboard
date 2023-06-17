@@ -115,6 +115,7 @@ const Applicant = () => {
     CheckingApplicants.CHECK_APP({adminName,applicantNum,status,applicantCode})
     .then(res => {
       console.log(res)
+      setPost(res.data.Applicants)
       setOpen(false)
       swal('Added Successfully')
     }
