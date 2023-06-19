@@ -382,12 +382,13 @@ const applicantInfoFB = applicantsInfo?.map((data) =>{
       <Sidebar/>
     <div className="applicantContainer">
       <Navbar/>
-<<<<<<< Updated upstream
-      <div className="top" >
+      <div className="top">
       <h1> Applicants </h1>   
+      
       <button id="checkButton" onClick={checkedrows}>
         Check
       </button>     
+
       <Box sx={{ height: 400, width: '100%' }}>
       <CustomDataGrid
         rows={filteredRows}
@@ -407,8 +408,8 @@ const applicantInfoFB = applicantsInfo?.map((data) =>{
         rowSelectionModel={selectedRows}
         onRowSelectionModelChange={handleSelectionModelChange}
       />
+
     </Box>
-=======
     <div className="top" >
       <h1> Applicants </h1>        
         <Box sx={{ height: 400, width: 'max-content' }}>
@@ -429,12 +430,11 @@ const applicantInfoFB = applicantsInfo?.map((data) =>{
             disableRowSelectionOnClick
           />
         </Box>
->>>>>>> Stashed changes
 
         </div>
       </div>
     </div>
-
+  </div>
     </>
   )
   
