@@ -36,10 +36,11 @@ const Appointment = () => {
   };
 
   const getAppointedUsersCount = (date) => {
+    console.log(date)
+    console.log(appointedList)
     return appointedList.filter(
       (appointment) =>
-        moment(appointment.schedDate).isSame(date, "day") &&
-        appointment.isInterview !== "No"
+        moment(appointment.schedDate).isSame(date, "day")
     ).length;
   };
 
@@ -219,6 +220,7 @@ const Appointment = () => {
       </>
     )
   })
+  console.log(getAppointedUsersCount())
   return (
     <div className="appointment">
         <Sidebar/>
@@ -330,17 +332,7 @@ const Appointment = () => {
         </Table>
       </TableContainer>
       </div>
-      <div className="calendarContainer">
-          <Calendar
-            localizer={localizer}
-            events={eventList}
-            startAccessor="start"
-            endAccessor="end"
-            selectable
-            onSelectSlot={handleSelectDate}
-          />
-        </div>
-        <div className="appointedListContainer">
+      <div className="appointedListContainer">
           <h3>Appointed Users</h3>
           {selectedDate && (
             <p>
@@ -356,6 +348,17 @@ const Appointment = () => {
             ))}
           </ul>
         </div>
+      <div className="calendarContainer">
+          <Calendar
+            localizer={localizer}
+            events={eventList}
+            startAccessor="start"
+            endAccessor="end"
+            selectable
+            onSelectSlot={handleSelectDate}
+          />
+        </div>
+
         </div>
     </div>
   )
