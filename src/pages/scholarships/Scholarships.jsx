@@ -1,7 +1,7 @@
 import Navbar from "../../components/navbar/Navbar"
 import Sidebar from "../../components/sidebar/Sidebar"
 import "./scholarships.scss"
-import { Tabs, Tab,Table, TableBody, TableCell, TableContainer, TableHead,TableRow, Paper, Box, Button, Typography, Modal} from "@mui/material"; 
+import { Table, TableBody, TableCell, TableContainer, TableHead,TableRow, Paper, Box, Modal} from "@mui/material"; 
 import './scholarship.css'
 import { FetchingSchoProg, CreateSchoProg, UpdateSchoProg } from "../../api/request";
 import { useEffect } from "react";
@@ -9,7 +9,7 @@ import { useState } from "react";
 import Radio from '@mui/material/Radio';
 import RadioGroup from '@mui/material/RadioGroup';
 import FormControlLabel from '@mui/material/FormControlLabel';
-import { admininfo } from "../../App";
+
 import FormLabel from '@mui/material/FormLabel';
 import swal from "sweetalert";
 
@@ -27,7 +27,6 @@ const Scholarships = () => {
     const [description1, setSchodesc1] = useState('');
     const [status1, setStatusCheck1] = useState('');
     const [olddata, setOlddata] = useState([]);
-    const [oldicon, setOldicon] = useState('');
     const [iconprev, setSchoprev] = useState();
     const [iconprev1, setSchoprev1] = useState();
     const [req, setReq] = useState([]);
@@ -60,7 +59,7 @@ const Scholarships = () => {
     left: '50%',
     transform: 'translate(-50%, -50%)',
     width: '1000px',
-    height: '70vh',
+    height: '80vh',
     bgcolor: 'background.paper',
     border: 'none',
     borderRadius: '10px',
@@ -157,7 +156,7 @@ function Edit(event){
 const scholarshipprogram = schocat?.map((f,index) =>{
   return (
         <TableRow key ={f.applicantNum} className="row">  
-            <TableCell className="tableCell"> <img style={{width: 55}} src={f.icon} alt="" /> </TableCell>  
+            <TableCell className="tableCell"> <img style={{width: 50, height: 50}} src={f.icon} alt="" /></TableCell>  
             <TableCell className="tableCell"> {f.name} </TableCell>  
             <TableCell className="tableCell"> {f.description} </TableCell>
             <TableCell className="tableCell"> {f.status} </TableCell>
@@ -200,7 +199,7 @@ const scholarshipprogram = schocat?.map((f,index) =>{
                 <input onChange={e=> setSchodesc(e.target.value)} type="text" /><br/>
 
                 <div className="status">
-                <FormLabel id="demo-row-radio-buttons-group-label"> Status </FormLabel>
+                <FormLabel id="demo-row-radio-buttons-group-label" className="stat"> Status </FormLabel>
                 <RadioGroup
                     row
                     aria-labelledby="demo-row-radio-buttons-group-label"
@@ -218,15 +217,13 @@ const scholarshipprogram = schocat?.map((f,index) =>{
                
                 </RadioGroup>
                 </div>
-
-
                 </div>
 
           </div>
 
       <div className="buttonbacapp1">
         <button >Cancel</button>
-        <button onClick={Create}> ADD </button>
+        <button onClick={Create}> Add </button>
       </div>
     </div>
 
@@ -249,8 +246,8 @@ const scholarshipprogram = schocat?.map((f,index) =>{
             <div className="imgprev">
               <label htmlFor=""></label>
               {icon1 ? 
-              (<img style={{width: 50}} className='previmg' src={iconprev1} alt=''/>) : 
-              (<img style={{width: 50}} className='previmg' src={olddata.icon} alt=''/>)}
+              (<img style={{width: 150}} className='previmg' src={iconprev1} alt=''/>) : 
+              (<img style={{width: 100}} className='previmg' src={olddata.icon} alt=''/>)}
             </div>
 
               <div className="schocredet">
@@ -266,16 +263,19 @@ const scholarshipprogram = schocat?.map((f,index) =>{
                   {req.map((item, index) => (
                     <div key={index}>
                       <input type="text" value={item.value} onChange={(e) => handleChangeReq(index, e)}/>
-                      <button onClick={() => handleDeleteReq(index)}>Delete</button>
+                      <button className="deleteBtn" onClick={() => handleDeleteReq(index)}>Delete</button>
                     </div>
                   ))}
                 </div>
 
-                <button onClick={handleAddReq}>Add Requirements</button>
+                <br/>
+                <button className="addReqbtn" onClick={handleAddReq}> Add Requirements </button> 
+                <br/>
 
-                <label htmlFor="">Write a Description</label>
-                <input placeholder={olddata.description} value={description1} onChange={e => setSchodesc1(e.target.value)} type="text" /><br/>
+                <label htmlFor="">Write a Description</label> <br/>
+                <textarea placeholder={olddata.description} value={description1} onChange={e => setSchodesc1(e.target.value)} />
 
+                <div className="option">
                 <FormLabel id="demo-row-radio-buttons-group-label" className="status">Status</FormLabel>
                 <RadioGroup
                     row
@@ -288,9 +288,12 @@ const scholarshipprogram = schocat?.map((f,index) =>{
                       setStatusCheck1(stat);
                     }}  
                   >
-                <FormControlLabel value="Open" control={<Radio />} label="Open" />
-                <FormControlLabel value="closed" control={<Radio />} label="Close" />
+               
+                <FormControlLabel value="Open" control={<Radio />} label="Open" className="edtstatus"/>
+                <FormControlLabel value="closed" control={<Radio />} label="Close" className="edtstatus"/>
                 </RadioGroup>
+                </div>
+
               </div>
           </div>
 

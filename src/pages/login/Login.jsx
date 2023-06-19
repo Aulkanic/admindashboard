@@ -28,10 +28,13 @@ const Login = () => {
     };
     const handlerEmailInput = (e) => setEmail(e.target.value)
     const handlerPasswordInput = (e) => setPassword(e.target.value)
+
   return (
     <div className="login">
       <div className="container">
-    <h3> Sign in </h3>
+    <h3> BMCC Admin </h3>
+    <img src="https://scontent.fcrk1-4.fna.fbcdn.net/v/t39.30808-6/320078628_1906759176338094_6278034478351068357_n.jpg?_nc_cat=102&ccb=1-7&_nc_sid=09cbfe&_nc_eui2=AeGKt9dCeDN118HQ2R7lz8_Pt2YS-hgqcNS3ZhL6GCpw1LM2aiEzzSdSpafO9QJl6dEWT9Adc6-PRhcPSOoZTfjT&_nc_ohc=PCXJ4Z3i6uEAX8bv9SM&_nc_ht=scontent.fcrk1-4.fna&oh=00_AfCpK3ObDaoguj-Xjk8pQuRHRrrXtOnbnz-jrfzKCHDYxg&oe=6494D276" 
+         alt=""/>
     <form>
       <div className="form-group">
         <input 
@@ -59,7 +62,7 @@ const Login = () => {
       <button className="btn btn-primary btn-block" 
                 onClick={handleSubmit}
                 >
-        Submit
+        Login
       </button>
 
     </form>
