@@ -1,12 +1,8 @@
 import "./widget.scss"
 import ArrowUpwardOutlinedIcon from '@mui/icons-material/ArrowUpwardOutlined';
-
 import ApprovalOutlinedIcon from '@mui/icons-material/ApprovalOutlined';
 
-
 import { Link } from "react-router-dom";
-
-
 
 const Widgets = ( {type} ) => {
 
