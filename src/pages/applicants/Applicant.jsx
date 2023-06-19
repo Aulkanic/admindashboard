@@ -382,7 +382,8 @@ const applicantInfoFB = applicantsInfo?.map((data) =>{
       <Sidebar/>
     <div className="applicantContainer">
       <Navbar/>
-      <div className="top">
+<<<<<<< Updated upstream
+      <div className="top" >
       <h1> Applicants </h1>   
       
       <button id="checkButton" onClick={checkedrows}>
@@ -410,6 +411,7 @@ const applicantInfoFB = applicantsInfo?.map((data) =>{
       />
 
     </Box>
+=======
     <div className="top" >
       <h1> Applicants </h1>        
         <Box sx={{ height: 400, width: 'max-content' }}>
@@ -430,6 +432,7 @@ const applicantInfoFB = applicantsInfo?.map((data) =>{
             disableRowSelectionOnClick
           />
         </Box>
+>>>>>>> Stashed changes
 
         </div>
       </div>

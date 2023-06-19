@@ -12,6 +12,10 @@ import { useState } from "react";
 import { useEffect } from "react";
 import { useContext } from "react";
 import { admininfo } from "../../App";
+import { Calendar, momentLocalizer } from "react-big-calendar";
+import moment from "moment";
+import "react-big-calendar/lib/css/react-big-calendar.css";
+const localizer = momentLocalizer(moment);
 
 const Appointment = () => {
   const { loginUser,user } = useContext(admininfo);
@@ -25,6 +29,26 @@ const Appointment = () => {
   const [selectAll, setSelectAll] = useState(false);
   const [selectedUsers, setSelectedUsers] = useState([]);
   const [filteredData, setFilteredData] = useState([]);
+  const [selectedDate, setSelectedDate] = useState(null);
+
+  const handleSelectDate = (date) => {
+    setSelectedDate(date);
+  };
+
+  const getAppointedUsersCount = (date) => {
+    console.log(date)
+    console.log(appointedList)
+    return appointedList.filter(
+      (appointment) =>
+        moment(appointment.schedDate).isSame(date, "day")
+    ).length;
+  };
+
+  const eventList = appointedList.map((appointment) => ({
+    title: `${appointment.Name} - ${appointment.Status}`,
+    start: moment(appointment.schedDate).toDate(),
+    end: moment(appointment.schedDate).toDate(),
+  }));
 
   const handleFilter = async (filterValue) => {
     const filtered = Qualified.filter(item =>
@@ -196,6 +220,7 @@ const Appointment = () => {
       </>
     )
   })
+  console.log(getAppointedUsersCount())
   return (
     <div className="appointment">
         <Sidebar/>
@@ -307,6 +332,33 @@ const Appointment = () => {
         </Table>
       </TableContainer>
       </div>
+      <div className="appointedListContainer">
+          <h3>Appointed Users</h3>
+          {selectedDate && (
+            <p>
+              Total Appointments on {moment(selectedDate).format("YYYY-MM-DD")}:
+              {getAppointedUsersCount(selectedDate)}
+            </p>
+          )}
+          <ul>
+            {appointedList.map((appointment, index) => (
+              <li key={index}>
+                {appointment.Name} - {appointment.Status}
+              </li>
+            ))}
+          </ul>
+        </div>
+      <div className="calendarContainer">
+          <Calendar
+            localizer={localizer}
+            events={eventList}
+            startAccessor="start"
+            endAccessor="end"
+            selectable
+            onSelectSlot={handleSelectDate}
+          />
+        </div>
+
         </div>
     </div>
   )
