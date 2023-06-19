@@ -187,6 +187,7 @@ console.log(datarows)
       ),
     },
   ];
+
   const applicantInfoPA = applicantsInfo?.map((data) =>{
       return (
         <div className="PA">
@@ -379,8 +380,9 @@ const applicantInfoFB = applicantsInfo?.map((data) =>{
 
     <div className="applicant">
       <Sidebar/>
-      <div className="applicantContainer">
+    <div className="applicantContainer">
       <Navbar/>
+<<<<<<< Updated upstream
       <div className="top" >
       <h1> Applicants </h1>   
       <button id="checkButton" onClick={checkedrows}>
@@ -406,6 +408,28 @@ const applicantInfoFB = applicantsInfo?.map((data) =>{
         onRowSelectionModelChange={handleSelectionModelChange}
       />
     </Box>
+=======
+    <div className="top" >
+      <h1> Applicants </h1>        
+        <Box sx={{ height: 400, width: 'max-content' }}>
+          <CustomDataGrid
+            rows={post}
+            columns={columns}
+            getRowId={(row) => row.applicantNum}
+            scrollbarSize={10}
+            initialState={{
+              pagination: {
+                paginationModel: {
+                  pageSize: 5,
+                },
+              },
+            }}
+            pageSizeOptions={[25]}
+            checkboxSelection
+            disableRowSelectionOnClick
+          />
+        </Box>
+>>>>>>> Stashed changes
 
         </div>
       </div>
