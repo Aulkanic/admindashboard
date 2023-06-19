@@ -3,6 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
+    "@babel/plugin-proposal-private-property-in-object": "^7.16.5",
     "@emotion/react": "^11.10.6",
     "@emotion/style": "^0.8.0",
     "@emotion/styled": "^11.10.6",
@@ -19,6 +20,7 @@
     "circular-progress-bar": "^2.1.0",
     "env-cmd": "^10.1.0",
     "react": "^18.2.0",
+    "react-big-calendar": "^1.8.1",
     "react-bootstrap": "^2.7.4",
     "react-card-flip": "^1.2.0",
     "react-chartjs-2": "^5.2.0",
@@ -32,8 +34,7 @@
     "sass": "^1.60.0",
     "socket.io-client": "^4.6.2",
     "sweetalert": "^2.1.2",
-    "web-vitals": "^2.1.4",
-    "@babel/plugin-proposal-private-property-in-object": "^7.16.5"
+    "web-vitals": "^2.1.4"
   },
   "scripts": {
     "start": "env-cmd -f .env.local react-scripts start",
