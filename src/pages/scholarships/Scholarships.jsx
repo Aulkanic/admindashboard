@@ -1,7 +1,7 @@
 import Navbar from "../../components/navbar/Navbar"
 import Sidebar from "../../components/sidebar/Sidebar"
 import "./scholarships.scss"
-import { Tabs, Tab,Table, TableBody, TableCell, TableContainer, TableHead,TableRow, Paper, Box, Button, Typography, Modal} from "@mui/material"; 
+import { Table, TableBody, TableCell, TableContainer, TableHead,TableRow, Paper, Box, Modal} from "@mui/material"; 
 import './scholarship.css'
 import { FetchingSchoProg, CreateSchoProg, UpdateSchoProg } from "../../api/request";
 import { useEffect } from "react";
@@ -9,7 +9,7 @@ import { useState } from "react";
 import Radio from '@mui/material/Radio';
 import RadioGroup from '@mui/material/RadioGroup';
 import FormControlLabel from '@mui/material/FormControlLabel';
-import { admininfo } from "../../App";
+
 import FormLabel from '@mui/material/FormLabel';
 import swal from "sweetalert";
 
@@ -27,7 +27,6 @@ const Scholarships = () => {
     const [descriptionu, setSchodesc1] = useState('');
     const [statusu, setStatusCheck1] = useState('');
     const [olddata, setOlddata] = useState([]);
-    const [oldicon, setOldicon] = useState('');
     const [iconprev, setSchoprev] = useState();
     const [iconprev1, setSchoprev1] = useState();
     const [req, setReq] = useState([]);
@@ -59,13 +58,17 @@ const Scholarships = () => {
     top: '50%',
     left: '50%',
     transform: 'translate(-50%, -50%)',
-    width: '100%',
-    height: '100%',
+    width: '1000px',
+    height: '80vh',
     bgcolor: 'background.paper',
-    border: '2px solid #000',
+    border: 'none',
+    borderRadius: '10px',
+    padding: '20px',
     boxShadow: 24,
     overflow: 'auto',
+    
   };
+  
   useEffect(() => {
     const fetchData = async () => {
       try {
@@ -156,18 +159,20 @@ function Edit(event){
 const scholarshipprogram = schocat?.map((f,index) =>{
   return (
         <TableRow key ={f.applicantNum} className="row">  
-            <TableCell className="tableCell"> <img style={{width: 100}} src={f.icon} alt="" /> </TableCell>  
+            <TableCell className="tableCell"> <img style={{width: 50, height: 50}} src={f.icon} alt="" /></TableCell>  
             <TableCell className="tableCell"> {f.name} </TableCell>  
             <TableCell className="tableCell"> {f.description} </TableCell>
             <TableCell className="tableCell"> {f.status} </TableCell>
-            <div>
-          <button className="editButton" onClick={() =>handleOpen1(f,index)}>Edit</button>
-          </div>
+            <TableCell className="tableCell"> 
+              <button className="editButton" 
+                      onClick={() =>handleOpen1(f,index)}> Edit </button> 
+            </TableCell>
         </TableRow>
     )})
+
   return (
     <>
-    {/* Modal for Add button */}
+  {/* Modal for Add button */}
       <Modal
         open={open}
         onClose={handleClose}
@@ -179,41 +184,52 @@ const scholarshipprogram = schocat?.map((f,index) =>{
             <button onClick={handleClose}>X</button>
           </div>
             
-      <div className="contentscho">
+        <div className="contentscho">
           <div className="formleft">
-              <div className="schodetails">
+            <div className="schodetails">
+
               <div className="newsimgprev">
-              {icon &&  <img style={{width: 100, height:100}} className='previmg' src={iconprev} alt=''/> }
+              {icon &&  <img style={{width: 50, height:50 }} className='previmg' src={iconprev} alt=''/> }
               </div>
+
                 <label htmlFor="">Scholarship Icon</label>
                 <input onChange={e=> setSchoimg(e.target.files[0])}  type="file" /><br/>
-                <label htmlFor="">Scholarshhip Program Name</label>
+
+                <label htmlFor="">Scholarshhip Name</label>
                 <input onChange={e=> setSchotitle(e.target.value)} type="text" /><br/>
+
                 <label htmlFor="">Write a Description</label>
                 <input onChange={e=> setSchodesc(e.target.value)} type="text" /><br/>
-                <FormLabel id="demo-row-radio-buttons-group-label">Status</FormLabel>
+
+                <div className="status">
+                <FormLabel id="demo-row-radio-buttons-group-label" className="stat"> Status </FormLabel>
                 <RadioGroup
                     row
                     aria-labelledby="demo-row-radio-buttons-group-label"
                     name="row-radio-buttons-group"
                     value={status}
+                    sx={{justifyContent: 'center'}}
                     onChange={(e) =>{
                      const stat = e.target.value;
                       setStatusCheck(stat);
-                    }}  
-                  >
-                <FormControlLabel value="Open" control={<Radio />} label="Open" />
-                <FormControlLabel value="Close" control={<Radio />} label="Close" />
+                    }}>
+
+                
+                <FormControlLabel value="Open" control={<Radio />} label="Open" className="status"/>
+                <FormControlLabel value="Close" control={<Radio />} label="Close" className="status"/>
+               
                 </RadioGroup>
+                </div>
                 </div>
 
           </div>
 
-          <div className="buttonbacapp">
+      <div className="buttonbacapp1">
         <button >Cancel</button>
-        <button onClick={Create}> ADD </button>
+        <button onClick={Create}> Add </button>
       </div>
-      </div>
+    </div>
+
         </Box>
       </Modal>
 
@@ -224,7 +240,6 @@ const scholarshipprogram = schocat?.map((f,index) =>{
         onClose={handleClose1}
       >
         <Box sx={style}>
-
           <div className="buttonclosed">
             <button classname='btnClose' onClick={handleClose1}> X </button>
           </div>
@@ -233,8 +248,11 @@ const scholarshipprogram = schocat?.map((f,index) =>{
         
             <div className="imgprev">
               <label htmlFor=""></label>
-          {icon1 ? (<img style={{width: 100}} className='previmg' src={iconprev1} alt=''/>) : (<img style={{width: 100}} className='previmg' src={olddata.icon} alt=''/>)}
-              </div>
+              {icon1 ? 
+              (<img style={{width: 150}} className='previmg' src={iconprev1} alt=''/>) : 
+              (<img style={{width: 100}} className='previmg' src={olddata.icon} alt=''/>)}
+            </div>
+
               <div className="schocredet">
                 <label htmlFor="">Scholarship Icon</label>
                 <input onChange={e=> setSchoimg1(e.target.files[0])}  type="file" /><br/>
@@ -256,37 +274,24 @@ const scholarshipprogram = schocat?.map((f,index) =>{
                       setStatusCheck1(stat);
                     }}  
                   >
-                <FormControlLabel value="Open" control={<Radio />} label="Open" />
-                <FormControlLabel value="closed" control={<Radio />} label="Close" />
+               
+                <FormControlLabel value="Open" control={<Radio />} label="Open" className="edtstatus"/>
+                <FormControlLabel value="closed" control={<Radio />} label="Close" className="edtstatus"/>
                 </RadioGroup>
                 </div>
-                <div className="schoreq">
-                  <label htmlFor="">Scholarship Requirement</label>
-                  <div className="reqcontainer">
-                  {req.map((item, index) => (
-                    <div key={index}>
-                      <input
-                        type="text"
-                        value={item.value}
-                        onChange={(e) => handleChangeReq(index, e)}
-                      />
-                      <button onClick={() => handleDeleteReq(index)}>Delete</button>
-                    </div>
-                  ))}
-                </div>
-                <button onClick={handleAddReq}>Add Requirements</button>
-                </div>
+
+              </div>
           </div>
-          <div className="buttonbacapp">
-        <button onClick={handleClose1}>Cancel</button>
-        <button onClick={Edit}>Save Changes</button>
+
+      <div className="buttonbacapp2">
+        <button onClick={handleClose1} className="cnlBtn">Cancel</button>
+        <button onClick={Edit} className="edtBtn">Save Changes</button>
       </div>
 
 
 
-        </Box>
+    </Box>
       </Modal>
-      
     <div className="scholarships">
         <Sidebar/>
     <div className="scholarshipsContainer">
@@ -296,29 +301,30 @@ const scholarshipprogram = schocat?.map((f,index) =>{
           <button className="addbtn" onClick={handleOpen}>ADD</button>
           </h1>
           
-          
         <TableContainer component={Paper} className="table">
         <Table sx={{ minWidth: 650 }} aria-label="simple table">
 
           <TableHead>
             <TableRow>
-              <TableCell className="tableCell"> Icon </TableCell>
-              <TableCell className="tableCell"> Scholarship Program </TableCell>
-              <TableCell className="tableCell"> Description </TableCell>
-              <TableCell className="tableCell"> Status </TableCell>
-              <TableCell className="tableCell"> Actions </TableCell>
+              <TableCell className="tableCell2"> Icon </TableCell>
+              <TableCell className="tableCell2"> Scholarship Program </TableCell>
+              <TableCell className="tableCell2"> Description </TableCell>
+              <TableCell className="tableCell2"> Status </TableCell>
+              <TableCell className="tableCell2"> Actions </TableCell>
             </TableRow>
+            
           </TableHead>
 
           <TableBody>
             {scholarshipprogram}
           </TableBody>
         </Table>
+
         </TableContainer>
           </div>
             </div>
     </div>
-          </>
+  </>
   )
 }
 
