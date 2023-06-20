@@ -410,28 +410,7 @@ const applicantInfoFB = applicantsInfo?.map((data) =>{
       />
 
     </Box>
-    <div className="top" >
-      <h1> Applicants </h1>        
-        <Box sx={{ height: 400, width: 'max-content' }}>
-          <CustomDataGrid
-            rows={post}
-            columns={columns}
-            getRowId={(row) => row.applicantNum}
-            scrollbarSize={10}
-            initialState={{
-              pagination: {
-                paginationModel: {
-                  pageSize: 5,
-                },
-              },
-            }}
-            pageSizeOptions={[25]}
-            checkboxSelection
-            disableRowSelectionOnClick
-          />
-        </Box>
 
-        </div>
       </div>
     </div>
   </div>
