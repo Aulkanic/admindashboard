@@ -260,28 +260,7 @@ const scholarshipprogram = schocat?.map((f,index) =>{
                 <input placeholder={olddata.name} name="titleu" value={titleu} onChange={(e) => {
                   setSchotitle1(e.target.value);
                 }} type="text" /><br/>
-                <label htmlFor="">Write a Description</label>
-                <input placeholder={olddata.description} value={descriptionu} onChange={e => setSchodesc1(e.target.value)} type="text" /><br/>
-                <FormLabel id="demo-row-radio-buttons-group-label">Status</FormLabel>
-
-                <label htmlFor="title1">Scholarship Program Name</label>
-                <input placeholder={olddata.name} name="title1" value={titleu} onChange={(e) => {
-                  setSchotitle1(e.target.value);}} type="text" /><br/>
-
-                <label htmlFor="">Scholarship Requirement</label>
-                <div className="reqcontainer">
-                  {req.map((item, index) => (
-                    <div key={index}>
-                      <input type="text" value={item.value} onChange={(e) => handleChangeReq(index, e)}/>
-                      <button className="deleteBtn" onClick={() => handleDeleteReq(index)}>Delete</button>
-                    </div>
-                  ))}
-                </div>
-
-                <br/>
-                <button className="addReqbtn" onClick={handleAddReq}> Add Requirements </button> 
-                <br/>
-
+ 
                 <label htmlFor="">Write a Description</label> <br/>
                 <textarea placeholder={olddata.description} value={descriptionu} onChange={e => setSchodesc1(e.target.value)} />
 
