@@ -19,6 +19,7 @@ const Endpoints = {
     RE_APPOINT: 'Appointment/Reappointed',
     SET_APPROVED: 'Appointment/SetApproved',
     FETCH_BMCCSCHOLAR: 'BMCCScholar/Scholars',
+    FETCH_BMCCSCHOLARINFO: 'BMCCScholar/SchoInfo/',
     CREATE_SCORECARD: 'Scorecard/score',
     FETCH_SCORECARD: 'Scorecard/getScore/',
     LIST_REQUIREMENTS: 'documents/Requirements',

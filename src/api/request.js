@@ -65,6 +65,9 @@ export const SetApproved = {
 export const FetchingBmccScho = {
     FETCH_SCHOLARS: () => axiosInstance.get(Endpoints.FETCH_BMCCSCHOLAR)
 }
+export const FetchingBmccSchoinfo = {
+    FETCH_SCHOLARSINFO: (data) => axiosInstance.get(Endpoints.FETCH_BMCCSCHOLARINFO+data)
+}
 export const CreatingScore = {
     CREATE_SCORECARD: (data) => axiosInstance.post(Endpoints.CREATE_SCORECARD,data)
 }

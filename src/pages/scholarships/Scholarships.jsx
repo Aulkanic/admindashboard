@@ -22,10 +22,10 @@ const Scholarships = () => {
     const [title, setSchotitle] = useState('');
     const [description, setSchodesc] = useState('');
     const [status, setStatusCheck] = useState('');
-    const [icon1, setSchoimg1] = useState(null);
-    const [title1, setSchotitle1] = useState('');
-    const [description1, setSchodesc1] = useState('');
-    const [status1, setStatusCheck1] = useState('');
+    const [icon1, setSchoimg1] = useState('');
+    const [titleu, setSchotitle1] = useState('');
+    const [descriptionu, setSchodesc1] = useState('');
+    const [statusu, setStatusCheck1] = useState('');
     const [olddata, setOlddata] = useState([]);
     const [oldicon, setOldicon] = useState('');
     const [iconprev, setSchoprev] = useState();
@@ -130,8 +130,11 @@ const Scholarships = () => {
 
 function Edit(event){
   event.preventDefault();
-  const schoid = olddata.schoProgId;
+  const schoid =  olddata.schoProgId;
   const icon = icon1;
+  const title1 = titleu || olddata.title
+  const description1 = descriptionu || olddata.description;
+  const status1 = statusu || olddata.status; 
   const data = {title1,description1,status1,schoid,icon}
   console.log(data)
   UpdateSchoProg.UPDATE_SCHOPROG(data)
@@ -235,19 +238,19 @@ const scholarshipprogram = schocat?.map((f,index) =>{
               <div className="schocredet">
                 <label htmlFor="">Scholarship Icon</label>
                 <input onChange={e=> setSchoimg1(e.target.files[0])}  type="file" /><br/>
-                <label htmlFor="title1">Scholarship Program Name</label>
-                <input placeholder={olddata.name} name="title1" value={title1} onChange={(e) => {
+                <label htmlFor="titleu">Scholarship Program Name</label>
+                <input placeholder={olddata.name} name="titleu" value={titleu} onChange={(e) => {
                   setSchotitle1(e.target.value);
                 }} type="text" /><br/>
                 <label htmlFor="">Write a Description</label>
-                <input placeholder={olddata.description} value={description1} onChange={e => setSchodesc1(e.target.value)} type="text" /><br/>
+                <input placeholder={olddata.description} value={descriptionu} onChange={e => setSchodesc1(e.target.value)} type="text" /><br/>
                 <FormLabel id="demo-row-radio-buttons-group-label">Status</FormLabel>
                 <RadioGroup
                     row
                     aria-labelledby="demo-row-radio-buttons-group-label"
                     name="row-radio-buttons-group"
                     defaultValue={olddata.status}
-                    value={status1 || olddata.status}
+                    value={statusu || olddata.status}
                     onChange={(e) =>{
                      const stat = e.target.value;
                       setStatusCheck1(stat);
