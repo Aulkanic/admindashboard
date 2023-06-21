@@ -196,7 +196,7 @@ const Scholars = () => {
             aria-describedby="modal-modal-description">
       <Box sx={style}>
         <div className='hbtnschocon'>
-          <button>X</button>
+          <button onClick={handleClose}>X</button>
         </div>
         <div className="schoinfocon">
           <div className="leftshco">

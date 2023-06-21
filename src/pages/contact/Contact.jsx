@@ -15,6 +15,7 @@ import swal from 'sweetalert';
 
 const Contact = () => {
   const [reqlist, setReqlist] = useState([]);
+  const [submitted, setSublist] = useState([]);
   const [open, setOpen] = useState(false);
   const [schocat, setSchocat] = useState([]);
   const[schoName,setSchoname] = useState('');
@@ -57,12 +58,28 @@ const Contact = () => {
       const req = await ListofReq.FETCH_REQUIREMENTS()
       const scho = await FetchingSchoProg.FETCH_SCHOPROG()
       console.log(req)
-      setReqlist(req.data.Requirements);
+      setReqlist(req.data.Requirements.results1);
+      setSublist(req.data.Requirements.results2);
       setSchocat(scho.data.SchoCat);
     }
     Fetch();
   }, []);
 
+  const mergedData = reqlist.map((requirement) => {
+    const { requirementID, requirementName, schoName, Status,batch } = requirement;
+
+    const submissions = submitted.filter((submission) => submission.requirement_Name === requirementName);
+
+    return {
+      requirementID,
+      requirementName,
+      schoName,
+      batch,
+      Status,
+      numSubmissions: submissions.length,
+    };
+  });
+  console.log(mergedData)
   const handleChange = async (event) => {
     const value = await event.target.value;
     setSchoname(value);
@@ -108,7 +125,7 @@ const Contact = () => {
       editable: false,
     },
     {
-      field: 'numDocs',
+      field: 'numSubmissions',
       headerName: 'Total Submitted',
       width: 250,
       editable: false,
@@ -198,7 +215,7 @@ const Contact = () => {
               <h1>Requirements</h1>
               <button onClick={handleOpen}>Add</button>
               <DataGrid
-        rows={reqlist}
+        rows={mergedData}
         columns={columns}
         getRowId={(row) => row.requirementID}
         scrollbarSize={10}

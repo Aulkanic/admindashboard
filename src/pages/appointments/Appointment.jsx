@@ -34,6 +34,36 @@ const Appointment = () => {
   const handleSelectDate = (date) => {
     setSelectedDate(date);
   };
+  const formatDateString = (dateString) => {
+    const date = new Date(dateString);
+    const options = { year: 'numeric', month: 'long', day: 'numeric' };
+    return date.toLocaleDateString('en-US', options);
+  };
+
+  const handleStartTimeChange = (e) => {
+    const selectedTime = e.target.value;
+    const timeWithAMPM = addAMPM(selectedTime);
+    setStartTime(timeWithAMPM);
+  };
+
+  const handleEndTimeChange = (e) => {
+    const selectedTime = e.target.value;
+    const timeWithAMPM = addAMPM(selectedTime);
+    setEndTime(timeWithAMPM);
+  };
+
+  const addAMPM = (time) => {
+    const [hour, minute] = time.split(':');
+    const hourInt = parseInt(hour, 10);
+    const ampm = hourInt >= 12 ? 'PM' : 'AM';
+    const formattedHour = hourInt % 12 || 12;
+    return `${formattedHour}:${minute} ${ampm}`;
+  };
+
+  const handleDateChange = (e) => {
+    const formattedDate = formatDateString(e.target.value);
+    setAppointmentDate(formattedDate);
+  };
 
   const getAppointedUsersCount = (date) => {
     console.log(date)
@@ -58,12 +88,6 @@ const Appointment = () => {
     );
     setFilteredData(filtered);
     
-  };
-  const handleStartTimeChange = (event) => {
-    setStartTime(event.target.value);
-  };
-  const handleEndTimeChange = (event) => {
-    setEndTime(event.target.value);
   };
   const handleUserSelection = (userId,name,email,scho,date,code) => {
     const currentIndex = selectedUsers.indexOf(userId);
@@ -220,7 +244,6 @@ const Appointment = () => {
       </>
     )
   })
-  console.log(getAppointedUsersCount())
   return (
     <div className="appointment">
         <Sidebar/>
@@ -233,7 +256,7 @@ const Appointment = () => {
         <input
           type="date"
           value={appointmentDate}
-          onChange={(e) => setAppointmentDate(e.target.value)}
+          onChange={handleDateChange}
         />
       </div>
 
