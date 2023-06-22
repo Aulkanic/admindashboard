@@ -134,38 +134,40 @@ const Contact = () => {
   ];
   return (
     <div className="contact">
-        <Sidebar/>
-        <div className="contactContainer">
-            <Navbar />
-            <div className="top">
-              <Modal
-                      open={open}
-                      aria-labelledby="modal-modal-title"
-                      aria-describedby="modal-modal-description">
-                <Box sx={style}>
-                <div className="buttonclosed">
-                <button onClick={handleClose}>X</button>
+      <Sidebar/>
+    <div className="contactContainer">
+      <Navbar />
 
-                </div>
-                <div style={{margin: 20}} className="form">
-                <div className="selectschoreqadd">
-                <FormControl sx={{ minWidth: 400 }}>
-            <InputLabel sx={{color:'green'}} id="demo-simple-select-label">Choose Scholarship Category</InputLabel>
+    <div className="top">
+      <Modal
+        open={open}
+        aria-labelledby="modal-modal-title"
+        aria-describedby="modal-modal-description">
+          
+      <Box sx={style}>
+        <div className="buttonclosed">
+          <button onClick={handleClose}> X </button>
+        </div>
+
+        <div className="form">
+        <div className="selectschoreqadd">
+        <FormControl sx={{ minWidth: 500}}>
+          <InputLabel id="demo-simple-select-label" className='inputlbl'>
+             Choose Scholarship Category
+          </InputLabel>
             <Select
                  MenuProps={{
                   getContentAnchorEl: null,
                   anchorOrigin: {
                     vertical: 'bottom',
-                    horizontal: 'left',
-                  },
+                    horizontal: 'left',},
                   transformOrigin: {
                     vertical: 'top',
-                    horizontal: 'left',
-                  },
+                    horizontal: 'left',},
                   PaperProps: {
                     style: {
-                      width: 500,
-                      maxHeight: 250,// Adjust the maximum height of the menu
+                    width: 500,
+                    maxHeight: 250,// Adjust the maximum height of the menu
                     },
                   },
                 }}
@@ -184,9 +186,10 @@ const Contact = () => {
             </Select>
            
             </FormControl> 
-                </div>
-                <TextField
-                   label='Requirement Name' 
+          </div>
+
+                <TextField 
+                    label='Requirement Name' 
                     margin='normal' 
                     variant='outlined'
                     size='large'
@@ -207,31 +210,36 @@ const Contact = () => {
                       </MenuItem>
                     ))}
                 </TextField> 
+
+                <div className="modalBtn">
+                  <button className="cnclBttn" onClick={handleClose}>Cancel</button>
+                  <button className="addBttn" onClick={AddReq}>Add</button>
                 </div>
-                <button onClick={handleClose}>Cancel</button>
-                <button onClick={AddReq}>Add</button>
+
+                </div>
+                
+              
                 </Box>
               </Modal>
-              <h1>Requirements</h1>
-              <button onClick={handleOpen}>Add</button>
-              <DataGrid
-        rows={mergedData}
-        columns={columns}
-        getRowId={(row) => row.requirementID}
-        scrollbarSize={10}
-        initialState={{
-          pagination: {
-            paginationModel: {
-              pageSize: 10,
-            },
-          },
-        }}
-        pageSizeOptions={[25]}
-        checkboxSelection
-        disableRowSelectionOnClick
-      />
-            </div>
-        </div>
+
+        <h1>Requirements</h1>
+          <button className="addBtn" onClick={handleOpen}> Add </button>
+
+         <DataGrid sx={{width: 1200}}
+            rows={mergedData}
+            columns={columns}
+            getRowId={(row) => row.requirementID}
+            scrollbarSize={10}
+            initialState={{
+              pagination: {
+                paginationModel: {
+                  pageSize: 10,
+                },},}}
+                  pageSizeOptions={[25]}
+                checkboxSelection
+              disableRowSelectionOnClick/>
+         </div>
+      </div>
     </div>
   )
 }

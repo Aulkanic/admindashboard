@@ -10,7 +10,7 @@ import MenuItem from '@mui/material/MenuItem';
 import FormControl from '@mui/material/FormControl';
 import { CreatingScore,FetchingScore } from '../../api/request';
 import swal from 'sweetalert';
-import { Input } from '@mui/icons-material';
+
 
 export const About = () => {
     const [schoprog, setSchoProg] = useState([]);
@@ -539,16 +539,14 @@ export const About = () => {
             </div>
             </div>
         </>
-      )
-     
-    })
+      )})
 
   return (
     <div className="about">
         <Sidebar/>
         <div className="aboutContainer">
         <Navbar/>
-        <div className="top">
+        <div   className="top">
           <h1>Score Card</h1>
           <div className="sheets">
             <div className="hshe">
@@ -591,38 +589,48 @@ export const About = () => {
               {scoreCardlist.length > 0 ? (<div className="formscorecard">
               {scoreCardlist}
               </div>) : (<div className="formscorecard">
-              <div className="quescontainer">
+
+            <div className="quescontainer">
+              <div className="quesco">
+               <div className="hshe">
+                <input onChange={(e) =>setWl(e.target.value)} type="number"/><p>Saan ka nakatira</p>             
+              </div>   
+
+              <div className="hshe">
+                <input onChange={(e) =>setWl1(e.target.value)} type="number"/><p>Subdivision</p>
+              </div>
+
+              <div className="hshe">
+                <input onChange={(e) =>setWl2(e.target.value)} type="number"/><p>Sitio/Purok</p>
+              </div>
+
+              <div className="hshe">
+                <input onChange={(e) =>setWl3(e.target.value)} type="number"/><p>Depressed Area</p>
+                </div>
+              </div>
+
             <div className="quesco">
-            <div className="hshe">
-            <input onChange={(e) =>setWl(e.target.value)} type="number"/><p>Saan ka nakatira</p>             
-            </div>   
-            <div className="hshe">
-            <input onChange={(e) =>setWl1(e.target.value)} type="number"/><p>Subdivision</p>
+              <div className="hshe">
+               <input onChange={(e) =>setHl(e.target.value)} type="number"/><p>Gaano na Katagal?</p>             
+             </div>   
+
+              <div className="hshe">
+                <input onChange={(e) =>setHl1(e.target.value)} type="number"/><p>6 Months</p>
+              </div>
+
+              <div className="hshe">
+                <input onChange={(e) =>setHl2(e.target.value)} type="number"/><p>1-2 Years</p>
+              </div>
+
+              <div className="hshe">
+                <input onChange={(e) =>setHl3(e.target.value)} type="number"/><p>3-4 Years</p>
+              </div>
+
+              <div className="hshe">
+                <input onChange={(e) =>setHl4(e.target.value)} type="number"/><p>5 Years</p>
+              </div>
             </div>
-            <div className="hshe">
-            <input onChange={(e) =>setWl2(e.target.value)} type="number"/><p>Sitio/Purok</p>
-            </div>
-            <div className="hshe">
-            <input onChange={(e) =>setWl3(e.target.value)} type="number"/><p>Depressed Area</p>
-            </div>
-            </div>
-            <div className="quesco">
-            <div className="hshe">
-            <input onChange={(e) =>setHl(e.target.value)} type="number"/><p>Gaano na Katagal?</p>             
-            </div>   
-            <div className="hshe">
-            <input onChange={(e) =>setHl1(e.target.value)} type="number"/><p>6 Months</p>
-            </div>
-            <div className="hshe">
-            <input onChange={(e) =>setHl2(e.target.value)} type="number"/><p>1-2 Years</p>
-            </div>
-            <div className="hshe">
-            <input onChange={(e) =>setHl3(e.target.value)} type="number"/><p>3-4 Years</p>
-            </div>
-            <div className="hshe">
-            <input onChange={(e) =>setHl4(e.target.value)} type="number"/><p>5 Years</p>
-            </div>
-            </div>
+
             <div className="quesco">
             <div className="hshe">
             <input onChange={(e) =>setOs(e.target.value)} type="number"/><p>Uri ng Pag-aari ng Bahay?</p>             
@@ -661,6 +669,7 @@ export const About = () => {
             </div>
             </div>
             </div>
+
             <div className="quescontainer">
             <div className="quesco">
             <div className="hshe">
@@ -725,6 +734,7 @@ export const About = () => {
             <input onChange={(e) =>setTs6(e.target.value)} type="number"/><p>Out of Children</p>
             </div>
             </div>
+
             <div className="quesco">
             <div className="hshe">
             <input onChange={(e) =>setGwa(e.target.value)} type="number"/><p>General Weighted Average</p>             
@@ -745,14 +755,16 @@ export const About = () => {
             <input onChange={(e) =>setGwa5(e.target.value)} type="number"/><p>80 Below</p>
             </div>
             </div>
-            </div>
-              </div>)}
-          </div>
-          <div>
-            <button onClick={handleSubmit}>Save</button>
+            </div>    
+            </div>)}
+                <div>
+                  <button onClick={handleSubmit}> Save </button>
+                </div>
           </div>
         </div>
         </div>
+
+         
     </div>
   )
 }

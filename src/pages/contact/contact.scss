@@ -5,21 +5,22 @@
         flex: 7;
 
         .top{
-            -webkit-box-shadow: 2px 4px 10px 1px rgba(171, 248, 194, 0.47);
-            box-shadow: 2px 4px 10px 1px rgba(100, 236, 123, 0.47);
-            margin: 20px;
-            padding: 20px;
-            border-radius: 20px;
+            -webkit-box-shadow: 2px 4px 10px 1px rgba(83, 99, 88, 0.47);
+            box-shadow: 2px 4px 10px 1px rgba(87, 116, 92, 0.47);
+            margin: 10px;
+            padding: 15px;
+            border-radius: 10px;
 
             h1{
                 color: #005247;
-                margin-left: 10px;
+                margin: 4px;
+                font-weight: 1000;
             }
 
             .cards{
                 display: flex;
                 text-align: center;
-                gap: 20px;
+                gap: 15px;
                 height: 60vh;
                 justify-content: center;
                 
@@ -41,10 +42,68 @@
                     justify-content: center;
                     margin: 5px;
                    
-                }
-                    
-                }
+                }}
             }
-            }
+        }
     }
+}
+
+.form{
+    padding: 10px;
+    margin: 40px;
+    border: none;
+    border-radius: 10px;
+
+    .modalBtn{
+        margin: 10px;
+        display: flex;
+        text-align: center;
+        justify-content: center;
+        align-items: center;
+
+        .cnclBttn{
+            height: 35px;
+            width: 80px;
+            margin: 10px;
+            border: none;
+            border-radius: 10px;
+            color: #005427;
+            background-color: #ace7b6;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: 600;
+        }
+
+        .addBttn{
+            height: 35px;
+            width: 80px;
+            margin: 10px;
+            border: none;
+            border-radius: 10px;
+            color: #005427;
+            background-color: #ace7b6;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: 600;
+        }
+    }
+}
+
+.dataTbl{
+    width: 300;
+}
+
+.addBtn{
+    float: right;
+    margin-top: -40px;
+    margin-right: 10px;
+    width: 80px;
+    height: 30px;
+    border: none;
+    border-radius: 10px;
+    background-color: #ace7b6;
+    font-size: 14px;
+    font-weight: 600;
+    color: #005427;
+    cursor: pointer;
 }
