@@ -3,7 +3,7 @@ import Navbar from '../../components/navbar/Navbar';
 import Sidebar from '../../components/sidebar/Sidebar';
 import './users.scss';
 import { useEffect, useState } from 'react';
-import { Tabs, Tab, Box, Modal } from "@mui/material"; 
+import { Box } from "@mui/material"; 
 import { styled } from '@mui/material/styles';
 import { DataGrid} from '@mui/x-data-grid';
 import Avatar from '@mui/material/Avatar';
@@ -11,9 +11,7 @@ import Chip from '@mui/material/Chip';
 
 const Users = () => {
   
-  const [open, setOpen] = useState(false);
   const [display, setDisplay] = useState([]);
-  const [status, setStatus] = useState('Active');
 
   const handleButtonClick = (id) => {
     setDisplay(prevDisplay => {

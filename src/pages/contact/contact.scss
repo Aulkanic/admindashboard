@@ -13,8 +13,9 @@
 
             h1{
                 color: #005247;
-                margin: 4px;
                 font-weight: 1000;
+                margin-bottom: 5px;
+                padding: 3px;
             }
 
             .cards{
@@ -89,10 +90,6 @@
     }
 }
 
-.dataTbl{
-    width: 300;
-}
-
 .addBtn{
     float: right;
     margin-top: -40px;
@@ -107,3 +104,8 @@
     color: #005427;
     cursor: pointer;
 }
+
+
+
+
+

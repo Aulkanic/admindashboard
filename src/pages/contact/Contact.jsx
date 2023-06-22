@@ -225,7 +225,7 @@ const Contact = () => {
         <h1>Requirements</h1>
           <button className="addBtn" onClick={handleOpen}> Add </button>
 
-         <DataGrid sx={{width: 1200}}
+         <DataGrid sx={{width: 1200, padding: 0.5}} className="dataTbl"
             rows={mergedData}
             columns={columns}
             getRowId={(row) => row.requirementID}
