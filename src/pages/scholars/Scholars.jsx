@@ -44,10 +44,12 @@ const OfflineBadge = styled(Badge)(({ theme }) => ({
 const Scholars = () => {
   const [data, setData] = useState([]);
   const [open, setOpen] = useState(false);
+  const [open1, setOpen1] = useState(false);
   const [value, setValue] = useState(0);
   const [schoinf1,setSchoInf1] = useState([]);
   const [schoinf2,setSchoInf2] = useState([]);
   const [schoinf3,setSchoInf3] = useState([]);
+  const [questions, setQuestions] = useState([]);
 
   useEffect(() => {
     async function Fetch(){
@@ -144,15 +146,16 @@ const Scholars = () => {
     setValue(newValue);
   };
   const OnlineAvatar = ({ user}) => {
+    console.log(user)
     return (
       <>
-        {user.isOnline ? (
+        {user.isOnline === 'True' ? (
           <OnlineBadge overlap="circular" variant="dot" anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}>
-            <Avatar sx={{ width: '100%', height: '100%', borderRadius: '50%' }} alt={user.Name} src={user.profile} />
+            <Avatar sx={{ width: '150px', height: '150px', borderRadius: '50%' }} alt={user.Name} src={user.profile} />
           </OnlineBadge>
         ) : (
           <OfflineBadge overlap="circular" variant="dot" anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}>
-            <Avatar sx={{ width: '100%', height: '100%', borderRadius: '50%',border:'2px solid black' }} alt={user.Name} src={user.profile} />
+            <Avatar sx={{ width: '150px', height: '150px', borderRadius: '50%',border:'2px solid black' }} alt={user.Name} src={user.profile} />
           </OfflineBadge>
         )}
       </>
@@ -160,6 +163,8 @@ const Scholars = () => {
   };
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
+  const handleOpen1 = () => setOpen1(true);
+  const handleClose1 = () => setOpen1(false);
 
   const requirements = schoinf3?.map((docu, index) => {
       return (
@@ -186,6 +191,28 @@ const Scholars = () => {
  
 
     });
+
+    const addQuestion = () => {
+      setQuestions([...questions, { question: '', choices: [] }]);
+    };
+  
+    const handleQuestionChange = (e, index) => {
+      const updatedQuestions = [...questions];
+      updatedQuestions[index].question = e.target.value;
+      setQuestions(updatedQuestions);
+    };
+  
+    const addChoice = (index) => {
+      const updatedQuestions = [...questions];
+      updatedQuestions[index].choices.push('');
+      setQuestions(updatedQuestions);
+    };
+  
+    const handleChoiceChange = (e, questionIndex, choiceIndex) => {
+      const updatedQuestions = [...questions];
+      updatedQuestions[questionIndex].choices[choiceIndex] = e.target.value;
+      setQuestions(updatedQuestions);
+    };
 
   return (
     <>
@@ -315,6 +342,18 @@ const Scholars = () => {
         </div>
       </Box>
     </Modal>
+    <Modal             
+    open={open1}
+    onClose={handleClose1}
+    aria-labelledby="modal-modal-title"
+    aria-describedby="modal-modal-description">
+      <Box sx={style}>
+      <div className='hbtnschocon'>
+          <button onClick={handleClose1}>X</button>
+        </div>
+
+      </Box>
+    </Modal>
     <div className="scholars">
         <Sidebar/>
         <div className="scholarsContainer">
@@ -322,6 +361,7 @@ const Scholars = () => {
             <div className="top">
             
               <h1>Scholars</h1>
+              <button onClick={handleOpen1}>Renewal Form</button>
               <Box sx={{ height: 400, width: '100%' }}>
       <DataGrid
         rows={data}

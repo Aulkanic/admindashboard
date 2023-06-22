@@ -92,3 +92,6 @@ export const Activitylog = {
 export const UpdateEmp = {
     UPDATE_EMP: (data) => axiosInstance.patch(Endpoints.UPDATE_EMP,data)
 }
+export const setRemarks = {
+    SET_REMARKS: (data) => axiosInstance.patch(Endpoints.SET_REMARKS,data)
+}

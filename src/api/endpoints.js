@@ -2,6 +2,7 @@ const Endpoints = {
     FETCH_APPLICANTS:"personalinfo/applicants",
     FETCH_USER_BY_ID:"userProf/UserAccounts",
     FETCH_ACCOUNTS:"userProf/UserAccounts",
+    SET_REMARKS:"userProf/Remarks",
     CREATE_SCHOLAR:"scholar/createScho",
     CREATE_NEWS:"news/create",
     FETCH_NEWS: 'news/newsinfo',

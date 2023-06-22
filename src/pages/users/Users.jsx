@@ -1,4 +1,4 @@
-import { UsersRequest } from '../../api/request';
+import { UsersRequest,setRemarks } from '../../api/request';
 import Navbar from '../../components/navbar/Navbar';
 import Sidebar from '../../components/sidebar/Sidebar';
 import './users.scss';
@@ -13,21 +13,38 @@ const Users = () => {
   
   const [display, setDisplay] = useState([]);
 
-  const handleButtonClick = (id) => {
-    setDisplay(prevDisplay => {
-      return prevDisplay.map(row => {
-        if (row.applicantNum === id) {
-          if (row.remarks === 'Active') {
-            return { ...row, remarks: 'Inactive' };
-          } else if (row.status === 'Inactive') {
-            return { ...row, remarks: 'Deactivated' };
-          } else {
-            return { ...row, remarks: 'Active' };
-          }
+  const handleButtonClick = async (id) => {
+    const updatedDisplay = display.map(row => {
+      if (row.applicantNum === id) {
+        let newRemarks;
+        if (row.remarks === 'Active') {
+          newRemarks = 'Inactive';
+        } else if (row.remarks === 'Inactive') {
+          newRemarks = 'Deactivated';
+        } else {
+          newRemarks = 'Active';
         }
-        return row;
-      });
+        return { ...row, remarks: newRemarks };
+      }
+      return row;
     });
+  
+    setDisplay(updatedDisplay);
+
+    try {
+      const remarksstat = updatedDisplay.find(row => row.applicantNum === id)?.remarks;
+      const applicantNum = updatedDisplay.find(row => row.applicantNum === id)?.applicantNum;
+      console.log(remarksstat,applicantNum)
+      const formData = new FormData();
+      formData.append('remarks',remarksstat);
+      formData.append('applicantNum',applicantNum)
+     const response = await setRemarks.SET_REMARKS(formData);
+      console.log(response);
+    } catch (error) {
+      console.log('Error updating status:', error);
+      // Rollback the display state to its previous value on error
+      setDisplay(prevDisplay => prevDisplay.map(row => (row.applicantNum === id ? { ...row } : row)));
+    }
   };
   
   const columns = [
@@ -116,14 +133,11 @@ const Users = () => {
   useEffect(() => {
     async function Fetch(){
       const userinfo = await UsersRequest.ALL_USERS()
-      console.log(userinfo)
       setDisplay(userinfo.data.UserAccounts);
     }
     Fetch();
    
   }, []);
-
-console.log(display)
   return (
     <>
     <div className="users">
