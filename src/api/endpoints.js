@@ -23,6 +23,7 @@ const Endpoints = {
     FETCH_BMCCSCHOLARINFO: 'BMCCScholar/SchoInfo/',
     CREATE_SCORECARD: 'Scorecard/score',
     FETCH_SCORECARD: 'Scorecard/getScore/',
+    FETCH_USERSCORE: 'Scorecard/UserScore/',
     LIST_REQUIREMENTS: 'documents/Requirements',
     ADD_REQUIREMENTS: 'documents/AddRequirements',
     BMCC_ADD: 'admin/Create',

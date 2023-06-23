@@ -89,6 +89,9 @@ export const FetchingBMCC = {
 export const Activitylog = {
     ACTIVITY_LOG: () => axiosInstance.get(Endpoints.ACTIVITY_LOG)
 }
+export const UserScore = {
+    USER_SCORE: (data) => axiosInstance.get(Endpoints.FETCH_USERSCORE+data)
+}
 export const UpdateEmp = {
     UPDATE_EMP: (data) => axiosInstance.patch(Endpoints.UPDATE_EMP,data)
 }

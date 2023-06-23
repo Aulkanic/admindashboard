@@ -10,17 +10,19 @@ import FormControlLabel from '@mui/material/FormControlLabel';
 import FormControl from '@mui/material/FormControl';
 import FormLabel from '@mui/material/FormLabel';
 import { ApplicantsRequest, FetchingApplicantsInfo, ListofSub,
-          CheckingSubs, CheckingApplicants } from "../../api/request";
+          CheckingSubs, CheckingApplicants,UserScore } from "../../api/request";
 import swal from "sweetalert";
 import { styled } from '@mui/material/styles';
 import { useContext } from "react";
 import { admininfo } from "../../App";
+import TextField from '@mui/material/TextField';
 import './applicant.css'
 
 const Applicant = () => {
   const { loginUser,user } = useContext(admininfo);
   const [open, setOpen] = useState(false);
   const [post , setPost] = useState([]);
+  const [userscore,setUserScore] = useState([]);
   const [selectedInfo, setSelectedInfo] = useState({});
   const [applicantsInfo, setApplicantInfo] = useState([]);
   const [applicantsDocs, setApplicantDocs] = useState([]);
@@ -69,14 +71,18 @@ const Applicant = () => {
   const view = async (data) => {
     console.log(data)
     const applicantNum = data.applicantNum;
+    const formData = new FormData();
+    formData.append('applicantNum',applicantNum)
     try {
       const response = await Promise.all([
         FetchingApplicantsInfo.FETCH_INFO(applicantNum),
-        ListofSub.FETCH_SUB(applicantNum)
+        ListofSub.FETCH_SUB(applicantNum),
+        UserScore.USER_SCORE(applicantNum)
       ]);
       console.log(response)
       setApplicantInfo(response[0].data.results);
       setApplicantDocs(response[1].data.Document);
+      setUserScore(response[2].data.result)
       setSelectedInfo(data)
       handleOpen()
       
@@ -139,7 +145,6 @@ const Applicant = () => {
 
     // ...
   };
-console.log(datarows)
   const columns = [
     { field: 'applicantNum', headerName: 'Applicant ID', width: 100 },
     {
@@ -192,66 +197,391 @@ console.log(datarows)
       return (
         <div className="PA">
           <div className="Pinfo">
-            <p>Applicant Number: {data.date}{data.applicantNum} </p>
-            <p>Name: {data.firstName} {data.middleName} {data.lastName}</p>
-            <p>Gender: {data.gender}</p>
-            <p>Citizenship: {data.citizenship}</p>
-            <p>Birthday: {data.birthday}</p>
-            <p>Age: {data.age}</p>
-            <p>Birth of Place: {data.birthPlace}</p>
-            <p>Contact Number: {data.contactNum}</p>
-            <p>Email: {data.email}</p>
-            <p>Current Address: {data.caddress}</p>
-            <p>Permanent Address: {data.paddress}</p>
+            <div className="fstcolm">
+              <div>
+          <TextField
+          disabled
+          id="outlined-disabled"
+          label="First Name"
+          defaultValue={data.firstName}
+        />
+        </div>
+        <div>
+          <TextField
+          disabled
+          id="outlined-disabled"
+          label="Last Name"
+          defaultValue={data.lastName}
+        />
+        </div>
+        <div>
+          <TextField
+          disabled
+          id="outlined-disabled"
+          label="Middle Name"
+          defaultValue={data.middleName}
+        />
+        </div>
+        <div>
+          <TextField
+          disabled
+          id="outlined-disabled"
+          label="Gender"
+          defaultValue={data.gender}
+        />
+        </div>
+        </div>
+        <div className="fstcolm">
+        <div>
+        <TextField
+          disabled
+          id="outlined-disabled"
+          label="Citizenship"
+          defaultValue={data.citizenship}
+        />
+        </div>
+        <div>
+        <TextField
+          disabled
+          id="outlined-disabled"
+          label="Birthday"
+          defaultValue={data.birthday}
+        />
+        </div>
+        <div>
+        <TextField
+          disabled
+          id="outlined-disabled"
+          label="Age"
+          defaultValue={data.age}
+        />
+        </div>
+        <div>
+        <TextField
+          disabled
+          id="outlined-disabled"
+          label="Birth of Place"
+          defaultValue={data.birthPlace}
+        />
+        </div>
+        </div>
+        <div className="fstcolm">
+        <div>
+        <TextField
+          disabled
+          id="outlined-disabled"
+          label="Contact Number"
+          defaultValue={data.contactNum}
+        />
+        </div>
+        <div>
+        <TextField
+          disabled
+          id="outlined-disabled"
+          label="Email"
+          defaultValue={data.email}
+        />
+        </div>
+        <div>
+        <TextField
+          disabled
+          id="outlined-disabled"
+          label="Permanent Address"
+          defaultValue={data.paddress}
+        />
+        </div>
+        <div>
+        <TextField
+          disabled
+          id="outlined-disabled"
+          label="Current Address"
+          defaultValue={data.caddress}
+        />
+        </div>
+        </div>
           </div>
       </div>
           )});
 
 const applicantInfoFB = applicantsInfo?.map((data) =>{
+  const score = userscore?.map((data) =>{
+    return data
+  })
     return (
       <>
       <div className="PA">
         <div className="Finfo">
-          <p>Mother Name:{data.motherName} {data.mothermName} {data.motherlName} </p>
-          <p>Occupation: {data.motherOccu}</p>
-          <p>Highest Educational Attainment: {data.motherEduc}</p>
-          <p>Father Name:{data.fatherName} {data.fathermName} {data.fatherlName} </p>
-          <p>Occupation: {data.fatherOccu}</p>
-          <p>Highest Educational Attainment: {data.fatherEduc}</p>
-          <p>Guardian Name: {data.guardianName}</p>
-          <p>Contact Number: {data.guardianContact}</p>
-          <p>Relationship: {data.relationship}</p>
-          <p>Number of Family Members: {data.famNum}</p>
+        <h1>Mother Information</h1>
+        <div className="fmbgconlisclmn">
+        <div>
+        <TextField
+          disabled
+          id="outlined-disabled"
+          label="First Name"
+          defaultValue={data.motherName}
+        />
+        </div>
+        <div>
+        <TextField
+          disabled
+          id="outlined-disabled"
+          label="Last Name"
+          defaultValue={data.motherlName}
+        />
+        </div>
+        <div>
+        <TextField
+          disabled
+          id="outlined-disabled"
+          label="Middle Name"
+          defaultValue={data.mothermName}
+        />
+        </div>
+        </div>
+        <div className="fmbgconlisclmn">
+        <div>
+        <TextField
+          disabled
+          id="outlined-disabled"
+          label="Occupation"
+          defaultValue={data.mothermName}
+        />
+        </div>
+        <div>
+        <TextField
+          disabled
+          id="outlined-disabled"
+          label="Highest Educational Attainment"
+          defaultValue={data.motherEduc}
+        />
+        </div>
+        </div>
+        <h1>Father Information</h1>
+        <div className="fmbgconlisclmn">
+        <div>
+        <TextField
+          disabled
+          id="outlined-disabled"
+          label="First Name"
+          defaultValue={data.fatherName}
+        />
+        </div>
+        <div>
+        <TextField
+          disabled
+          id="outlined-disabled"
+          label="Last Name"
+          defaultValue={data.fatherlName}
+        />
+        </div>
+        <div>
+        <TextField
+          disabled
+          id="outlined-disabled"
+          label="Middle Name"
+          defaultValue={data.fathermName}
+        />
+        </div>
+        </div>
+        <div className="fmbgconlisclmn">
+        <div>
+        <TextField
+          disabled
+          id="outlined-disabled"
+          label="Occupation"
+          defaultValue={data.fatherOccu}
+        />
+        </div>
+        <div>
+        <TextField
+          disabled
+          id="outlined-disabled"
+          label="Highest Educational Attainment"
+          defaultValue={data.fatherEduc}
+        />
+        </div>
+        </div>
+        <div className="fmbgconlisclmn">
+        <div>
+        <span>Score</span>
+        <input style={{width:'40px',height:'50px',textAlign:'center'}} type="number" disabled value={score[0].fntotal}/>
+        <TextField
+          disabled
+          id="outlined-disabled"
+          label="Number of Family Members"
+          defaultValue={data.famNum}
+        />
+        </div>
+        </div>
+        <h1>Guardian Information</h1>
+        <div className="fmbgconlisclmn">
+        <div>
+        <TextField
+          disabled
+          id="outlined-disabled"
+          label="Full Name"
+          defaultValue={data.guardianName}
+        />
+        </div>
+        <div>
+        <TextField
+          disabled
+          id="outlined-disabled"
+          label="Contact Name"
+          defaultValue={data.guardianContact}
+        />
+        </div>
+        <div>
+        <TextField
+          disabled
+          id="outlined-disabled"
+          label="Relationship"
+          defaultValue={data.relationship}
+        />
+        </div>
+        </div>
         </div>
       </div>
       </>
         )})
-
   const applicantInfoEcB = applicantsInfo?.map((data) =>{
+    const score = userscore?.map((data) =>{
+      return data
+    })
+    console.log(score)
     return (
       <>
       <div className="PA">
         <div className="Einfo">
-          <p>Baranggay: {data.baranggay}</p>
-          <p>How Long living in Marilao: {data.howLong}</p>
-          <p>Living Type: {data.wereLive}</p>
-          <p>House Ownership: {data.ownerShhip}</p>
-          <p>Monthly Income of Parents/Guardian: {data.monthIncome}</p>
+        <div className="fstcolm">
+        <div>
+        <span>Score</span>
+          <input style={{width:'40px',height:'50px',textAlign:'center'}} type="number" disabled value={score[0].wltotal}/>
+        <TextField
+          disabled
+          id="outlined-disabled"
+          label="Where do you Live?"
+          defaultValue={data.wereLive}
+        />
+        </div>
+        <div>
+        <span>Score</span>
+          <input style={{width:'40px',height:'50px',textAlign:'center'}} type="number" disabled value={score[0].hltotal}/>
+        <TextField
+          disabled
+          id="outlined-disabled"
+          label="Living in Marilao"
+          defaultValue={data.howLong}
+        />
+        </div>
+        <div>
+        <span>Score</span>
+          <input style={{width:'40px',height:'50px',textAlign:'center'}} type="number" disabled value={score[0].ostotal}/>
+        <TextField
+          disabled
+          id="outlined-disabled"
+          label="House Ownership"
+          defaultValue={data.ownerShip}
+        />
+        </div>
+        <div>
+        <span>Score</span>
+          <input style={{width:'40px',height:'50px',textAlign:'center'}} type="number" disabled value={score[0].mitotal}/>
+        <TextField
+          disabled
+          id="outlined-disabled"
+          label="Parent/Guardian Monthly Income"
+          defaultValue={data.monthIncome}
+        />
+        </div>
+        <div>
+        <TextField
+          disabled
+          id="outlined-disabled"
+          label="Baranggay"
+          defaultValue={data.baranggay}
+        />
+        </div>
+        </div>
       </div>
       </div>
       </>
         )})
 
   const applicantInfoEdB = applicantsInfo?.map((data) =>{
+    const score = userscore?.map((data) =>{
+      return data
+    })
     return (
       <>
       <div className="PA">
-        <div className="Eduinfo">
-          <p>Current Year: {data.currentYear}</p>
-          <p>Course: {data.course}</p>
-          <p>Current School: {data.currentSchool}</p>
-          <p>Type of School: {data.typeSchool}</p>
-          <p>School Award: {data.elemAward},{data.highAward}</p>
+      <div className="fmbgconlisclmn">
+        <div>
+        <TextField
+          disabled
+          id="outlined-disabled"
+          label="Year Level"
+          defaultValue={data.currentYear}
+        />
+        </div>
+        <div>
+        <span>Score</span>
+        <input style={{width:'40px',height:'50px',textAlign:'center'}} type="number" disabled value={score[0].tstotal}/>
+        <TextField
+          disabled
+          id="outlined-disabled"
+          label="Type of School"
+          defaultValue={data.typeSchool}
+        />
+        </div>
+        <div>
+        <TextField
+          disabled
+          id="outlined-disabled"
+          label="Degree Program/Course(Priority Course)"
+          defaultValue={data.course}
+        />
+        </div>
+        </div><br />
+        <div className="fmbgconlisclmn">
+        <div>
+        <TextField
+          disabled
+          id="outlined-disabled"
+          label="School Name"
+          defaultValue={data.currentSchool}
+        />
+        </div>
+        <div>
+        <TextField
+          disabled
+          id="outlined-disabled"
+          label="School Address"
+          defaultValue={data.address}
+        />
+        </div>
+        </div>
+        <div className="fmbgconlisclmn">
+        <div>
+        <span>Score</span>
+        <input style={{width:'40px',height:'50px',textAlign:'center'}} type="number" disabled value={score[0].gwatotal}/>
+        <TextField
+          disabled
+          id="outlined-disabled"
+          label="General Weighted Average"
+          defaultValue={data.gwa}
+        />
+        </div>
+        <div>
+        <span>Score</span>
+        <input style={{width:'40px',height:'50px',textAlign:'center'}} type="number" disabled value={score[0].fatotal}/>
+        <TextField
+          disabled
+          id="outlined-disabled"
+          label="Financial Support"
+          defaultValue={data.financialSupport}
+        />
+        </div>
         </div>
       </div>
       </>
@@ -334,6 +664,8 @@ const applicantInfoFB = applicantsInfo?.map((data) =>{
           border: 1 ,
           color: '#005427',
           borderRadius: 5,
+          height:'100%',
+          overflow:'auto'
         }}>
        
            <div className="buttonclosed" >
