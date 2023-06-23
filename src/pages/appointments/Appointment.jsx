@@ -102,9 +102,25 @@ const Appointment = () => {
       const Name = data.name || data.Name;
       const Email = data.email || data.email;
       const Status = data.scho || data.status;
-      console.log(user)
+      const date = new Date(appointmentDate).toDateString();
+      const value = { $d: new Date(startTime) };
+      const start = value.$d.toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit', hour12: true });
+      const value1 = { $d: new Date(endTime) };
+      const end = value1.$d.toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit', hour12: true });
       const adminName = user.name;
-      CreateAppointment.CREATE_APPOINT({applicantCode,adminName,applicantNum,Name,Email,Status,endTime,startTime,appointmentDate,Location,Agenda})
+      const formData = new FormData();
+      formData.append('applicantCode',applicantCode);
+      formData.append('adminName',adminName)
+      formData.append('applicantNum',applicantNum)
+      formData.append('Name',Name);
+      formData.append('Email',Email)
+      formData.append('Status',Status)
+      formData.append('Location',Location)
+      formData.append('Agenda',Agenda)
+      formData.append('appointmentDate',date);
+      formData.append('startTime',start)
+      formData.append('endTime',end)
+      CreateAppointment.CREATE_APPOINT(formData)
       .then(res => {
         console.log(res)
         setQualified(res.data.List.data1);
@@ -233,7 +249,7 @@ const Appointment = () => {
           label="Appointment Date"
           value={appointmentDate}
           onChange={(newValue) => setAppointmentDate(newValue)}
-          format="LL"
+          format="MMM DD, YYYY"
         />
         </LocalizationProvider>
       </div>
@@ -245,7 +261,7 @@ const Appointment = () => {
           label="Time Start"
           value={startTime}
           onChange={(newValue) => setStartTime(newValue)}
-          format="hh:mm a"
+          format="hh:mm A"
         />
       </DemoContainer>
       </LocalizationProvider>
@@ -255,7 +271,7 @@ const Appointment = () => {
           label="Time End"
           value={endTime}
           onChange={(newValue) => setEndTime(newValue)}
-          format="hh:mm a"
+          format="hh:mm A"
         />
       </DemoContainer>
       </LocalizationProvider>
