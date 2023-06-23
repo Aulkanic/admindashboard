@@ -5,7 +5,12 @@ import { Tabs, Tab,Table, TableBody, TableCell, TableContainer, TableHead,TableR
 import { FetchingQualified, CreateAppointment,FetchingAppointList
   , Reaapointed, SetApproved,FetchingApplicantsInfo } from "../../api/request";
 import FormControlLabel from '@mui/material/FormControlLabel';
-import DatePicker from 'react-datepicker';
+import dayjs from 'dayjs';
+import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
+import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
+import { DateField } from '@mui/x-date-pickers/DateField';
+import { DemoContainer, DemoItem } from '@mui/x-date-pickers/internals/demo';
+import { TimeField } from '@mui/x-date-pickers/TimeField';
 import Checkbox from '@mui/material/Checkbox';
 import swal from "sweetalert";
 import { useState } from "react";
@@ -24,8 +29,8 @@ const Appointment = () => {
   const [appointmentDate, setAppointmentDate] = useState('');
   const [Agenda, setAgenda] = useState('');
   const [Location, setLocation] = useState('');
-  const [startTime, setStartTime] = useState('');
-  const [endTime, setEndTime] = useState('');
+  const [startTime, setStartTime] = useState(dayjs('2022-04-17T15:30'));
+  const [endTime, setEndTime] = useState(dayjs('2022-04-17T15:30'));
   const [selectAll, setSelectAll] = useState(false);
   const [selectedUsers, setSelectedUsers] = useState([]);
   const [filteredData, setFilteredData] = useState([]);
@@ -34,36 +39,7 @@ const Appointment = () => {
   const handleSelectDate = (date) => {
     setSelectedDate(date);
   };
-  const formatDateString = (dateString) => {
-    const date = new Date(dateString);
-    const options = { year: 'numeric', month: 'long', day: 'numeric' };
-    return date.toLocaleDateString('en-US', options);
-  };
 
-  const handleStartTimeChange = (e) => {
-    const selectedTime = e.target.value;
-    const timeWithAMPM = addAMPM(selectedTime);
-    setStartTime(timeWithAMPM);
-  };
-
-  const handleEndTimeChange = (e) => {
-    const selectedTime = e.target.value;
-    const timeWithAMPM = addAMPM(selectedTime);
-    setEndTime(timeWithAMPM);
-  };
-
-  const addAMPM = (time) => {
-    const [hour, minute] = time.split(':');
-    const hourInt = parseInt(hour, 10);
-    const ampm = hourInt >= 12 ? 'PM' : 'AM';
-    const formattedHour = hourInt % 12 || 12;
-    return `${formattedHour}:${minute} ${ampm}`;
-  };
-
-  const handleDateChange = (e) => {
-    const formattedDate = formatDateString(e.target.value);
-    setAppointmentDate(formattedDate);
-  };
 
   const getAppointedUsersCount = (date) => {
     console.log(date)
@@ -252,20 +228,37 @@ const Appointment = () => {
             <div className="top">
               <h1> Appointments </h1>
               <div>
-        <label>Date:</label>
-        <input
-          type="date"
+        <LocalizationProvider dateAdapter={AdapterDayjs}>
+        <DateField
+          label="Appointment Date"
           value={appointmentDate}
-          onChange={handleDateChange}
+          onChange={(newValue) => setAppointmentDate(newValue)}
+          format="LL"
         />
+        </LocalizationProvider>
       </div>
 
       <div>
-       <label>Start Time</label>
-       <input type="time" value={startTime} onChange={handleStartTimeChange} />
-
-      <label>End Time</label>
-      <input type="time" value={endTime} onChange={handleEndTimeChange} />
+      <LocalizationProvider dateAdapter={AdapterDayjs}>
+      <DemoContainer components={['TimeField', 'TimeField', 'TimeField']}>
+        <TimeField
+          label="Time Start"
+          value={startTime}
+          onChange={(newValue) => setStartTime(newValue)}
+          format="hh:mm a"
+        />
+      </DemoContainer>
+      </LocalizationProvider>
+      <LocalizationProvider dateAdapter={AdapterDayjs}>
+      <DemoContainer components={['TimeField', 'TimeField', 'TimeField']}>
+        <TimeField
+          label="Time End"
+          value={endTime}
+          onChange={(newValue) => setEndTime(newValue)}
+          format="hh:mm a"
+        />
+      </DemoContainer>
+      </LocalizationProvider>
       </div>
       <div>
        <label>Agenda</label>

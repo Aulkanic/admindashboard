@@ -192,27 +192,6 @@ const Scholars = () => {
 
     });
 
-    const addQuestion = () => {
-      setQuestions([...questions, { question: '', choices: [] }]);
-    };
-  
-    const handleQuestionChange = (e, index) => {
-      const updatedQuestions = [...questions];
-      updatedQuestions[index].question = e.target.value;
-      setQuestions(updatedQuestions);
-    };
-  
-    const addChoice = (index) => {
-      const updatedQuestions = [...questions];
-      updatedQuestions[index].choices.push('');
-      setQuestions(updatedQuestions);
-    };
-  
-    const handleChoiceChange = (e, questionIndex, choiceIndex) => {
-      const updatedQuestions = [...questions];
-      updatedQuestions[questionIndex].choices[choiceIndex] = e.target.value;
-      setQuestions(updatedQuestions);
-    };
 
   return (
     <>
