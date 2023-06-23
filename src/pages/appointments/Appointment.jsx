@@ -37,7 +37,8 @@ const Appointment = () => {
   const [selectedDate, setSelectedDate] = useState(null);
 
   const handleSelectDate = (date) => {
-    setSelectedDate(date);
+    const formattedDate = moment(date).format('YYYY-MM-DD');
+    setSelectedDate(formattedDate);
   };
 
 
@@ -49,9 +50,8 @@ const Appointment = () => {
         moment(appointment.schedDate).isSame(date, "day")
     ).length;
   };
-
   const eventList = appointedList.map((appointment) => ({
-    title: `${appointment.Name} - ${appointment.Status}`,
+    title: `${appointment.Reason} - ${appointment.Name}`,
     start: moment(appointment.schedDate).toDate(),
     end: moment(appointment.schedDate).toDate(),
   }));
@@ -387,6 +387,8 @@ const Appointment = () => {
             startAccessor="start"
             endAccessor="end"
             selectable
+            style={{ height: 500 }}
+            defaultView="month"
             onSelectSlot={handleSelectDate}
           />
         </div>
