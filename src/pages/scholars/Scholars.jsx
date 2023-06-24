@@ -340,7 +340,6 @@ const Scholars = () => {
             <div className="top">
             
               <h1>Scholars</h1>
-              <button onClick={handleOpen1}>Renewal Form</button>
               <Box sx={{ height: 400, width: '100%' }}>
       <DataGrid
         rows={data}

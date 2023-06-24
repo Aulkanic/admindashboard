@@ -146,6 +146,7 @@ const Navbar = () => {
      )
     .catch(err => console.log(err));
     }
+    console.log(user)
   return (
     <>
       <Modal
@@ -272,7 +273,7 @@ const Navbar = () => {
         anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
         variant="dot"
       >
-        <Avatar alt="Remy Sharp" src="/static/images/avatar/1.jpg" />
+        <Avatar alt="Remy Sharp" src={user.profile} />
       </StyledBadge>
       </Button>
           </div>
