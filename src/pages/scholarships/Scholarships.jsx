@@ -215,8 +215,9 @@ const scholarshipprogram = schocat?.map((f,index) =>{
                     }}>
 
                 
-                <FormControlLabel value="Open" control={<Radio />} label="Open" className="status"/>
-                <FormControlLabel value="Close" control={<Radio />} label="Close" className="status"/>
+<FormControlLabel value="Open" control={<Radio />} label="Open" className="edtstatus"/>
+                <FormControlLabel value="Under Evaluation" control={<Radio />} label="Under Evaluation" className="edtstatus"/>
+                <FormControlLabel value="Paused" control={<Radio />} label="Paused" className="edtstatus"/>
                
                 </RadioGroup>
                 </div>
@@ -279,7 +280,8 @@ const scholarshipprogram = schocat?.map((f,index) =>{
                   >
                
                 <FormControlLabel value="Open" control={<Radio />} label="Open" className="edtstatus"/>
-                <FormControlLabel value="closed" control={<Radio />} label="Close" className="edtstatus"/>
+                <FormControlLabel value="Under Evaluation" control={<Radio />} label="Under Evaluation" className="edtstatus"/>
+                <FormControlLabel value="Paused" control={<Radio />} label="Paused" className="edtstatus"/>
                 </RadioGroup>
                 </div>
 

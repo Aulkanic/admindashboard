@@ -21,7 +21,6 @@ const Faqs = () => {
   const { loginUser,user } = useContext(admininfo);
   const [username,setUsername] = useState('');
   const [email,setEmail] = useState('');
-  const [password,setPassword] = useState('');
   const [jobDes, setJobdes] = useState('');
   const [upjobDes, setUpJobdes] = useState('');
   const[status,setStatus] = useState('');
@@ -100,6 +99,7 @@ const CustomDataGrid = styled(DataGrid)({
         Fetch();
   },[])
  const bmccemp = bmcc?.map((data) =>{
+  console.log(data)
     return (
       <>
       <div className='emplycon'>
@@ -110,7 +110,7 @@ const CustomDataGrid = styled(DataGrid)({
         sx={{ width: 45, height: 45 }}
       />) : (<Avatar
         alt="No Image"
-        src={data.profle}
+        src={data.profile}
         sx={{ width: 45, height: 45 }}
       />)}
         </div>
@@ -144,11 +144,6 @@ const CustomDataGrid = styled(DataGrid)({
   } else if (!/^[A-Za-z0-9._%+-]+@gmail\.com$/.test(email)) {
      errors.username = "Username is invalid";
   }
-  if (!password) {
-    errors.password = "Email is required";
-  } else if (!/^[A-Za-z0-9._%+-]+@gmail\.com$/.test(email)) {
-     errors.password = "Email is invalid";
-  }
   if (Object.keys(errors).length > 0) {
     setErrors(errors);
     console.log(errors)
@@ -156,7 +151,6 @@ const CustomDataGrid = styled(DataGrid)({
   }
   const formData = new FormData();
   formData.append('email', email);
-  formData.append('password', password);
   formData.append('name', username);
   formData.append('jobdes', jobDes);
   AddBMCC.ADD_BMCC(formData)
@@ -220,15 +214,7 @@ const UpdateBMCC = (event) =>{
                     onChange={(e) =>setEmail(e.target.value)}  
                     color='secondary'
                     />
-                <TextField
-                   label='Password' 
-                    margin='normal' 
-                    variant='outlined'
-                    size='large'
-                    fullWidth
-                    onChange={(e) =>setPassword(e.target.value)}  
-                    color='secondary'
-                    />
+
                 <TextField
                    label='Job Description' 
                     margin='normal' 
