@@ -98,3 +98,9 @@ export const UpdateEmp = {
 export const setRemarks = {
     SET_REMARKS: (data) => axiosInstance.patch(Endpoints.SET_REMARKS,data)
 }
+export const UpdatePassword = {
+    UPDATE_PASS: (data) => axiosInstance.patch(Endpoints.UPDATE_PASS,data)
+}
+export const UpdateProfile = {
+    UPDATE_PROFILE: (data) => axiosInstance.patch(Endpoints.UPDATE_PROFILE,data)
+}

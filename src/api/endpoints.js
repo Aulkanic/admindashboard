@@ -30,6 +30,8 @@ const Endpoints = {
     BMCC_FETCH: 'admin/BMCCmembers',
     ACTIVITY_LOG: 'admin/Activitylog',
     UPDATE_EMP: 'admin/Update',
+    UPDATE_PASS: 'admin/Updatepassword',
+    UPDATE_PROFILE: 'admin/Updateprofile',
 }
 
 export default Endpoints
