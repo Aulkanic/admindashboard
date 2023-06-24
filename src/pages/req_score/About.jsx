@@ -385,155 +385,155 @@ export const About = () => {
             <div className="quescontainer">
             <div className="quesco">
             <div className="hshe">
-            <input  placeholder={data.wlsc} onChange={(e) =>setWl(e.target.value)} type="number"/><p>Saan ka nakatira</p>             
+            <input  placeholder={data.wlsc} onChange={(e) =>setWl(e.target.value)} type="number"/><p>Q1:Saan ka nakatira</p>             
             </div>   
             <div className="hshe">
-            <input placeholder={data.wlsc1} onChange={(e) =>setWl1(e.target.value)} type="number"/><p>Subdivision</p>
+            <input placeholder={data.wlsc1} onChange={(e) =>setWl1(e.target.value)} type="number"/><p>CHOICE1:Subdivision</p>
             </div>
             <div className="hshe">
-            <input placeholder={data.wlsc2} onChange={(e) =>setWl2(e.target.value)} type="number"/><p>Sitio/Purok</p>
+            <input placeholder={data.wlsc2} onChange={(e) =>setWl2(e.target.value)} type="number"/><p>CHOICE2:Sitio/Purok</p>
             </div>
             <div className="hshe">
-            <input placeholder={data.wlsc3} onChange={(e) =>setWl3(e.target.value)} type="number"/><p>Depressed Area</p>
+            <input placeholder={data.wlsc3} onChange={(e) =>setWl3(e.target.value)} type="number"/><p>CHOICE3:Depressed Area</p>
             </div>
             </div>
             <div className="quesco">
             <div className="hshe">
-            <input placeholder={data.hlsc} onChange={(e) =>setHl(e.target.value)} type="number"/><p>Gaano na Katagal?</p>             
+            <input placeholder={data.hlsc} onChange={(e) =>setHl(e.target.value)} type="number"/><p>Q2:Gaano na Katagal?</p>             
             </div>   
             <div className="hshe">
-            <input placeholder={data.hlsc1} onChange={(e) =>setHl1(e.target.value)} type="number"/><p>6 Months</p>
+            <input placeholder={data.hlsc1} onChange={(e) =>setHl1(e.target.value)} type="number"/><p>CHOICE1:6 Months</p>
             </div>
             <div className="hshe">
-            <input placeholder={data.hlsc2} onChange={(e) =>setHl2(e.target.value)} type="number"/><p>1-2 Years</p>
+            <input placeholder={data.hlsc2} onChange={(e) =>setHl2(e.target.value)} type="number"/><p>CHOICE2:1-2 Years</p>
             </div>
             <div className="hshe">
-            <input placeholder={data.hlsc3} onChange={(e) =>setHl3(e.target.value)} type="number"/><p>3-4 Years</p>
+            <input placeholder={data.hlsc3} onChange={(e) =>setHl3(e.target.value)} type="number"/><p>CHOICE3:3-4 Years</p>
             </div>
             <div className="hshe">
-            <input placeholder={data.hlsc4} onChange={(e) =>setHl4(e.target.value)} type="number"/><p>5 Years</p>
+            <input placeholder={data.hlsc4} onChange={(e) =>setHl4(e.target.value)} type="number"/><p>CHOICE4:5 Years</p>
             </div>
             </div>
             <div className="quesco">
             <div className="hshe">
-            <input placeholder={data.ossc} onChange={(e) =>setOs(e.target.value)} type="number"/><p>Uri ng Pag-aari ng Bahay?</p>             
+            <input placeholder={data.ossc} onChange={(e) =>setOs(e.target.value)} type="number"/><p>Q3:Uri ng Pag-aari ng Bahay?</p>             
             </div>   
             <div className="hshe">
-            <input placeholder={data.ossc1} onChange={(e) =>setOs1(e.target.value)} type="number"/><p>Nakikitira</p>
+            <input placeholder={data.ossc1} onChange={(e) =>setOs1(e.target.value)} type="number"/><p>CHOICE1:Nakikitira</p>
             </div>
             <div className="hshe">
-            <input placeholder={data.ossc2} onChange={(e) =>setOs2(e.target.value)} type="number"/><p>Umuupa</p>
+            <input placeholder={data.ossc2} onChange={(e) =>setOs2(e.target.value)} type="number"/><p>CHOICE2:Umuupa</p>
             </div>
             <div className="hshe">
-            <input placeholder={data.ossc3} onChange={(e) =>setOs3(e.target.value)} type="number"/><p>Sariling  Bahay</p>
+            <input placeholder={data.ossc3} onChange={(e) =>setOs3(e.target.value)} type="number"/><p>CHOICE3:Sariling  Bahay</p>
             </div>
             <div className="hshe">
-            <input placeholder={data.ossc4} onChange={(e) =>setOs4(e.target.value)} type="number"/><p>Others</p>
+            <input placeholder={data.ossc4} onChange={(e) =>setOs4(e.target.value)} type="number"/><p>CHOICE4:Others</p>
             </div>
             </div>
             <div className="quesco">
             <div className="hshe">
-            <input placeholder={data.misc1} onChange={(e) =>setMi(e.target.value)} type="number"/><p>Buwanang Pangkalahatang kita ng Pamilya?</p>             
+            <input placeholder={data.misc1} onChange={(e) =>setMi(e.target.value)} type="number"/><p>Q4:Buwanang Pangkalahatang kita ng Pamilya?</p>             
             </div>   
             <div className="hshe">
-            <input placeholder={data.misc1} onChange={(e) =>setMi1(e.target.value)} type="number"/><p>P1,000 - 4,000</p>
+            <input placeholder={data.misc1} onChange={(e) =>setMi1(e.target.value)} type="number"/><p>CHOICE1:P1,000 - 4,000</p>
             </div>
             <div className="hshe">
-            <input placeholder={data.misc2} onChange={(e) =>setMi2(e.target.value)} type="number"/><p>P5,000 - 8,000</p>
+            <input placeholder={data.misc2} onChange={(e) =>setMi2(e.target.value)} type="number"/><p>CHOICE2:P5,000 - 8,000</p>
             </div>
             <div className="hshe">
-            <input placeholder={data.misc3} onChange={(e) =>setMi3(e.target.value)} type="number"/><p>P9,000 - 12,000</p>
+            <input placeholder={data.misc3} onChange={(e) =>setMi3(e.target.value)} type="number"/><p>CHOICE3:P9,000 - 12,000</p>
             </div>
             <div className="hshe">
-            <input placeholder={data.misc4} onChange={(e) =>setMi4(e.target.value)} type="number"/><p>P13,000 - 18,000</p>
+            <input placeholder={data.misc4} onChange={(e) =>setMi4(e.target.value)} type="number"/><p>CHOICE4:P13,000 - 18,000</p>
             </div>
             <div className="hshe">
-            <input placeholder={data.misc5} onChange={(e) =>setMi5(e.target.value)} type="number"/><p>P19,000 Above</p>
+            <input placeholder={data.misc5} onChange={(e) =>setMi5(e.target.value)} type="number"/><p>CHOICE5:P19,000 Above</p>
             </div>
             </div>
             </div>
             <div className="quescontainer">
             <div className="quesco">
             <div className="hshe">
-            <input placeholder={data.fnsc} onChange={(e) =>setFn(e.target.value)} type="number"/><p>Ilan ang Miyembro ng Pamilya?</p>             
+            <input placeholder={data.fnsc} onChange={(e) =>setFn(e.target.value)} type="number"/><p>Q5:Ilan ang Miyembro ng Pamilya?</p>             
             </div>   
             <div className="hshe">
-            <input placeholder={data.fnsc1} onChange={(e) =>setFn1(e.target.value)} type="number"/><p>11- Pataas</p>
+            <input placeholder={data.fnsc1} onChange={(e) =>setFn1(e.target.value)} type="number"/><p>CHOICE1:11- Pataas</p>
             </div>
             <div className="hshe">
-            <input placeholder={data.fnsc2} onChange={(e) =>setFn2(e.target.value)} type="number"/><p>7 - 10 Members</p>
+            <input placeholder={data.fnsc2} onChange={(e) =>setFn2(e.target.value)} type="number"/><p>CHOICE2:7 - 10 Members</p>
             </div>
             <div className="hshe">
-            <input placeholder={data.fnsc3} onChange={(e) =>setFn3(e.target.value)} type="number"/><p>4 - 6 Members</p>
+            <input placeholder={data.fnsc3} onChange={(e) =>setFn3(e.target.value)} type="number"/><p>CHOICE3:4 - 6 Members</p>
             </div>
             <div className="hshe">
-            <input placeholder={data.fnsc4} onChange={(e) =>setFn4(e.target.value)} type="number"/><p>1-3 Members</p>
+            <input placeholder={data.fnsc4} onChange={(e) =>setFn4(e.target.value)} type="number"/><p>CHOICE4:1-3 Members</p>
             </div>
             </div>
             <div className="quesco">
             <div className="hshe">
-            <input placeholder={data.fasc} onChange={(e) =>setFa(e.target.value)} type="number"/><p>Paano natutustusan ang iyong Pag-aaral</p>             
+            <input placeholder={data.fasc} onChange={(e) =>setFa(e.target.value)} type="number"/><p>Q6:Paano natutustusan ang iyong Pag-aaral</p>             
             </div>   
             <div className="hshe">
-            <input placeholder={data.fasc1} onChange={(e) =>setFa1(e.target.value)} type="number"/><p>Suporta ng Magulang</p>
+            <input placeholder={data.fasc1} onChange={(e) =>setFa1(e.target.value)} type="number"/><p>CHOICE1:Suporta ng Magulang</p>
             </div>
             <div className="hshe">
-            <input placeholder={data.fasc2} onChange={(e) =>setFa2(e.target.value)} type="number"/><p>Working Student</p>
+            <input placeholder={data.fasc2} onChange={(e) =>setFa2(e.target.value)} type="number"/><p>CHOICE2:Working Student</p>
             </div>
             <div className="hshe">
-            <input placeholder={data.fasc3} onChange={(e) =>setFa3(e.target.value)} type="number"/><p>Sponsorship</p>
+            <input placeholder={data.fasc3} onChange={(e) =>setFa3(e.target.value)} type="number"/><p>CHOICE3:Sponsorship</p>
             </div>
             <div className="hshe">
-            <input placeholder={data.fasc4} onChange={(e) =>setFa4(e.target.value)} type="number"/><p>Suporta ng Kamg-anak o Kapatid</p>
+            <input placeholder={data.fasc4} onChange={(e) =>setFa4(e.target.value)} type="number"/><p>CHOICE4:Suporta ng Kamg-anak o Kapatid</p>
             </div>
             <div className="hshe">
-            <input placeholder={data.fasc5} onChange={(e) =>setFa5(e.target.value)} type="number"/><p>Scholarship</p>
+            <input placeholder={data.fasc5} onChange={(e) =>setFa5(e.target.value)} type="number"/><p>CHOICE5:Scholarship</p>
             </div>
             <div className="hshe">
-            <input placeholder={data.fasc6} onChange={(e) =>setFa6(e.target.value)} type="number"/><p>Others</p>
+            <input placeholder={data.fasc6} onChange={(e) =>setFa6(e.target.value)} type="number"/><p>CHOICE6:Others</p>
             </div>
             </div>
             <div className="quesco">
             <div className="hshe">
-            <input placeholder={data.tssc} onChange={(e) =>setTs(e.target.value)} type="number"/><p>Uri ng Paaralan?</p>             
+            <input placeholder={data.tssc} onChange={(e) =>setTs(e.target.value)} type="number"/><p>Q7:Uri ng Paaralan?</p>             
             </div>   
             <div className="hshe">
-            <input placeholder={data.tssc1} onChange={(e) =>setTs1(e.target.value)} type="number"/><p>Private</p>
+            <input placeholder={data.tssc1} onChange={(e) =>setTs1(e.target.value)} type="number"/><p>CHOICE1:Private</p>
             </div>
             <div className="hshe">
-            <input placeholder={data.tssc2} onChange={(e) =>setTs2(e.target.value)} type="number"/><p>Public</p>
+            <input placeholder={data.tssc2} onChange={(e) =>setTs2(e.target.value)} type="number"/><p>CHOICE2:Public</p>
             </div>
             <div className="hshe">
-            <input placeholder={data.tssc3} onChange={(e) =>setTs3(e.target.value)} type="number"/><p>ALS</p>
+            <input placeholder={data.tssc3} onChange={(e) =>setTs3(e.target.value)} type="number"/><p>CHOICE3:ALS</p>
             </div>
             <div className="hshe">
-            <input placeholder={data.tssc4} onChange={(e) =>setTs4(e.target.value)} type="number"/><p>Private(Scholarship,Voucher,Sponsored)</p>
+            <input placeholder={data.tssc4} onChange={(e) =>setTs4(e.target.value)} type="number"/><p>CHOICE4:Private(Scholarship,Voucher,Sponsored)</p>
             </div>
             <div className="hshe">
-            <input placeholder={data.tssc5} onChange={(e) =>setTs5(e.target.value)} type="number"/><p>Public(Scholarship,Voucher,Sponsored)</p>
+            <input placeholder={data.tssc5} onChange={(e) =>setTs5(e.target.value)} type="number"/><p>CHOICE5:Public(Scholarship,Voucher,Sponsored)</p>
             </div>
             <div className="hshe">
-            <input placeholder={data.tssc6} onChange={(e) =>setTs6(e.target.value)} type="number"/><p>Out of Children</p>
+            <input placeholder={data.tssc6} onChange={(e) =>setTs6(e.target.value)} type="number"/><p>CHOICE6:Out of Children</p>
             </div>
             </div>
             <div className="quesco">
             <div className="hshe">
-            <input placeholder={data.gwasc} onChange={(e) =>setGwa(e.target.value)} type="number"/><p>General Weighted Average</p>             
+            <input placeholder={data.gwasc} onChange={(e) =>setGwa(e.target.value)} type="number"/><p>Q8:General Weighted Average</p>             
             </div>   
             <div className="hshe">
-            <input placeholder={data.gwasc1} onChange={(e) =>setGwa1(e.target.value)} type="number"/><p>96-100</p>
+            <input placeholder={data.gwasc1} onChange={(e) =>setGwa1(e.target.value)} type="number"/><p>CHOICE1:96-100</p>
             </div>
             <div className="hshe">
-            <input placeholder={data.gwasc2} onChange={(e) =>setGwa2(e.target.value)} type="number"/><p>91-95</p>
+            <input placeholder={data.gwasc2} onChange={(e) =>setGwa2(e.target.value)} type="number"/><p>CHOICE2:91-95</p>
             </div>
             <div className="hshe">
-            <input placeholder={data.gwasc3} onChange={(e) =>setGwa3(e.target.value)} type="number"/><p>86-90</p>
+            <input placeholder={data.gwasc3} onChange={(e) =>setGwa3(e.target.value)} type="number"/><p>CHOICE3:86-90</p>
             </div>
             <div className="hshe">
-            <input placeholder={data.gwasc4} onChange={(e) =>setGwa4(e.target.value)} type="number"/><p>81-85</p>
+            <input placeholder={data.gwasc4} onChange={(e) =>setGwa4(e.target.value)} type="number"/><p>CHOICE4:81-85</p>
             </div>
             <div className="hshe">
-            <input placeholder={data.gwasc5} onChange={(e) =>setGwa5(e.target.value)} type="number"/><p>80 Below</p>
+            <input placeholder={data.gwasc5} onChange={(e) =>setGwa5(e.target.value)} type="number"/><p>CHOICE5:80 Below</p>
             </div>
             </div>
             </div>
@@ -548,6 +548,13 @@ export const About = () => {
         <Navbar/>
         <div   className="top">
           <h1>Score Card</h1>
+          This Score Card will apply to the Scholarship Application Form
+          <p>Instructions:</p>
+          <p>1.Set the Score for each questions where in the score is equivalent to percentage </p>
+          <p>2.All the Questions(Q1-8) must the total value is equivalent to 100 when each questions is sum up </p>
+          <p>3.All the CHOICE mut a value is not greater than to 100 or less than 0 </p>
+          <p>4.The Choices will be the percentage of a questions</p>
+          <p>5.Formula: Percentage of Selected Choice divided by 100 times the Specific Questions</p>
           <div className="sheets">
             <div className="hshe">
             <FormControl sx={{ m: 1, minWidth: 400 }}>
@@ -593,79 +600,79 @@ export const About = () => {
             <div className="quescontainer">
               <div className="quesco">
                <div className="hshe">
-                <input onChange={(e) =>setWl(e.target.value)} type="number"/><p>Saan ka nakatira</p>             
+                <input onChange={(e) =>setWl(e.target.value)} type="number"/><p>Q1:Saan ka nakatira</p>             
               </div>   
 
               <div className="hshe">
-                <input onChange={(e) =>setWl1(e.target.value)} type="number"/><p>Subdivision</p>
+                <input onChange={(e) =>setWl1(e.target.value)} type="number"/><p>CHOICE1:Subdivision</p>
               </div>
 
               <div className="hshe">
-                <input onChange={(e) =>setWl2(e.target.value)} type="number"/><p>Sitio/Purok</p>
+                <input onChange={(e) =>setWl2(e.target.value)} type="number"/><p>CHOICE2:Sitio/Purok</p>
               </div>
 
               <div className="hshe">
-                <input onChange={(e) =>setWl3(e.target.value)} type="number"/><p>Depressed Area</p>
+                <input onChange={(e) =>setWl3(e.target.value)} type="number"/><p>CHOICE3:Depressed Area</p>
                 </div>
               </div>
 
             <div className="quesco">
               <div className="hshe">
-               <input onChange={(e) =>setHl(e.target.value)} type="number"/><p>Gaano na Katagal?</p>             
+               <input onChange={(e) =>setHl(e.target.value)} type="number"/><p>Q2:Gaano na Katagal?</p>             
              </div>   
 
               <div className="hshe">
-                <input onChange={(e) =>setHl1(e.target.value)} type="number"/><p>6 Months</p>
+                <input onChange={(e) =>setHl1(e.target.value)} type="number"/><p>CHOICE1:6 Months</p>
               </div>
 
               <div className="hshe">
-                <input onChange={(e) =>setHl2(e.target.value)} type="number"/><p>1-2 Years</p>
+                <input onChange={(e) =>setHl2(e.target.value)} type="number"/><p>CHOICE2:1-2 Years</p>
               </div>
 
               <div className="hshe">
-                <input onChange={(e) =>setHl3(e.target.value)} type="number"/><p>3-4 Years</p>
+                <input onChange={(e) =>setHl3(e.target.value)} type="number"/><p>CHOICE3:3-4 Years</p>
               </div>
 
               <div className="hshe">
-                <input onChange={(e) =>setHl4(e.target.value)} type="number"/><p>5 Years</p>
+                <input onChange={(e) =>setHl4(e.target.value)} type="number"/><p>CHOICE4:5 Years</p>
               </div>
             </div>
 
             <div className="quesco">
             <div className="hshe">
-            <input onChange={(e) =>setOs(e.target.value)} type="number"/><p>Uri ng Pag-aari ng Bahay?</p>             
+            <input onChange={(e) =>setOs(e.target.value)} type="number"/><p>Q3:Uri ng Pag-aari ng Bahay?</p>             
             </div>   
             <div className="hshe">
-            <input onChange={(e) =>setOs1(e.target.value)} type="number"/><p>Nakikitira</p>
+            <input onChange={(e) =>setOs1(e.target.value)} type="number"/><p>CHOICE1:Nakikitira</p>
             </div>
             <div className="hshe">
-            <input onChange={(e) =>setOs2(e.target.value)} type="number"/><p>Umuupa</p>
+            <input onChange={(e) =>setOs2(e.target.value)} type="number"/><p>CHOICE2:Umuupa</p>
             </div>
             <div className="hshe">
-            <input onChange={(e) =>setOs3(e.target.value)} type="number"/><p>Sariling  Bahay</p>
+            <input onChange={(e) =>setOs3(e.target.value)} type="number"/><p>CHOICE3:Sariling  Bahay</p>
             </div>
             <div className="hshe">
-            <input onChange={(e) =>setOs4(e.target.value)} type="number"/><p>Others</p>
+            <input onChange={(e) =>setOs4(e.target.value)} type="number"/><p>CHOICE4:Others</p>
             </div>
             </div>
             <div className="quesco">
             <div className="hshe">
-            <input onChange={(e) =>setMi(e.target.value)} type="number"/><p>Buwanang Pangkalahatang kita ng Pamilya?</p>             
+            <input onChange={(e) =>setMi(e.target.value)} type="number"/><p>Q4:Buwanang Pangkalahatang kita ng Pamilya?</p>             
             </div>   
             <div className="hshe">
-            <input onChange={(e) =>setMi1(e.target.value)} type="number"/><p>P1,000 - 4,000</p>
+            <input onChange={(e) =>setMi1(e.target.value)} type="number"/><p>CHOICE1:P1,000 - 4,000</p>
             </div>
             <div className="hshe">
-            <input onChange={(e) =>setMi2(e.target.value)} type="number"/><p>P5,000 - 8,000</p>
+            <input onChange={(e) =>setMi2(e.target.value)} type="number"/><p>CHOICE2:P5,000 - 8,000</p>
             </div>
             <div className="hshe">
-            <input onChange={(e) =>setMi3(e.target.value)} type="number"/><p>P9,000 - 12,000</p>
+            <input onChange={(e) =>setMi3(e.target.value)} type="number"/><p>CHOICE3:P9,000 - 12,000</p>
             </div>
             <div className="hshe">
-            <input onChange={(e) =>setMi4(e.target.value)} type="number"/><p>P13,000 - 18,000</p>
+            <input onChange={(e) =>setMi4(e.target.value)} type="number"/><p>CHOICE4:P13,000 - 18,000</p>
             </div>
             <div className="hshe">
-            <input onChange={(e) =>setMi5(e.target.value)} type="number"/><p>P19,000 Above</p>
+            <input onChange={(e) =>setMi5(e.target.value)} type="number"/><p>CHOICE5:P19,000 Above</p>
             </div>
             </div>
             </div>
@@ -673,86 +680,86 @@ export const About = () => {
             <div className="quescontainer">
             <div className="quesco">
             <div className="hshe">
-            <input onChange={(e) =>setFn(e.target.value)} type="number"/><p>Ilan ang Miyembro ng Pamilya?</p>             
+            <input onChange={(e) =>setFn(e.target.value)} type="number"/><p>Q5:Ilan ang Miyembro ng Pamilya?</p>             
             </div>   
             <div className="hshe">
-            <input onChange={(e) =>setFn1(e.target.value)} type="number"/><p>11- Pataas</p>
+            <input onChange={(e) =>setFn1(e.target.value)} type="number"/><p>CHOICE1:11- Pataas</p>
             </div>
             <div className="hshe">
-            <input onChange={(e) =>setFn2(e.target.value)} type="number"/><p>7 - 10 Members</p>
+            <input onChange={(e) =>setFn2(e.target.value)} type="number"/><p>CHOICE2:7 - 10 Members</p>
             </div>
             <div className="hshe">
-            <input onChange={(e) =>setFn3(e.target.value)} type="number"/><p>4 - 6 Members</p>
+            <input onChange={(e) =>setFn3(e.target.value)} type="number"/><p>CHOICE3:4 - 6 Members</p>
             </div>
             <div className="hshe">
-            <input onChange={(e) =>setFn4(e.target.value)} type="number"/><p>1-3 Members</p>
+            <input onChange={(e) =>setFn4(e.target.value)} type="number"/><p>CHOICE4:1-3 Members</p>
             </div>
             </div>
             <div className="quesco">
             <div className="hshe">
-            <input onChange={(e) =>setFa(e.target.value)} type="number"/><p>Paano natutustusan ang iyong Pag-aaral</p>             
+            <input onChange={(e) =>setFa(e.target.value)} type="number"/><p>Q6:Paano natutustusan ang iyong Pag-aaral</p>             
             </div>   
             <div className="hshe">
-            <input onChange={(e) =>setFa1(e.target.value)} type="number"/><p>Suporta ng Magulang</p>
+            <input onChange={(e) =>setFa1(e.target.value)} type="number"/><p>CHOICE1:Suporta ng Magulang</p>
             </div>
             <div className="hshe">
-            <input onChange={(e) =>setFa2(e.target.value)} type="number"/><p>Working Student</p>
+            <input onChange={(e) =>setFa2(e.target.value)} type="number"/><p>CHOICE2:Working Student</p>
             </div>
             <div className="hshe">
-            <input onChange={(e) =>setFa3(e.target.value)} type="number"/><p>Sponsorship</p>
+            <input onChange={(e) =>setFa3(e.target.value)} type="number"/><p>CHOICE3:Sponsorship</p>
             </div>
             <div className="hshe">
-            <input onChange={(e) =>setFa4(e.target.value)} type="number"/><p>Suporta ng Kamg-anak o Kapatid</p>
+            <input onChange={(e) =>setFa4(e.target.value)} type="number"/><p>CHOICE4:Suporta ng Kamg-anak o Kapatid</p>
             </div>
             <div className="hshe">
-            <input onChange={(e) =>setFa5(e.target.value)} type="number"/><p>Scholarship</p>
+            <input onChange={(e) =>setFa5(e.target.value)} type="number"/><p>CHOICE5:Scholarship</p>
             </div>
             <div className="hshe">
-            <input onChange={(e) =>setFa6(e.target.value)} type="number"/><p>Others</p>
+            <input onChange={(e) =>setFa6(e.target.value)} type="number"/><p>CHOICE6:Others</p>
             </div>
             </div>
             <div className="quesco">
             <div className="hshe">
-            <input onChange={(e) =>setTs(e.target.value)} type="number"/><p>Uri ng Paaralan?</p>             
+            <input onChange={(e) =>setTs(e.target.value)} type="number"/><p>Q7:Uri ng Paaralan?</p>             
             </div>   
             <div className="hshe">
-            <input onChange={(e) =>setTs1(e.target.value)} type="number"/><p>Private</p>
+            <input onChange={(e) =>setTs1(e.target.value)} type="number"/><p>CHOICE1:Private</p>
             </div>
             <div className="hshe">
-            <input onChange={(e) =>setTs2(e.target.value)} type="number"/><p>Public</p>
+            <input onChange={(e) =>setTs2(e.target.value)} type="number"/><p>CHOICE2:Public</p>
             </div>
             <div className="hshe">
-            <input onChange={(e) =>setTs3(e.target.value)} type="number"/><p>ALS</p>
+            <input onChange={(e) =>setTs3(e.target.value)} type="number"/><p>CHOICE3:ALS</p>
             </div>
             <div className="hshe">
-            <input onChange={(e) =>setTs4(e.target.value)} type="number"/><p>Private(Scholarship,Voucher,Sponsored)</p>
+            <input onChange={(e) =>setTs4(e.target.value)} type="number"/><p>CHOICE4:Private(Scholarship,Voucher,Sponsored)</p>
             </div>
             <div className="hshe">
-            <input onChange={(e) =>setTs5(e.target.value)} type="number"/><p>Public(Scholarship,Voucher,Sponsored)</p>
+            <input onChange={(e) =>setTs5(e.target.value)} type="number"/><p>CHOICE5:Public(Scholarship,Voucher,Sponsored)</p>
             </div>
             <div className="hshe">
-            <input onChange={(e) =>setTs6(e.target.value)} type="number"/><p>Out of Children</p>
+            <input onChange={(e) =>setTs6(e.target.value)} type="number"/><p>CHOICE6:Out of Children</p>
             </div>
             </div>
 
             <div className="quesco">
             <div className="hshe">
-            <input onChange={(e) =>setGwa(e.target.value)} type="number"/><p>General Weighted Average</p>             
+            <input onChange={(e) =>setGwa(e.target.value)} type="number"/><p>Q8:General Weighted Average</p>             
             </div>   
             <div className="hshe">
-            <input onChange={(e) =>setGwa1(e.target.value)} type="number"/><p>96-100</p>
+            <input onChange={(e) =>setGwa1(e.target.value)} type="number"/><p>CHOICE1:96-100</p>
             </div>
             <div className="hshe">
-            <input onChange={(e) =>setGwa2(e.target.value)} type="number"/><p>91-95</p>
+            <input onChange={(e) =>setGwa2(e.target.value)} type="number"/><p>CHOICE2:91-95</p>
             </div>
             <div className="hshe">
-            <input onChange={(e) =>setGwa3(e.target.value)} type="number"/><p>86-90</p>
+            <input onChange={(e) =>setGwa3(e.target.value)} type="number"/><p>CHOICE3:86-90</p>
             </div>
             <div className="hshe">
-            <input onChange={(e) =>setGwa4(e.target.value)} type="number"/><p>81-85</p>
+            <input onChange={(e) =>setGwa4(e.target.value)} type="number"/><p>CHOICE4:81-85</p>
             </div>
             <div className="hshe">
-            <input onChange={(e) =>setGwa5(e.target.value)} type="number"/><p>80 Below</p>
+            <input onChange={(e) =>setGwa5(e.target.value)} type="number"/><p>CHOICE5:80 Below</p>
             </div>
             </div>
             </div>    
