@@ -3,11 +3,12 @@ import Navbar from '../../components/navbar/Navbar';
 import Sidebar from '../../components/sidebar/Sidebar';
 import './users.scss';
 import { useEffect, useState } from 'react';
-import { Box } from "@mui/material"; 
+import { Box,Card } from "@mui/material"; 
 import { styled } from '@mui/material/styles';
 import { DataGrid} from '@mui/x-data-grid';
 import Avatar from '@mui/material/Avatar';
 import Chip from '@mui/material/Chip';
+import './user.css'
 
 const Users = () => {
   
@@ -144,7 +145,8 @@ const Users = () => {
       <Sidebar />
       <div className="usersContainer">
         <Navbar />
-        <div className="top">
+        <Card sx={{width:'95%',margin:'10px',padding:'10px'}} elevation={3}>
+        <div className='userlsitcon'>
           <h1> Users Account List </h1>
           <Box sx={{ height: 400, width: '100%' }}>
       <CustomDataGrid
@@ -165,6 +167,7 @@ const Users = () => {
       />
     </Box>
         </div>
+        </Card>
       </div>
     </div>
     </>

@@ -2,7 +2,7 @@ import "./applicant.scss";
 import Sidebar from "../../components/sidebar/Sidebar";
 import Navbar from "../../components/navbar/Navbar";
 import { useState, useEffect } from "react";
-import { Tabs, Tab, Box, Modal } from "@mui/material"; 
+import { Tabs, Tab, Box, Modal, Card } from "@mui/material"; 
 import { DataGrid} from '@mui/x-data-grid';
 import Radio from '@mui/material/Radio';
 import RadioGroup from '@mui/material/RadioGroup';
@@ -10,7 +10,7 @@ import FormControlLabel from '@mui/material/FormControlLabel';
 import FormControl from '@mui/material/FormControl';
 import FormLabel from '@mui/material/FormLabel';
 import { ApplicantsRequest, FetchingApplicantsInfo, ListofSub,
-          CheckingSubs, CheckingApplicants,UserScore } from "../../api/request";
+          CheckingSubs, CheckingApplicants,UserScore,ListofReq } from "../../api/request";
 import swal from "sweetalert";
 import { styled } from '@mui/material/styles';
 import { useContext } from "react";
@@ -22,6 +22,7 @@ const Applicant = () => {
   const { loginUser,user } = useContext(admininfo);
   const [open, setOpen] = useState(false);
   const [post , setPost] = useState([]);
+  const [reqlist,setReqlist] = useState([]);
   const [userscore,setUserScore] = useState([]);
   const [selectedInfo, setSelectedInfo] = useState({});
   const [applicantsInfo, setApplicantInfo] = useState([]);
@@ -61,8 +62,13 @@ const Applicant = () => {
 
     async function Fetch(){
       const response = await ApplicantsRequest.ALL_APPLICANTS()
-      console.log(response)
+      const docreq = await ListofReq.FETCH_REQUIREMENTS()
       setPost(response.data.results);
+      console.log(docreq)
+      const sub = docreq.data.Requirements.results2
+      const list = docreq.data.Requirements.results1
+      const totalsubdiv = `${sub.length}/${list.length}`
+      setReqlist(totalsubdiv)
     }
     Fetch();
   }, []);
@@ -92,7 +98,7 @@ const Applicant = () => {
 
   }
   const check = async (data,index) =>{
-    console.log(selectedInfo)
+    console.log(status)
     const requirement_Name = data.requirement_Name;
     const applicantNum = applicantsInfo[0].applicantNum;   
     const adminName = user.name;
@@ -113,12 +119,14 @@ const Applicant = () => {
      )
     .catch(err => console.log(err));
   }
-  const ApplicantCheck = async () =>{
-    const applicantNum = applicantsInfo[0].applicantNum;
+  const ApplicantCheck = async (data) =>{
+    console.log(data)
+    const applicantNum = data.applicantNum;
     const applicantCode = selectedInfo.applicantCode;
     const status = 'Qualified';
     const adminName = user.name;
-    CheckingApplicants.CHECK_APP({adminName,applicantNum,status,applicantCode})
+    const email = data.email
+    CheckingApplicants.CHECK_APP({email,adminName,applicantNum,status,applicantCode})
     .then(res => {
       console.log(res)
       setPost(res.data.Applicants)
@@ -172,23 +180,27 @@ const Applicant = () => {
       editable: false,
     },
     {
-      field: 'score',
-      headerName: 'Score',
+      field: (reqlist),
+      headerName: 'Documents',
       width: 110,
-      editable: true,
+      editable: false,
+      valueGetter: () => reqlist,
     },
     {
       field: 'Batch',
       headerName: 'Batch',
-      width: 110,
+      width: 100,
       editable: false,
     },
     {
       field: 'insert',
       headerName: 'Actions',
-      width: 90,
+      width: 150,
       renderCell: (params) => (
+        <>
         <button onClick={() => view(params.row)}>View</button>
+        <button style={{marginLeft:'5px'}} onClick={() => ApplicantCheck(params.row)}>Add</button>
+        </>
       ),
     },
   ];
@@ -303,303 +315,18 @@ const Applicant = () => {
       </div>
           )});
 
-const applicantInfoFB = applicantsInfo?.map((data) =>{
-  const score = userscore?.map((data) =>{
-    return data
-  })
-    return (
-      <>
-      <div className="PA">
-        <div className="Finfo">
-        <h1>Mother Information</h1>
-        <div className="fmbgconlisclmn">
-        <div>
-        <TextField
-          disabled
-          id="outlined-disabled"
-          label="First Name"
-          defaultValue={data.motherName}
-        />
-        </div>
-        <div>
-        <TextField
-          disabled
-          id="outlined-disabled"
-          label="Last Name"
-          defaultValue={data.motherlName}
-        />
-        </div>
-        <div>
-        <TextField
-          disabled
-          id="outlined-disabled"
-          label="Middle Name"
-          defaultValue={data.mothermName}
-        />
-        </div>
-        </div>
-        <div className="fmbgconlisclmn">
-        <div>
-        <TextField
-          disabled
-          id="outlined-disabled"
-          label="Occupation"
-          defaultValue={data.mothermName}
-        />
-        </div>
-        <div>
-        <TextField
-          disabled
-          id="outlined-disabled"
-          label="Highest Educational Attainment"
-          defaultValue={data.motherEduc}
-        />
-        </div>
-        </div>
-        <h1>Father Information</h1>
-        <div className="fmbgconlisclmn">
-        <div>
-        <TextField
-          disabled
-          id="outlined-disabled"
-          label="First Name"
-          defaultValue={data.fatherName}
-        />
-        </div>
-        <div>
-        <TextField
-          disabled
-          id="outlined-disabled"
-          label="Last Name"
-          defaultValue={data.fatherlName}
-        />
-        </div>
-        <div>
-        <TextField
-          disabled
-          id="outlined-disabled"
-          label="Middle Name"
-          defaultValue={data.fathermName}
-        />
-        </div>
-        </div>
-        <div className="fmbgconlisclmn">
-        <div>
-        <TextField
-          disabled
-          id="outlined-disabled"
-          label="Occupation"
-          defaultValue={data.fatherOccu}
-        />
-        </div>
-        <div>
-        <TextField
-          disabled
-          id="outlined-disabled"
-          label="Highest Educational Attainment"
-          defaultValue={data.fatherEduc}
-        />
-        </div>
-        </div>
-        <div className="fmbgconlisclmn">
-        <div>
-        <span>Score</span>
-        <input style={{width:'40px',height:'50px',textAlign:'center'}} type="number" disabled value={score[0].fntotal}/>
-        <TextField
-          disabled
-          id="outlined-disabled"
-          label="Number of Family Members"
-          defaultValue={data.famNum}
-        />
-        </div>
-        </div>
-        <h1>Guardian Information</h1>
-        <div className="fmbgconlisclmn">
-        <div>
-        <TextField
-          disabled
-          id="outlined-disabled"
-          label="Full Name"
-          defaultValue={data.guardianName}
-        />
-        </div>
-        <div>
-        <TextField
-          disabled
-          id="outlined-disabled"
-          label="Contact Name"
-          defaultValue={data.guardianContact}
-        />
-        </div>
-        <div>
-        <TextField
-          disabled
-          id="outlined-disabled"
-          label="Relationship"
-          defaultValue={data.relationship}
-        />
-        </div>
-        </div>
-        </div>
-      </div>
-      </>
-        )})
-  const applicantInfoEcB = applicantsInfo?.map((data) =>{
-    const score = userscore?.map((data) =>{
-      return data
-    })
-    console.log(score)
-    return (
-      <>
-      <div className="PA">
-        <div className="Einfo">
-        <div className="fstcolm">
-        <div>
-        <span>Score</span>
-          <input style={{width:'40px',height:'50px',textAlign:'center'}} type="number" disabled value={score[0].wltotal}/>
-        <TextField
-          disabled
-          id="outlined-disabled"
-          label="Where do you Live?"
-          defaultValue={data.wereLive}
-        />
-        </div>
-        <div>
-        <span>Score</span>
-          <input style={{width:'40px',height:'50px',textAlign:'center'}} type="number" disabled value={score[0].hltotal}/>
-        <TextField
-          disabled
-          id="outlined-disabled"
-          label="Living in Marilao"
-          defaultValue={data.howLong}
-        />
-        </div>
-        <div>
-        <span>Score</span>
-          <input style={{width:'40px',height:'50px',textAlign:'center'}} type="number" disabled value={score[0].ostotal}/>
-        <TextField
-          disabled
-          id="outlined-disabled"
-          label="House Ownership"
-          defaultValue={data.ownerShip}
-        />
-        </div>
-        <div>
-        <span>Score</span>
-          <input style={{width:'40px',height:'50px',textAlign:'center'}} type="number" disabled value={score[0].mitotal}/>
-        <TextField
-          disabled
-          id="outlined-disabled"
-          label="Parent/Guardian Monthly Income"
-          defaultValue={data.monthIncome}
-        />
-        </div>
-        <div>
-        <TextField
-          disabled
-          id="outlined-disabled"
-          label="Baranggay"
-          defaultValue={data.baranggay}
-        />
-        </div>
-        </div>
-      </div>
-      </div>
-      </>
-        )})
-
-  const applicantInfoEdB = applicantsInfo?.map((data) =>{
-    const score = userscore?.map((data) =>{
-      return data
-    })
-    return (
-      <>
-      <div className="PA">
-      <div className="fmbgconlisclmn">
-        <div>
-        <TextField
-          disabled
-          id="outlined-disabled"
-          label="Year Level"
-          defaultValue={data.currentYear}
-        />
-        </div>
-        <div>
-        <span>Score</span>
-        <input style={{width:'40px',height:'50px',textAlign:'center'}} type="number" disabled value={score[0].tstotal}/>
-        <TextField
-          disabled
-          id="outlined-disabled"
-          label="Type of School"
-          defaultValue={data.typeSchool}
-        />
-        </div>
-        <div>
-        <TextField
-          disabled
-          id="outlined-disabled"
-          label="Degree Program/Course(Priority Course)"
-          defaultValue={data.course}
-        />
-        </div>
-        </div><br />
-        <div className="fmbgconlisclmn">
-        <div>
-        <TextField
-          disabled
-          id="outlined-disabled"
-          label="School Name"
-          defaultValue={data.currentSchool}
-        />
-        </div>
-        <div>
-        <TextField
-          disabled
-          id="outlined-disabled"
-          label="School Address"
-          defaultValue={data.address}
-        />
-        </div>
-        </div>
-        <div className="fmbgconlisclmn">
-        <div>
-        <span>Score</span>
-        <input style={{width:'40px',height:'50px',textAlign:'center'}} type="number" disabled value={score[0].gwatotal}/>
-        <TextField
-          disabled
-          id="outlined-disabled"
-          label="General Weighted Average"
-          defaultValue={data.gwa}
-        />
-        </div>
-        <div>
-        <span>Score</span>
-        <input style={{width:'40px',height:'50px',textAlign:'center'}} type="number" disabled value={score[0].fatotal}/>
-        <TextField
-          disabled
-          id="outlined-disabled"
-          label="Financial Support"
-          defaultValue={data.financialSupport}
-        />
-        </div>
-        </div>
-      </div>
-      </>
-        )})
 
   const docusubmitted = applicantsDocs?.map((data,index) =>{
     return (
       <>
       <div className="PA">
       <div className="Docuinfo">
-        <h1>{data.requirement_Name}</h1>
+        <div>
+          <Card elevation={5}>
         <div className="sublist" key={index}>
-        <div className="subdocsprev">
-          <img style={{width: 100}} src={data.File} alt="" />
-        </div>
-        </div>
-
+        <div>
         <div className="actions">
+        <h1>{data.requirement_Name}</h1>
         <FormControl>
           <FormLabel id="demo-row-radio-buttons-group-label"> Status </FormLabel>
         <RadioGroup
@@ -641,16 +368,18 @@ const applicantInfoFB = applicantsInfo?.map((data) =>{
             <button onClick={() =>check(data,index)}> Save </button>
           </div>
         </div>
+        <div className="subdocsprev">
+          <img style={{width: '70%',height:'80%'}} src={data.File} alt="" />
+        </div>
+        </div>
+        </Card>
+        </div>
+        </div>
       </div>
       </>
     )})
 
-      const TabPanel = ({ children, value, index }) => (
-        <div role="tabpanel" hidden={value !== index}>
-          {value === index && <Box p={3}>{children}</Box>}
-        </div>
-      );
-      const filteredRows = post.filter((row) => row.status === 'For Evaluation');
+      const filteredRows = post.filter((row) => row.status === 'Applicants');
   return (
     <>
     <Modal className="modalContainer"
@@ -664,48 +393,19 @@ const applicantInfoFB = applicantsInfo?.map((data) =>{
           border: 1 ,
           color: '#005427',
           borderRadius: 5,
-          height:'100%',
-          overflow:'auto'
+          height:'90%',
+          overflow:'auto',
+          width:'90%'
         }}>
-       
+          <div className="docusersub">
            <div className="buttonclosed" >
             <button onClick={handleClose}> X </button>
-            </div>
-
-  {/* Header of Modal */}
-            <div className="header">
-            <label> PERSONAL INFO </label> 
-            <br/>
-            <span> Name: {selectedInfo?.Name}</span>
-            <br/>
-            <span> Email: {selectedInfo.email} </span>
-            </div>
-          
-
-        <Tabs
-          value={tabValue} 
-          onChange={handleTabChange}   
-          variant="scrollable"
-          scrollButtons="auto">
-        
-        <Tab label="Personal Information" />
-        <Tab label="Family Background" />
-        <Tab label="Economic Background" />
-        <Tab label="Educational Background" />
-        <Tab label="Documents" />
-      </Tabs>
-      
-      <TabPanel value={tabValue} index={0}>{applicantInfoPA}</TabPanel>
-      <TabPanel value={tabValue} index={1}>{applicantInfoFB}</TabPanel>
-      <TabPanel value={tabValue} index={2}>{applicantInfoEcB}</TabPanel>
-      <TabPanel value={tabValue} index={3}>{applicantInfoEdB}</TabPanel>
-      <TabPanel value={tabValue} index={4}>{docusubmitted}</TabPanel>
-
-      <div className="buttonbacapp">
-        <button onClick={handleClose}> CANCEL </button>
-        <button onClick={() => ApplicantCheck()}> ADD </button>
-      </div>
-
+            </div>  
+            <h1>Documents:{reqlist}</h1>
+            <div className="clas"> 
+          {docusubmitted}
+          </div>
+          </div>
         </Box>
     </Modal>
      
@@ -715,11 +415,7 @@ const applicantInfoFB = applicantsInfo?.map((data) =>{
     <div className="applicantContainer">
       <Navbar/>
       <div className="top" >
-      <h1> Applicants </h1>   
-      
-      <button id="checkButton" onClick={checkedrows}>
-        Check
-      </button>     
+      <h1> Applicants </h1>      
 
       <Box sx={{ height: 400, width: '100%' }}>
       <CustomDataGrid

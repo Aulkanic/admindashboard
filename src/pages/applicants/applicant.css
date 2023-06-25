@@ -17,3 +17,47 @@
     display: flex;
     margin: 0;
   }
+  .docusersub{
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+  }
+  .clas{
+    margin: 0;
+  padding: 0;
+  width: 100%;
+  display: grid;
+  grid-template-columns: repeat(auto-fit,minmax(400px, 1fr));
+  grid-gap: 10px;
+  height: 100%;
+  }
+  .PA{
+    width: 100%;
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+  .Docuinfo{
+    width: 100%;
+    height: 100%;
+  }
+  .buttonclosed{
+    width: 100%;
+    height: 20px;
+  }
+  .sublist{
+    width: 100%;
+    display: flex;
+    float: left;
+    justify-content: space-between;
+    flex-direction: row-reverse;
+  }
+  .subdocsprev{
+    width: 30%;
+    height: 200px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }

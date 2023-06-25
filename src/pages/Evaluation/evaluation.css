@@ -1,0 +1,60 @@
+.PA{
+    width: 100%;
+    height: 100%;
+    padding: 10px;
+}
+.PA .Pinfo .fstcolm{
+    width: 100%;
+    height: 100%;
+    display: flex;
+}
+.PA .Pinfo .fstcolm div{
+    margin: 10px;
+}
+.PA .Finfo{
+    padding: 10px;
+}
+.fmbgconlisclmn{
+    width: 100%;
+    height: 100%;
+    display: flex;
+}
+.fmbgconlisclmn div{
+    margin: 10px;
+}
+.fmbgconlisclmn .withscore{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+.fstcolm{
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+.fstcolm .withscore{
+    margin: 10px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+.fmbgconlisclmn{
+    width: 100%;
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+.fmbgconlisclmn div{
+    margin: 10px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+.evluationcon{
+    width: 100%;
+    height: 100%;
+}

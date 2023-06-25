@@ -1,0 +1,41 @@
+.frmappoint{
+    width: 100%;
+    height: 100%;
+    margin: 10px;
+    padding: 10px;
+    display: flex;
+    flex-direction: column;
+}
+.datagloc{
+    width: 100%;
+    display: flex;
+    justify-content: space-around;
+    margin-bottom: 15px;
+}
+.timestend{
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+.applicalist{
+    width: 100%;
+    height: 100%;
+
+}
+.heaaplpli{
+    display: flex;
+    width: 100%;
+    justify-content: space-between;
+    align-items: center;
+}
+.appoiintedlistsed{
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+}
+.calendarContainer{
+    width: 100%;
+    height: 100%;
+    margin-top: 20px;
+}

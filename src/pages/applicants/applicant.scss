@@ -5,11 +5,12 @@
         flex: 7;
         
         .top{
-        -webkit-box-shadow: 2px 4px 10px 1px rgba(9, 247, 1, 0.47);
-        box-shadow: 2px 4px 10px 1px rgba(2, 129, 30, 0.47);
-        margin: 20px;
-        padding: 20px;
-        border-radius: 10px;
+        // -webkit-box-shadow: 2px 4px 10px 1px rgba(9, 247, 1, 0.47);
+        // box-shadow: 2px 4px 10px 1px rgba(2, 129, 30, 0.47);
+        // margin: 20px;
+        // padding: 20px;
+        // border-radius: 10px;
+        border: none;
 
         h1{
             padding: 10px;
@@ -140,7 +141,7 @@
         border: none;
         float: right;
         display: flex;
-        width: 25px;
+        width: 35px;
         justify-content: center;
         }
     }

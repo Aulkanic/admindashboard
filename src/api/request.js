@@ -62,6 +62,9 @@ export const Reaapointed = {
 export const SetApproved = {
     SET_APPROVE: (data) => axiosInstance.patch(Endpoints.SET_APPROVED,data)
 }
+export const SetApplicant = {
+    SET_APPLICANT: (data) => axiosInstance.patch(Endpoints.SET_APPLICANT,data)
+}
 export const FetchingBmccScho = {
     FETCH_SCHOLARS: () => axiosInstance.get(Endpoints.FETCH_BMCCSCHOLAR)
 }

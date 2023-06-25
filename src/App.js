@@ -8,6 +8,7 @@ import Applicant from './pages/applicants/Applicant';
 import Users from './pages/users/Users';
 import Appointment from './pages/appointments/Appointment';
 import Scholars from './pages/scholars/Scholars';
+import Evaluation from './pages/Evaluation/evaluation';
 import News from './pages/new/New';
 import { BrowserRouter, Routes, Route,} from "react-router-dom";
 import Single from './pages/single/Single';
@@ -42,6 +43,7 @@ function App() {
           <Route path='users' element={<Users/>} />
           <Route path='appointments' element={<Appointment/>} />
           <Route path='scholars' element={<Scholars/>} />
+          <Route path='Evaluation' element={<Evaluation/>} />
         </Route>
       </Routes>
       </admininfo.Provider>

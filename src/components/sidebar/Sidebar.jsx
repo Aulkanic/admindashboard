@@ -36,6 +36,12 @@ const Sidebar = () => {
             </Link>
 
             <p className="title"> Web </p>
+            <Link to='/faqs' style={{ textDecoration: "none" }}>
+            <li>
+              <LiveHelpIcon className='icon'/>
+              <span> Accounts </span>
+            </li>
+            </Link>
 
             <Link to="/scholarships" style={{ textDecoration: "none" }}>
             <li>
@@ -58,26 +64,27 @@ const Sidebar = () => {
             </li>
             </Link>
           
-            <Link to='/faqs' style={{ textDecoration: "none" }}>
-            <li>
-              <LiveHelpIcon className='icon'/>
-              <span> Accounts </span>
-            </li>
-            </Link>
+
 
             <p className="title"> Informations </p>
-
-            <Link to="/applicants" style={{ textDecoration: "none" }}>
-            <li>
-              <ViewListIcon className='icon'/>
-              <span> Applicants </span>
-            </li>
-            </Link>
 
             <Link to="/users" style={{ textDecoration: "none" }}>
             <li>
               <AccountBoxIcon className='icon'/>
               <span> User Accounts</span>
+            </li>
+            </Link>
+
+            <Link to="/Evaluation" style={{ textDecoration: "none" }}>
+            <li>
+              <ViewListIcon className='icon'/>
+              <span> Evaluation </span>
+            </li>
+            </Link>
+            <Link to="/applicants" style={{ textDecoration: "none" }}>
+            <li>
+              <ViewListIcon className='icon'/>
+              <span> Applicants </span>
             </li>
             </Link>
 
