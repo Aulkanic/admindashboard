@@ -340,6 +340,7 @@ const Scholars = () => {
             <div className="top">
             
               <h1>Scholars</h1>
+              <Button variant='contained'>Renewal</Button>
               <Box sx={{ height: 400, width: '100%' }}>
       <DataGrid
         rows={data}
@@ -357,8 +358,8 @@ const Scholars = () => {
         checkboxSelection
         disableRowSelectionOnClick
       />
-    </Box>
-              
+              </Box>
+              {}
             </div>
         </div>
     </div>

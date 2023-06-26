@@ -4,7 +4,7 @@ import Sidebar from "../../components/sidebar/Sidebar";
 import Navbar from "../../components/navbar/Navbar";    
 import { Tabs, Tab,Table, TableBody, TableCell, TableContainer, TableHead,TableRow, Paper, Box, Button, Typography, Modal,Card} from "@mui/material"; 
 import { FetchingQualified, CreateAppointment,FetchingAppointList
-  , Reaapointed, SetApproved,FetchingApplicantsInfo,SetApplicant,Addusertolistapp,UpdateScheduleApp } from "../../api/request";
+  , Reaapointed, SetApproved,FetchingApplicantsInfo,SetApplicant,Addusertolistapp,UpdateScheduleApp,FetchingBmccSchoinfo,FailedUser } from "../../api/request";
 import FormControlLabel from '@mui/material/FormControlLabel';
 import dayjs from 'dayjs';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
@@ -18,6 +18,11 @@ import { useState } from "react";
 import { useEffect } from "react";
 import { useContext } from "react";
 import { admininfo } from "../../App";
+import Dialog from '@mui/material/Dialog';
+import DialogActions from '@mui/material/DialogActions';
+import DialogContent from '@mui/material/DialogContent';
+import DialogContentText from '@mui/material/DialogContentText';
+import DialogTitle from '@mui/material/DialogTitle';
 import { Calendar, momentLocalizer } from "react-big-calendar";
 import moment from "moment";
 import "react-big-calendar/lib/css/react-big-calendar.css";
@@ -85,7 +90,19 @@ const Appointment = () => {
   const handleClose = () => setOpen(false);
   const [selectedRows, setSelectedRows] = useState([]);
   const [datarows,setDatarows] = useState([]);
-  const [addtosched,setAddSched] = useState([]);
+  const [dialog, setDialog] = React.useState(false);
+  const [reason,setReason] = useState('');
+  const [failinf,setFailInf] = useState([]);
+
+  const handleClickOpenDialog = (data) => {
+    console.log(data)
+    setDialog(true);
+    setFailInf(data)
+  };
+
+  const handleCloseDialog = () => {
+    setDialog(false);
+  };
 
   const handleSelectDate = (date) => {
     const formattedDate = moment(date).format('YYYY-MM-DD');
@@ -356,6 +373,23 @@ const Appointment = () => {
     
 
 };
+
+const Failed = async() =>{
+  console.log(failinf)
+  const res = await FetchingBmccSchoinfo.FETCH_SCHOLARSINFO(failinf.applicantNum);
+  console.log(res)
+  const schoapplied = res.data.ScholarInf.results1[0].SchoIarshipApplied;
+  const batch = res.data.ScholarInf.results1[0].Batch;
+  const formData = new FormData();
+  formData.append('applicantNum',failinf.applicantNum)
+  formData.append('Name',failinf.Name)
+  formData.append('ScholarshipApplied', schoapplied)
+  formData.append('batch',batch)
+  formData.append('Reason',reason)
+  formData.append('email',failinf.Email)
+  FailedUser.FAILED_USER(formData)
+
+}
   const AddtoApp = async(data) =>{
     console.log(data)
     const selectedRowsData = selectedRows.map((rowId) => {
@@ -676,13 +710,37 @@ const Appointment = () => {
               <TableCell className="tableCell"> {data.Location} </TableCell>
               <TableCell className="tableCell"> {data.Reason} </TableCell>
               <TableCell className="tableCell"> {data.appointedBy} </TableCell>
-              <TableCell className="tableCell"><button onClick={() => Reapp(data)}>Re-appoint</button> <button onClick={() => Approved(data)}>Approved</button>  </TableCell>
+              <TableCell className="tableCell"><button onClick={() => Reapp(data)}>View</button></TableCell>
+              <TableCell className="tableCell"><button onClick={() => Reapp(data)}>Re-appoint</button> <button onClick={() => Approved(data)}>Approved</button><button onClick={() =>handleClickOpenDialog(data)}>Failed</button>  </TableCell>
         </TableRow>) : null}
       </>
     )
   })
   return (
     <>
+         <Dialog open={dialog} onClose={handleCloseDialog}>
+        <DialogTitle>Failed</DialogTitle>
+        <DialogContent>
+          <DialogContentText>
+            Please Enter the Reason for Failing
+          </DialogContentText>
+          <TextField
+            autoFocus
+            margin="dense"
+            id="name"
+            label="Reason"
+            type="text"
+            value={reason}
+            fullWidth
+            onChange={(e) => setReason(e.target.value)}
+            variant="standard"
+          />
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={handleCloseDialog}>Cancel</Button>
+          <Button onClick={Failed}>Submit</Button>
+        </DialogActions>
+      </Dialog>
           <Modal
         open={open}
         aria-labelledby="modal-modal-title"
@@ -710,6 +768,7 @@ const Appointment = () => {
               <TableCell className="tableCell"> Location </TableCell>
               <TableCell className="tableCell"> Agenda </TableCell>
               <TableCell className="tableCell"> Appointed By </TableCell>
+              <TableCell className="tableCell"> Details </TableCell>
               <TableCell className="tableCell"> Action </TableCell>
             </TableRow>
           </TableHead>

@@ -113,3 +113,6 @@ export const UpdateProfile = {
 export const UpdateScheduleApp = {
     UPDATE_SCHEDULE: (data) => axiosInstance.patch(Endpoints.UPDATE_SCHEDULE,data)
 }
+export const FailedUser = {
+    FAILED_USER: (data) => axiosInstance.post(Endpoints.FAILED_USER,data)
+}

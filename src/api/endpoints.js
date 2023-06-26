@@ -22,6 +22,7 @@ const Endpoints = {
     SET_APPLICANT: 'Appointment/SetApplicants',
     ADD_APPLICANTLIST: 'Appointment/Addusertolist',
     UPDATE_SCHEDULE: 'Appointment/UpdateSchedule',
+    FAILED_USER: 'Appointment/Failed',
     FETCH_BMCCSCHOLAR: 'BMCCScholar/Scholars',
     FETCH_BMCCSCHOLARINFO: 'BMCCScholar/SchoInfo/',
     CREATE_SCORECARD: 'Scorecard/score',
