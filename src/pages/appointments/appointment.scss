@@ -5,9 +5,176 @@
     .appointmentContainer{
         width: 100%;
         flex: 7;
+        
 
         .top{
-            width: 100%;
+            display: flex;
+            -webkit-box-shadow: 2px 4px 10px 1px rgba(0, 0, 0, 0.47);
+            box-shadow: 2px 4px 10px 1px rgba(201, 201, 201, 0.47);
+            width: max-content;
+            margin: 10px;
+            padding: 10px;
+            flex-direction: column;
+
+            h1{
+                color: #005427;
+                font-weight: 1000;
+                font-size: 30px;
+                display: flex;
+                padding: 5px;
             }
+
+            h2{
+                color: #005427;
+                font-weight: 1000;
+                font-size: 20px;
+                display: flex;
+                padding: 5px;
+            }
+
+           .headerAppoint{
+                display: flex;
+                padding: 10px;
+                gap: 700px;
+                
+
+            .viewAppointbtn{
+                border-radius: 5px;
+                padding: 5px;
+                float: right;
+                width: 200px;
+                border: none;
+                font-size: 15px;
+                font-weight: 600;
+                color: #005427;
+                background-color: #d3e7dc;
+                cursor: pointer;
+            }
+           }
+
+           .frmappoint{
+                margin: 10px;
+                padding: 25px;     
+                justify-content: space-evenly;
+                text-align: center;
+
+            .datagloc{
+                width: max-content;
+                color: #005427;
+                
+                
+                .dateAppoint, .agenda, .location{
+                    margin: 5px;
+                    padding: 5px;
+                    height: 50px;
+                    color: #005427;
+
+                    .dataField{
+                        margin-left: 10px;
+                        width: 500px;
+                        color: #005427;
+                    }
+
+                    label{
+                        color: #005427;
+                        font-style: italic;
+                    }
+                }  
+            }
+
+            .timestend{
+                float: right;
+                display: flex;
+                flex-direction: column;
+                margin-top: -200px;
+                height: 150px;
+                margin-right: 20px;
+
+                .timeField{
+                    width: 500px;
+                    margin: 10px;
+                    padding: 5px;
+                }
+
+                label{
+                    color: #005427;
+                    font-style: italic;
+                }
+            }
+        }
+        }
     }
 }
+
+.applicalist{
+    padding: 10px;
+    margin: 10px;
+
+    .dataList{
+        display: flex;
+        padding: 5px;
+        
+        .appHead{
+            display: flex;
+            text-align: center;
+            justify-content: center;
+            align-items: center;
+            gap: 5px;
+            
+
+            .searchBox{
+                margin-left: 10px;
+                color: #005427;
+                font-weight: 600;
+                font-size: 14px;
+                
+                input{
+                    height: 22px;
+                    border: 1px solid #005427;
+                    
+                }
+            }
+        }
+    }
+    .applicantList{
+        justify-content: center;
+        align-items: center;
+        text-align: center;
+        display: flex;
+        gap: 50px;
+        margin: 10px;
+        padding: 10px;
+        
+
+        .appointBtn, .dselectBtn{
+          gap: 50px;
+        }
+    }
+   
+
+}
+
+table{
+    border: 1px solid #005427;
+    border-radius: 10px;
+    display: flex;
+    position: relative;
+    font-size: 14px;
+    text-align: center;
+    justify-content: center;
+    align-items: center;
+
+    .tableCell{
+        border: 1px solid #005427;
+        font-size: 12px;
+        font-weight: 600;
+        
+    }
+
+}
+
+.cards{
+    margin: 5px;
+
+}
+

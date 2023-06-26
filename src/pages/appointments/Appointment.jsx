@@ -62,7 +62,6 @@ const style = {
   boxShadow: 24,
   p: 4,
   overflow: 'auto',
-  
 };
 
 
@@ -157,7 +156,7 @@ const Appointment = () => {
   
       return (
         <>
-        <Card sx={{width:'45%',padding:'10px'}}>
+        <Card sx={{padding:'10px'}}>
         <div key={date}>
           <div style={{display:'flex',justifyContent:'space-between'}}>
             <div>
@@ -166,7 +165,8 @@ const Appointment = () => {
           <p>Location: {Location}</p>
           <p>Time: {timeStart}-{timeEnd}</p>
             </div>
-          <div style={{width:'25%',display:'flex',justifyContent:'space-between',height:'30px'}}>
+
+          <div style={{display:'flex',justifyContent:'space-between',height:'30px'}}>
           <ChildModalEdit
                  open={open2}
                  handleOpen={handleOpen2}
@@ -215,8 +215,8 @@ const Appointment = () => {
       )
     );
     setFilteredData(filtered);
-    
   };
+
   const handleUserSelection = (userId,name,email,scho,date,code) => {
     const currentIndex = selectedUsers.indexOf(userId);
     const newChecked = [...selectedUsers];
@@ -234,6 +234,7 @@ const Appointment = () => {
       setSelectedUsers(newChecked)
     }
   };
+
   const handleSelectAllChange = (event) => {
     const isChecked = event.target.checked;
     setSelectAll(isChecked);
@@ -246,6 +247,7 @@ const Appointment = () => {
       setSelectedUsers([]);
     }
   };
+
   const handleSave = (e) => {
     e.preventDefault()
     let errors = {}
@@ -302,6 +304,7 @@ const Appointment = () => {
       formData.append('appointmentDate',date);
       formData.append('startTime',start)
       formData.append('endTime',end)
+
       CreateAppointment.CREATE_APPOINT(formData)
       .then((res) => {
         if(res.data.success === 1){
@@ -318,6 +321,7 @@ const Appointment = () => {
       .catch(err => console.log(err));
     })
   };
+
   const Reapp = (data) => {
     console.log(data)
     const adminName = user.name;
@@ -337,8 +341,8 @@ const Appointment = () => {
       }
        )
       .catch(err => console.log(err));
-
   };
+
   const Approved = async (data) => {
     console.log(data)
     try {
@@ -369,8 +373,6 @@ const Appointment = () => {
     } catch (error) {
       console.error('Error fetching data:', error);
     }
-
-    
 
 };
 
@@ -437,6 +439,7 @@ const Failed = async() =>{
 
     });
   }
+
   function ChildModal(props) {
     const [open1, setOpen1] = React.useState(false);
     const handleOpen1 = () => {
@@ -446,6 +449,7 @@ const Failed = async() =>{
       setOpen1(false);
     };
     console.log(props)
+
     return (
       <React.Fragment>
         <Button variant="contained" onClick={handleOpen1}>Add</Button>
@@ -454,12 +458,15 @@ const Failed = async() =>{
           aria-labelledby="child-modal-title"
           aria-describedby="child-modal-description"
         >
-          <Box sx={{ ...style, width: '50%',height:'85%' }}>
+          <Box sx={{ height:'85%' }}>
             <button onClick={handleClose1}>X</button>
-            <div style={{width:'100%',display:'flex',justifyContent:'space-between'}}>
+
+            <div style={{display:'flex',justifyContent:'space-between'}}>
             <h1>Applicant List</h1>
+
             <Button onClick={() =>AddtoApp(props)}>Add</Button>
             </div>
+
           <DataGrid
           sx={{height:'70%'}}
           rows={Qualified}
@@ -484,6 +491,7 @@ const Failed = async() =>{
       </React.Fragment>
     );
   }
+
   function ChildModalEdit(props) {
     const [open2, setOpen2] = React.useState(false);
     const handleOpen2 = (event) => {
@@ -504,16 +512,19 @@ const Failed = async() =>{
           aria-labelledby="child-modal-title"
           aria-describedby="child-modal-description"
         >
-          <Box sx={{ ...style, width: '70%',height:'55%' }}>
+          <Box sx={{height:'55%' }}>
             <button onClick={handleClose2}>X</button>
-            <div style={{width:'100%',display:'flex',justifyContent:'space-between'}}>
+            <div style={{display:'flex',justifyContent:'space-between'}}>
             <Button onClick={() =>EditSched(props)}>Edit</Button>
             </div>
-            <Card style={{width:'95%',height:'100%',padding:'10px',margin:'10px'}} elevation={3}>
-              <div className="frmappoint">
-                <h1 style={{marginBottom:'10px',fontSize:'15px'}}>Update Appointment Schedule</h1>
-                <div className="datagloc">
-                <div>
+
+      <Card style={{height:'100%'}} elevation={3}>
+        <div className="frmappoint">
+          <h1 style={{marginBottom:'10px',fontSize:'15px'}}>Update Appointment Schedule</h1>
+        <div className="datagloc">
+      <div>
+
+{/* APPOINTMENT DATE */}
         <LocalizationProvider dateAdapter={AdapterDayjs}>
         <DateField 
           label="Appointment Date"
@@ -522,20 +533,17 @@ const Failed = async() =>{
           onChange={(newValue) => setAppointmentDate1(newValue)}
           format="MMM DD, YYYY"
         />
-            {errors.date1 && <MuiAlert variant='outlined' 
-    style={{ 
-      width: '70%', 
-      marginTop: '10px', 
-      color:'red', 
-      fontSize:'10px',
-      height:'auto',
-      background:'white' }} elevation={0} severity="error">
+          {errors.date1 && 
+          <MuiAlert 
+          elevation={0} severity="error">
           {errors.date1}
         </MuiAlert>}
-        </LocalizationProvider>
-        </div>
-        <div>
-        <TextField 
+      </LocalizationProvider>
+    </div>
+
+{/* AGENDA */}
+    <div>
+      <TextField 
         id="outlined-basic" 
         label="Agenda"
         size='small'
@@ -543,7 +551,9 @@ const Failed = async() =>{
         onChange={(e) => setAgenda1(e.target.value)} 
         variant="outlined" />     
       </div>
-      <div>
+
+{/* LOCATION */}
+    <div>
       <TextField 
         id="outlined-basic" 
         label="Location"
@@ -552,60 +562,57 @@ const Failed = async() =>{
         onChange={(e) => setLocation1(e.target.value)}
         variant="outlined" /> 
       </div>
-        </div>
-      <div className="timestend">
-        <div style={{marginRight:'20px'}}>
+    </div>
+
+{/* TIMESTART */}
+    <div className="timestend">
+
+      <div >
       <LocalizationProvider dateAdapter={AdapterDayjs}>
-      <DemoContainer components={['TimeField', 'TimeField', 'TimeField']}>
-        <TimeField size='small'
-          label="Time Start"
-          value={startTime1}
-          onChange={(newValue) => setStartTime1(newValue)}
-          format="hh:mm A"
-        />
-        {errors.start1 && <MuiAlert variant='outlined' 
-    style={{ 
-      width: '80%', 
-      marginTop: '10px', 
-      color:'red', 
-      fontSize:'10px',
-      height:'auto',
-      background:'white' }} elevation={0} severity="error">
+        <DemoContainer components={['TimeField', 'TimeField', 'TimeField']}>
+          <TimeField size='small'
+            label="Time Start"
+            value={startTime1}
+            onChange={(newValue) => setStartTime1(newValue)}
+            format="hh:mm A"
+          />
+
+      {errors.start1 && 
+      <MuiAlert 
+        variant='outlined' 
+        elevation={0} severity="error">
           {errors.start1}
         </MuiAlert>}
       </DemoContainer>
       </LocalizationProvider>
       </div>
+
+{/* TIME END      */}
       <div>
-      <LocalizationProvider dateAdapter={AdapterDayjs}>
-      <DemoContainer components={['TimeField', 'TimeField', 'TimeField']}>
-        <TimeField size='small'
-          label="Time End"
-          value={endTime1}
-          onChange={(newValue) => setEndTime1(newValue)}
-          format="hh:mm A"
-        />
-                    {errors.end1 && <MuiAlert variant='outlined' 
-    style={{ 
-      width: '70%', 
-      marginTop: '10px', 
-      color:'red', 
-      fontSize:'10px',
-      height:'auto',
-      background:'white' }} elevation={0} severity="error">
-          {errors.end1}
-        </MuiAlert>}
-      </DemoContainer>
-      </LocalizationProvider>
+        <LocalizationProvider dateAdapter={AdapterDayjs}>
+        <DemoContainer components={['TimeField', 'TimeField', 'TimeField']}>
+          <TimeField size='small'
+            label="Time End"
+            value={endTime1}
+            onChange={(newValue) => setEndTime1(newValue)}
+            format="hh:mm A"
+          />
+            {errors.end1 && <MuiAlert variant='outlined' 
+             elevation={0} severity="error">
+            {errors.end1}
+            </MuiAlert>}
+          </DemoContainer>
+          </LocalizationProvider>
+        </div>
+
       </div>
-      </div>
-      </div>
-              </Card>
+    </div>
+            </Card>
           </Box>
         </Modal>}
       </React.Fragment>
-    );
-  }
+    );}
+
   const EditSched = async(data) =>{
     console.log(data)
     let errors = {}
@@ -696,6 +703,7 @@ const Failed = async() =>{
       </>
     )
   })
+
   const appointmentList = appointedList?.map((data,index) =>{
     console.log(data.isInterview)
     return(
@@ -751,10 +759,11 @@ const Failed = async() =>{
             <button onClick={handleClose}> X </button>
         </div> 
         
-        <div className="appoiintedlistsed">
+        <div className="listAppointed">
         <div>
             <h3>Appointed List</h3>
         </div>
+
       <TableContainer component={Paper} className="table">
         <Table sx={{ minWidth: 650 }} aria-label="simple table">
           <TableHead>
@@ -783,101 +792,95 @@ const Failed = async() =>{
         </div>
         </Box>
       </Modal>
+
+{/* APPOINTMENT CONTAINER */}
     <div className="appointment">
         <Sidebar/>
         <div className="appointmentContainer">
-            <Navbar />
-            <div style={{width:'90%',display:'flex',justifyContent:'space-between',
-          margin:'10px'}}>
-            <h1> Appointments </h1>
-            <Button variant="contained" onClick={handleOpen}>View Appointed Applicants</Button>
-            </div>
-            <div className="top">
+          <Navbar />
+          <div className="top">
 
-              <Card style={{width:'95%',height:'100%',padding:'10px',margin:'10px'}} elevation={3}>
-              <div className="frmappoint">
-                <h1 style={{marginBottom:'10px',fontSize:'15px'}}>Set Appointment Schedule</h1>
-                <div className="datagloc">
-                <div>
+          <div className="headerAppoint">
+          <h1> Appointments </h1>
+          <button className="viewAppointbtn" onClick={handleOpen}> View Appointed Applicants </button>
+          </div>
+
+        <Card className="cards">
+        <div className="frmappoint">
+              <h2>Set Appointment Schedule</h2>
+
+        <div className="datagloc">
+
+        <div className="dateAppoint">
         <LocalizationProvider dateAdapter={AdapterDayjs}>
         <DateField 
+          className="dataField"
           label="Appointment Date"
           value={appointmentDate}
-          size='small'
           onChange={(newValue) => setAppointmentDate(newValue)}
           format="MMM DD, YYYY"
         />
-            {errors.date && <MuiAlert variant='outlined' 
-    style={{ 
-      width: '70%', 
-      marginTop: '10px', 
-      color:'red', 
-      fontSize:'10px',
-      height:'auto',
-      background:'white' }} elevation={0} severity="error">
-          {errors.date}
+
+        {errors.date && <MuiAlert 
+        elevation={0} severity="error">
+        {errors.date}
         </MuiAlert>}
         </LocalizationProvider>
         </div>
-        <div>
+
+      <div className="agenda">
         <TextField 
+        className="dataField"
         id="outlined-basic" 
         label="Agenda"
-        size='small'
         value={Agenda}
         onChange={(e) => setAgenda(e.target.value)} 
         variant="outlined" />     
       </div>
-      <div>
+      
+      <div className="location">
       <TextField 
+        className="dataField"
         id="outlined-basic" 
         label="Location"
-        size='small'
         value={Location}
         onChange={(e) => setLocation(e.target.value)}
         variant="outlined" /> 
       </div>
         </div>
+
       <div className="timestend">
-        <div style={{marginRight:'20px'}}>
+
+      <div>
       <LocalizationProvider dateAdapter={AdapterDayjs}>
       <DemoContainer components={['TimeField', 'TimeField', 'TimeField']}>
-        <TimeField size='small'
+        <TimeField 
+          className="timeField"
           label="Time Start"
           value={startTime}
           onChange={(newValue) => setStartTime(newValue)}
           format="hh:mm A"
         />
         {errors.start && <MuiAlert variant='outlined' 
-    style={{ 
-      width: '80%', 
-      marginTop: '10px', 
-      color:'red', 
-      fontSize:'10px',
-      height:'auto',
-      background:'white' }} elevation={0} severity="error">
-          {errors.start}
+        elevation={0} severity="error">
+        {errors.start}
         </MuiAlert>}
       </DemoContainer>
       </LocalizationProvider>
       </div>
+
       <div>
       <LocalizationProvider dateAdapter={AdapterDayjs}>
       <DemoContainer components={['TimeField', 'TimeField', 'TimeField']}>
-        <TimeField size='small'
+        <TimeField 
+          className="timeField"
           label="Time End"
           value={endTime}
           onChange={(newValue) => setEndTime(newValue)}
           format="hh:mm A"
         />
-                    {errors.end && <MuiAlert variant='outlined' 
-    style={{ 
-      width: '70%', 
-      marginTop: '10px', 
-      color:'red', 
-      fontSize:'10px',
-      height:'auto',
-      background:'white' }} elevation={0} severity="error">
+          {errors.end && <MuiAlert variant='outlined' 
+          elevation={0} severity="error">
           {errors.end}
         </MuiAlert>}
       </DemoContainer>
@@ -885,18 +888,23 @@ const Failed = async() =>{
       </div>
       </div>
       </div>
-              </Card>
-              <Card style={{width:'95%',height:'100%',padding:'10px',margin:'10px'}} elevation={3}>
-              <div className="applicalist">
-                <div className="heaaplpli">
-      <h3>Applicants List</h3>
-      <div>
-      <label htmlFor="">Search:</label>
+      </Card>
+
+    <Card className="cards">
+      <div className="applicalist">
+        <div className="dataList">
+
+ {/* APPLICANT */}
+
+    <div className="appHead">
+     <h2>Applicants List</h2>
+      <label className="searchBox"> Search </label>
       <input type="text" onChange={(e) => handleFilter(e.target.value)} />  
       </div>
-      </div>
+    </div>
+
       <TableContainer component={Paper} className="table">
-        <Table sx={{ minWidth: 650 }} aria-label="simple table">
+        <Table aria-label="simple table">
           <TableHead>
             <TableRow>
             <TableCell className="tableCell">
@@ -904,6 +912,7 @@ const Failed = async() =>{
               checked={selectAll}
               onChange={handleSelectAllChange} />}/>
             </TableCell>
+
               <TableCell className="tableCell"> Applicant Number </TableCell>
               <TableCell className="tableCell"> Scholarship Applied </TableCell>
               <TableCell className="tableCell"> Full Name </TableCell>
@@ -920,7 +929,7 @@ const Failed = async() =>{
                 <>
                 <TableBody>
                 {!data.isAppointed || data.isAppointed === 'No' ? (<TableRow key ={index}>  
-              <TableCell className="tableCell"><FormControlLabel required control={<Checkbox
+            <TableCell className="tableCell"><FormControlLabel required control={<Checkbox
             checked={selectedUsers.some((item) => item.userId === data.applicantNum) || selectAll}
             onChange={() => handleUserSelection(data.applicantNum,data.Name,data.email,data.status,data.DateApplied)} />}/></TableCell> 
               <TableCell className="tableCell"> {data.applicantNum} </TableCell>  
@@ -932,22 +941,22 @@ const Failed = async() =>{
         </TableRow>) : null}                  
                 </TableBody>
                 </>
-              )
-            })
+              )})
           ) : (<TableBody>
             {listqua}
           </TableBody>)}
         </Table>
       </TableContainer>
-            <div style={{width:'100%',display:'flex',justifyContent:'space-around',margin:'10px'}}>
-            <Button onClick={handleSave} variant="contained">APPOINT</Button>
-            <Button onClick={() => setSelectedUsers([])} variant="contained">DESELECT</Button>
-            </div>
-            </div>
-              </Card>
-            </div>
 
-        </div>
+          <div className="applicantList">
+            <Button className="appointBtn" onClick={handleSave} variant="contained">APPOINT</Button>
+            <Button className="dselectBtn" onClick={() => setSelectedUsers([])} variant="contained">DESELECT</Button>
+          </div>
+         </div>
+      </Card>
+  </div>
+
+      </div>
     </div>
     </>
   )

@@ -100,6 +100,7 @@ const CustomDataGrid = styled(DataGrid)({
   },[])
  const bmccemp = bmcc?.map((data) =>{
   console.log(data)
+
     return (
       <>
       <div className='emplycon'>
@@ -114,6 +115,7 @@ const CustomDataGrid = styled(DataGrid)({
         sx={{ width: 45, height: 45 }}
       />)}
         </div>
+
         <div className="detemp">
           <p>Name:{data.name}</p>
           <p>Email:{data.email}</p>
@@ -130,6 +132,7 @@ const CustomDataGrid = styled(DataGrid)({
       </>
     )
  })
+
  const AddbMCC = (event) =>{
   event.preventDefault();
   const errors = {};
@@ -187,15 +190,15 @@ const UpdateBMCC = (event) =>{
         <div className="faqsContainer">
             <Navbar/>
             <Modal
-                      open={open}
-                      aria-labelledby="modal-modal-title"
-                      aria-describedby="modal-modal-description">
-                <Box sx={style}>
-                <div className="buttonclosed">
-                <button onClick={handleClose}>X</button>
-
+                  open={open}
+                  aria-labelledby="modal-modal-title"
+                  aria-describedby="modal-modal-description">
+            <Box sx={style}>
+              <div className="buttonclosed">
+              <button onClick={handleClose}>X</button>
                 </div>
-                <div style={{margin: 20}} className="form">
+
+              <div className="form">
                 <TextField
                    label='Username' 
                     margin='normal' 
@@ -230,9 +233,9 @@ const UpdateBMCC = (event) =>{
                 </Box>
             </Modal>
             <Modal
-                      open={open1}
-                      aria-labelledby="modal-modal-title"
-                      aria-describedby="modal-modal-description">
+                open={open1}
+                aria-labelledby="modal-modal-title"
+                aria-describedby="modal-modal-description">
                 <Box sx={style}>
                 <div className="buttonclosed">
                 <button onClick={handleClose1}>X</button>
@@ -266,18 +269,20 @@ const UpdateBMCC = (event) =>{
                 <button onClick={UpdateBMCC}>Save Changes</button>
                 </Box>
             </Modal>
+
             <div className="top">
-              <div>
               <h1>Employee Accounts</h1>
-              </div>
+              
               <div className="containeremaccs">
                 <div className="emacsslist">
                   <h1>Employee List</h1>
+
                   <div>
                     {bmccemp}
                   </div>
                   <button onClick={handleOpen}>Add</button>
                 </div>
+
                 <div className="emaccsact">
                   <h1>Activity Log</h1>
                   <div>
