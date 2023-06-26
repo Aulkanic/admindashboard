@@ -322,8 +322,11 @@ const Appointment = () => {
     })
   };
 
-  const Reapp = (data) => {
+  const Reapp = async(data) => {
     console.log(data)
+    const res = await FetchingBmccSchoinfo.FETCH_SCHOLARSINFO(data.applicantNum);
+    console.log(res)
+    const email = res.data.ScholarInf.results1[0].email
     const adminName = user.name;
     const applicantNum = data.applicantNum;
     const applicantCode = data.applicantCode;
@@ -331,6 +334,7 @@ const Appointment = () => {
     formData.append('adminName',adminName);
     formData.append('applicantNum',applicantNum);
     formData.append('applicantCode',applicantCode)
+    formData.append('email',email)
       Reaapointed.RE_APPOINT(formData)
       .then(res => {
         console.log(res)
@@ -354,7 +358,7 @@ const Appointment = () => {
       console.log(dataappinfo)
       const Name = `${dataappinfo.firstName} ${dataappinfo.middleName} ${dataappinfo.lastName}`;
       const applicantNum = data.applicantNum;
-      const applicantCode = data.applicantCode
+      const applicantCode = data.applicantCode;
       const yearLevel =dataappinfo.currentYear;
       const baranggay = dataappinfo.baranggay;
       const email = dataappinfo.email;

@@ -11,7 +11,14 @@ import InputLabel from '@mui/material/InputLabel';
 import MenuItem from '@mui/material/MenuItem';
 import FormControl from '@mui/material/FormControl';
 import TextField from '@mui/material/TextField';
+import dayjs from 'dayjs';
+import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
+import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
+import { DateField } from '@mui/x-date-pickers/DateField';
+import { DemoContainer, DemoItem } from '@mui/x-date-pickers/internals/demo';
+import MuiAlert from '@mui/material/Alert';
 import swal from 'sweetalert';
+import moment from "moment";
 
 const Contact = () => {
   const [reqlist, setReqlist] = useState([]);
@@ -21,6 +28,9 @@ const Contact = () => {
   const[schoName,setSchoname] = useState('');
   const[requirementName,setReqname] = useState('');
   const[batch,setBatch] = useState('');
+  const [deadline,setDeadline] = useState('');
+  const [errors, setErrors] = useState({});
+  const [docsfor,setDocsfor] = useState('');
 
   const handleYearChange = (event) => {
     setBatch(event.target.value);
@@ -46,7 +56,7 @@ const Contact = () => {
     left: '50%',
     transform: 'translate(-50%, -50%)',
     width: '700',
-    height: '400',
+    height: '80%',
     bgcolor: 'background.paper',
     border: '2px solid #000',
     boxShadow: 24,
@@ -86,8 +96,30 @@ const Contact = () => {
 
   };
 
-  const AddReq = () =>{
-      Addrequirements.ADD_REQUIREMENTS({schoName,requirementName,batch})
+  const AddReq = (e) =>{
+    e.preventDefault();
+    let errors = {};
+    const currentDate = moment();
+    const date = new Date(deadline).toDateString();
+    const targetDate = moment(date);
+    if(!date || date === ''){
+      errors.date = 'Select A Deadline Date First'
+    }
+    if (targetDate.isBefore(currentDate)) {
+      errors.date ='Selected Deadline is less than the current date!';
+    }
+    if (Object.keys(errors).length > 0) {
+      setErrors(errors);
+      console.log(errors)
+      return;
+    }
+    const formData = new FormData();
+    formData.append('schoName',schoName)
+    formData.append('requirementName',requirementName)
+    formData.append('batch',batch)
+    formData.append('deadline',deadline)
+    formData.append('docsfor',docsfor)
+      Addrequirements.ADD_REQUIREMENTS(formData)
       .then(res => {
         console.log(res)
         setReqlist(res.data.Requirements);
@@ -100,17 +132,17 @@ const Contact = () => {
     { 
       field: 'requirementID', 
       headerName: 'ID',
-      width: 100
+      width: 50
      },
      {
       field: 'schoName', 
        headerName: 'Scholraship Category',
-     width: 300
+     width: 200
      },
      {
        field: 'requirementName', 
         headerName: 'Requirements',
-      width: 300
+      width: 200
       },
     {
       field: 'Status',
@@ -121,6 +153,18 @@ const Contact = () => {
     {
       field: 'batch',
       headerName: 'Batch',
+      width: 100,
+      editable: false,
+    },
+    {
+      field: 'docsfor',
+      headerName: 'Requirements For',
+      width: 150,
+      editable: false,
+    },
+    {
+      field: 'deadline',
+      headerName: 'Deadline',
       width: 150,
       editable: false,
     },
@@ -187,7 +231,23 @@ const Contact = () => {
            
             </FormControl> 
           </div>
-
+          <div style={{width:'100%',}}>
+        <FormControl sx={{width:'100%',marginTop:'10px'}}>
+        <InputLabel id="demo-simple-select-autowidth-label">Requirements For:</InputLabel>
+        <Select
+          labelId="demo-simple-select-autowidth-label"
+          id="demo-simple-select-autowidth"
+          value={docsfor}
+          onChange={(e) => setDocsfor(e.target.value)}
+          fullWidth
+          label="Requirements For"
+        >
+          <MenuItem value={'Renewal'}>Renewal</MenuItem>
+          <MenuItem value={'Application'}>Application</MenuItem>
+        </Select>
+      </FormControl>
+        </div>
+                <div>
                 <TextField 
                     label='Requirement Name' 
                     margin='normal' 
@@ -196,6 +256,23 @@ const Contact = () => {
                     fullWidth
                     onChange={(e) =>setReqname(e.target.value)}  
                     color='secondary'/>
+          <LocalizationProvider dateAdapter={AdapterDayjs}>
+        <DateField 
+        sx={{marginBottom:'10px'}}
+          className="dataField"
+          label="Deadline"
+          value={deadline}
+          fullWidth
+          onChange={(newValue) => setDeadline(newValue)}
+          format="MMM DD, YYYY"
+        />
+
+        {errors.date && <MuiAlert 
+        elevation={0} severity="error">
+        {errors.date}
+        </MuiAlert>}
+        </LocalizationProvider>
+        <div style={{marginTop:'10px'}}>
                  <TextField
                     select
                     label="Select a year"
@@ -204,13 +281,16 @@ const Contact = () => {
                     fullWidth
                     color='secondary'
                   >
+ 
                     {generateYearOptions().map((year) => (
                       <MenuItem key={year} value={year}>
                         {year}
                       </MenuItem>
                     ))}
+                
                 </TextField> 
-
+                </div>
+                </div>
                 <div className="modalBtn">
                   <button className="cnclBttn" onClick={handleClose}>Cancel</button>
                   <button className="addBttn" onClick={AddReq}>Add</button>
@@ -220,7 +300,7 @@ const Contact = () => {
                 
               
                 </Box>
-              </Modal>
+      </Modal>
 
         <h1>Requirements</h1>
           <button className="addBtn" onClick={handleOpen}> Add </button>

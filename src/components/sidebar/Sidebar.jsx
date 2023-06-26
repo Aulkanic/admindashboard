@@ -108,6 +108,14 @@ const Sidebar = () => {
               <AnnouncementIcon className='icon'/>
               <span> Announcement </span>
             </li>
+            <li>
+              <AnnouncementIcon className='icon'/>
+              <span> Rules </span>
+            </li>
+            <li>
+              <AnnouncementIcon className='icon'/>
+              <span> BMCC Web </span>
+            </li>
 
             <Link to='/news' style={{ textDecoration: 'none'}}>
             <li>
