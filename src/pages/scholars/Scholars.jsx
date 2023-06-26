@@ -197,10 +197,10 @@ const Scholars = () => {
   return (
     <>
     <Modal
-            open={open}
-            onClose={handleClose}
-            aria-labelledby="modal-modal-title"
-            aria-describedby="modal-modal-description">
+        open={open}
+        onClose={handleClose}
+        aria-labelledby="modal-modal-title"
+        aria-describedby="modal-modal-description">
       <Box sx={style}>
         <div className='hbtnschocon'>
           <button onClick={handleClose}>X</button>
@@ -232,6 +232,7 @@ const Scholars = () => {
             </List>
           </div>
           </div>
+
           <div className="rigthscho">
             {value === 0 && <div>
                 <h1 style={{textAlign: 'center'}}>PERSONAL INFORMATION</h1>
@@ -274,7 +275,9 @@ const Scholars = () => {
               </Card>
                 </div>
               </div>}
-              {value === 1 && <div>
+              {value === 1 && 
+              
+              <div>
                 <h1 style={{textAlign: 'center'}}>SCHOLAR INFORMATION</h1>
                 <div className='peschocoon'>
               <Card elevation={5} sx={{ width:'90%', margin:'10px', height:'100%' }}>
@@ -315,6 +318,7 @@ const Scholars = () => {
               </Card>
                 </div>
               </div>}
+
               {value === 2 && <><h1>DOCUMENTS</h1><div className='doculistscho'>
                 {requirements}
                 </div></>}
@@ -322,6 +326,7 @@ const Scholars = () => {
         </div>
       </Box>
     </Modal>
+
     <Modal             
     open={open1}
     onClose={handleClose1}
@@ -340,9 +345,8 @@ const Scholars = () => {
             <Navbar/>
             <div className="top">
             
-              <h1>Scholars</h1>
-              <Button variant='contained'>Renewal</Button>
-              <Box sx={{ height: 400, width: '100%' }}>
+    <h1>Scholars</h1>
+    <Box sx={{ height: 400, width: '100%' }}>
       <DataGrid
         rows={data}
         columns={columns}
@@ -359,8 +363,8 @@ const Scholars = () => {
         checkboxSelection
         disableRowSelectionOnClick
       />
-              </Box>
-              {}
+    </Box>
+              
             </div>
         </div>
     </div>
