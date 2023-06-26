@@ -4,7 +4,7 @@ import Sidebar from "../../components/sidebar/Sidebar";
 import Navbar from "../../components/navbar/Navbar";    
 import { Tabs, Tab,Table, TableBody, TableCell, TableContainer, TableHead,TableRow, Paper, Box, Button, Typography, Modal,Card} from "@mui/material"; 
 import { FetchingQualified, CreateAppointment,FetchingAppointList
-  , Reaapointed, SetApproved,FetchingApplicantsInfo,SetApplicant } from "../../api/request";
+  , Reaapointed, SetApproved,FetchingApplicantsInfo,SetApplicant,Addusertolistapp,UpdateScheduleApp } from "../../api/request";
 import FormControlLabel from '@mui/material/FormControlLabel';
 import dayjs from 'dayjs';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
@@ -23,8 +23,27 @@ import moment from "moment";
 import "react-big-calendar/lib/css/react-big-calendar.css";
 import TextField from '@mui/material/TextField';
 import MuiAlert from '@mui/material/Alert';
+import { DataGrid } from '@mui/x-data-grid';
 import './appointment.css'
 const localizer = momentLocalizer(moment);
+
+const columns = [
+  { field: 'applicantNum', headerName: 'ID', width: 90 },
+  { field: 'applicantCode', headerName: 'Applicant Code', width: 150 },
+  {
+    field: 'Name',
+    headerName: 'Name',
+    width: 250,
+    editable: true,
+  },
+  {
+    field: 'status',
+    headerName: 'Status',
+    width: 150,
+    editable: true,
+  },
+
+];
 
 const style = {
   position: 'absolute',
@@ -37,7 +56,11 @@ const style = {
   border: '2px solid #000',
   boxShadow: 24,
   p: 4,
+  overflow: 'auto',
+  
 };
+
+
 const Appointment = () => {
   const { loginUser,user } = useContext(admininfo);
   const [Qualified, setQualified] = useState([]);
@@ -47,6 +70,11 @@ const Appointment = () => {
   const [Location, setLocation] = useState('');
   const [startTime, setStartTime] = useState(dayjs('2022-04-17T15:30'));
   const [endTime, setEndTime] = useState(dayjs('2022-04-17T15:30'));
+  const [appointmentDate1, setAppointmentDate1] = useState('');
+  const [Agenda1, setAgenda1] = useState('');
+  const [Location1, setLocation1] = useState('');
+  const [startTime1, setStartTime1] = useState(dayjs('2022-04-17T15:30'));
+  const [endTime1, setEndTime1] = useState(dayjs('2022-04-17T15:30'));
   const [selectAll, setSelectAll] = useState(false);
   const [selectedUsers, setSelectedUsers] = useState([]);
   const [filteredData, setFilteredData] = useState([]);
@@ -55,13 +83,100 @@ const Appointment = () => {
   const [open, setOpen] = React.useState(false);
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
+  const [selectedRows, setSelectedRows] = useState([]);
+  const [datarows,setDatarows] = useState([]);
+  const [addtosched,setAddSched] = useState([]);
 
   const handleSelectDate = (date) => {
     const formattedDate = moment(date).format('YYYY-MM-DD');
     setSelectedDate(formattedDate);
   };
+  const handleSelectionModelChange = (newSelectionModel) => {
+    setSelectedRows(newSelectionModel);
 
+  };
 
+  useEffect(() => {
+    async function Fetch(){
+      const response = await FetchingQualified.FETCH_QUALIFIED();
+      const listing  = await FetchingAppointList.FETCH_LISTAPPOINT();
+      setQualified(response.data.List);
+      setAppointedList(listing.data.AppointmentList)
+    }
+    Fetch();
+
+  }, []);
+
+  const groupAppointmentsByDate = () => {
+    const groupedAppointments = {};
+
+    // Group appointments by date
+    appointedList.forEach((appointment) => {
+      const { schedDate, Name,Reason,Location,applicantCode,timeStart,timeEnd,applicantNum } = appointment;
+
+      if (!groupedAppointments[schedDate]) {
+        groupedAppointments[schedDate] = [];
+      }
+
+      groupedAppointments[schedDate].push({Name,Reason,Location,applicantCode,timeStart,timeEnd,applicantNum});
+    });
+
+    return groupedAppointments;
+  };
+  const RenderAppointmentsByDate = () => {
+    const groupedAppointments = groupAppointmentsByDate();
+    const [open2, setOpen2] = React.useState(false);
+    const handleOpen2 = () => {
+      setOpen2(true);
+    };
+  
+    const handleClose2 = () => {
+      setOpen2(false);
+    };
+    return Object.keys(groupedAppointments).map((date) => {
+      console.log(groupedAppointments)
+      const appointments = groupedAppointments[date];
+      const { Reason, Location,timeStart,timeEnd,applicantNum } = appointments[0];
+  
+      return (
+        <>
+        <Card sx={{width:'45%',padding:'10px'}}>
+        <div key={date}>
+          <div style={{display:'flex',justifyContent:'space-between'}}>
+            <div>
+            <h3>Date: {date}</h3>
+            <p>Agenda: {Reason}</p>
+          <p>Location: {Location}</p>
+          <p>Time: {timeStart}-{timeEnd}</p>
+            </div>
+          <div style={{width:'25%',display:'flex',justifyContent:'space-between',height:'30px'}}>
+          <ChildModalEdit
+                 open={open2}
+                 handleOpen={handleOpen2}
+                 handleClose={handleClose2}
+          data={date} deta={appointments}/>
+            <ChildModal data={date} deta={appointments[0]}/>
+          </div>
+          </div>
+          <div className="listuserapp">
+          <ul>
+            {appointments.map((user) => (
+              
+              <li key={user.id}>
+                <p>ApplicantCode:{user.applicantCode}</p>
+                <p>Name: {user.Name}</p>
+              </li>
+             
+            ))}
+          </ul>
+          </div>
+        </div>
+        </Card>
+        </>
+      );
+    });
+  };
+  
   const getAppointedUsersCount = (date) => {
     console.log(date)
     console.log(appointedList)
@@ -120,22 +235,29 @@ const Appointment = () => {
     selectedUsers.forEach((data,index) =>{
       console.log(data)
       const currentDate = moment();
-      const officeHourStart = moment('09:00 AM', 'hh:mm A');
+      const officeHourStart = moment('08:00 AM', 'hh:mm A');
       const officeHourEnd = moment('05:00 PM', 'hh:mm A');
-      if(!appointmentDate || appointmentDate === ''){
+      const date = new Date(appointmentDate).toDateString();
+      const targetDate = moment(date);
+      const value = { $d: new Date(startTime) };
+      const start = value.$d.toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit', hour12: true });
+      const value1 = { $d: new Date(endTime) };
+      const end = value1.$d.toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit', hour12: true })
+      const startcheck = moment(start, 'hh:mm A'); 
+      const endcheck = moment(end, 'hh:mm A');
+      const startTimemin = endcheck.clone().subtract(1, 'hour');
+      if(!date || date === ''){
         errors.date = 'Select A Scheduled Date First'
       }
-      if (appointmentDate.isBefore(currentDate)) {
+      if (targetDate.isBefore(currentDate)) {
         errors.date ='Selected date is less than the current date!';
       }
-      if (endTime.isAfter(endTime)) {
+      if (endcheck.isBefore(startcheck)) {
         errors.end = 'End time cannot be before the start time!'
-      } else if (!endTime.isBetween(officeHourStart, officeHourEnd, 'minute', '[]')) {
+      } else if (!endcheck.isBetween(officeHourStart, officeHourEnd, undefined, "(]")) {
         errors.end = 'Please select a time within office hours!(9AM-5PM)';
       }
-      if (startTime.isAfter(startTime)) {
-        errors.start = 'Start time cannot be after the end time!';
-      } else if (!startTime.isBetween(officeHourStart, officeHourEnd, 'minute', '[]')) {
+     if (!startcheck.isBetween(officeHourStart, officeHourEnd, undefined, "(]")) {
         errors.start = 'Please select a time within office hours!(9AM-5PM)';
       }
       console.log(errors)
@@ -149,11 +271,7 @@ const Appointment = () => {
       const Name = data.name || data.Name;
       const Email = data.email || data.email;
       const Status = data.scho || data.status;
-      const date = new Date(appointmentDate).toDateString();
-      const value = { $d: new Date(startTime) };
-      const start = value.$d.toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit', hour12: true });
-      const value1 = { $d: new Date(endTime) };
-      const end = value1.$d.toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit', hour12: true });
+
       const adminName = user.name;
       const formData = new FormData();
       formData.append('applicantCode',applicantCode);
@@ -174,8 +292,10 @@ const Appointment = () => {
           setQualified(res.data.List.data1);
           setAppointedList(res.data.List.data2)
           swal(res.data.message)
+          setErrors('')
         }
         swal(res.data.message)
+        setErrors('')
       }
        )
       .catch(err => console.log(err));
@@ -236,16 +356,293 @@ const Appointment = () => {
     
 
 };
-  useEffect(() => {
-    async function Fetch(){
-      const response = await FetchingQualified.FETCH_QUALIFIED();
-      const listing  = await FetchingAppointList.FETCH_LISTAPPOINT();
-      setQualified(response.data.List);
-      setAppointedList(listing.data.AppointmentList)
-    }
-    Fetch();
+  const AddtoApp = async(data) =>{
+    console.log(data)
+    const selectedRowsData = selectedRows.map((rowId) => {
+      return Qualified.find((row) => row.applicantNum === rowId);
+    });
+    setDatarows(selectedRowsData)
+    selectedRowsData.forEach((row) => {
+      const  applicantCode = data.deta.applicantCode
+      const applicantNum = row.applicantNum;
+      const Name = data.deta.Name
+      const Email = row.email;
+      const Status = row.status;
+      const Location = data.deta.Location
+      const Agenda = data.deta.Reason;
+      const date = data.data;
+      const start = data.deta.timeStart;
+      const end = data.deta.timeEnd
+      const adminName = user.name;
+      const formData = new FormData();
+      formData.append('applicantCode',applicantCode);
+      formData.append('adminName',adminName)
+      formData.append('applicantNum',applicantNum)
+      formData.append('Name',Name);
+      formData.append('Email',Email)
+      formData.append('Status',Status)
+      formData.append('Location',Location)
+      formData.append('Agenda',Agenda)
+      formData.append('appointmentDate',date);
+      formData.append('startTime',start)
+      formData.append('endTime',end)
+      Addusertolistapp.ADD_USEAPP(formData)
+      .then((res) => {
+        if(res.data.success === 1){
+          console.log(res)
+          setQualified(res.data.List.data1);
+          setAppointedList(res.data.List.data2)
+          swal(res.data.message)
+          setErrors('')
+        }
+        swal(res.data.message)
+        setErrors('')
+      }
+       )
+      .catch(err => console.log(err));
 
-  }, []);
+    });
+  }
+  function ChildModal(props) {
+    const [open1, setOpen1] = React.useState(false);
+    const handleOpen1 = () => {
+      setOpen1(true);
+    };
+    const handleClose1 = () => {
+      setOpen1(false);
+    };
+    console.log(props)
+    return (
+      <React.Fragment>
+        <Button variant="contained" onClick={handleOpen1}>Add</Button>
+        <Modal
+          open={open1}
+          aria-labelledby="child-modal-title"
+          aria-describedby="child-modal-description"
+        >
+          <Box sx={{ ...style, width: '50%',height:'85%' }}>
+            <button onClick={handleClose1}>X</button>
+            <div style={{width:'100%',display:'flex',justifyContent:'space-between'}}>
+            <h1>Applicant List</h1>
+            <Button onClick={() =>AddtoApp(props)}>Add</Button>
+            </div>
+          <DataGrid
+          sx={{height:'70%'}}
+          rows={Qualified}
+          columns={columns}
+          getRowId={(row) => row.applicantNum}
+          initialState={{
+            pagination: {
+              paginationModel: {
+                pageSize: 5,
+              },
+            },
+          }}
+          pageSizeOptions={[5]}
+          checkboxSelection
+          disableRowSelectionOnClick
+          rowSelectionModel={selectedRows}
+          onRowSelectionModelChange={handleSelectionModelChange}
+        />
+
+          </Box>
+        </Modal>
+      </React.Fragment>
+    );
+  }
+  function ChildModalEdit(props) {
+    const [open2, setOpen2] = React.useState(false);
+    const handleOpen2 = (event) => {
+      event.stopPropagation();
+      setOpen2(true);
+    };
+    const handleClose2 = (event) => {
+      event.stopPropagation();
+      setOpen2(false);
+    };
+
+    console.log(open2)
+    return (
+      <React.Fragment>
+        <Button variant="contained" onClick={handleOpen2}>Edit</Button>
+        {open2 && <Modal
+          open={open2}
+          aria-labelledby="child-modal-title"
+          aria-describedby="child-modal-description"
+        >
+          <Box sx={{ ...style, width: '70%',height:'55%' }}>
+            <button onClick={handleClose2}>X</button>
+            <div style={{width:'100%',display:'flex',justifyContent:'space-between'}}>
+            <Button onClick={() =>EditSched(props)}>Edit</Button>
+            </div>
+            <Card style={{width:'95%',height:'100%',padding:'10px',margin:'10px'}} elevation={3}>
+              <div className="frmappoint">
+                <h1 style={{marginBottom:'10px',fontSize:'15px'}}>Update Appointment Schedule</h1>
+                <div className="datagloc">
+                <div>
+        <LocalizationProvider dateAdapter={AdapterDayjs}>
+        <DateField 
+          label="Appointment Date"
+          value={appointmentDate1}
+          size='small'
+          onChange={(newValue) => setAppointmentDate1(newValue)}
+          format="MMM DD, YYYY"
+        />
+            {errors.date1 && <MuiAlert variant='outlined' 
+    style={{ 
+      width: '70%', 
+      marginTop: '10px', 
+      color:'red', 
+      fontSize:'10px',
+      height:'auto',
+      background:'white' }} elevation={0} severity="error">
+          {errors.date1}
+        </MuiAlert>}
+        </LocalizationProvider>
+        </div>
+        <div>
+        <TextField 
+        id="outlined-basic" 
+        label="Agenda"
+        size='small'
+        value={Agenda1}
+        onChange={(e) => setAgenda1(e.target.value)} 
+        variant="outlined" />     
+      </div>
+      <div>
+      <TextField 
+        id="outlined-basic" 
+        label="Location"
+        size='small'
+        value={Location1}
+        onChange={(e) => setLocation1(e.target.value)}
+        variant="outlined" /> 
+      </div>
+        </div>
+      <div className="timestend">
+        <div style={{marginRight:'20px'}}>
+      <LocalizationProvider dateAdapter={AdapterDayjs}>
+      <DemoContainer components={['TimeField', 'TimeField', 'TimeField']}>
+        <TimeField size='small'
+          label="Time Start"
+          value={startTime1}
+          onChange={(newValue) => setStartTime1(newValue)}
+          format="hh:mm A"
+        />
+        {errors.start1 && <MuiAlert variant='outlined' 
+    style={{ 
+      width: '80%', 
+      marginTop: '10px', 
+      color:'red', 
+      fontSize:'10px',
+      height:'auto',
+      background:'white' }} elevation={0} severity="error">
+          {errors.start1}
+        </MuiAlert>}
+      </DemoContainer>
+      </LocalizationProvider>
+      </div>
+      <div>
+      <LocalizationProvider dateAdapter={AdapterDayjs}>
+      <DemoContainer components={['TimeField', 'TimeField', 'TimeField']}>
+        <TimeField size='small'
+          label="Time End"
+          value={endTime1}
+          onChange={(newValue) => setEndTime1(newValue)}
+          format="hh:mm A"
+        />
+                    {errors.end1 && <MuiAlert variant='outlined' 
+    style={{ 
+      width: '70%', 
+      marginTop: '10px', 
+      color:'red', 
+      fontSize:'10px',
+      height:'auto',
+      background:'white' }} elevation={0} severity="error">
+          {errors.end1}
+        </MuiAlert>}
+      </DemoContainer>
+      </LocalizationProvider>
+      </div>
+      </div>
+      </div>
+              </Card>
+          </Box>
+        </Modal>}
+      </React.Fragment>
+    );
+  }
+  const EditSched = async(data) =>{
+    console.log(data)
+    let errors = {}
+    data.deta.forEach((des,index) =>{
+      console.log(data)
+      const currentDate = moment();
+      const officeHourStart = moment('08:00 AM', 'hh:mm A');
+      const officeHourEnd = moment('05:00 PM', 'hh:mm A');
+      const appointmenDate1 = appointmentDate1 || data.data
+      const date = new Date(appointmenDate1).toDateString();
+      const targetDate = moment(date);
+      const startTime2 = startTime1 || data.timeStart
+      const value = { $d: new Date(startTime2) };
+      const start = value.$d.toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit', hour12: true });
+      const endTime2 = endTime1 || data.timeEnd
+      const value1 = { $d: new Date(endTime2) };
+      const end = value1.$d.toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit', hour12: true })
+      const startcheck = moment(start, 'hh:mm A'); 
+      const endcheck = moment(end, 'hh:mm A');
+      const startTimemin = endcheck.clone().subtract(1, 'hour');
+      if(!date || date === ''){
+        errors.date1 = 'Select A Scheduled Date First'
+      }
+      if (targetDate.isBefore(currentDate)) {
+        errors.date1 ='Selected date is less than the current date!';
+      }
+      if (endcheck.isBefore(startcheck)) {
+        errors.end1 = 'End time cannot be before the start time!'
+      } else if (!endcheck.isBetween(officeHourStart, officeHourEnd, undefined, "(]")) {
+        errors.end1 = 'Please select a time within office hours!(9AM-5PM)';
+      }
+     if (!startcheck.isBetween(officeHourStart, officeHourEnd, undefined, "(]")) {
+        errors.start1 = 'Please select a time within office hours!(9AM-5PM)';
+      }
+      console.log(errors)
+      if (Object.keys(errors).length > 0) {
+        setErrors(errors);
+        console.log(errors)
+        return;
+      }
+      const applicantCode = data.applicantCode
+      const applicantNum = data.applicatNum
+      const adminName = user.name;
+      const agen = Agenda1 || data.Reason;
+      const loc = Location1 || data.Location
+
+      const formData = new FormData();
+      formData.append('applicantCode',applicantCode);
+      formData.append('adminName',adminName)
+      formData.append('applicantNum',applicantNum)
+      formData.append('Location',loc)
+      formData.append('Agenda',agen)
+      formData.append('appointmentDate',date);
+      formData.append('startTime',start)
+      formData.append('endTime',end)
+      UpdateScheduleApp.UPDATE_SCHEDULE(formData)
+      .then((res) => {
+        if(res.data.success === 1){
+          console.log(res)
+          setQualified(res.data.List.data1);
+          setAppointedList(res.data.List.data2)
+          swal(res.data.message)
+          setErrors('')
+        }
+        swal(res.data.message)
+        setErrors('')
+      }
+       )
+      .catch(err => console.log(err));
+    })
+  }
 
   const listqua = Qualified?.map((data,index)=>{
     return(
@@ -288,7 +685,6 @@ const Appointment = () => {
     <>
           <Modal
         open={open}
-        onClose={handleClose}
         aria-labelledby="modal-modal-title"
         aria-describedby="modal-modal-description"
       >
@@ -296,24 +692,10 @@ const Appointment = () => {
         <div >
             <button onClick={handleClose}> X </button>
         </div> 
+        
         <div className="appoiintedlistsed">
         <div>
             <h3>Appointed List</h3>
-            <div className="appointedListContainer">
-          {selectedDate && (
-            <p>
-              Total Appointments on {moment(selectedDate).format("YYYY-MM-DD")}:
-              {getAppointedUsersCount(selectedDate)}
-            </p>
-          )}
-          <ul>
-            {appointedList.map((appointment, index) => (
-              <li key={index}>
-                {appointment.Name} - {appointment.Status}
-              </li>
-            ))}
-          </ul>
-        </div>
         </div>
       <TableContainer component={Paper} className="table">
         <Table sx={{ minWidth: 650 }} aria-label="simple table">
@@ -338,17 +720,7 @@ const Appointment = () => {
       </TableContainer>
         </div>
         <div className="calendarContainer">
-          <h1 style={{margin:'0',fontSize:'15px'}}>Calendar View</h1>
-          <Calendar
-            localizer={localizer}
-            events={eventList}
-            startAccessor="start"
-            endAccessor="end"
-            selectable
-            style={{ height: 500 ,margin:'10px'}}
-            defaultView="month"
-            onSelectSlot={handleSelectDate}
-          />
+        {RenderAppointmentsByDate()}
         </div>
         </Box>
       </Modal>

@@ -112,8 +112,6 @@ const Applicant = () => {
     CheckingSubs.CHECK_SUB({requirement_Name,applicantNum,status,Comments,adminName,applicantCode})
     .then(res => {
       console.log(res)
-      setComments('');
-      setStatusCheck('');
       swal('Save')
     }
      )
@@ -146,7 +144,7 @@ const Applicant = () => {
     });
     setDatarows(selectedRowsData)
     selectedRowsData.forEach((row) => {
-      const paramName = row.applicantNum; // Replace "paramName" with the actual parameter name
+      const paramName = row.applicantNum;
       const paramValue = row;
 
     });
@@ -315,7 +313,7 @@ const Applicant = () => {
       </div>
           )});
 
-
+console.log(applicantsDocs)
   const docusubmitted = applicantsDocs?.map((data,index) =>{
     return (
       <>
@@ -378,8 +376,8 @@ const Applicant = () => {
       </div>
       </>
     )})
-
-      const filteredRows = post.filter((row) => row.status === 'Applicants');
+console.log(post)
+      const filteredRows = post.filter((row) => row.status === 'Applicants' || row.status ==='Applicant');
   return (
     <>
     <Modal className="modalContainer"

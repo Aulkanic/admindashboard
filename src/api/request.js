@@ -74,6 +74,9 @@ export const FetchingBmccSchoinfo = {
 export const CreatingScore = {
     CREATE_SCORECARD: (data) => axiosInstance.post(Endpoints.CREATE_SCORECARD,data)
 }
+export const Addusertolistapp = {
+    ADD_USEAPP: (data) => axiosInstance.post(Endpoints.ADD_APPLICANTLIST,data)
+}
 export const FetchingScore = {
     FETCH_SCORECARD: (data) => axiosInstance.get(Endpoints.FETCH_SCORECARD+data)
 }
@@ -106,4 +109,7 @@ export const UpdatePassword = {
 }
 export const UpdateProfile = {
     UPDATE_PROFILE: (data) => axiosInstance.patch(Endpoints.UPDATE_PROFILE,data)
+}
+export const UpdateScheduleApp = {
+    UPDATE_SCHEDULE: (data) => axiosInstance.patch(Endpoints.UPDATE_SCHEDULE,data)
 }
