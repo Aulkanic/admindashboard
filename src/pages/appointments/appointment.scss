@@ -54,9 +54,10 @@
 
            .frmappoint{
                 margin: 10px;
-                padding: 25px;     
-                justify-content: space-evenly;
+                padding: 10px;     
+                justify-content: space-between;
                 text-align: center;
+                height: max-content;
 
             .datagloc{
                 width: max-content;
@@ -64,14 +65,17 @@
                 
                 
                 .dateAppoint, .agenda, .location{
+                    display: flex;
+                    flex-direction: column;
                     margin: 5px;
                     padding: 5px;
-                    height: 50px;
                     color: #005427;
 
                     .dataField{
+                        display: flex;
                         margin-left: 10px;
                         width: 500px;
+                        height: 70px;
                         color: #005427;
                     }
 
@@ -86,14 +90,14 @@
                 float: right;
                 display: flex;
                 flex-direction: column;
-                margin-top: -200px;
-                height: 150px;
+                margin-top: -260px;
                 margin-right: 20px;
+                padding: 10px;
+                gap: 25px;
 
                 .timeField{
                     width: 500px;
-                    margin: 10px;
-                    padding: 5px;
+                    height: 40px;
                 }
 
                 label{

@@ -34,9 +34,9 @@ console.log(user)
 
 const CustomDataGrid = styled(DataGrid)({
   '& .MuiDataGrid-columnHeaders': {
-    backgroundColor: 'green', 
-    color: 'white', 
+    color: '#005427', 
   },
+
 });
   const style = {
     position: 'absolute',
@@ -50,6 +50,7 @@ const CustomDataGrid = styled(DataGrid)({
     boxShadow: 24,
     overflow: 'auto',
   };
+
   const columns = [
     { field: 'activityLog', headerName: 'ID', width: 50 },
     {
@@ -106,32 +107,26 @@ const CustomDataGrid = styled(DataGrid)({
       <div className='emplycon'>
         <div className="profemp">
           {data.profile === '' ? (<Avatar
-        alt="No Image"
-        src={BMCC}
-        sx={{ width: 45, height: 45 }}
+           alt="No Image"
+           src={BMCC}
+          // sx={{ width: 45, height: 45 }}
       />) : (<Avatar
-        alt="No Image"
-        src={data.profile}
-        sx={{ width: 45, height: 45 }}
+          alt="No Image"
+          src={data.profile}
+        // sx={{ width: 45, height: 45 }}
       />)}
         </div>
 
         <div className="detemp">
           <p>Name:{data.name}</p>
           <p>Email:{data.email}</p>
-
-        </div>
-        <div>
-        <p>Job:{data.jobDescription}</p>
-        <p>Status:{data.status}</p>
-        </div>
-        <div>
-          <button onClick={() =>{handleOpen1(data)}}>Edit</button>
+          <p>Job:{data.jobDescription}</p>
+          <p>Status:{data.status}</p>
+          <button className="editBtnEmp" onClick={() =>{handleOpen1(data)}}>Edit</button>
         </div>
       </div>
       </>
-    )
- })
+    )})
 
  const AddbMCC = (event) =>{
   event.preventDefault();
@@ -227,11 +222,16 @@ const UpdateBMCC = (event) =>{
                     onChange={(e) =>setJobdes(e.target.value)}  
                     color='secondary'
                     />
-                </div>
+
                 <button onClick={handleClose}>Cancel</button>
                 <button onClick={AddbMCC}>Add</button>
+                </div>
+
+               
                 </Box>
             </Modal>
+
+
             <Modal
                 open={open1}
                 aria-labelledby="modal-modal-title"
@@ -272,35 +272,36 @@ const UpdateBMCC = (event) =>{
 
             <div className="top">
               <h1>Employee Accounts</h1>
-              
               <div className="containeremaccs">
                 <div className="emacsslist">
                   <h1>Employee List</h1>
-
-                  <div>
+                  
+                  <div className='bmccEmp'>
                     {bmccemp}
+                    <button className="addBtnEmp" onClick={handleOpen}> ADD </button>
                   </div>
-                  <button onClick={handleOpen}>Add</button>
+                  
                 </div>
 
                 <div className="emaccsact">
                   <h1>Activity Log</h1>
-                  <div>
-                  <CustomDataGrid width={200}
-        rows={actlog}
-        columns={columns}
-        getRowId={(row) => row.activityLog}
-        scrollbarSize={10}
-        initialState={{
-          pagination: {
-            paginationModel: {
-              pageSize: 10,
-            },
-          },
-        }}
-        pageSizeOptions={[25]}  
-        disableRowSelectionOnClick
-      />
+                  <div className='dataGridCon'>
+                  <CustomDataGrid 
+                  className='dataGrid'
+                    rows={actlog}
+                    columns={columns}
+                    getRowId={(row) => row.activityLog}
+                    scrollbarSize={10}
+                    initialState={{
+                      pagination: {
+                        paginationModel: {
+                          pageSize: 10,
+                        },
+                      },
+                    }}
+                    pageSizeOptions={[25]}  
+                    disableRowSelectionOnClick
+                  />
                   </div>
                 </div>
               </div>

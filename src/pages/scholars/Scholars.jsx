@@ -85,11 +85,12 @@ const Scholars = () => {
     setSchoInf2(response.data.ScholarInf.results2[0])
     setSchoInf3(response.data.ScholarInf.results3)
   }
+
   const columns = [
     { 
       field: 'scholarId', 
       headerName: 'Scholar ID',
-      width: 100
+      width: 79
      },
      {
        field: 'scholarCode', 
@@ -99,37 +100,37 @@ const Scholars = () => {
     {
       field: 'scholarshipApplied',
       headerName: 'Scholarship Applied',
-      width: 150,
+      width: 165,
       editable: false,
     },
     {
       field: 'Name',
       headerName: 'Name',
-      width: 250,
+      width: 230,
       editable: false,
     },
     {
       field: 'yearLevel',
       headerName: 'Year Level',
-      width: 150,
+      width: 120,
       editable: false,
     },
     {
       field: 'Baranggay',
       headerName: 'Baranggay',
-      width: 150,
+      width: 120,
       editable: false,
     },
     {
       field: 'status',
       headerName: 'Status',
-      width: 100,
+      width: 80,
       editable: false,
     },
     {
       field: 'Batch',
       headerName: 'Batch',
-      width: 110,
+      width: 80,
       editable: false,
     },
     {
@@ -137,7 +138,7 @@ const Scholars = () => {
       headerName: 'Actions',
       width: 90,
       renderCell: (params) => (
-        <button onClick={() => view(params.row)}>View</button>
+        <button className="viewBtnScholars" onClick={() => view(params.row)}>View</button>
       ),
     },
 

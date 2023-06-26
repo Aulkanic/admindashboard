@@ -9,6 +9,7 @@ import { DataGrid} from '@mui/x-data-grid';
 import Avatar from '@mui/material/Avatar';
 import Chip from '@mui/material/Chip';
 import './user.css'
+import { GridColDef } from '@mui/x-data-grid';
 
 const Users = () => {
   
@@ -48,23 +49,33 @@ const Users = () => {
     }
   };
   
+  
   const columns = [
-    { field: 'applicantNum',
-     headerName: 'Applicant ID',
-      width: 100, 
-       
+    { 
+      field: 'applicantNum',
+      headerName: 'Applicant ID',
+      width: 90, 
+      headerAlign: 'center',
+    
     },
+
     {
       field: 'ScholarshipApplied',
       headerName: 'Scholarship Applied',
-      width: 250,
+      width: 200,
       editable: true,
+      headerAlign: 'center'
+
     },
+    
     {
       field: 'profile',
       headerName: 'Profile',
-      width: 150,
+      width: 120,
+      headerAlign: 'center',
+
       renderCell: (params) => {
+
         console.log(params)
         const isOnline = params.row.isOnline; // Assuming there's a field named 'online' in your data
         
@@ -75,9 +86,8 @@ const Users = () => {
           status = 'Online'
         }
         
-        
         return (
-          <Chip
+          <Chip 
             color={chipColor}
             label={status}
             avatar={
@@ -85,36 +95,43 @@ const Users = () => {
                 alt="No Image"
                 src={params.value}
                 sx={{ width: 35, height: 35 }}
-              />
-            }
-          />
-        );
-      },
-    },
+              />}/>
+        );},},
+
     {
       field: 'Name',
       headerName: 'Name',
       width: 250,
       editable: true,
+      headerAlign: 'center',
+    
     },
+
     {
       field: 'email',
       headerName: 'Email',
       width: 250,
       editable: false,
+      headerAlign: 'center',
+    
     },
+
     {
       field: 'status',
       headerName: 'Remarks',
-      width: 100,
+      width: 90,
       editable: false,
+      headerAlign: 'center',
+    
     },
+
     {
       field: 'remarks',
       headerName: 'Account Status',
       width: 110,
+      headerAlign: 'center',
       renderCell: (params) => (
-        <button onClick={() => handleButtonClick(params.row.applicantNum)}>
+        <button className="deactivateBtn" onClick={() => handleButtonClick(params.row.applicantNum)}>
           {params.row.remarks === 'Active'
             ? 'Active'
             : params.row.remarks === 'Inactive'
@@ -124,10 +141,11 @@ const Users = () => {
       ),
     },
   ];
+
   const CustomDataGrid = styled(DataGrid)({
     '& .MuiDataGrid-columnHeaders': {
-      backgroundColor: 'green', 
-      color: 'white', 
+      color: '#005427',
+      
     },
   });
   
@@ -145,29 +163,31 @@ const Users = () => {
       <Sidebar />
       <div className="usersContainer">
         <Navbar />
-        <Card sx={{width:'95%',margin:'10px',padding:'10px'}} elevation={3}>
-        <div className='userlsitcon'>
+
+      
+        <div className='userlistcon'>
           <h1> Users Account List </h1>
-          <Box sx={{ height: 400, width: '100%' }}>
-      <CustomDataGrid
-        rows={display}
-        columns={columns}
-        getRowId={(row) => row.applicantNum}
-        scrollbarSize={10}
-        initialState={{
-          pagination: {
-            paginationModel: {
-              pageSize: 5,
-            },
-          },
-        }}
-        checkboxSelection   
-        disableRowSelectionOnClick
-        pageSizeOptions={[25]}
-      />
-    </Box>
+
+      <Box>
+        <CustomDataGrid
+              className='dataGrid'
+              rows={display}
+              columns={columns}
+              getRowId={(row) => row.applicantNum}
+              scrollbarSize={10}
+              initialState={{
+                pagination: {
+                  paginationModel: {
+                    pageSize: 5,
+                  },},}}
+
+              checkboxSelection   
+              disableRowSelectionOnClick
+              pageSizeOptions={[25]}
+            />
+          </Box>
         </div>
-        </Card>
+      
       </div>
     </div>
     </>
