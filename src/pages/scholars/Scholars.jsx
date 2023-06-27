@@ -6,8 +6,8 @@ import CardContent from '@mui/material/CardContent';
 import Button from '@mui/material/Button';
 import Typography from '@mui/material/Typography';
 import { DataGrid} from '@mui/x-data-grid';
-import { useState, useEffect } from 'react';
-import { FetchingBmccScho, FetchingBmccSchoinfo,ScholarStand } from '../../api/request';
+import React, {useEffect, useState} from 'react'
+import { FetchingBmccScho, FetchingBmccSchoinfo,ScholarStand ,ListofReq} from '../../api/request';
 import './scholar.css'
 import { styled } from '@mui/material/styles';
 import Badge from '@mui/material/Badge';
@@ -18,7 +18,16 @@ import ListItem from '@mui/material/ListItem';
 import ListItemText from '@mui/material/ListItemText';
 import Divider from '@mui/material/Divider';
 import swal from 'sweetalert';
-
+import Radio from '@mui/material/Radio';
+import RadioGroup from '@mui/material/RadioGroup';
+import FormControlLabel from '@mui/material/FormControlLabel';
+import Dialog from '@mui/material/Dialog';
+import DialogActions from '@mui/material/DialogActions';
+import DialogContent from '@mui/material/DialogContent';
+import DialogContentText from '@mui/material/DialogContentText';
+import DialogTitle from '@mui/material/DialogTitle';
+import FormLabel from '@mui/material/FormLabel';
+import TextField from '@mui/material/TextField';
 
 const OnlineBadge = styled(Badge)(({ theme }) => ({
   '& .MuiBadge-badge': {
@@ -50,8 +59,11 @@ const Scholars = () => {
   const [schoinf1,setSchoInf1] = useState([]);
   const [schoinf2,setSchoInf2] = useState([]);
   const [schoinf3,setSchoInf3] = useState([]);
+  const [schodocs,setSchodocs] = useState([]);
   const [questions, setQuestions] = useState([]);
   const [reason,setReason] = useState('');
+  const [status,setStatus] = useState('');
+  const [openDialog, setOpenDialog] = useState(false);
 
   useEffect(() => {
     async function Fetch(){
@@ -67,10 +79,11 @@ const Scholars = () => {
     left: '50%',
     transform: 'translate(-50%, -50%)',
     width: '80%',
-    height: '75%',
+    height: '100%%',
     bgcolor: 'background.paper',
     border: '2px solid #000',
     boxShadow: 24,
+    overflow:'auto'
   };
   const stylediv = {
     width: '100%',
@@ -83,7 +96,9 @@ const Scholars = () => {
     setOpen(true)
     const applicantNum = data.applicantNum
     const response = await FetchingBmccSchoinfo.FETCH_SCHOLARSINFO(applicantNum)
-    console.log(response)
+    const req = await ListofReq.FETCH_REQUIREMENTS()
+    console.log(response.data.ScholarInf.results1[0])
+    setSchodocs(req.data.Requirements.results1)
     setSchoInf1(response.data.ScholarInf.results1[0])
     setSchoInf2(response.data.ScholarInf.results2[0])
     setSchoInf3(response.data.ScholarInf.results3)
@@ -150,24 +165,9 @@ const Scholars = () => {
       width: 160,
     },
     {
-      field: 'remarks',
+      field: 'standing',
       headerName: 'Standing',
       width: 110,
-      renderCell: (params) => (
-        <>
-        <div style={{display:'flex',flexDirection:'column'}}>
-        <button onClick={() => handleButtonClick(params.row.applicantNum)}>
-          Active
-        </button>
-        <button onClick={() => handleButtonClick(params.row.applicantNum)}>
-          Hold
-        </button>
-        <button onClick={() => handleButtonClick(params.row.applicantNum)}>
-          Dsiqualified
-        </button>
-        </div>
-        </>
-      ),
     },
 
   ];
@@ -216,23 +216,76 @@ const Scholars = () => {
           </Box>
           </div>
           </>
-          )
- 
+          )    
 
     });
-    const handleButtonClick = async (data) => {
+    const requirementsListed = schodocs?.map((docu, index) => {
+      const valueToCheck = docu.requirementName;
+      const hassubmit = schoinf3.some((item) => item.requirement_Name === valueToCheck);
+      const deadline = new Date(docu.deadline); // Convert the deadline string to a Date object
+      const currentDate = new Date(); // Get the current date
+    
+      const isPastDue = currentDate > deadline && !hassubmit;
+    
+      return (
+        <React.Fragment key={index}>
+          <Box>
+            <Card elevated={15} sx={{height:'100%'}}>
+              <div className='reqlistcontainer'>
+                <div className="requirelist">
+                  <div className='userlistreq'>
+                    <label htmlFor="">{docu.requirementName}</label>
+                    <span>Deadline: {docu.deadline}</span>
+                    {isPastDue ? (
+                      <p>Past due: Document submission is no longer possible.</p>
+                    ) : (
+                       !hassubmit ? (
+                        <input
+                          type="text"
+                          name={`${docu.requirementName}`}
+                        />
+                      ) : (
+                        <p>Already Submitted</p>
+                      )
+                    )}
+                  </div>
+                </div>
+                {(index + 1) % 4 === 0 && <br />}
+              </div>
+            </Card>
+          </Box>
+        </React.Fragment>
+      );
+    });
+
+    const handleButtonOpenDialog = async () => {
+      console.log(status)
+      if (status === 'Hold' || status === 'Disqualified') {
+        setOpenDialog(true);
+      } else {
+        await handleButtonClick();
+      }
+    };
+    const handleDialogSubmit = async () => {
+      await handleButtonClick();
+      setOpenDialog(false);
+    };
+    const handleCloseDialog = async () => {
+      setOpenDialog(false);
+    };
+    const handleButtonClick = async () => {
+      const applicantNum = schoinf1.applicantNum
         const res = await FetchingBmccSchoinfo.FETCH_SCHOLARSINFO(applicantNum)
         console.log(res)
         const email = res.data.ScholarInf.results1[0].email;
-        const standing = 'Active'
-        const applicantNum = data.applicantNum
-        console.log(standing,applicantNum,reason,email)
+        const standing = status
+        console.log(status,applicantNum,reason,email)
         const formData = new FormData();
-        formData.append('standing',standing);
+        formData.append('status',standing);
         formData.append('applicantNum',applicantNum);
         formData.append('reason',reason)
         formData.append('email',email)
-       const response = await ScholarStand.UPDATE_SCHOSTAND(formData);
+       const response = await ScholarStand.UPDATE_SCHOSTAND({status,applicantNum,reason,email});
         console.log(response);
         if(response.data.success === 1){
           swal('Standing Update')
@@ -245,6 +298,29 @@ const Scholars = () => {
 
   return (
     <>
+         <Dialog open={openDialog} onClose={handleCloseDialog}>
+        <DialogTitle>Failed</DialogTitle>
+        <DialogContent>
+          <DialogContentText>
+            Please Enter the Reason for Failing
+          </DialogContentText>
+          <TextField
+            autoFocus
+            margin="dense"
+            id="name"
+            label="Reason"
+            type="text"
+            value={reason}
+            fullWidth
+            onChange={(e) => setReason(e.target.value)}
+            variant="standard"
+          />
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={handleCloseDialog}>Cancel</Button>
+          <Button onClick={handleDialogSubmit}>Submit</Button>
+        </DialogActions>
+      </Dialog>
     <Modal
         open={open}
         onClose={handleClose}
@@ -279,6 +355,27 @@ const Scholars = () => {
                 <ListItemText primary="Documents List" />
               </ListItem>
             </List>
+            <div className="status">
+                <FormLabel id="demo-row-radio-buttons-group-label" className="stat"> Standing </FormLabel>
+                <RadioGroup
+                    row
+                    aria-labelledby="demo-row-radio-buttons-group-label"
+                    name="row-radio-buttons-group"
+                    value={status}
+                    sx={{justifyContent: 'center'}}
+                    onChange={(e) =>{
+                     const stat = e.target.value;
+                      setStatus(stat);
+                    }}>
+
+                
+                <FormControlLabel value="Active" control={<Radio />} label="Active" className="edtstatus"/>
+                <FormControlLabel value="Hold" control={<Radio />} label="Hold" className="edtstatus"/>
+                <FormControlLabel value="Disqualified" control={<Radio />} label="Disqualified" className="edtstatus"/>
+               
+                </RadioGroup>
+                </div>
+                <Button variant='contained' fullWidth onClick={handleButtonOpenDialog}>Save</Button>
           </div>
           </div>
 
@@ -369,7 +466,11 @@ const Scholars = () => {
               </div>}
 
               {value === 2 && <><h1>DOCUMENTS</h1><div className='doculistscho'>
+                <div style={{width:'100%',display:'flex',height:'150px'}}>
+              {requirementsListed}
+              </div>
                 {requirements}
+
                 </div></>}
           </div>
         </div>
