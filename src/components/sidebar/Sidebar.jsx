@@ -39,7 +39,7 @@ const Sidebar = () => {
             <Link to='/faqs' style={{ textDecoration: "none" }}>
             <li>
               <LiveHelpIcon className='icon'/>
-              <span> Accounts </span>
+              <span> Employees </span>
             </li>
             </Link>
 

@@ -88,11 +88,12 @@ const Scholars = () => {
     setSchoInf2(response.data.ScholarInf.results2[0])
     setSchoInf3(response.data.ScholarInf.results3)
   }
+
   const columns = [
     { 
       field: 'scholarId', 
       headerName: 'Scholar ID',
-      width: 100
+      width: 79
      },
      {
        field: 'scholarCode', 
@@ -102,37 +103,37 @@ const Scholars = () => {
     {
       field: 'scholarshipApplied',
       headerName: 'Scholarship Applied',
-      width: 150,
+      width: 165,
       editable: false,
     },
     {
       field: 'Name',
       headerName: 'Name',
-      width: 250,
+      width: 230,
       editable: false,
     },
     {
       field: 'yearLevel',
       headerName: 'Year Level',
-      width: 150,
+      width: 120,
       editable: false,
     },
     {
       field: 'Baranggay',
       headerName: 'Baranggay',
-      width: 150,
+      width: 120,
       editable: false,
     },
     {
       field: 'status',
       headerName: 'Status',
-      width: 100,
+      width: 80,
       editable: false,
     },
     {
       field: 'Batch',
       headerName: 'Batch',
-      width: 110,
+      width: 80,
       editable: false,
     },
     {
@@ -140,7 +141,32 @@ const Scholars = () => {
       headerName: 'Actions',
       width: 90,
       renderCell: (params) => (
-        <button onClick={() => view(params.row)}>View</button>
+        <button className="viewBtnScholars" onClick={() => view(params.row)}>View</button>
+      ),
+    },
+    {
+      field: 'renewdocs',
+      headerName: 'Renewal Submitted',
+      width: 160,
+    },
+    {
+      field: 'remarks',
+      headerName: 'Account Status',
+      width: 110,
+      renderCell: (params) => (
+        <>
+        <div style={{display:'flex',flexDirection:'column'}}>
+        <button onClick={() => handleButtonClick(params.row.applicantNum)}>
+          Active
+        </button>
+        <button onClick={() => handleButtonClick(params.row.applicantNum)}>
+          Hold
+        </button>
+        <button onClick={() => handleButtonClick(params.row.applicantNum)}>
+          Dsiqualified
+        </button>
+        </div>
+        </>
       ),
     },
     {
@@ -245,10 +271,10 @@ const Scholars = () => {
   return (
     <>
     <Modal
-            open={open}
-            onClose={handleClose}
-            aria-labelledby="modal-modal-title"
-            aria-describedby="modal-modal-description">
+        open={open}
+        onClose={handleClose}
+        aria-labelledby="modal-modal-title"
+        aria-describedby="modal-modal-description">
       <Box sx={style}>
         <div className='hbtnschocon'>
           <button onClick={handleClose}>X</button>
@@ -280,6 +306,7 @@ const Scholars = () => {
             </List>
           </div>
           </div>
+
           <div className="rigthscho">
             {value === 0 && <div>
                 <h1 style={{textAlign: 'center'}}>PERSONAL INFORMATION</h1>
@@ -322,7 +349,9 @@ const Scholars = () => {
               </Card>
                 </div>
               </div>}
-              {value === 1 && <div>
+              {value === 1 && 
+              
+              <div>
                 <h1 style={{textAlign: 'center'}}>SCHOLAR INFORMATION</h1>
                 <div className='peschocoon'>
               <Card elevation={5} sx={{ width:'90%', margin:'10px', height:'100%' }}>
@@ -363,6 +392,7 @@ const Scholars = () => {
               </Card>
                 </div>
               </div>}
+
               {value === 2 && <><h1>DOCUMENTS</h1><div className='doculistscho'>
                 {requirements}
                 </div></>}
@@ -370,6 +400,7 @@ const Scholars = () => {
         </div>
       </Box>
     </Modal>
+
     <Modal             
     open={open1}
     onClose={handleClose1}
@@ -388,9 +419,8 @@ const Scholars = () => {
             <Navbar/>
             <div className="top">
             
-              <h1>Scholars</h1>
-              <Button variant='contained'>Renewal</Button>
-              <Box sx={{ height: 400, width: '100%' }}>
+    <h1>Scholars</h1>
+    <Box sx={{ height: 400, width: '100%' }}>
       <DataGrid
         rows={data}
         columns={columns}
