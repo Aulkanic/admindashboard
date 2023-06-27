@@ -61,23 +61,35 @@ const Scholars = () => {
     }
     Fetch();
   }, []);
+
   const style = {
     position: 'absolute',
     top: '50%',
     left: '50%',
     transform: 'translate(-50%, -50%)',
     width: '80%',
-    height: '75%',
+    height: '80%',
     bgcolor: 'background.paper',
-    border: '2px solid #000',
+    border: 'none',
+    borderRadius: '15px',
     boxShadow: 24,
   };
+
   const stylediv = {
     width: '100%',
-    fontSize:'20px',
-    textAlign:'center'
+    fontSize:'10px',
+    textAlign:'center',
+    
   };
+<<<<<<< Updated upstream
   
+=======
+<<<<<<< HEAD
+
+=======
+  
+>>>>>>> cd6ec96d52d28e831d931523d73e6f24591424d0
+>>>>>>> Stashed changes
   const view = async(data) =>{
     console.log(data)
     setOpen(true)
@@ -217,8 +229,6 @@ const Scholars = () => {
           </div>
           </>
           )
- 
-
     });
     const handleButtonClick = async (data) => {
         const res = await FetchingBmccSchoinfo.FETCH_SCHOLARSINFO(applicantNum)
@@ -250,12 +260,14 @@ const Scholars = () => {
         onClose={handleClose}
         aria-labelledby="modal-modal-title"
         aria-describedby="modal-modal-description">
+
       <Box sx={style}>
         <div className='hbtnschocon'>
-          <button onClick={handleClose}>X</button>
+          <button className="closedBtn" onClick={handleClose}> X </button>
         </div>
+
         <div className="schoinfocon">
-          <div className="leftshco">
+          <div className="leftscho">
             <div className="profilescho">
               <div className="schopic">
               <OnlineAvatar user={schoinf2} />
@@ -265,112 +277,118 @@ const Scholars = () => {
                 <p>{schoinf1.email}</p>
               </div>
             </div>
-            <div className="scholog">
-            <List sx={stylediv} component="nav" aria-label="mailbox folders">
-              <ListItem button onClick={() => handleTabClick(0)}>
-                <ListItemText primary="Personal Information" />
+
+          <div className="scholog">
+            <List className='listTab' component="nav" sx={{fontWeight: 600}}>
+              <ListItem button className="tabs" onClick={() => handleTabClick(0)}>
+                <ListItemText className="leftLbl" primary="Personal Information" />
               </ListItem>
               <Divider />
-              <ListItem button onClick={() => handleTabClick(1)}>
-                <ListItemText primary="Scholar Information" />
+
+              <ListItem button className="tabs" onClick={() => handleTabClick(1)}>
+                <ListItemText className="leftLbl" primary="Scholar Information" />
               </ListItem>
               <Divider light />
-              <ListItem button onClick={() => handleTabClick(2)}>
-                <ListItemText primary="Documents List" />
+
+              <ListItem button className="tabs" onClick={() => handleTabClick(2)}>
+                <ListItemText className="leftLbl" primary="Documents List" />
               </ListItem>
             </List>
           </div>
-          </div>
+        </div>
 
-          <div className="rigthscho">
-            {value === 0 && <div>
+          <div className="rightscho">
+            {value === 0 && 
+            <div className='personalInfo'>
                 <h1 style={{textAlign: 'center'}}>PERSONAL INFORMATION</h1>
-                <div className='peschocoon'>
-              <Card elevation={5} sx={{ width:'90%', margin:'10px', height:'100%' }}>
+
+            <div className='peschocon'>
+            
               <CardContent>
-                <Typography sx={{ fontSize: 23 }} color="text.secondary">
+                <Typography sx={{ fontSize: 20 }} >
                   Name: {schoinf1.Name}
                 </Typography>
                 <Typography variant="h5" component="div">
                 </Typography>
-                <Typography sx={{ fontSize: 23 }} color="text.secondary">
+                <Typography sx={{ fontSize: 20 }}>
                   Age: {schoinf1.age}
                 </Typography>
-                <Typography sx={{ fontSize: 23 }} color="text.secondary">
+                <Typography sx={{ fontSize: 20 }} >
                   Birthday: {schoinf1.birthday}
                 </Typography>
-                <Typography sx={{ fontSize: 23 }} color="text.secondary">
+                <Typography sx={{ fontSize: 20 }} >
                   Birth of Place: {schoinf1.birthPlace}
                 </Typography>
-                <Typography sx={{ fontSize: 23 }} color="text.secondary">
+                <Typography sx={{ fontSize: 20 }} >
                   Citizenship: {schoinf1.citizenship}
                 </Typography>
-                <Typography sx={{ fontSize: 23 }} color="text.secondary">
+                <Typography sx={{ fontSize: 20 }} >
                   Contact Number: {schoinf1.contactNum}
                 </Typography>
-                <Typography sx={{ fontSize: 23 }} color="text.secondary">
+                <Typography sx={{ fontSize: 20 }} >
                   Address: {schoinf1.caddress}
                 </Typography>
-                <Typography sx={{ fontSize: 23 }} color="text.secondary" gluttterBottom>
+                <Typography sx={{ fontSize: 20 }} >
                   Baranggay: {schoinf1.baranggay}
                 </Typography>
-                <Typography sx={{ fontSize: 23 }} color="text.secondary">
+                <Typography sx={{ fontSize: 20 }} >
                   Current School Enrolled: {schoinf1.currentSchool}
                 </Typography>
-                <Typography sx={{ fontSize: 23 }} color="text.secondary">
+                <Typography sx={{ fontSize: 20 }} >
                   Year Level: {schoinf1.currentYear}
                 </Typography>
               </CardContent>
-              </Card>
+             
                 </div>
               </div>}
               {value === 1 && 
               
               <div>
                 <h1 style={{textAlign: 'center'}}>SCHOLAR INFORMATION</h1>
-                <div className='peschocoon'>
-              <Card elevation={5} sx={{ width:'90%', margin:'10px', height:'100%' }}>
+                <div className='peschocon'>
               <CardContent>
-                <Typography sx={{ fontSize: 23 }} color="text.secondary">
+                <Typography sx={{ fontSize: 20 }} >
                   Name: {schoinf1.Name}
                 </Typography>
                 <Typography variant="h5" component="div">
                 </Typography>
-                <Typography sx={{ fontSize: 23 }} color="text.secondary">
+                <Typography sx={{ fontSize: 20 }} >
                   Applicant Code: {schoinf2.applicantCode}
                 </Typography>
-                <Typography sx={{ fontSize: 23 }} color="text.secondary">
+                <Typography sx={{ fontSize: 20 }} >
                   Scholar Code: {schoinf2.scholarCode}
                 </Typography>
-                <Typography sx={{ fontSize: 23 }} color="text.secondary">
+                <Typography sx={{ fontSize: 20 }} c>
                   Birth of Place: {schoinf1.birthPlace}
                 </Typography>
-                <Typography sx={{ fontSize: 23 }} color="text.secondary">
+                <Typography sx={{ fontSize: 20 }} >
                   Batch: {schoinf2.Batch}
                 </Typography>
-                <Typography sx={{ fontSize: 23 }} color="text.secondary">
+                <Typography sx={{ fontSize: 20 }} >
                   Contact Number: {schoinf1.contactNum}
                 </Typography>
-                <Typography sx={{ fontSize: 23 }} color="text.secondary">
+                <Typography sx={{ fontSize: 20 }} >
                   Email: {schoinf2.email}
                 </Typography>
-                <Typography sx={{ fontSize: 23 }} color="text.secondary" gluttterBottom>
+                <Typography sx={{ fontSize: 20 }} >
                   Baranggay: {schoinf1.baranggay}
                 </Typography>
-                <Typography sx={{ fontSize: 23 }} color="text.secondary">
+                <Typography sx={{ fontSize: 20 }} >
                   Status: {schoinf2.status}
                 </Typography>
-                <Typography sx={{ fontSize: 23 }} color="text.secondary">
+                <Typography sx={{ fontSize: 20 }} >
                   Year Level: {schoinf1.currentYear}
                 </Typography>
               </CardContent>
-              </Card>
                 </div>
               </div>}
 
-              {value === 2 && <><h1>DOCUMENTS</h1><div className='doculistscho'>
+              {value === 2 && <>
+              <h1>DOCUMENTS</h1>
+              <div className='doculistscho'>
                 {requirements}
-                </div></>}
+                </div>
+                </>}
           </div>
         </div>
       </Box>
@@ -381,9 +399,10 @@ const Scholars = () => {
     onClose={handleClose1}
     aria-labelledby="modal-modal-title"
     aria-describedby="modal-modal-description">
+
       <Box sx={style}>
       <div className='hbtnschocon'>
-          <button onClick={handleClose1}>X</button>
+          <button className="exitBtn" onClick={handleClose1}> X </button>
         </div>
 
       </Box>
@@ -397,6 +416,7 @@ const Scholars = () => {
     <h1>Scholars</h1>
     <Box sx={{ height: 400, width: '100%' }}>
       <DataGrid
+        className='dataGrid'
         rows={data}
         columns={columns}
         getRowId={(row) => row.scholarId}

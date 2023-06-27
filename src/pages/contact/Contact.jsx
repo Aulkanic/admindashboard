@@ -49,7 +49,6 @@ const Contact = () => {
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
 
-  
   const style = {
     position: 'absolute',
     top: '50%',
@@ -58,8 +57,9 @@ const Contact = () => {
     width: '700',
     height: '80%',
     bgcolor: 'background.paper',
-    border: '2px solid #000',
+    borderRadius: '10px',
     boxShadow: 24,
+    border: 'none',
     overflow: 'auto',
   };
   useEffect(() => {
@@ -135,12 +135,12 @@ const Contact = () => {
     { 
       field: 'requirementID', 
       headerName: 'ID',
-      width: 50
+      width: 40
      },
      {
       field: 'schoName', 
        headerName: 'Scholraship Category',
-     width: 200
+      width: 180
      },
      {
        field: 'requirementName', 
@@ -150,13 +150,13 @@ const Contact = () => {
     {
       field: 'Status',
       headerName: 'Status',
-      width: 150,
+      width: 100,
       editable: false,
     },
     {
       field: 'batch',
       headerName: 'Batch',
-      width: 100,
+      width: 70,
       editable: false,
     },
     {
@@ -168,13 +168,21 @@ const Contact = () => {
     {
       field: 'deadline',
       headerName: 'Deadline',
+<<<<<<< Updated upstream
       width: 200,
+=======
+<<<<<<< HEAD
+      width: 100,
+=======
+      width: 200,
+>>>>>>> cd6ec96d52d28e831d931523d73e6f24591424d0
+>>>>>>> Stashed changes
       editable: false,
     },
     {
       field: 'numSubmissions',
       headerName: 'Total Submitted',
-      width: 250,
+      width: 120,
       editable: false,
     },
 
@@ -308,7 +316,8 @@ const Contact = () => {
         <h1>Requirements</h1>
           <button className="addBtn" onClick={handleOpen}> Add </button>
 
-         <DataGrid sx={{width: 1200, padding: 0.5}} className="dataTbl"
+         <DataGrid 
+            className="dataTbl"
             rows={mergedData}
             columns={columns}
             getRowId={(row) => row.requirementID}
