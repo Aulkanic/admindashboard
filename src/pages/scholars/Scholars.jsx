@@ -7,7 +7,7 @@ import Button from '@mui/material/Button';
 import Typography from '@mui/material/Typography';
 import { DataGrid} from '@mui/x-data-grid';
 import { useState, useEffect } from 'react';
-import { FetchingBmccScho, FetchingBmccSchoinfo } from '../../api/request';
+import { FetchingBmccScho, FetchingBmccSchoinfo,ScholarStand } from '../../api/request';
 import './scholar.css'
 import { styled } from '@mui/material/styles';
 import Badge from '@mui/material/Badge';
@@ -17,6 +17,7 @@ import List from '@mui/material/List';
 import ListItem from '@mui/material/ListItem';
 import ListItemText from '@mui/material/ListItemText';
 import Divider from '@mui/material/Divider';
+import swal from 'sweetalert';
 
 
 const OnlineBadge = styled(Badge)(({ theme }) => ({
@@ -50,6 +51,7 @@ const Scholars = () => {
   const [schoinf2,setSchoInf2] = useState([]);
   const [schoinf3,setSchoInf3] = useState([]);
   const [questions, setQuestions] = useState([]);
+  const [reason,setReason] = useState('');
 
   useEffect(() => {
     async function Fetch(){
@@ -75,6 +77,7 @@ const Scholars = () => {
     fontSize:'20px',
     textAlign:'center'
   };
+  
   const view = async(data) =>{
     console.log(data)
     setOpen(true)
@@ -140,6 +143,31 @@ const Scholars = () => {
         <button onClick={() => view(params.row)}>View</button>
       ),
     },
+    {
+      field: 'renewdocs',
+      headerName: 'Renewal Submitted',
+      width: 160,
+    },
+    {
+      field: 'remarks',
+      headerName: 'Account Status',
+      width: 110,
+      renderCell: (params) => (
+        <>
+        <div style={{display:'flex',flexDirection:'column'}}>
+        <button onClick={() => handleButtonClick(params.row.applicantNum)}>
+          Active
+        </button>
+        <button onClick={() => handleButtonClick(params.row.applicantNum)}>
+          Hold
+        </button>
+        <button onClick={() => handleButtonClick(params.row.applicantNum)}>
+          Dsiqualified
+        </button>
+        </div>
+        </>
+      ),
+    },
 
   ];
   const handleTabClick = (newValue) => {
@@ -191,7 +219,28 @@ const Scholars = () => {
  
 
     });
-
+    const handleButtonClick = async (data) => {
+        const res = await FetchingBmccSchoinfo.FETCH_SCHOLARSINFO(applicantNum)
+        console.log(res)
+        const email = res.data.ScholarInf.results1[0].email;
+        const standing = 'Active'
+        const applicantNum = data.applicantNum
+        console.log(standing,applicantNum,reason,email)
+        const formData = new FormData();
+        formData.append('standing',standing);
+        formData.append('applicantNum',applicantNum);
+        formData.append('reason',reason)
+        formData.append('email',email)
+       const response = await ScholarStand.UPDATE_SCHOSTAND(formData);
+        console.log(response);
+        if(response.data.success === 1){
+          swal('Standing Update')
+          setData(response.data.result)
+        }
+        else{
+          swal('Something went Wrong')
+        }
+    }
 
   return (
     <>
@@ -359,7 +408,7 @@ const Scholars = () => {
         disableRowSelectionOnClick
       />
               </Box>
-              {}
+
             </div>
         </div>
     </div>

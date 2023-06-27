@@ -76,7 +76,7 @@ const Contact = () => {
   }, []);
 
   const mergedData = reqlist.map((requirement) => {
-    const { requirementID, requirementName, schoName, Status,batch } = requirement;
+    const { requirementID, requirementName, schoName, Status,batch,deadline,docsfor } = requirement;
 
     const submissions = submitted.filter((submission) => submission.requirement_Name === requirementName);
 
@@ -86,6 +86,8 @@ const Contact = () => {
       schoName,
       batch,
       Status,
+      deadline,
+      docsfor,
       numSubmissions: submissions.length,
     };
   });
@@ -102,6 +104,7 @@ const Contact = () => {
     const currentDate = moment();
     const date = new Date(deadline).toDateString();
     const targetDate = moment(date);
+    
     if(!date || date === ''){
       errors.date = 'Select A Deadline Date First'
     }
@@ -117,7 +120,7 @@ const Contact = () => {
     formData.append('schoName',schoName)
     formData.append('requirementName',requirementName)
     formData.append('batch',batch)
-    formData.append('deadline',deadline)
+    formData.append('deadline',date)
     formData.append('docsfor',docsfor)
       Addrequirements.ADD_REQUIREMENTS(formData)
       .then(res => {
@@ -165,7 +168,7 @@ const Contact = () => {
     {
       field: 'deadline',
       headerName: 'Deadline',
-      width: 150,
+      width: 200,
       editable: false,
     },
     {

@@ -24,6 +24,7 @@ const Endpoints = {
     UPDATE_SCHEDULE: 'Appointment/UpdateSchedule',
     FAILED_USER: 'Appointment/Failed',
     FETCH_BMCCSCHOLAR: 'BMCCScholar/Scholars',
+    UPDATE_BMCCSCHOLAR: 'BMCCScholar/Schostanding',
     FETCH_BMCCSCHOLARINFO: 'BMCCScholar/SchoInfo/',
     CREATE_SCORECARD: 'Scorecard/score',
     FETCH_SCORECARD: 'Scorecard/getScore/',

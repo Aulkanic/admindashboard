@@ -116,3 +116,6 @@ export const UpdateScheduleApp = {
 export const FailedUser = {
     FAILED_USER: (data) => axiosInstance.post(Endpoints.FAILED_USER,data)
 }
+export const ScholarStand = {
+    UPDATE_SCHOSTAND: (data) => axiosInstance.post(Endpoints.UPDATE_BMCCSCHOLAR,data)
+}
