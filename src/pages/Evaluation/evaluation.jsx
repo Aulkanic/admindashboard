@@ -3,10 +3,11 @@ import './evaluation.css'
 import Sidebar from '../../components/sidebar/Sidebar'
 import Navbar from '../../components/navbar/Navbar'
 import { DataGrid} from '@mui/x-data-grid';
-import { Tabs, Tab, Box, Modal,Card } from "@mui/material";  
+import { Tabs, Tab, Box, Modal,Card,Button } from "@mui/material";  
 import { ApplicantsRequest, FetchingApplicantsInfo, ListofSub,
-    CheckingSubs, CheckingApplicants,UserScore,SetApplicant } from "../../api/request";
+    CheckingSubs, CheckingApplicants,UserScore,SetApplicant,FailedUser,FetchingBmccSchoinfo } from "../../api/request";
 import TextField from '@mui/material/TextField';
+import swal from 'sweetalert';
 
 const Evaluation = () => {
     const [data, setData] = useState([]);
@@ -46,6 +47,27 @@ const Evaluation = () => {
         }
     
       }
+      const failed = async(data) =>{
+        console.log(data)
+        const res = await FetchingBmccSchoinfo.FETCH_SCHOLARSINFO(data.applicantNum);
+        console.log(res)
+        const schoapplied = res.data.ScholarInf.results1[0].SchoIarshipApplied;
+        const batch = res.data.ScholarInf.results1[0].Batch;
+        const reason = 'Score did not Meet Passing Score'
+        const formData = new FormData();
+        formData.append('applicantNum',data.applicantNum)
+        formData.append('Name',data.Name)
+        formData.append('ScholarshipApplied', schoapplied)
+        formData.append('batch',batch)
+        formData.append('Reason',reason)
+        formData.append('email',res.data.ScholarInf.results1[0].email)
+        const response = await FailedUser.FAILED_USER(formData)
+        if(response.data.success === 1){
+          swal('Status Updated')
+        }else{
+          swal('Something Went Wrong')
+        }
+      }
     const columns = [
         { 
           field: 'applicantNum', 
@@ -82,13 +104,36 @@ const Evaluation = () => {
           editable: false,
         },
         {
+          field: 'score',
+          headerName: 'Applicantion Score',
+          width: 150,
+          editable: false,
+        },
+        {
             field: 'insert',
             headerName: 'Actions',
             width: 150,
             renderCell: (params) => (
                 <>
-              <button onClick={() => view(params.row)}>View</button>
-              <button style={{marginLeft:'5px'}} onClick={() => setFirsttoSecStat(params.row)}>Add</button>
+                <div style={{display:'flex',flexDirection:'column',height:'100%',width:'100%',justifyContent:'center',alignItems:'center'}}>
+              <button style={{marginLeft:'5px',backgroundColor:'blue',border:'none',padding:'3px',width:'60px',margin:'2px',color:'white',borderRadius:'5px',cursor:'pointer'}}
+               onClick={() => view(params.row)}>View</button>
+              </div>
+              </>
+            ),
+          },
+          {
+            field: 'insert1',
+            headerName: 'Details',
+            width: 150,
+            renderCell: (params) => (
+                <>
+                <div style={{display:'flex',flexDirection:'column',height:'100%'}}>
+              <button style={{marginLeft:'5px',backgroundColor:'green',border:'none',padding:'3px',width:'60px',margin:'2px',color:'white',borderRadius:'5px',cursor:'pointer'}} 
+              onClick={() => setFirsttoSecStat(params.row)}>Add</button>
+              <button style={{marginLeft:'5px',backgroundColor:'red',border:'none',padding:'3px',width:'60px',margin:'2px',color:'white',borderRadius:'5px',cursor:'pointer'}}  
+              onClick={() => failed(params.row)}>Failed</button>
+              </div>
               </>
             ),
           },
@@ -504,13 +549,21 @@ const Evaluation = () => {
         formData.append('applicantNum',data.applicantNum)
         SetApplicant.SET_APPLICANT(formData)
         .then(res => {
+          if(res.data.success === 1){
             console.log(res)
+            
             setData(res.data.result)
             setOpen(false)
+            swal('Status Updated')
+          }else{
+            swal('Something Went Wrong')
+          }
+
           }
            )
           .catch(err => console.log(err));
     }
+    console.log(data)
   return (
     <>
         <Modal className="modalContainer"
@@ -551,12 +604,12 @@ const Evaluation = () => {
 
         </Box>
     </Modal>
-    <div style={{backgroundColor:'whitesmoke'}}>
+    <div style={{width:'100%'}}>
            <div className="scholars">
         <Sidebar/>
         <div className="scholarsContainer">
             <Navbar/>
-            <Card sx={{width:'95%',margin:'10px'}} elevation={3}>
+            <Card sx={{width:'100%%',margin:'10px'}} elevation={3}>
             <div className='evluationcon'>
               <h1 style={{marginLeft:'10px'}}>Registered Applicants</h1>
               <Box sx={{ height: 400, width: '100%' }}>

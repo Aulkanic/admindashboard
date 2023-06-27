@@ -2,7 +2,7 @@ import "./applicant.scss";
 import Sidebar from "../../components/sidebar/Sidebar";
 import Navbar from "../../components/navbar/Navbar";
 import { useState, useEffect } from "react";
-import { Tabs, Tab, Box, Modal, Card } from "@mui/material"; 
+import { Tabs, Tab, Box, Modal, Card,Button } from "@mui/material"; 
 import { DataGrid} from '@mui/x-data-grid';
 import Radio from '@mui/material/Radio';
 import RadioGroup from '@mui/material/RadioGroup';
@@ -10,12 +10,17 @@ import FormControlLabel from '@mui/material/FormControlLabel';
 import FormControl from '@mui/material/FormControl';
 import FormLabel from '@mui/material/FormLabel';
 import { ApplicantsRequest, FetchingApplicantsInfo, ListofSub,
-          CheckingSubs, CheckingApplicants,UserScore,ListofReq,FailedUser } from "../../api/request";
+          CheckingSubs, CheckingApplicants,UserScore,ListofReq,FailedUser,FetchingBmccSchoinfo } from "../../api/request";
 import swal from "sweetalert";
 import { styled } from '@mui/material/styles';
 import { useContext } from "react";
 import { admininfo } from "../../App";
 import TextField from '@mui/material/TextField';
+import Dialog from '@mui/material/Dialog';
+import DialogActions from '@mui/material/DialogActions';
+import DialogContent from '@mui/material/DialogContent';
+import DialogContentText from '@mui/material/DialogContentText';
+import DialogTitle from '@mui/material/DialogTitle';
 import './applicant.css'
 
 const Applicant = () => {
@@ -32,6 +37,19 @@ const Applicant = () => {
   const [tabValue, setTabValue] = useState(0);
   const [selectedRows, setSelectedRows] = useState([]);
   const [datarows,setDatarows] = useState([]);
+  const [dialog, setDialog] = useState(false);
+  const [reason,setReason] = useState('');
+  const [failinf,setFailInf] = useState([]);
+
+  const handleClickOpenDialog = (data) => {
+    console.log(data)
+    setDialog(true);
+    setFailInf(data)
+  };
+
+  const handleCloseDialog = () => {
+    setDialog(false);
+  };
 
   const handleSelectionModelChange = (newSelectionModel) => {
     setSelectedRows(newSelectionModel);
@@ -60,6 +78,7 @@ const Applicant = () => {
     async function Fetch(){
       const response = await ApplicantsRequest.ALL_APPLICANTS()
       const docreq = await ListofReq.FETCH_REQUIREMENTS()
+      console.log(response)
       setPost(response.data.results);
       console.log(docreq)
       const sub = docreq.data.Requirements.results2
@@ -139,7 +158,26 @@ const check = async (data, index) => {
   }
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
-
+  const failed = async() =>{
+    console.log(failinf)
+    const res = await FetchingBmccSchoinfo.FETCH_SCHOLARSINFO(failinf.applicantNum);
+    console.log(res)
+    const schoapplied = res.data.ScholarInf.results1[0].SchoIarshipApplied;
+    const batch = res.data.ScholarInf.results1[0].Batch;
+    const formData = new FormData();
+    formData.append('applicantNum',failinf.applicantNum)
+    formData.append('Name',failinf.Name)
+    formData.append('ScholarshipApplied', schoapplied)
+    formData.append('batch',batch)
+    formData.append('Reason',reason)
+    formData.append('email',res.data.ScholarInf.results1[0].email)
+    const response = await FailedUser.FAILED_USER(formData)
+    if(response.data.success === 1){
+      swal('Status Updated')
+    }else{
+      swal('Something Went Wrong')
+    }
+  }
   const columns = [
     { field: 'applicantNum', headerName: 'Applicant ID', width: 100 },
     {
@@ -181,12 +219,26 @@ const check = async (data, index) => {
     },
     {
       field: 'insert',
-      headerName: 'Actions',
+      headerName: 'Details',
       width: 150,
       renderCell: (params) => (
         <>
         <button onClick={() => view(params.row)}>View</button>
-        <button style={{marginLeft:'5px'}} onClick={() => ApplicantCheck(params.row)}>Add</button>
+        </>
+      ),
+    },
+    {
+      field: 'insert1',
+      headerName: 'Actions',
+      width: 150,
+      renderCell: (params) => (
+        <>
+        <div style={{display:'flex',flexDirection:'column',height:'100%'}}>
+        <button style={{marginLeft:'5px',backgroundColor:'green',border:'none',padding:'3px',width:'60px',margin:'2px',color:'white',borderRadius:'5px',cursor:'pointer'}}  
+        onClick={() => ApplicantCheck(params.row)}>Add</button>
+        <button style={{marginLeft:'5px',backgroundColor:'red',border:'none',padding:'3px',width:'60px',margin:'2px',color:'white',borderRadius:'5px',cursor:'pointer'}}  
+              onClick={() =>handleClickOpenDialog(params.row)}>Failed</button>
+        </div>
         </>
       ),
     },
@@ -328,7 +380,29 @@ console.log(applicantsDocs)
           </div>
         </Box>
     </Modal>
-     
+    <Dialog open={dialog} onClose={handleCloseDialog}>
+        <DialogTitle>Failed</DialogTitle>
+        <DialogContent>
+          <DialogContentText>
+            Please Enter the Reason for Failing
+          </DialogContentText>
+          <TextField
+            autoFocus
+            margin="dense"
+            id="name"
+            label="Reason"
+            type="text"
+            value={reason}
+            fullWidth
+            onChange={(e) => setReason(e.target.value)}
+            variant="standard"
+          />
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={handleCloseDialog}>Cancel</Button>
+          <Button onClick={failed}>Submit</Button>
+        </DialogActions>
+      </Dialog>
 
     <div className="applicant">
       <Sidebar/>

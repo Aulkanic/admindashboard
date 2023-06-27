@@ -151,32 +151,7 @@ const Scholars = () => {
     },
     {
       field: 'remarks',
-      headerName: 'Account Status',
-      width: 110,
-      renderCell: (params) => (
-        <>
-        <div style={{display:'flex',flexDirection:'column'}}>
-        <button onClick={() => handleButtonClick(params.row.applicantNum)}>
-          Active
-        </button>
-        <button onClick={() => handleButtonClick(params.row.applicantNum)}>
-          Hold
-        </button>
-        <button onClick={() => handleButtonClick(params.row.applicantNum)}>
-          Dsiqualified
-        </button>
-        </div>
-        </>
-      ),
-    },
-    {
-      field: 'renewdocs',
-      headerName: 'Renewal Submitted',
-      width: 160,
-    },
-    {
-      field: 'remarks',
-      headerName: 'Account Status',
+      headerName: 'Standing',
       width: 110,
       renderCell: (params) => (
         <>

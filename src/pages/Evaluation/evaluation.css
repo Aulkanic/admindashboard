@@ -6,10 +6,13 @@
 .PA .Pinfo .fstcolm{
     width: 100%;
     height: 100%;
-    display: flex;
+    display: grid;
+    grid-template-columns: repeat(auto-fit,minmax(400px, 1fr));
+    grid-gap: 10px;
+    height: 100%;
 }
 .PA .Pinfo .fstcolm div{
-    margin: 10px;
+    margin: 5px;
 }
 .PA .Finfo{
     padding: 10px;
