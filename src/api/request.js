@@ -119,3 +119,6 @@ export const FailedUser = {
 export const ScholarStand = {
     UPDATE_SCHOSTAND: (data) => axiosInstance.post(Endpoints.UPDATE_BMCCSCHOLAR,data)
 }
+export const FetchingAnnounce = {
+    FETCH_ANNOUNCE: () => axiosInstance.get(Endpoints.FETCH_ANNOUNCEMENT)
+}
