@@ -8,7 +8,17 @@ import { ApplicantsRequest, FetchingApplicantsInfo, ListofSub,
     CheckingSubs, CheckingApplicants,UserScore,SetApplicant,FailedUser,FetchingBmccSchoinfo } from "../../api/request";
 import TextField from '@mui/material/TextField';
 import swal from 'sweetalert';
-
+import Typography from '@mui/material/Typography';
+import Breadcrumbs from '@mui/material/Breadcrumbs';
+import Link from '@mui/material/Link';
+import Dialog from '@mui/material/Dialog';
+import DialogActions from '@mui/material/DialogActions';
+import DialogContent from '@mui/material/DialogContent';
+import DialogContentText from '@mui/material/DialogContentText';
+import DialogTitle from '@mui/material/DialogTitle';
+import CheckCircleIcon from '@mui/icons-material/CheckCircle';
+import CancelIcon from '@mui/icons-material/Cancel';
+import FormatListBulletedOutlinedIcon from '@mui/icons-material/FormatListBulletedOutlined';
 const Evaluation = () => {
     const [data, setData] = useState([]);
     const [userscore,setUserScore] = useState([]);
@@ -18,6 +28,11 @@ const Evaluation = () => {
     const [open, setOpen] = useState(false);
     const handleOpen = () => setOpen(true);
     const handleClose = () => setOpen(false);
+    const [openDialog, setOpenDialog] = useState(false);
+    const handleOpenDialog = () => setOpenDialog(true);
+    const handleCloseDialog = () => setOpenDialog(false);
+
+
     useEffect(() => {
 
         async function Fetch(){
@@ -88,7 +103,7 @@ const Evaluation = () => {
         {
           field: 'Name',
           headerName: 'Name',
-          width: 250,
+          width: 150,
           editable: false,
         },
         {
@@ -100,24 +115,24 @@ const Evaluation = () => {
         {
           field: 'status',
           headerName: 'Status',
-          width: 150,
+          width: 100,
           editable: false,
         },
         {
           field: 'score',
-          headerName: 'Applicantion Score',
-          width: 150,
+          headerName: 'Score',
+          width: 70,
           editable: false,
         },
         {
             field: 'insert',
             headerName: 'Actions',
-            width: 150,
+            width: 100,
             renderCell: (params) => (
                 <>
                 <div style={{display:'flex',flexDirection:'column',height:'100%',width:'100%',justifyContent:'center',alignItems:'center'}}>
-              <button style={{marginLeft:'5px',backgroundColor:'blue',border:'none',padding:'3px',width:'60px',margin:'2px',color:'white',borderRadius:'5px',cursor:'pointer'}}
-               onClick={() => view(params.row)}>View</button>
+              <button style={{marginLeft:'5px',backgroundColor:'blue',border:'none',padding:'3px',width:'100%',margin:'2px',color:'white',borderRadius:'5px',cursor:'pointer'}}
+               onClick={() => view(params.row)}>View Details</button>
               </div>
               </>
             ),
@@ -125,14 +140,14 @@ const Evaluation = () => {
           {
             field: 'insert1',
             headerName: 'Details',
-            width: 150,
+            width: 250,
             renderCell: (params) => (
                 <>
-                <div style={{display:'flex',flexDirection:'column',height:'100%'}}>
-              <button style={{marginLeft:'5px',backgroundColor:'green',border:'none',padding:'3px',width:'60px',margin:'2px',color:'white',borderRadius:'5px',cursor:'pointer'}} 
-              onClick={() => setFirsttoSecStat(params.row)}>Add</button>
-              <button style={{marginLeft:'5px',backgroundColor:'red',border:'none',padding:'3px',width:'60px',margin:'2px',color:'white',borderRadius:'5px',cursor:'pointer'}}  
-              onClick={() => failed(params.row)}>Failed</button>
+                <div style={{width:"100%",display:'flex',flexDirection:'column',height:'100%'}}>
+              <button style={{marginLeft:'5px',backgroundColor:'green',border:'none',padding:'3px',width:'100%',margin:'2px',color:'white',borderRadius:'5px',cursor:'pointer'}} 
+              onClick={() => setFirsttoSecStat(params.row)}>Add to Applicants List</button>
+              <button style={{marginLeft:'5px',backgroundColor:'red',border:'none',padding:'3px',width:'100%',margin:'2px',color:'white',borderRadius:'5px',cursor:'pointer'}}  
+              onClick={handleOpenDialog}>Access</button>
               </div>
               </>
             ),
@@ -566,7 +581,37 @@ const Evaluation = () => {
     console.log(data)
   return (
     <>
-        <Modal className="modalContainer"
+          <Dialog open={openDialog} onClose={handleCloseDialog}>
+        <DialogTitle>Login to Grant Access</DialogTitle>
+        <DialogContent>
+          <DialogContentText>
+            This will use for the special case scenario if the Admin, Employee or Mayor wants an applicants with a failed score to be passed
+          </DialogContentText>
+          <TextField
+            autoFocus
+            margin="dense"
+            id="name"
+            label="Email Address"
+            type="email"
+            fullWidth
+            variant="standard"
+          />
+          <TextField
+            autoFocus
+            margin="dense"
+            id="name"
+            label="Password"
+            type="password"
+            fullWidth
+            variant="standard"
+          />
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={handleCloseDialog}>Cancel</Button>
+          <Button onClick={handleCloseDialog}>Submit</Button>
+        </DialogActions>
+      </Dialog>
+    <Modal className="modalContainer"
         open={open}
         onClose={handleClose}
       >
@@ -609,9 +654,60 @@ const Evaluation = () => {
         <Sidebar/>
         <div className="scholarsContainer">
             <Navbar/>
-            <Card sx={{width:'100%%',margin:'10px'}} elevation={3}>
+            <Card sx={{width:'97%',margin:'10px',padding:'10px',display:'flex',justifyContent:'flex-end',flexDirection:'column',alignItems:'flex-end'}} elevation={3}>
             <div className='evluationcon'>
-              <h1 style={{marginLeft:'10px'}}>Registered Applicants</h1>
+              <div style={{width:'100%',height: 100,display:'flex',justifyContent:'space-between',padding:10}}>
+                  <div style={{display:'flex',flexDirection:'column',justifyContent:'space-between',height:'100%'}}>
+                  <h1>Registered Applicants</h1>
+                  <Breadcrumbs aria-label="breadcrumb">
+                  <Typography
+              sx={{ display: 'flex', alignItems: 'center' }}
+              color="text.primary"
+            >
+              <FormatListBulletedOutlinedIcon sx={{ mr: 0.5 }} fontSize="inherit" />
+              All(1)
+            </Typography>
+            <Typography
+              sx={{ display: 'flex', alignItems: 'center' }}
+              color="text.primary"
+            >
+              <CheckCircleIcon sx={{ mr: 0.5 }} fontSize="inherit" />
+              Passed(1)
+            </Typography>
+            <Typography
+              sx={{ display: 'flex', alignItems: 'center' }}
+              color="text.primary"
+            >
+              <CancelIcon sx={{ mr: 0.5 }} fontSize="inherit" />
+              Failed(0)
+            </Typography>
+          </Breadcrumbs>
+                  </div>
+                  <div style={{marginRight:25}}>
+                    <div style={{display:'flex',flexDirection:'column',justifyContent:'space-between',height:'100%'}}>
+                    <TextField
+                        id="outlined-number"
+                        label="Passing Score"
+                        type="number"
+                        size='small'
+                        value={'80'}
+                        InputLabelProps={{
+                          shrink: true,
+                        }}
+                      />
+                    <TextField
+                        id="outlined-number"
+                        label="Available Slot"
+                        type="number"
+                        size='small'
+                        value={'20'}
+                        InputLabelProps={{
+                          shrink: true,
+                        }}
+                      />
+                    </div>
+                  </div>
+              </div>
               <Box sx={{ height: 400, width: '100%' }}>
       <DataGrid
         rows={data}
@@ -631,6 +727,9 @@ const Evaluation = () => {
       />
     </Box>
               
+            </div>
+            <div sx={{width:'90%',margin:'10px',display:'flex',justifyContent:'flex-end',flexDirection:'column',alignItems:'flex-end'}}>
+              <Button sx={{margin:'10px'}} variant='contained'>ADD ALL SELECTED TO APPLICANT LIST</Button>
             </div>
             </Card>
         </div>

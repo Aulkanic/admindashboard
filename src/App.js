@@ -9,7 +9,10 @@ import Users from './pages/users/Users';
 import Appointment from './pages/appointments/Appointment';
 import Scholars from './pages/scholars/Scholars';
 import Evaluation from './pages/Evaluation/evaluation';
+import Rule from './pages/Rules/rule';
+import Website from './pages/Website/website';
 import News from './pages/new/New';
+import Announcement from './pages/Announcement/announcement';
 import { BrowserRouter, Routes, Route,} from "react-router-dom";
 import Single from './pages/single/Single';
 import { createContext } from 'react';
@@ -44,6 +47,9 @@ function App() {
           <Route path='appointments' element={<Appointment/>} />
           <Route path='scholars' element={<Scholars/>} />
           <Route path='Evaluation' element={<Evaluation/>} />
+          <Route path='Rules' element={<Rule/>} />
+          <Route path='Announcement' element={<Announcement/>} />
+          <Route path='Website-Maintenance' element={<Website/>} />
         </Route>
       </Routes>
       </admininfo.Provider>

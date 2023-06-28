@@ -107,7 +107,7 @@ const Scholars = () => {
   const columns = [
     { 
       field: 'scholarId', 
-      headerName: 'Scholar ID',
+      headerName: 'ID',
       width: 79
      },
      {
@@ -124,7 +124,7 @@ const Scholars = () => {
     {
       field: 'Name',
       headerName: 'Name',
-      width: 230,
+      width: 200,
       editable: false,
     },
     {

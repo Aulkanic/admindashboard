@@ -103,19 +103,24 @@ const Sidebar = () => {
             </Link>
 
             <p className="title"> Maintenance </p>
-
+            <Link to='/Announcement' style={{ textDecoration: 'none'}}>
             <li>
               <AnnouncementIcon className='icon'/>
               <span> Announcement </span>
             </li>
+            </Link>
+            <Link to='/Rules' style={{ textDecoration: 'none'}}>
             <li>
               <AnnouncementIcon className='icon'/>
               <span> Rules </span>
             </li>
+            </Link>
+            <Link to='/Website-Maintenance' style={{ textDecoration: 'none'}}>
             <li>
               <AnnouncementIcon className='icon'/>
-              <span> BMCC Web </span>
+              <span> BMCC Website </span>
             </li>
+            </Link>
 
             <Link to='/news' style={{ textDecoration: 'none'}}>
             <li>
@@ -124,12 +129,12 @@ const Sidebar = () => {
             </li> 
             </Link>
             
+            <Link to='/Report' style={{ textDecoration: 'none'}}>
             <li>
-    
-              <ReportIcon className='icon'/>
+              <AnnouncementIcon className='icon'/>
               <span> Reports </span>
-          
             </li>
+            </Link>
 
 <           Link to='/' style={{ textDecoration: "none"}}>
             <li>
