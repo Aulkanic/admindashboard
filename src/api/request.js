@@ -122,3 +122,12 @@ export const ScholarStand = {
 export const FetchingAnnounce = {
     FETCH_ANNOUNCE: () => axiosInstance.get(Endpoints.FETCH_ANNOUNCEMENT)
 }
+export const FetchingReportApp = {
+    FETCH_APPLICANTS: () => axiosInstance.get(Endpoints.FETCH_REPORTAPP)
+}
+export const FetchingReportScho = {
+    FETCH_SCHOLARS: () => axiosInstance.get(Endpoints.FETCH_REPORTSCHO)
+}
+export const FetchingReportUser = {
+    FETCH_USERACCS: () => axiosInstance.get(Endpoints.FETCH_REPORTUSER)
+}

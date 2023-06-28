@@ -37,7 +37,10 @@ const Endpoints = {
     UPDATE_EMP: 'admin/Update',
     UPDATE_PASS: 'admin/Updatepassword',
     UPDATE_PROFILE: 'admin/Updateprofile',
-    FETCH_ANNOUNCEMENT:'announce/Announced'
+    FETCH_ANNOUNCEMENT:'announce/Announced',
+    FETCH_REPORTAPP:'Reports/Applicants',
+    FETCH_REPORTSCHO:'Reports/Scholars',
+    FETCH_REPORTUSER:'Reports/UserAccounts',
 }
 
 export default Endpoints
