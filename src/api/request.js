@@ -131,3 +131,6 @@ export const FetchingReportScho = {
 export const FetchingReportUser = {
     FETCH_USERACCS: () => axiosInstance.get(Endpoints.FETCH_REPORTUSER)
 }
+export const LogoutAdmin = {
+    SET_LOGOUT: (data) => axiosInstance.post(Endpoints.SET_OFFLINE,data)
+}

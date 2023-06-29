@@ -4,6 +4,7 @@ import {login} from '../../api/request'
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useContext } from "react";
+import swal from "sweetalert";
 
 const Login = () => {
     const { loginUser } = useContext(admininfo);
@@ -17,11 +18,22 @@ const Login = () => {
       console.log(res.data)
       if(res.data.message === 'Success'){
         loginUser(res.data.userDetails)
+        localStorage.setItem('AdminisOnline',true)
         navigate('/home');
-        alert(res.data.message)
+        swal({
+          text: 'Login Success',
+          timer: 2000,
+          buttons: false,
+          icon: "success",
+        })
       }
      else{
-      alert(res.data.message);
+      swal({
+        text: `${res.data.message}`,
+        timer: 2000,
+        buttons: false,
+        icon: "error",
+      })
       navigate('/');
      }
      })
@@ -33,7 +45,7 @@ const Login = () => {
     <div className="login">
       <div className="container">
     <h3> BMCC Admin </h3>
-    <img src="https://scontent.fcrk1-4.fna.fbcdn.net/v/t39.30808-6/320078628_1906759176338094_6278034478351068357_n.jpg?_nc_cat=102&ccb=1-7&_nc_sid=09cbfe&_nc_eui2=AeGKt9dCeDN118HQ2R7lz8_Pt2YS-hgqcNS3ZhL6GCpw1LM2aiEzzSdSpafO9QJl6dEWT9Adc6-PRhcPSOoZTfjT&_nc_ohc=PCXJ4Z3i6uEAX8bv9SM&_nc_ht=scontent.fcrk1-4.fna&oh=00_AfCpK3ObDaoguj-Xjk8pQuRHRrrXtOnbnz-jrfzKCHDYxg&oe=6494D276" 
+    <img style={{borderRadius:50}} src="https://drive.google.com/uc?id=1Vg5RGP_vmahLzh-ptNacTpgxGyoLbOPl" 
          alt=""/>
     <form>
       <div className="form-group">

@@ -12,11 +12,34 @@ import AnnouncementIcon from '@mui/icons-material/Announcement';
 import FeedIcon from '@mui/icons-material/Feed';
 import ReportIcon from '@mui/icons-material/Report';
 import LogoutIcon from '@mui/icons-material/Logout';
+import { Tabs, Tab, Box, Modal,Card,Button } from "@mui/material"; 
+import { LogoutAdmin } from '../../api/request';
+import { Link, useNavigate } from 'react-router-dom';
+import { useContext } from "react";
+import { admininfo } from "../../App";
+import swal from 'sweetalert';
 
-import { Link } from 'react-router-dom';
 
 const Sidebar = () => {
-
+  const { loginUser,user } = useContext(admininfo);
+  const navigate = useNavigate();
+  const Logout = async() =>{
+    const formData = new FormData();
+    formData.append('id',user.id)
+      const res = await LogoutAdmin.SET_LOGOUT(formData)
+      if(res.data.success === 0){
+        swal(res.data.message)
+      }else{
+        localStorage.setItem('AdminisLogin',false)
+        swal({
+          text: 'Logging Out....',
+          timer: 2000,
+          buttons: false,
+        })
+        await new Promise((resolve) => setTimeout(resolve, 2000));
+        navigate('/')
+      }
+  }
   return (
     <div className='sidebar'>
 
@@ -136,11 +159,13 @@ const Sidebar = () => {
             </li>
             </Link>
 
-<           Link to='/' style={{ textDecoration: "none"}}>
+<           Link style={{ textDecoration: "none"}}>
+            <Button onClick={Logout}>
             <li>
               <LogoutIcon className='icon'/>
               <span> Logout </span>
             </li>
+            </Button>
             </Link>
 
           </ul>

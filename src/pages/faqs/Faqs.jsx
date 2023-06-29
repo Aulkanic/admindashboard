@@ -4,7 +4,7 @@ import './faqs.scss';
 import './employeeaccs.css'
 import { useEffect, useState } from 'react';
 import { AddBMCC,FetchingBMCC,Activitylog,UpdateEmp } from '../../api/request';
-import { Box, Modal} from "@mui/material"; 
+import { Box, Modal,Card,Button, Typography} from "@mui/material"; 
 import TextField from '@mui/material/TextField';
 import { useContext } from "react";
 import { admininfo } from "../../App";
@@ -16,6 +16,18 @@ import RadioGroup from '@mui/material/RadioGroup';
 import FormControlLabel from '@mui/material/FormControlLabel';
 import FormLabel from '@mui/material/FormLabel';
 import Avatar from '@mui/material/Avatar';
+import Chip from '@mui/material/Chip';
+import { purple } from '@mui/material/colors';
+import '../Button style/button.css'
+import swal from 'sweetalert';
+
+const ColorButton = styled(Button)(({ theme }) => ({
+  color: theme.palette.getContrastText(purple[500]),
+  backgroundColor: purple[500],
+  '&:hover': {
+    backgroundColor: purple[700],
+  },
+}));
 
 const Faqs = () => {
   const { loginUser,user } = useContext(admininfo);
@@ -30,7 +42,7 @@ const Faqs = () => {
   const [open, setOpen] = useState(false);
   const [open1, setOpen1] = useState(false);
   const [errors, setErrors] = useState({});
-console.log(user)
+  const [activeState,setActiveState] = useState('log');
 
 const CustomDataGrid = styled(DataGrid)({
   '& .MuiDataGrid-columnHeaders': {
@@ -47,29 +59,43 @@ const CustomDataGrid = styled(DataGrid)({
     height: '400',
     bgcolor: 'background.paper',
     border: '2px solid #000',
-    boxShadow: 24,
     overflow: 'auto',
+    padding:'10px',
+    borderRadius:'10px'
+  };
+
+  const handleClick = () => {
+    if(user.name !== 'Admin'){
+      swal({
+        text: 'UnAuthorized Access',
+        timer: 2000,
+        buttons: false,
+        icon: "error",
+      })
+      return
+    }
+    setActiveState(activeState === 'log' ? 'admin' : 'log');
   };
 
   const columns = [
-    { field: 'activityLog', headerName: 'ID', width: 50 },
+    { field: 'activityLog', headerName: 'Log ID', width: 100 },
     {
       field: 'name',
       headerName: 'Employee Name',
-      width: 150,
-      editable: true,
+      width: 350,
+      editable: false,
     },
     {
       field: 'action',
       headerName: 'Action',
-      width: 130,
-      editable: true,
+      width: 270,
+      editable: false,
     },
     {
       field: 'applicantNum',
       headerName: 'Applicant Code',
-      width: 150,
-      editable: true,
+      width: 200,
+      editable: false,
     },
     {
       field: 'date',
@@ -77,6 +103,71 @@ const CustomDataGrid = styled(DataGrid)({
       width: 170,
       editable: false,
     }
+  ];
+  const columns1 = [
+    { field: 'id', headerName: 'Employee ID', width: 100 },
+    {
+      field: 'profile',
+      headerName: 'Profile',
+      width: 120,
+      headerAlign: 'center',
+
+      renderCell: (params) => {
+
+        console.log(params)
+        const isOnline = params.row.isOnline;
+        
+        let chipColor = 'error'; 
+        let status = 'Offline';
+        if (isOnline === 'True') {
+          chipColor = 'success'; 
+          status = 'Online'
+        }
+        
+        return (
+          <Chip 
+            color={chipColor}
+            label={status}
+            avatar={
+              <Avatar
+                alt="No Image"
+                src={params.value}
+                sx={{ width: 35, height: 35 }}
+              />}/>
+        );},},
+
+    {
+      field: 'name',
+      headerName: 'Employee Name',
+      width: 250,
+      editable: false,
+    },
+    {
+      field: 'email',
+      headerName: 'Employee Email',
+      width: 250,
+      editable: false,
+    },
+    {
+      field: 'jobDescription',
+      headerName: 'Job Description',
+      width: 170,
+      editable: false,
+    },
+    {
+      field: 'status',
+      headerName: 'Account Status',
+      width: 150,
+      editable: false,
+    },
+    {
+      field: 'insert',
+      headerName: 'Actions',
+      width: 150,
+      renderCell: (params) => (
+        <Button style={{backgroundColor:'yellow',color:'blue',border:'2px solid blue'}} variant='contained' onClick={() => handleOpen1(params.row)}>Edit Details</Button>
+      ),
+    },
   ];
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
@@ -99,34 +190,6 @@ const CustomDataGrid = styled(DataGrid)({
         }
         Fetch();
   },[])
- const bmccemp = bmcc?.map((data) =>{
-  console.log(data)
-
-    return (
-      <>
-      <div className='emplycon'>
-        <div className="profemp">
-          {data.profile === '' ? (<Avatar
-           alt="No Image"
-           src={BMCC}
-          // sx={{ width: 45, height: 45 }}
-      />) : (<Avatar
-          alt="No Image"
-          src={data.profile}
-        // sx={{ width: 45, height: 45 }}
-      />)}
-        </div>
-
-        <div className="detemp">
-          <p>Name:{data.name}</p>
-          <p>Email:{data.email}</p>
-          <p>Job:{data.jobDescription}</p>
-          <p>Status:{data.status}</p>
-          <button className="editBtnEmp" onClick={() =>{handleOpen1(data)}}>Edit</button>
-        </div>
-      </div>
-      </>
-    )})
 
  const AddbMCC = (event) =>{
   event.preventDefault();
@@ -177,8 +240,6 @@ const UpdateBMCC = (event) =>{
    )
   .catch(err => console.log(err));
 }
-
- console.log(open)
   return (
     <div className="faqs">
         <Sidebar/>
@@ -190,10 +251,16 @@ const UpdateBMCC = (event) =>{
                   aria-describedby="modal-modal-description">
             <Box sx={style}>
               <div className="buttonclosed">
-              <button onClick={handleClose}>X</button>
+              <Button onClick={handleClose}>X</Button>
                 </div>
 
               <div className="form">
+                <Typography sx={{fontSize:35}}>
+                  Create Employee Accounts.
+                </Typography>
+                <Typography>
+                  Please input necessary Details
+                </Typography>
                 <TextField
                    label='Username' 
                     margin='normal' 
@@ -222,26 +289,28 @@ const UpdateBMCC = (event) =>{
                     onChange={(e) =>setJobdes(e.target.value)}  
                     color='secondary'
                     />
-
-                <button onClick={handleClose}>Cancel</button>
-                <button onClick={AddbMCC}>Add</button>
+                <div style={{margin:10,width:'100%',height:'30px',display:'flex',alignItems:'center',justifyContent:'space-between'}}>
+                <Button variant='contained' onClick={handleClose}>Cancel</Button>
+                <Button variant='contained' onClick={AddbMCC}>Add Employee</Button>
+                </div>
                 </div>
 
                
                 </Box>
             </Modal>
-
-
             <Modal
                 open={open1}
                 aria-labelledby="modal-modal-title"
                 aria-describedby="modal-modal-description">
                 <Box sx={style}>
-                <div className="buttonclosed">
-                <button onClick={handleClose1}>X</button>
+                <div style={{margin:10,width:'100%',height:'30px',display:'flex',alignItems:'center',justifyContent:'space-between'}}>
+                <Typography sx={{fontSize:35,fontWeight:700}}>Edit Employee Details</Typography>
+                <Button variant='contained' style={{padding:10,height:'100%',float:'right',marginRight:20}} onClick={handleClose1}>X</Button>
                 </div>
-                {olddata ? (<h1>Name: {olddata.name}</h1>) : (null)}
+
                 <div style={{margin: 20}} className="form">
+                {olddata ? (<h1 style={{fontWeight:'lighter'}}>Name: {olddata.name}</h1>) : (null)}
+                {olddata ? (<h1 style={{fontWeight:'lighter'}}>Email: {olddata.email}</h1>) : (null)}
                 <TextField
                    label='Job Description' 
                     margin='normal' 
@@ -249,7 +318,7 @@ const UpdateBMCC = (event) =>{
                     size='large'
                     fullWidth
                     onChange={(e) =>setUpJobdes(e.target.value)}  
-                    color='secondary'
+                    color='primary'
                     />
                 <FormLabel id="demo-row-radio-buttons-group-label">Account Status</FormLabel>
                 <RadioGroup
@@ -265,45 +334,78 @@ const UpdateBMCC = (event) =>{
                 <FormControlLabel value="Inactive" control={<Radio />} label="Inactive" />
                 </RadioGroup>
                 </div>
-                <button onClick={handleClose1}>Cancel</button>
-                <button onClick={UpdateBMCC}>Save Changes</button>
+                <div style={{width:'100%',display:'flex',justifyContent:'space-around'}}>
+                <Button variant='contained' onClick={handleClose1}>Cancel</Button>
+                <Button variant='contained' onClick={UpdateBMCC}>Save Changes</Button>
+                </div>
                 </Box>
             </Modal>
 
             <div className="top">
+              <Card elevation={0} style={{width:'100%',display:'flex',justifyContent:'space-around',height:100,alignItems:'center',border:'none'}}>
               <h1>Employee Accounts</h1>
+              <button  className='buttonStyle'
+              onClick={handleClick}
+              variant='contained' size='small'>
+                {activeState === 'log' && 'Manage Employee'}
+                {activeState === 'admin' && 'View Activity Log'}
+              </button>
+              </Card>
+              
               <div className="containeremaccs">
-                <div className="emacsslist">
-                  <h1>Employee List</h1>
-                  
-                  <div className='bmccEmp'>
-                    {bmccemp}
-                    <button className="addBtnEmp" onClick={handleOpen}> ADD </button>
-                  </div>
-                  
-                </div>
+                    {activeState === 'admin' && <div className="emacsslist">
+                      <div style={{width:'90%',display:'flex',justifyContent:'space-between',padding:10,alignItems:'center'}}>
+                      <h1>Employee List</h1>
+                      <Button sx={{backgroundColor:'green',height:'50%'}}
+                       className="addBtnEmp" variant='contained' onClick={handleOpen}> ADD EMPLOYEE </Button>
+                      </div>
+                      <div className='bmccEmp'>
+                      <CustomDataGrid 
+                      className='dataGrid'
+                        rows={bmcc}
+                        columns={columns1}
+                        autoHeight 
+                        autoPageSize
+                        getRowId={(row) => row.id}
+                        scrollbarSize={10}
+                        initialState={{
+                          pagination: {
+                            paginationModel: {
+                              pageSize: 10,
+                            },
+                          },
+                        }}
+                        pageSizeOptions={[25]}  
+                        disableRowSelectionOnClick
+                      />
+                        
+                      </div>
+                      
+                    </div>}
 
-                <div className="emaccsact">
-                  <h1>Activity Log</h1>
-                  <div className='dataGridCon'>
-                  <CustomDataGrid 
-                  className='dataGrid'
-                    rows={actlog}
-                    columns={columns}
-                    getRowId={(row) => row.activityLog}
-                    scrollbarSize={10}
-                    initialState={{
-                      pagination: {
-                        paginationModel: {
-                          pageSize: 10,
-                        },
-                      },
-                    }}
-                    pageSizeOptions={[25]}  
-                    disableRowSelectionOnClick
-                  />
-                  </div>
-                </div>
+                    {activeState === 'log' && <div className="emaccsact">
+                      <h1>Activity Log</h1>
+                      <div className='dataGridCon' style={{width:'100%'}}>
+                      <CustomDataGrid 
+                      className='dataGrid'
+                        rows={actlog}
+                        columns={columns}
+                        autoHeight 
+                        autoPageSize
+                        getRowId={(row) => row.activityLog}
+                        scrollbarSize={10}
+                        initialState={{
+                          pagination: {
+                            paginationModel: {
+                              pageSize: 10,
+                            },
+                          },
+                        }}
+                        pageSizeOptions={[25]}  
+                        disableRowSelectionOnClick
+                      />
+                      </div>
+                    </div>}
               </div>
             </div>
         </div>

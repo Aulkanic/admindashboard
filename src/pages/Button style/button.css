@@ -1,0 +1,35 @@
+
+.buttonStyle {
+    background-color: #ffd753;
+  border: 1px solid #ecff42;
+  border-radius: 6px;
+  box-sizing: border-box;
+  color: #005427;
+  cursor: pointer;
+  display: inline-block;
+  font-family: nunito,roboto,proxima-nova,"proxima nova",sans-serif;
+  font-size: 16px;
+  font-weight: 800;
+  line-height: 16px;
+  min-height: 40px;
+  outline: 0;
+  padding: 12px 14px;
+  text-align: center;
+  text-rendering: geometricprecision;
+  text-transform: none;
+  user-select: none;
+  -webkit-user-select: none;
+  touch-action: manipulation;
+  vertical-align: middle;
+}
+
+.buttonStyle:hover,
+.buttonStyle:active {
+  background-color:  #fdde79;
+  background-position: 0 0;
+  color: #005427;
+}
+
+.buttonStyle:active {
+  opacity: .5;
+}

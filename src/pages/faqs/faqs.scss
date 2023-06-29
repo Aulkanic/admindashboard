@@ -22,16 +22,12 @@
 
             .containeremaccs{
                 height: 100%;
-                display: flex;
                 width: 100%;
-                -webkit-box-shadow: 2px 4px 10px 1px rgba(0, 0, 0, 0.47);
-                box-shadow: 2px 4px 10px 1px rgba(105, 105, 105, 0.47);
-                
 
                 .emacsslist{
                     display: flex;
                     flex-direction: column;
-                    width: 50%;
+                    width:100%;
                     padding: 10px;
 
                     .bmccEmp{
@@ -50,7 +46,7 @@
                             border-radius: 10px;
                             font-size: 14px;
                             font-weight: 600;
-                            color: #005427;
+                            color: blue;
                             background-color:  #ace7b6;
                             cursor: pointer;
                         }
@@ -61,14 +57,13 @@
 
                 .emmaccsact{
                     padding: 10px;
-                    width: 50%;  
+                    width: 100%; 
                     
 
                     .dataGridCon{
+                        width: 100%;
                         padding: 10px;
                         margin: 10px;
-
-                
                     }
                 }
               
@@ -110,7 +105,7 @@
                         margin: 2px;
                         font-size: 14px;
                         font-weight: 600;
-                        color: #005427;
+                        color: blue;
                     }
 
                     .editBtnEmp{
@@ -119,8 +114,8 @@
                         padding: 5px;
                         font-size: 12px;
                         font-weight: 600;
-                        color: #005427;
-                        background-color:  #ace7b6;
+                        color: yellow;
+                        background-color:  blue;
                         cursor: pointer;
                     }
                 }
