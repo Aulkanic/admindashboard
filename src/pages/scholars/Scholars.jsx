@@ -160,11 +160,6 @@ const Scholars = () => {
       ),
     },
     {
-      field: 'renewdocs',
-      headerName: 'Renewal Submitted',
-      width: 160,
-    },
-    {
       field: 'standing',
       headerName: 'Standing',
       width: 110,

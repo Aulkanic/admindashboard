@@ -55,7 +55,7 @@ const Users = () => {
       field: 'applicantNum',
       headerName: 'Applicant ID',
       width: 90, 
-      headerAlign: 'center',
+      editable: false,
     
     },
 
@@ -63,8 +63,7 @@ const Users = () => {
       field: 'ScholarshipApplied',
       headerName: 'Scholarship Applied',
       width: 200,
-      editable: true,
-      headerAlign: 'center'
+      editable: false,
 
     },
     
@@ -72,17 +71,13 @@ const Users = () => {
       field: 'profile',
       headerName: 'Profile',
       width: 120,
-      headerAlign: 'center',
-
       renderCell: (params) => {
-
         console.log(params)
-        const isOnline = params.row.isOnline; // Assuming there's a field named 'online' in your data
-        
+        const isOnline = params.row.isOnline; 
         let chipColor = 'error'; 
         let status = 'Offline';
         if (isOnline === 'True') {
-          chipColor = 'success'; // Set color to green if user is online
+          chipColor = 'success'; 
           status = 'Online'
         }
         
@@ -103,7 +98,6 @@ const Users = () => {
       headerName: 'Name',
       width: 250,
       editable: true,
-      headerAlign: 'center',
     
     },
 
@@ -112,7 +106,7 @@ const Users = () => {
       headerName: 'Email',
       width: 250,
       editable: false,
-      headerAlign: 'center',
+
     
     },
 
@@ -121,7 +115,6 @@ const Users = () => {
       headerName: 'Remarks',
       width: 90,
       editable: false,
-      headerAlign: 'center',
     
     },
 
@@ -130,15 +123,25 @@ const Users = () => {
       headerName: 'Account Status',
       width: 110,
       headerAlign: 'center',
-      renderCell: (params) => (
-        <button className="deactivateBtn" onClick={() => handleButtonClick(params.row.applicantNum)}>
+      renderCell: (params) => {
+        let color1 = 'green'
+        if(params.value === "Inactive"){
+          color1 = 'yellow'
+        }
+        if(params.value === 'Deactivated'){
+          color1 ='red'
+        }
+        return(
+        <>
+        <button style={{backgroundColor: color1,color:'white'}}  className="deactivateBtn" onClick={() => handleButtonClick(params.row.applicantNum)}>
           {params.row.remarks === 'Active'
             ? 'Active'
             : params.row.remarks === 'Inactive'
             ? 'Inactive'
             : 'Deactivated'}
         </button>
-      ),
+        </>)
+      },
     },
   ];
 

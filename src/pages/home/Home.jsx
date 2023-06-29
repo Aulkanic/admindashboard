@@ -128,17 +128,10 @@ const Home = () => {
     <Card elevation={10} sx={{ minWidth: 275}}>
       <CardContent>
         <Typography sx={{ fontSize: 20 }} color="text.secondary" gutterBottom>
-          Word of the Day
+          Appointed Today
         </Typography>
         <Typography variant="h5" component="div">
-          benevolent
-        </Typography>
-        <Typography sx={{ mb: 1.5 }} color="text.secondary">
-          adjective
-        </Typography>
-        <Typography variant="body2">
-          well meaning and kindly.
-          <br />
+          0
         </Typography>
       </CardContent>
       <CardActions>

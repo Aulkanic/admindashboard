@@ -42,6 +42,7 @@ const Endpoints = {
     FETCH_REPORTSCHO:'Reports/Scholars',
     FETCH_REPORTUSER:'Reports/UserAccounts',
     SET_OFFLINE:"admin/Logout",
+    CREATE_ANNOUNCEMENT:'announce/createannounced',
 }
 
 export default Endpoints

@@ -11,10 +11,13 @@ import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
 import Avatar from '@mui/material/Avatar';
 import TextField from '@mui/material/TextField';
-import { FetchingAnnounce } from '../../api/request';
+import swal from 'sweetalert';
+import { FetchingAnnounce,CreateAnnouncement } from '../../api/request';
 
 const Announcement = () => {
     const [announced,setAnnounced] = useState([]);
+    const [title,setTitle] = useState('');
+    const [content,setContent] = useState('');
 
     useEffect(() =>{
         async function Fetch(){
@@ -47,6 +50,26 @@ const Announcement = () => {
         </>
       )
     })
+    const Create = async() =>{
+      const formData = new FormData();
+      formData.append('title', title);
+      formData.append('content',content)
+      await CreateAnnouncement.CREATE_ANNOUNCEMENT(formData)
+      .then(res => {
+        console.log(res)
+        const announce = res.data.Announce
+        setAnnounced(announce.reverse());
+        swal({
+          title: "Success",
+          text: "Being Announced!",
+          icon: "success",
+          button: "OK",
+        });
+      }
+       )
+      .catch(err => console.log(err));
+
+    }
   return (
     <>
     <div className="scholarships" style={{backgroundColor:'whitesmoke'}}>
@@ -70,7 +93,10 @@ const Announcement = () => {
                   </Typography>
                   <Typography variant="h5" component="div">
                   <Box sx={{ display: 'flex', alignItems: 'flex-end' }}>
-                  <TextField fullWidth id="input-with-sx" label="" variant="outlined" />
+                  <TextField
+                  onChange={(e) => setTitle(e.target.value)}
+                  value={title}
+                  fullWidth id="input-with-sx" label="" variant="outlined" />
                 </Box>
                   </Typography>
                 </CardContent>
@@ -81,12 +107,14 @@ const Announcement = () => {
                   <Typography variant="h5" component="div">
                   <Box sx={{ display: 'flex', alignItems: 'flex-end' }}>
                   <TextField multiline
+                    onChange={(e) => setContent(e.target.value)}
+                    value={content}
                     rows={10} fullWidth id="input-with-sx" label="" variant="outlined" />
                 </Box>
                   </Typography>
                 </CardContent>
                 <div style={{width:'100%',display:'flex',justifyContent:'center'}}>
-              <Button variant='contained'>Announce</Button>
+              <Button onClick={Create} variant='contained'>Announce</Button>
               </div>
               </Card>
               </div>

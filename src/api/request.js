@@ -134,3 +134,6 @@ export const FetchingReportUser = {
 export const LogoutAdmin = {
     SET_LOGOUT: (data) => axiosInstance.post(Endpoints.SET_OFFLINE,data)
 }
+export const CreateAnnouncement = {
+    CREATE_ANNOUNCEMENT: (data) => axiosInstance.post(Endpoints.CREATE_ANNOUNCEMENT,data)
+}
