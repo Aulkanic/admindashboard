@@ -2,15 +2,15 @@ import React, { useEffect, useState } from 'react'
 import './evaluation.css'
 import Sidebar from '../../components/sidebar/Sidebar'
 import Navbar from '../../components/navbar/Navbar'
-import { DataGrid} from '@mui/x-data-grid';
+import { DataGrid,} from '@mui/x-data-grid';
 import { Tabs, Tab, Box, Modal,Card,Button } from "@mui/material";  
 import { ApplicantsRequest, FetchingApplicantsInfo, ListofSub,
-    CheckingSubs, CheckingApplicants,UserScore,SetApplicant,FailedUser,FetchingBmccSchoinfo } from "../../api/request";
+    CheckingSubs, CheckingApplicants,UserScore,SetApplicant,FailedUser,FetchingBmccSchoinfo,
+      UpdatePassSlots,FetchPassSlots,DecrePassSlots,GrantAccess } from "../../api/request";
 import TextField from '@mui/material/TextField';
 import swal from 'sweetalert';
 import Typography from '@mui/material/Typography';
 import Breadcrumbs from '@mui/material/Breadcrumbs';
-import Link from '@mui/material/Link';
 import Dialog from '@mui/material/Dialog';
 import DialogActions from '@mui/material/DialogActions';
 import DialogContent from '@mui/material/DialogContent';
@@ -19,8 +19,15 @@ import DialogTitle from '@mui/material/DialogTitle';
 import CheckCircleIcon from '@mui/icons-material/CheckCircle';
 import CancelIcon from '@mui/icons-material/Cancel';
 import FormatListBulletedOutlinedIcon from '@mui/icons-material/FormatListBulletedOutlined';
+import { useContext } from "react";
+import { admininfo } from "../../App";
+import Link from '@mui/material/Link';
+
 const Evaluation = () => {
+  const { loginUser,user } = useContext(admininfo);
     const [data, setData] = useState([]);
+    const [email,setEmail] = useState('');
+    const [password,setPassword] = useState('')
     const [userscore,setUserScore] = useState([]);
     const [selectedInfo, setSelectedInfo] = useState({});
     const [applicantsInfo, setApplicantInfo] = useState([]);
@@ -28,20 +35,39 @@ const Evaluation = () => {
     const [open, setOpen] = useState(false);
     const handleOpen = () => setOpen(true);
     const handleClose = () => setOpen(false);
+    const [passSlot,setPassSlot] = useState([]);
+    const [passscore, setPassscore] = useState('');
+    const [slots, setSlots] = useState('');
+    const [isButtonVisible, setIsButtonVisible] = useState(false);
     const [openDialog, setOpenDialog] = useState(false);
-    const handleOpenDialog = () => setOpenDialog(true);
     const handleCloseDialog = () => setOpenDialog(false);
+    const [activeState,setActiveState] = useState('All');
+    const [rowSelectionModel, setRowSelectionModel] = useState([]);
+    const [hasAccess,setHasAccess] = useState(false);
+    const [who,setWho] = useState('');
 
-
+    const handleOpenDialog = (data) => {
+      console.log(data)
+      setOpenDialog(true);
+      setWho(data.applicantNum)
+    }
     useEffect(() => {
 
         async function Fetch(){
-          const response = await ApplicantsRequest.ALL_APPLICANTS()
+          const response = await ApplicantsRequest.ALL_APPLICANTS();
+          const pass = await FetchPassSlots.FETCH_PASSSLOTS()
           console.log(response)
-          setData(response.data.results);
+          const ForEva = response.data.results?.filter(user => user.status === 'For Evaluation')
+          console.log(ForEva)
+          setData(ForEva);
+          setPassSlot(pass.data.result[0])
         }
         Fetch();
       }, []);
+      useEffect(() => {
+        setIsButtonVisible(passscore !== '' || slots !== '');
+      }, [passscore,slots]);
+    
       const view = async (data) => {
         console.log(data)
         const applicantNum = data.applicantNum;
@@ -83,6 +109,11 @@ const Evaluation = () => {
           swal('Something Went Wrong')
         }
       }
+      const handleRowSelectionModelChange = (newRowSelectionModel) => {
+        console.log(newRowSelectionModel)
+        setRowSelectionModel(newRowSelectionModel);
+
+      };
     const columns = [
         { 
           field: 'applicantNum', 
@@ -119,10 +150,15 @@ const Evaluation = () => {
           editable: false,
         },
         {
-          field: 'score',
+          field: 'stat',
           headerName: 'Score',
           width: 70,
           editable: false,
+          renderCell: (params) =>(
+            <>
+            <p>{params.row.score}</p>
+            </>
+          ),
         },
         {
             field: 'insert',
@@ -131,33 +167,214 @@ const Evaluation = () => {
             renderCell: (params) => (
                 <>
                 <div style={{display:'flex',flexDirection:'column',height:'100%',width:'100%',justifyContent:'center',alignItems:'center'}}>
-              <button style={{marginLeft:'5px',backgroundColor:'blue',border:'none',padding:'3px',width:'100%',margin:'2px',color:'white',borderRadius:'5px',cursor:'pointer'}}
-               onClick={() => view(params.row)}>View Details</button>
-              </div>
+                <button style={{marginLeft:'5px',backgroundColor:'blue',border:'none',padding:'3px',width:'100%',margin:'2px',color:'white',borderRadius:'5px',cursor:'pointer'}}
+                onClick={() => view(params.row)}>View Details</button>
+                </div>
               </>
             ),
           },
           {
-            field: 'insert1',
+            field: 'score',
             headerName: 'Details',
             width: 250,
+            renderCell: (params) => {
+              let status
+              if(params.value >= passSlot.passingscore){
+                status = 'Passed'
+              }
+              if(params.value < passSlot.passingscore){
+                status = 'Failed'
+              }
+              return(
+                <>
+                <div style={{width:"100%",display:'flex',flexDirection:'column',height:'100%',justifyContent:'center',alignItems:'center'}}>
+              {status === 'Passed' && <button style={{marginLeft:'5px',backgroundColor:'green',border:'none',padding:'3px',width:'100%',margin:'2px',color:'white',borderRadius:'5px',cursor:'pointer'}} 
+              onClick={() => setFirsttoSecStat(params.row)}>
+                Add to Applicants List
+                </button>}
+              {status === 'Failed' && (<>
+                {params.row.grantedAccess === '' || !params.row.grantedAccess ? (<button style={{marginLeft:'5px',backgroundColor:'yellow',color:'green',border:'none',padding:'3px',width:'100%',margin:'2px',borderRadius:'5px',cursor:'pointer'}}  
+              onClick={() =>handleOpenDialog(params.row)}>
+                Access</button>) : (<button style={{marginLeft:'5px',backgroundColor:'green',border:'none',padding:'3px',width:'100%',margin:'2px',color:'white',borderRadius:'5px',cursor:'pointer'}} 
+              onClick={() => setFirsttoSecStat(params.row)}>
+                Add to Applicants List
+                </button>)}
+                <button style={{marginLeft:'5px',backgroundColor:'red',border:'none',padding:'3px',width:'100%',margin:'2px',color:'white',borderRadius:'5px',cursor:'pointer'}} 
+              onClick={() => failed(params.row)}>
+                Failed
+                </button>
+                </>)}
+              </div>
+              </>)
+            },
+          },
+    
+      ];
+    const passedColumn = [
+        { 
+          field: 'applicantNum', 
+          headerName: 'Registry ID',
+          width: 100
+         },
+         {
+           field: 'applicantCode', 
+            headerName: 'Applicant Code',
+          width: 150
+          },
+        {
+          field: 'SchoIarshipApplied',
+          headerName: 'Scholarship Applied',
+          width: 150,
+          editable: false,
+        },
+        {
+          field: 'Name',
+          headerName: 'Name',
+          width: 150,
+          editable: false,
+        },
+        {
+          field: 'DateApplied',
+          headerName: 'Date Applied',
+          width: 150,
+          editable: false,
+        },
+        {
+          field: 'status',
+          headerName: 'Status',
+          width: 100,
+          editable: false,
+        },
+        {
+          field: 'stat',
+          headerName: 'Score',
+          width: 70,
+          editable: false,
+          renderCell: (params) =>(
+            <>
+            <p>{params.row.score}</p>
+            </>
+          ),
+        },
+        {
+            field: 'insert',
+            headerName: 'Actions',
+            width: 100,
             renderCell: (params) => (
                 <>
-                <div style={{width:"100%",display:'flex',flexDirection:'column',height:'100%'}}>
-              <button style={{marginLeft:'5px',backgroundColor:'green',border:'none',padding:'3px',width:'100%',margin:'2px',color:'white',borderRadius:'5px',cursor:'pointer'}} 
-              onClick={() => setFirsttoSecStat(params.row)}>Add to Applicants List</button>
-              <button style={{marginLeft:'5px',backgroundColor:'red',border:'none',padding:'3px',width:'100%',margin:'2px',color:'white',borderRadius:'5px',cursor:'pointer'}}  
-              onClick={handleOpenDialog}>Access</button>
-              </div>
+                <div style={{display:'flex',flexDirection:'column',height:'100%',width:'100%',justifyContent:'center',alignItems:'center'}}>
+                <button style={{marginLeft:'5px',backgroundColor:'blue',border:'none',padding:'3px',width:'100%',margin:'2px',color:'white',borderRadius:'5px',cursor:'pointer'}}
+                onClick={() => view(params.row)}>View Details</button>
+                </div>
               </>
             ),
+          },
+          {
+            field: 'score',
+            headerName: 'Details',
+            width: 250,
+            renderCell: (params) => {
+              return(
+                <>
+                <div style={{width:"100%",display:'flex',flexDirection:'column',height:'100%',justifyContent:'center',alignItems:'center'}}>
+              <button style={{marginLeft:'5px',backgroundColor:'green',border:'none',padding:'3px',width:'100%',margin:'2px',color:'white',borderRadius:'5px',cursor:'pointer'}} 
+              onClick={() => setFirsttoSecStat(params.row)}>
+                Add to Applicants List
+                </button>
+              </div>
+              </>)
+            },
+          },
+    
+      ];
+      const failedColumn = [
+        { 
+          field: 'applicantNum', 
+          headerName: 'Registry ID',
+          width: 100
+         },
+         {
+           field: 'applicantCode', 
+            headerName: 'Applicant Code',
+          width: 150
+          },
+        {
+          field: 'SchoIarshipApplied',
+          headerName: 'Scholarship Applied',
+          width: 150,
+          editable: false,
+        },
+        {
+          field: 'Name',
+          headerName: 'Name',
+          width: 150,
+          editable: false,
+        },
+        {
+          field: 'DateApplied',
+          headerName: 'Date Applied',
+          width: 150,
+          editable: false,
+        },
+        {
+          field: 'status',
+          headerName: 'Status',
+          width: 100,
+          editable: false,
+        },
+        {
+          field: 'stat',
+          headerName: 'Score',
+          width: 70,
+          editable: false,
+          renderCell: (params) =>(
+            <>
+            <p>{params.row.score}</p>
+            </>
+          ),
+        },
+        {
+            field: 'insert',
+            headerName: 'Actions',
+            width: 100,
+            renderCell: (params) => (
+                <>
+                <div style={{display:'flex',flexDirection:'column',height:'100%',width:'100%',justifyContent:'center',alignItems:'center'}}>
+                <button style={{marginLeft:'5px',backgroundColor:'blue',border:'none',padding:'3px',width:'100%',margin:'2px',color:'white',borderRadius:'5px',cursor:'pointer'}}
+                onClick={() => view(params.row)}>View Details</button>
+                </div>
+              </>
+            ),
+          },
+          {
+            field: 'grantedAccess',
+            headerName: 'Details',
+            width: 250,
+            renderCell: (params) => {
+              console.log(params.row)
+              return(
+                <>
+                <div style={{width:"100%",display:'flex',flexDirection:'column',height:'100%',justifyContent:'center',alignItems:'center'}}>
+              {params.row.grantedAccess === '' || !params.row.grantedAccess ? (<button style={{marginLeft:'5px',backgroundColor:'yellow',color:'green',border:'none',padding:'3px',width:'100%',margin:'2px',borderRadius:'5px',cursor:'pointer'}}  
+              onClick={() =>handleOpenDialog(params.row)}>
+                Access</button>) : (<button style={{marginLeft:'5px',backgroundColor:'green',border:'none',padding:'3px',width:'100%',margin:'2px',color:'white',borderRadius:'5px',cursor:'pointer'}} 
+              onClick={() => setFirsttoSecStat(params.row)}>
+                Add to Applicants List
+                </button>)}
+                <button style={{marginLeft:'5px',backgroundColor:'red',border:'none',padding:'3px',width:'100%',margin:'2px',color:'white',borderRadius:'5px',cursor:'pointer'}} 
+              onClick={() => failed(params.row)}>
+                Failed
+                </button>
+              </div>
+              </>)
+            },
           },
     
       ];
       const handleTabChange = (event, newValue) => {
         setTabValue(newValue);
       };
-      const applicantInfoPA = applicantsInfo?.map((data) =>{
+    const applicantInfoPA = applicantsInfo?.map((data) =>{
         return (
           <div className="PA">
             <div className="Pinfo">
@@ -266,9 +483,9 @@ const Evaluation = () => {
           </div>
             </div>
         </div>
-            )});
+          )});
   
-  const applicantInfoFB = applicantsInfo?.map((data) =>{
+    const applicantInfoFB = applicantsInfo?.map((data) =>{
     const score = userscore?.map((data) =>{
       return data
     })
@@ -551,14 +768,24 @@ const Evaluation = () => {
         </>
           )})
 
-          const TabPanel = ({ children, value, index }) => (
+    const TabPanel = ({ children, value, index }) => (
             <div role="tabpanel" hidden={value !== index}>
               {value === index && <Box p={3}>{children}</Box>}
             </div>
           );
 
-    const setFirsttoSecStat = (data) =>{
+    const setFirsttoSecStat = async(data) =>{
         console.log(data)
+        if (passSlot.slots === 0) {
+          swal({
+            text: 'No Slots Available',
+            timer: 2000,
+            buttons: false,
+            icon: 'error',
+          });
+          return;
+        }
+        const decre = await DecrePassSlots.DECRE_PASSSLOTS();
         const formData = new FormData();
         formData.append('email',data.email);
         formData.append('applicantNum',data.applicantNum)
@@ -566,10 +793,11 @@ const Evaluation = () => {
         .then(res => {
           if(res.data.success === 1){
             console.log(res)
-            
-            setData(res.data.result)
-            setOpen(false)
-            swal('Status Updated')
+            setPassSlot(decre.data.results[0]);
+            setData(res.data.result);
+            setPassscore(decre.data.results[0].passingscore);
+            setSlots(decre.data.results[0].slots);
+            swal('Status Updated');
           }else{
             swal('Something Went Wrong')
           }
@@ -578,10 +806,151 @@ const Evaluation = () => {
            )
           .catch(err => console.log(err));
     }
-    console.log(data)
+    const ScoreSlot = () =>{
+      console.log(user)
+      if(user.name !== 'Admin'){
+        swal({
+          text: 'UnAuthorized Access',
+          timer: 2000,
+          buttons: false,
+          icon: "error",
+        })
+        setPassscore(passSlot.passingscore)
+        setSlots(passSlot.slots)
+        return
+      }
+      const data1 = passscore || passSlot.passingscore;
+      const data2 = slots || passSlot.slots
+      const formData = new FormData();
+      formData.append('passscore',data1);
+      formData.append('slots',data2)
+      UpdatePassSlots.UPDATE_PASSSLOTS(formData)
+      .then(res => {
+        if(res.data.success === 1){
+          console.log(res)
+          
+          setPassSlot(res.data.results[0])
+          swal('Updated')
+        }else{
+          swal('Something Went Wrong')
+        }
+
+        }
+         )
+        .catch(err => console.log(err));
+    }
+    const Addall = async () => {
+      console.log(rowSelectionModel);
+      const selectedRows = rowSelectionModel.map((selectedRow) =>
+        data.find((row) => row.applicantNum === selectedRow)
+      );
+    
+      if (passSlot.slots === 0) {
+        swal({
+          text: 'No Slots Available',
+          timer: 2000,
+          buttons: false,
+          icon: 'error',
+        });
+        return;
+      }else if(passSlot.slots < selectedRows.length){
+        swal({
+          text: 'Insufficient slots for Selected User',
+          timer: 2000,
+          buttons: false,
+          icon: 'error',
+        });
+        return;
+      }
+    
+      const decre = await DecrePassSlots.DECRE_PASSSLOTS();
+      console.log(decre);
+    
+      if (decre.data.success === 1) {
+        try {
+          for (let i = 0; i < selectedRows.length; i++) {
+            const row = selectedRows[i];
+    
+            if (passSlot.slots === 0) {
+              swal({
+                text: 'No Slots Available',
+                timer: 2000,
+                buttons: false,
+                icon: 'error',
+              });
+              break; 
+            }
+    
+            const formData = new FormData();
+            formData.append('email', row.email);
+            formData.append('applicantNum', row.applicantNum);
+    
+            const res = await SetApplicant.SET_APPLICANT(formData);
+            if (res.data.success === 1) {
+              console.log(res);
+              setPassSlot(decre.data.results[0]);
+              setData(res.data.result);
+              setPassscore(decre.data.results[0].passingscore);
+              setSlots(decre.data.results[0].slots);
+              swal('Status Updated');
+            } else {
+              swal('Something Went Wrong');
+            }
+          }
+        } catch (error) {
+          console.log(error);
+        }
+      } else {
+        swal({
+          text: 'No Slots Available',
+          timer: 2000,
+          buttons: false,
+          icon: 'error',
+        });
+        return;
+      }
+    };
+    const Access = async() =>{
+      const formData = new FormData();
+      formData.append('email',email);
+      formData.append('password',password);
+      formData.append('applicantNum',who)
+      await GrantAccess.GRANT_ACCESS(formData)
+      .then(res => {
+        if(res.data.success === 1){
+          console.log(res)
+          const ForEva = res.data.result?.filter(user => user.status === 'For Evaluation')
+          console.log(ForEva)
+          setData(ForEva);
+          setEmail('')
+          setPassword('')
+          swal({
+            text: res.data.message,
+            timer: 2000,
+            buttons: false,
+            icon: 'success',
+          });
+        }else{
+          swal({
+            text: res.data.message,
+            timer: 2000,
+            buttons: false,
+            icon: 'error',
+          });
+        }
+
+        }
+         )
+        .catch(err => console.log(err));
+      
+    }
+    
+    
+    const Passed = data?.filter(user => user.score >= passSlot.passingscore)
+    const Failed = data?.filter(user => user.score < passSlot.passingscore)
   return (
     <>
-          <Dialog open={openDialog} onClose={handleCloseDialog}>
+      <Dialog open={openDialog} onClose={handleCloseDialog}>
         <DialogTitle>Login to Grant Access</DialogTitle>
         <DialogContent>
           <DialogContentText>
@@ -591,6 +960,8 @@ const Evaluation = () => {
             autoFocus
             margin="dense"
             id="name"
+            value={email}
+            onChange={(e) =>setEmail(e.target.value)}
             label="Email Address"
             type="email"
             fullWidth
@@ -600,6 +971,8 @@ const Evaluation = () => {
             autoFocus
             margin="dense"
             id="name"
+            value={password}
+            onChange={(e) =>setPassword(e.target.value)}
             label="Password"
             type="password"
             fullWidth
@@ -608,7 +981,7 @@ const Evaluation = () => {
         </DialogContent>
         <DialogActions>
           <Button onClick={handleCloseDialog}>Cancel</Button>
-          <Button onClick={handleCloseDialog}>Submit</Button>
+          <Button onClick={Access}>Submit</Button>
         </DialogActions>
       </Dialog>
     <Modal className="modalContainer"
@@ -657,40 +1030,56 @@ const Evaluation = () => {
             <Card sx={{width:'97%',margin:'10px',padding:'10px',display:'flex',justifyContent:'flex-end',flexDirection:'column',alignItems:'flex-end'}} elevation={3}>
             <div className='evluationcon'>
               <div style={{width:'100%',height: 100,display:'flex',justifyContent:'space-between',padding:10}}>
-                  <div style={{display:'flex',flexDirection:'column',justifyContent:'space-between',height:'100%'}}>
+                  <div style={{width:'30%',display:'flex',flexDirection:'column',justifyContent:'space-between',height:'100%'}}>
                   <h1>Registered Applicants</h1>
-                  <Breadcrumbs aria-label="breadcrumb">
-                  <Typography
-              sx={{ display: 'flex', alignItems: 'center' }}
-              color="text.primary"
-            >
-              <FormatListBulletedOutlinedIcon sx={{ mr: 0.5 }} fontSize="inherit" />
-              All(1)
-            </Typography>
-            <Typography
-              sx={{ display: 'flex', alignItems: 'center' }}
-              color="text.primary"
-            >
-              <CheckCircleIcon sx={{ mr: 0.5 }} fontSize="inherit" />
-              Passed(1)
-            </Typography>
-            <Typography
-              sx={{ display: 'flex', alignItems: 'center' }}
-              color="text.primary"
-            >
-              <CancelIcon sx={{ mr: 0.5 }} fontSize="inherit" />
-              Failed(0)
-            </Typography>
-          </Breadcrumbs>
+                  <Breadcrumbs sx={{backgroundColor:'green'}} aria-label="breadcrumb">
+                  <Button onClick={() => setActiveState('All')}>
+                    <Link
+                      underline="none"
+                      sx={{
+                        color: activeState === 'All' ? 'white' : 'black',
+                      }}
+                    >
+                      <FormatListBulletedOutlinedIcon fontSize="inherit" />
+                      All({data.length})
+                    </Link>
+                  </Button>
+                  <Button onClick={() => setActiveState('Passed')}>
+                    <Link
+                      underline="none"
+                      sx={{
+                        color: activeState === 'Passed' ? 'white' : 'black',
+                      }}
+                    >
+                      <CheckCircleIcon sx={{ mr: 0.5 }} fontSize="inherit" />
+                      Passed({Passed.length})
+                    </Link>
+                  </Button>
+                  <Button onClick={() => setActiveState('Failed')}>
+                    <Link
+                      underline="none"
+                      sx={{
+                        color: activeState === 'Failed' ? 'white' : 'black',
+                      }}
+                    >
+                      <CancelIcon sx={{ mr: 0.5 }} fontSize="inherit" />
+                      Failed({Failed.length})
+                    </Link>
+                  </Button>
+                  </Breadcrumbs>
                   </div>
-                  <div style={{marginRight:25}}>
-                    <div style={{display:'flex',flexDirection:'column',justifyContent:'space-between',height:'100%'}}>
+                  <div style={{marginRight:5,height:'100%'}}>
+                    <div style={{display:'flex',flexDirection:'column',height:'100%',width:'100%',alignItems:'center'}}>
+                      <div style={{width:'100%',alignItems:'center',justifyContent:'center',display:'flex',margin:10}}>
                     <TextField
                         id="outlined-number"
                         label="Passing Score"
-                        type="number"
+                        type="text"
                         size='small'
-                        value={'80'}
+                        placeholder={passSlot.passingscore}
+                        sx={{width:'30%',marginRight:5}}
+                        value={passscore}
+                        onChange={(e) => setPassscore(e.target.value)}
                         InputLabelProps={{
                           shrink: true,
                         }}
@@ -698,39 +1087,80 @@ const Evaluation = () => {
                     <TextField
                         id="outlined-number"
                         label="Available Slot"
-                        type="number"
+                        placeholder={passSlot.slots}
+                        type="text"
                         size='small'
-                        value={'20'}
+                        sx={{width:'30%'}}
+                        onChange={(e) =>setSlots(e.target.value)}
+                        value={slots}
                         InputLabelProps={{
                           shrink: true,
                         }}
                       />
+                      </div>
+                      <div>
+                      {isButtonVisible && <Button onClick={ScoreSlot} variant='contained' size='small'>Save Changes</Button>}
+                      </div>
                     </div>
                   </div>
               </div>
               <Box sx={{ height: 400, width: '100%' }}>
-      <DataGrid
-        rows={data}
-        columns={columns}
-        getRowId={(row) => row.applicantNum}
-        scrollbarSize={10}
-        initialState={{
-          pagination: {
-            paginationModel: {
-              pageSize: 5,
-            },
-          },
-        }}
-        pageSizeOptions={[25]}
-        checkboxSelection
-        disableRowSelectionOnClick
-      />
-    </Box>
+                {activeState === 'All' && <DataGrid
+                  rows={data}
+                  columns={columns}
+                  getRowId={(row) => row.applicantNum}
+                  scrollbarSize={10}
+                  initialState={{
+                    pagination: {
+                      paginationModel: {
+                        pageSize: 5,
+                      },
+                    },
+                  }}
+                  pageSizeOptions={[25]}
+                  checkboxSelection
+                  disableRowSelectionOnClick
+                />}
+                {activeState === 'Passed' && <DataGrid
+                  rows={Passed}
+                  columns={passedColumn}
+                  getRowId={(row) => row.applicantNum}
+                  scrollbarSize={10}
+                  initialState={{
+                    pagination: {
+                      paginationModel: {
+                        pageSize: 5,
+                      },
+                    },
+                  }}
+                  pageSizeOptions={[25]}
+                  checkboxSelection
+                  onRowSelectionModelChange={handleRowSelectionModelChange}
+                  rowSelectionModel={rowSelectionModel}
+                  disableRowSelectionOnClick
+                />}
+                {activeState === 'Failed' && <DataGrid
+                  rows={Failed}
+                  columns={failedColumn}
+                  getRowId={(row) => row.applicantNum}
+                  scrollbarSize={10}
+                  initialState={{
+                    pagination: {
+                      paginationModel: {
+                        pageSize: 5,
+                      },
+                    },
+                  }}
+                  pageSizeOptions={[25]}
+                  checkboxSelection
+                  disableRowSelectionOnClick
+                />}
+              </Box>
               
             </div>
-            <div sx={{width:'90%',margin:'10px',display:'flex',justifyContent:'flex-end',flexDirection:'column',alignItems:'flex-end'}}>
-              <Button sx={{margin:'10px'}} variant='contained'>ADD ALL SELECTED TO APPLICANT LIST</Button>
-            </div>
+            {activeState === 'Passed' && <div sx={{width:'90%',margin:'10px',display:'flex',justifyContent:'flex-end',flexDirection:'column',alignItems:'flex-end'}}>
+              <Button onClick={Addall} sx={{margin:'10px'}} variant='contained'>ADD ALL SELECTED TO APPLICANT LIST</Button>
+            </div>}
             </Card>
         </div>
     </div>

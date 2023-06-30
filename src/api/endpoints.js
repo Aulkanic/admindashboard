@@ -42,7 +42,11 @@ const Endpoints = {
     FETCH_REPORTSCHO:'Reports/Scholars',
     FETCH_REPORTUSER:'Reports/UserAccounts',
     SET_OFFLINE:"admin/Logout",
+    GRANT_ACCESS:"admin/GrantAccess",
     CREATE_ANNOUNCEMENT:'announce/createannounced',
+    UPDATE_SCORESLOT:'Dynamic/Update',
+    FETCH_SCORESLOT:'Dynamic/PassSlot',
+    DECRE_SCORESLOT:'Dynamic/DecreSlot',
 }
 
 export default Endpoints

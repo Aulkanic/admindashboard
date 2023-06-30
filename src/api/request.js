@@ -134,6 +134,18 @@ export const FetchingReportUser = {
 export const LogoutAdmin = {
     SET_LOGOUT: (data) => axiosInstance.post(Endpoints.SET_OFFLINE,data)
 }
+export const GrantAccess = {
+    GRANT_ACCESS: (data) => axiosInstance.post(Endpoints.GRANT_ACCESS,data)
+}
 export const CreateAnnouncement = {
     CREATE_ANNOUNCEMENT: (data) => axiosInstance.post(Endpoints.CREATE_ANNOUNCEMENT,data)
+}
+export const UpdatePassSlots = {
+    UPDATE_PASSSLOTS: (data) => axiosInstance.post(Endpoints.UPDATE_SCORESLOT,data)
+}
+export const DecrePassSlots = {
+    DECRE_PASSSLOTS: () => axiosInstance.post(Endpoints.DECRE_SCORESLOT)
+}
+export const FetchPassSlots = {
+    FETCH_PASSSLOTS: () => axiosInstance.get(Endpoints.FETCH_SCORESLOT)
 }
