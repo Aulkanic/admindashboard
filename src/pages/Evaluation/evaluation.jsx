@@ -43,6 +43,7 @@ const Evaluation = () => {
     const handleCloseDialog = () => setOpenDialog(false);
     const [activeState,setActiveState] = useState('All');
     const [rowSelectionModel, setRowSelectionModel] = useState([]);
+    const [failedSelectionModel,setFailedSelectionModel] = useState([]);
     const [hasAccess,setHasAccess] = useState(false);
     const [who,setWho] = useState('');
 
@@ -112,6 +113,11 @@ const Evaluation = () => {
       const handleRowSelectionModelChange = (newRowSelectionModel) => {
         console.log(newRowSelectionModel)
         setRowSelectionModel(newRowSelectionModel);
+
+      };
+      const handleFailedSelectionModelChange = (newFailedSelectionModel) => {
+        console.log(newFailedSelectionModel)
+        setFailedSelectionModel(newFailedSelectionModel);
 
       };
     const columns = [
@@ -840,7 +846,6 @@ const Evaluation = () => {
         .catch(err => console.log(err));
     }
     const Addall = async () => {
-      console.log(rowSelectionModel);
       const selectedRows = rowSelectionModel.map((selectedRow) =>
         data.find((row) => row.applicantNum === selectedRow)
       );
@@ -910,6 +915,30 @@ const Evaluation = () => {
         return;
       }
     };
+    const FailedAll = async() =>{
+      const selectedRows = failedSelectionModel.map((selectedRow) =>
+        data.find((row) => row.applicantNum === selectedRow));
+        for (let i=0 ;i<selectedRows.length;i++){
+          const row = selectedRows[i];
+          console.log(row)
+          const schoapplied = row.SchoIarshipApplied
+          const batch = row.Batch
+          const reason = 'Score did not Meet Passing Score'
+          const formData = new FormData();
+          formData.append('applicantNum',row.applicantNum)
+          formData.append('Name',row.Name)
+          formData.append('ScholarshipApplied', schoapplied)
+          formData.append('batch',batch)
+          formData.append('Reason',reason)
+          formData.append('email',row.email)
+          // const response = await FailedUser.FAILED_USER(formData)
+          // if(response.data.success === 1){
+          //   swal('Status Updated')
+          // }else{
+          //   swal('Something Went Wrong')
+          // }
+        }
+    }
     const Access = async() =>{
       const formData = new FormData();
       formData.append('email',email);
@@ -1153,6 +1182,8 @@ const Evaluation = () => {
                   }}
                   pageSizeOptions={[25]}
                   checkboxSelection
+                  onRowSelectionModelChange={handleFailedSelectionModelChange}
+                  rowSelectionModel={failedSelectionModel}
                   disableRowSelectionOnClick
                 />}
               </Box>
@@ -1160,6 +1191,9 @@ const Evaluation = () => {
             </div>
             {activeState === 'Passed' && <div sx={{width:'90%',margin:'10px',display:'flex',justifyContent:'flex-end',flexDirection:'column',alignItems:'flex-end'}}>
               <Button onClick={Addall} sx={{margin:'10px'}} variant='contained'>ADD ALL SELECTED TO APPLICANT LIST</Button>
+            </div>}
+            {activeState === 'Failed' && <div sx={{width:'90%',margin:'10px',display:'flex',justifyContent:'flex-end',flexDirection:'column',alignItems:'flex-end'}}>
+              <Button onClick={FailedAll} sx={{margin:'10px'}} variant='contained'>SET FAILED THE SELECTED USERS</Button>
             </div>}
             </Card>
         </div>
