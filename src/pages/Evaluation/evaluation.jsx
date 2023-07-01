@@ -22,6 +22,7 @@ import FormatListBulletedOutlinedIcon from '@mui/icons-material/FormatListBullet
 import { useContext } from "react";
 import { admininfo } from "../../App";
 import Link from '@mui/material/Link';
+import Checkbox from '@mui/material/Checkbox';
 
 const Evaluation = () => {
   const { loginUser,user } = useContext(admininfo);
@@ -46,9 +47,21 @@ const Evaluation = () => {
     const [failedSelectionModel,setFailedSelectionModel] = useState([]);
     const [hasAccess,setHasAccess] = useState(false);
     const [who,setWho] = useState('');
+    const [isSend,setIsSend] = useState('No')
+    const [checked, setChecked] = React.useState(false);
 
+    const handleChangeCheckbox = (event) => {
+      const check = event.target.checked
+      if(check){
+        setChecked(check);
+        setIsSend('Yes')
+      }else{
+        setChecked(check);
+        setIsSend('No')
+      }
+
+    };
     const handleOpenDialog = (data) => {
-      console.log(data)
       setOpenDialog(true);
       setWho(data.applicantNum)
     }
@@ -931,12 +944,15 @@ const Evaluation = () => {
           formData.append('batch',batch)
           formData.append('Reason',reason)
           formData.append('email',row.email)
-          // const response = await FailedUser.FAILED_USER(formData)
-          // if(response.data.success === 1){
-          //   swal('Status Updated')
-          // }else{
-          //   swal('Something Went Wrong')
-          // }
+          formData.append('isSend',isSend)
+          const response = await FailedUser.FAILED_USER(formData)
+          if(response.data.success === 1){
+            swal('Status Updated')
+            setData(response.data.result);
+            setIsSend('No')
+          }else{
+            swal('Something Went Wrong')
+          }
         }
     }
     const Access = async() =>{
@@ -952,6 +968,7 @@ const Evaluation = () => {
           console.log(ForEva)
           setData(ForEva);
           setEmail('')
+          setOpenDialog(false)
           setPassword('')
           swal({
             text: res.data.message,
@@ -974,9 +991,12 @@ const Evaluation = () => {
       
     }
     
-    
-    const Passed = data?.filter(user => user.score >= passSlot.passingscore)
-    const Failed = data?.filter(user => user.score < passSlot.passingscore)
+    const Passed = data && data.length > 0
+    ? data.filter(user => user.score >= passSlot.passingscore)
+    : '';
+    const Failed = data && data.length > 0
+    ? data.filter(user => user.score < passSlot.passingscore)
+    : '';
   return (
     <>
       <Dialog open={openDialog} onClose={handleCloseDialog}>
@@ -1134,58 +1154,76 @@ const Evaluation = () => {
                   </div>
               </div>
               <Box sx={{ height: 400, width: '100%' }}>
-                {activeState === 'All' && <DataGrid
-                  rows={data}
-                  columns={columns}
-                  getRowId={(row) => row.applicantNum}
-                  scrollbarSize={10}
-                  initialState={{
-                    pagination: {
-                      paginationModel: {
-                        pageSize: 5,
+                    {activeState === 'All' && (data && data.length > 0 ? (
+                  <DataGrid
+                    rows={data}
+                    columns={columns}
+                    getRowId={(row) => row.applicantNum}
+                    scrollbarSize={10}
+                    initialState={{
+                      pagination: {
+                        paginationModel: {
+                          pageSize: 5,
+                        },
                       },
-                    },
-                  }}
-                  pageSizeOptions={[25]}
-                  checkboxSelection
-                  disableRowSelectionOnClick
-                />}
-                {activeState === 'Passed' && <DataGrid
-                  rows={Passed}
-                  columns={passedColumn}
-                  getRowId={(row) => row.applicantNum}
-                  scrollbarSize={10}
-                  initialState={{
-                    pagination: {
-                      paginationModel: {
-                        pageSize: 5,
-                      },
-                    },
-                  }}
-                  pageSizeOptions={[25]}
-                  checkboxSelection
-                  onRowSelectionModelChange={handleRowSelectionModelChange}
-                  rowSelectionModel={rowSelectionModel}
-                  disableRowSelectionOnClick
-                />}
-                {activeState === 'Failed' && <DataGrid
-                  rows={Failed}
-                  columns={failedColumn}
-                  getRowId={(row) => row.applicantNum}
-                  scrollbarSize={10}
-                  initialState={{
-                    pagination: {
-                      paginationModel: {
-                        pageSize: 5,
-                      },
-                    },
-                  }}
-                  pageSizeOptions={[25]}
-                  checkboxSelection
-                  onRowSelectionModelChange={handleFailedSelectionModelChange}
-                  rowSelectionModel={failedSelectionModel}
-                  disableRowSelectionOnClick
-                />}
+                    }}
+                    pageSizeOptions={[25]}
+                    checkboxSelection
+                    disableRowSelectionOnClick
+                  />
+                ) : (
+                  <div style={{width:'100%',height:'100%',display:'flex',justifyContent:'center',alignItems:'center',backgroundColor:'whitesmoke'}}>
+                  <p style={{ textAlign: 'center',fontSize:30,fontWeight:700,fontStyle:'italic' }}>No records</p>
+                  </div>
+                ))}
+                  {activeState === 'Passed' && (Passed && Passed.length > 0 ? (
+                    <DataGrid
+                      rows={Passed}
+                      columns={passedColumn}
+                      getRowId={(row) => row.applicantNum}
+                      scrollbarSize={10}
+                      initialState={{
+                        pagination: {
+                          paginationModel: {
+                            pageSize: 5,
+                          },
+                        },
+                      }}
+                      pageSizeOptions={[25]}
+                      checkboxSelection
+                      onRowSelectionModelChange={handleRowSelectionModelChange}
+                      rowSelectionModel={rowSelectionModel}
+                      disableRowSelectionOnClick
+                    />
+                  ) : (
+                    <div style={{width:'100%',height:'100%',display:'flex',justifyContent:'center',alignItems:'center',backgroundColor:'whitesmoke'}}>
+                    <p style={{ textAlign: 'center',fontSize:30,fontWeight:700,fontStyle:'italic' }}>No records</p>
+                    </div>
+                  ))}
+                  {activeState === 'Failed' && (Failed && Failed.length > 0 ? (
+                    <DataGrid
+                      rows={Failed}
+                      columns={failedColumn}
+                      getRowId={(row) => row.applicantNum}
+                      scrollbarSize={10}
+                      initialState={{
+                        pagination: {
+                          paginationModel: {
+                            pageSize: 5,
+                          },
+                        },
+                      }}
+                      pageSizeOptions={[25]}
+                      checkboxSelection
+                      onRowSelectionModelChange={handleFailedSelectionModelChange}
+                      rowSelectionModel={failedSelectionModel}
+                      disableRowSelectionOnClick
+                    />
+                  ) : (
+                    <div style={{width:'100%',height:'100%',display:'flex',justifyContent:'center',alignItems:'center',backgroundColor:'whitesmoke'}}>
+                    <p style={{ textAlign: 'center',fontSize:30,fontWeight:700,fontStyle:'italic' }}>No records</p>
+                    </div>
+                  ))}
               </Box>
               
             </div>
@@ -1193,7 +1231,12 @@ const Evaluation = () => {
               <Button onClick={Addall} sx={{margin:'10px'}} variant='contained'>ADD ALL SELECTED TO APPLICANT LIST</Button>
             </div>}
             {activeState === 'Failed' && <div sx={{width:'90%',margin:'10px',display:'flex',justifyContent:'flex-end',flexDirection:'column',alignItems:'flex-end'}}>
-              <Button onClick={FailedAll} sx={{margin:'10px'}} variant='contained'>SET FAILED THE SELECTED USERS</Button>
+                  <Checkbox
+                    checked={checked}
+                    onChange={handleChangeCheckbox}
+                    inputProps={{ 'aria-label': 'controlled' }}
+                  /><span>Sent Notification</span>
+                <Button onClick={FailedAll} sx={{margin:'10px'}} variant='contained'>SET FAILED THE SELECTED USERS</Button>
             </div>}
             </Card>
         </div>
