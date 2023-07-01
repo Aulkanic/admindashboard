@@ -21,13 +21,17 @@ import { purple } from '@mui/material/colors';
 import '../Button style/button.css'
 import swal from 'sweetalert';
 
-const ColorButton = styled(Button)(({ theme }) => ({
-  color: theme.palette.getContrastText(purple[500]),
-  backgroundColor: purple[500],
-  '&:hover': {
-    backgroundColor: purple[700],
-  },
-}));
+const StyledButton = styled(Button)`
+  && {
+    float: right;
+    background-color: red;
+    transition: opacity 0.3s ease;
+
+    &:hover {
+      opacity: 0.8;
+    }
+  }
+`;
 
 const Faqs = () => {
   const { loginUser,user } = useContext(admininfo);
@@ -251,7 +255,7 @@ const UpdateBMCC = (event) =>{
                   aria-describedby="modal-modal-description">
             <Box sx={style}>
               <div className="buttonclosed">
-              <Button onClick={handleClose}>X</Button>
+              <StyledButton onClick={handleClose}>X</StyledButton>
                 </div>
 
               <div className="form">
@@ -305,7 +309,8 @@ const UpdateBMCC = (event) =>{
                 <Box sx={style}>
                 <div style={{margin:10,width:'100%',height:'30px',display:'flex',alignItems:'center',justifyContent:'space-between'}}>
                 <Typography sx={{fontSize:35,fontWeight:700}}>Edit Employee Details</Typography>
-                <Button variant='contained' style={{padding:10,height:'100%',float:'right',marginRight:20}} onClick={handleClose1}>X</Button>
+                <StyledButton variant='contained' style={{padding:10,height:'100%',float:'right',marginRight:20}} onClick={handleClose1}>
+                  X</StyledButton>
                 </div>
 
                 <div style={{margin: 20}} className="form">

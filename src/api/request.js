@@ -149,3 +149,9 @@ export const DecrePassSlots = {
 export const FetchPassSlots = {
     FETCH_PASSSLOTS: () => axiosInstance.get(Endpoints.FETCH_SCORESLOT)
 }
+export const NewDeadline = {
+    NEW_DEADLINE: (data) => axiosInstance.post(Endpoints.UPDATE_REQUIREMENTS,data)
+}
+export const DeleteReq = {
+    DELETE_REQ: (data) => axiosInstance.post(Endpoints.DELETE_REQUIREMENTS,data)
+}

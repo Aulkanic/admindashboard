@@ -1,9 +1,9 @@
 import Navbar from '../../components/navbar/Navbar';
 import Sidebar from '../../components/sidebar/Sidebar';
 import './contact.scss';
-import { Box, Modal} from "@mui/material"; 
+import { Box, Modal,Button,Card} from "@mui/material"; 
 import { DataGrid} from '@mui/x-data-grid';
-import { ListofReq, FetchingSchoProg, Addrequirements } from '../../api/request';
+import { ListofReq, FetchingSchoProg, Addrequirements,NewDeadline,DeleteReq } from '../../api/request';
 import { useState } from 'react';
 import { useEffect } from 'react';
 import Select from '@mui/material/Select';
@@ -19,6 +19,39 @@ import { DemoContainer, DemoItem } from '@mui/x-date-pickers/internals/demo';
 import MuiAlert from '@mui/material/Alert';
 import swal from 'sweetalert';
 import moment from "moment";
+import { styled } from '@mui/material/styles';
+import '../Button style/button.css';
+import Dialog from '@mui/material/Dialog';
+import DialogActions from '@mui/material/DialogActions';
+import DialogContent from '@mui/material/DialogContent';
+import DialogContentText from '@mui/material/DialogContentText';
+import DialogTitle from '@mui/material/DialogTitle';
+
+const StyledButton = styled(Button)`
+  && {
+    float: right;
+    background-color: red;
+    transition: opacity 0.3s ease;
+    color:white;
+
+    &:hover {
+      opacity: 0.8;
+    }
+  }
+`;
+const StyledButtonEdit = styled(Button)`
+  && {
+    float: right;
+    background-color: green;
+    transition: opacity 0.3s ease;
+    color:white;
+    margin-right:10px;
+
+    &:hover {
+      opacity: 0.8;
+    }
+  }
+`;
 
 const Contact = () => {
   const [reqlist, setReqlist] = useState([]);
@@ -29,8 +62,16 @@ const Contact = () => {
   const[requirementName,setReqname] = useState('');
   const[batch,setBatch] = useState('');
   const [deadline,setDeadline] = useState('');
+  const [newDeadline,setNewDeadline] = useState('');
   const [errors, setErrors] = useState({});
   const [docsfor,setDocsfor] = useState('');
+  const [openDialog, setOpenDialog] = useState(false);
+  const [selected,setSelected] = useState([])
+  const handleCloseDialog = () => setOpenDialog(false);
+  const handleOpenDialog = (data) => {
+    setOpenDialog(true);
+    setSelected(data)
+  }
 
   const handleYearChange = (event) => {
     setBatch(event.target.value);
@@ -55,12 +96,13 @@ const Contact = () => {
     top: '50%',
     left: '50%',
     transform: 'translate(-50%, -50%)',
-    width: '700',
-    height: '80%',
+    width: '60%',
+    height: '90%',
     bgcolor: 'background.paper',
     border: '2px solid #000',
-    boxShadow: 24,
     overflow: 'auto',
+    padding:'10px',
+    borderRadius:'10px'
   };
   useEffect(() => {
 
@@ -91,13 +133,11 @@ const Contact = () => {
       numSubmissions: submissions.length,
     };
   });
-  console.log(mergedData)
   const handleChange = async (event) => {
     const value = await event.target.value;
     setSchoname(value);
 
   };
-
   const AddReq = (e) =>{
     e.preventDefault();
     let errors = {};
@@ -131,6 +171,73 @@ const Contact = () => {
        )
       .catch(err => console.log(err));
   }
+  const Edit = () =>{
+    console.log(selected)
+    let errors = {};
+    const currentDate = moment();
+
+    if(!newDeadline || newDeadline === ''){
+      errors.newdate = 'Select A Deadline Date First'
+      swal({
+        text: 'Select A Deadline Date First',
+        timer: 2000,
+        buttons: false,
+        icon: "error",
+      })
+      return
+    }
+    else{
+    const date = new Date(newDeadline).toDateString();
+    const targetDate = moment(date);
+    if (targetDate.isBefore(currentDate)) {
+      swal({
+        text: 'Selected Deadline is less than the current date!',
+        timer: 2000,
+        buttons: false,
+        icon: "error",
+      })
+      return
+    }
+    const formData = new FormData();
+    formData.append('newDeadline',date);
+    formData.append('reqid',selected.requirementID)
+    NewDeadline.NEW_DEADLINE(formData)
+    .then(res => {
+      console.log(res)
+      setReqlist(res.data.Requirements.results1);
+      swal({
+        text: 'Updated Successfully',
+        timer: 2000,
+        buttons: false,
+        icon: "success",
+      })
+      setErrors('')
+      setOpenDialog(false)
+    }
+     )
+    .catch(err => console.log(err));
+  }
+  }
+  const Delete = (data) =>{
+    console.log(data)
+    const formData = new FormData();
+    formData.append('reqID',data.requirementID)
+    DeleteReq.DELETE_REQ(formData)
+    .then(res => {
+      console.log(res)
+      setReqlist(res.data.Requirements.results1);
+      swal({
+        text: 'Deleted Successfully',
+        timer: 2000,
+        buttons: false,
+        icon: "success",
+      })
+      setErrors('')
+      setOpenDialog(false)
+    }
+     )
+    .catch(err => console.log(err));
+  }
   const columns = [
     { 
       field: 'requirementID', 
@@ -148,12 +255,6 @@ const Contact = () => {
       width: 200
       },
     {
-      field: 'Status',
-      headerName: 'Status',
-      width: 150,
-      editable: false,
-    },
-    {
       field: 'batch',
       headerName: 'Batch',
       width: 100,
@@ -168,14 +269,27 @@ const Contact = () => {
     {
       field: 'deadline',
       headerName: 'Deadline',
-      width: 200,
+      width: 150,
       editable: false,
     },
     {
       field: 'numSubmissions',
       headerName: 'Total Submitted',
-      width: 250,
+      width: 100,
       editable: false,
+    },
+    {
+    field: 'insert',
+    headerName: 'Actions',
+    width: 250,
+    renderCell: (params) => {
+
+      return(
+        <>
+      <StyledButtonEdit onClick={() => handleOpenDialog(params.row)}>Edit Deadline</StyledButtonEdit>
+      <StyledButton onClick={() => Delete(params.row)}>Delete</StyledButton>
+      </>
+    )},
     },
 
   ];
@@ -190,125 +304,151 @@ const Contact = () => {
         open={open}
         aria-labelledby="modal-modal-title"
         aria-describedby="modal-modal-description">
-          
-      <Box sx={style}>
-        <div className="buttonclosed">
-          <button onClick={handleClose}> X </button>
-        </div>
+        <Box sx={style}>
+            <div className="buttonclosed">
+              <StyledButton onClick={handleClose}> X </StyledButton>
+            </div>
+            <div className="form">
+              <div style={{margin:10,width:'90%'}}>
+              <h1 style={{color:'#005247',fontWeight:1000}}>Create Requirements For Scholarship Program</h1>
+              </div>
+                    <div style={{width:'100%'}}>
+                    <FormControl sx={{ width:'100%'}}>
+                      <InputLabel id="demo-simple-select-label" className='inputlbl'>
+                        Choose Scholarship Category
+                      </InputLabel>
+                        <Select
+                            
+                            MenuProps={{
+                              getContentAnchorEl: null,
+                              anchorOrigin: {
+                                vertical: 'bottom',
+                                horizontal: 'left',},
+                              transformOrigin: {
+                                vertical: 'top',
+                                horizontal: 'left',},
+                              PaperProps: {
+                                style: {
+                                width: '50%',
+                                maxHeight: 250,// Adjust the maximum height of the menu
+                                },
+                              },
+                            }}
+                          autoWidth
+                          labelId="demo-simple-select-label"
+                          id="demo-simple-select"
+                          label='Choose Scholarship Category'
+                          value={schoName} 
+                          onChange={handleChange}
+                        >
+                          {schocat?.map((item) => (
+                              <MenuItem key={item.schoProgId} value={item.name} disabled={item.status === 'closed'}>
+                                {item.name}
+                              </MenuItem>
+                            ))}
+                        </Select>
+                      
+                        </FormControl> 
+                    </div>
+                    <div style={{width:'100%',}}>
+                    <FormControl sx={{width:'100%',marginTop:'10px'}}>
+                    <InputLabel id="demo-simple-select-autowidth-label">Requirements For:</InputLabel>
+                    <Select
+                      labelId="demo-simple-select-autowidth-label"
+                      id="demo-simple-select-autowidth"
+                      value={docsfor}
+                      onChange={(e) => setDocsfor(e.target.value)}
+                      fullWidth
+                      label="Requirements For"
+                    >
+                      <MenuItem value={'Renewal'}>Renewal</MenuItem>
+                      <MenuItem value={'Application'}>Application</MenuItem>
+                    </Select>
+                  </FormControl>
+                    </div>
+                    <div>
+                            <TextField 
+                                label='Requirement Name' 
+                                margin='normal' 
+                                variant='outlined'
+                                size='large'
+                                fullWidth
+                                onChange={(e) =>setReqname(e.target.value)}  
+                                color='secondary'/>
+                      <LocalizationProvider dateAdapter={AdapterDayjs}>
+                    <DateField 
+                    sx={{marginBottom:'10px'}}
+                      className="dataField"
+                      label="Deadline"
+                      value={deadline}
+                      fullWidth
+                      onChange={(newValue) => setDeadline(newValue)}
+                      format="MMM DD, YYYY"
+                    />
 
-        <div className="form">
-        <div className="selectschoreqadd">
-        <FormControl sx={{ minWidth: 500}}>
-          <InputLabel id="demo-simple-select-label" className='inputlbl'>
-             Choose Scholarship Category
-          </InputLabel>
-            <Select
-                 MenuProps={{
-                  getContentAnchorEl: null,
-                  anchorOrigin: {
-                    vertical: 'bottom',
-                    horizontal: 'left',},
-                  transformOrigin: {
-                    vertical: 'top',
-                    horizontal: 'left',},
-                  PaperProps: {
-                    style: {
-                    width: 500,
-                    maxHeight: 250,// Adjust the maximum height of the menu
-                    },
-                  },
-                }}
-              autoWidth
-              labelId="demo-simple-select-label"
-              id="demo-simple-select"
-              label='Choose Scholarship Category'
-              value={schoName} 
-              onChange={handleChange}
-            >
-              {schocat?.map((item) => (
-                  <MenuItem key={item.schoProgId} value={item.name} disabled={item.status === 'closed'}>
-                    {item.name}
-                  </MenuItem>
-                ))}
-            </Select>
-           
-            </FormControl> 
-          </div>
-          <div style={{width:'100%',}}>
-        <FormControl sx={{width:'100%',marginTop:'10px'}}>
-        <InputLabel id="demo-simple-select-autowidth-label">Requirements For:</InputLabel>
-        <Select
-          labelId="demo-simple-select-autowidth-label"
-          id="demo-simple-select-autowidth"
-          value={docsfor}
-          onChange={(e) => setDocsfor(e.target.value)}
-          fullWidth
-          label="Requirements For"
-        >
-          <MenuItem value={'Renewal'}>Renewal</MenuItem>
-          <MenuItem value={'Application'}>Application</MenuItem>
-        </Select>
-      </FormControl>
-        </div>
-                <div>
-                <TextField 
-                    label='Requirement Name' 
-                    margin='normal' 
-                    variant='outlined'
-                    size='large'
-                    fullWidth
-                    onChange={(e) =>setReqname(e.target.value)}  
-                    color='secondary'/>
-          <LocalizationProvider dateAdapter={AdapterDayjs}>
-        <DateField 
-        sx={{marginBottom:'10px'}}
-          className="dataField"
-          label="Deadline"
-          value={deadline}
-          fullWidth
-          onChange={(newValue) => setDeadline(newValue)}
-          format="MMM DD, YYYY"
-        />
-
-        {errors.date && <MuiAlert 
-        elevation={0} severity="error">
-        {errors.date}
-        </MuiAlert>}
-        </LocalizationProvider>
-        <div style={{marginTop:'10px'}}>
-                 <TextField
-                    select
-                    label="Select a year"
-                    value={batch}
-                    onChange={handleYearChange}
-                    fullWidth
-                    color='secondary'
-                  >
- 
-                    {generateYearOptions().map((year) => (
-                      <MenuItem key={year} value={year}>
-                        {year}
-                      </MenuItem>
-                    ))}
-                
-                </TextField> 
-                </div>
-                </div>
-                <div className="modalBtn">
-                  <button className="cnclBttn" onClick={handleClose}>Cancel</button>
-                  <button className="addBttn" onClick={AddReq}>Add</button>
-                </div>
-
-                </div>
-                
-              
-                </Box>
+                    {errors.date && <MuiAlert 
+                    elevation={0} severity="error">
+                    {errors.date}
+                    </MuiAlert>}
+                    </LocalizationProvider>
+                    <div style={{marginTop:'10px'}}>
+                            <TextField
+                                select
+                                label="Select a Year Batch"
+                                value={batch}
+                                onChange={handleYearChange}
+                                fullWidth
+                                color='secondary'
+                              >
+            
+                                {generateYearOptions().map((year) => (
+                                  <MenuItem key={year} value={year}>
+                                    {year}
+                                  </MenuItem>
+                                ))}
+                            
+                            </TextField> 
+                            </div>
+                    </div>
+                    <div style={{width:'100%',display:'flex',justifyContent:'space-around',margin:10}}>
+                      <button className="buttonStyle" onClick={handleClose}>Cancel</button>
+                      <button className="buttonStyle" onClick={AddReq}>Add</button>
+                    </div>
+            </div>
+        </Box>
       </Modal>
+      <Dialog open={openDialog} onClose={handleCloseDialog}>
+        <DialogTitle>Edit Requirements Deadline of Submission</DialogTitle>
+        <DialogContent>
+          <div style={{margin:10}}>
+          <LocalizationProvider dateAdapter={AdapterDayjs}>
+                    <DateField 
+                    sx={{marginBottom:'10px'}}
+                      className="dataField"
+                      label="Set New Deadline"
+                      value={newDeadline}
+                      fullWidth
+                      onChange={(newValue) => setNewDeadline(newValue)}
+                      format="MMM DD, YYYY"
+                    />
 
+                    {errors.newdate && <MuiAlert 
+                    elevation={0} severity="error">
+                    {errors.newdate}
+                    </MuiAlert>}
+                    </LocalizationProvider>
+                    </div>
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={handleCloseDialog}>Cancel</Button>
+          <Button onClick={Edit}>Save</Button>
+        </DialogActions>
+      </Dialog>
+          <Card style={{padding:5,display:'flex',justifyContent:'space-between',margin:10}}>
         <h1>Requirements</h1>
-          <button className="addBtn" onClick={handleOpen}> Add </button>
-
-         <DataGrid sx={{width: 1200, padding: 0.5}} className="dataTbl"
+          <button className="buttonStyle" onClick={handleOpen}> Add </button>
+          </Card>
+         <DataGrid sx={{width: "100%", padding: 0.5}} className="dataTbl"
             rows={mergedData}
             columns={columns}
             getRowId={(row) => row.requirementID}

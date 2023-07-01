@@ -31,6 +31,8 @@ const Endpoints = {
     FETCH_USERSCORE: 'Scorecard/UserScore/',
     LIST_REQUIREMENTS: 'documents/Requirements',
     ADD_REQUIREMENTS: 'documents/AddRequirements',
+    UPDATE_REQUIREMENTS: 'documents/UpdateDeadline',
+    DELETE_REQUIREMENTS: 'documents/DeleteReqid',
     BMCC_ADD: 'admin/Create',
     BMCC_FETCH: 'admin/BMCCmembers',
     ACTIVITY_LOG: 'admin/Activitylog',
