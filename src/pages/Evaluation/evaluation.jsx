@@ -45,7 +45,6 @@ const Evaluation = () => {
     const [activeState,setActiveState] = useState('All');
     const [rowSelectionModel, setRowSelectionModel] = useState([]);
     const [failedSelectionModel,setFailedSelectionModel] = useState([]);
-    const [hasAccess,setHasAccess] = useState(false);
     const [who,setWho] = useState('');
     const [isSend,setIsSend] = useState('No')
     const [checked, setChecked] = React.useState(false);

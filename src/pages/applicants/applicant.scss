@@ -1,31 +1,17 @@
 .applicant{
     display: flex;
+    width: 100%;
 
     .applicantContainer{
         flex: 7;
         
         .top{
-        // -webkit-box-shadow: 2px 4px 10px 1px rgba(9, 247, 1, 0.47);
-        // box-shadow: 2px 4px 10px 1px rgba(2, 129, 30, 0.47);
-        // margin: 20px;
-        // padding: 20px;
-        // border-radius: 10px;
-        border: none;
+            width: 100%;
+            border: none;
 
         h1{
             padding: 10px;
             color: #005427;
-        }
-
-        table{
-            border: 1px solid #005427;
-
-            .tableCell{
-                border: 1px solid #005427;
-                font-size: 12px;
-                color: #005427;
-                font-weight: 600;
-            }
         }
     }
         .cellAction{
@@ -127,6 +113,7 @@
 }
 
 .modalContainer{
+    width: 100%;
     display: flex;
 
     .buttonclosed{

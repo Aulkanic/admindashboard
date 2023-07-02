@@ -33,6 +33,7 @@ const Endpoints = {
     ADD_REQUIREMENTS: 'documents/AddRequirements',
     UPDATE_REQUIREMENTS: 'documents/UpdateDeadline',
     DELETE_REQUIREMENTS: 'documents/DeleteReqid',
+    FETCH_DOCUMENTARY: 'documents/Documentary',
     BMCC_ADD: 'admin/Create',
     BMCC_FETCH: 'admin/BMCCmembers',
     ACTIVITY_LOG: 'admin/Activitylog',

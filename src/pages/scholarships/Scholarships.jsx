@@ -205,7 +205,8 @@ console.log(icon1)
         headerName: 'Actions',
         width: 150,
         renderCell: (params) => (
-          <Button style={{backgroundColor:'yellow',color:'blue',border:'2px solid blue'}} variant='contained' onClick={() => handleOpen1(params.row)}>Edit Details</Button>
+          <Button style={{backgroundColor:'yellow',color:'blue',border:'2px solid blue'}} variant='contained' onClick={() => handleOpen1(params.row)}>
+            Edit Details</Button>
         ),
       },
     ];
@@ -285,7 +286,7 @@ console.log(icon1)
                 </div>
                 <div className="buttonbacapp2">
                 <button onClick={handleClose} className="buttonStyle">Cancel</button>
-                <button onClick={Create} className="buttonStyle">Save Changes</button>
+                <button onClick={Create} className="buttonStyle">Create</button>
                 </div>
                 </Card>
             </div>           

@@ -448,7 +448,7 @@ const Contact = () => {
         <h1>Requirements</h1>
           <button className="buttonStyle" onClick={handleOpen}> Add </button>
           </Card>
-         <DataGrid sx={{width: "100%", padding: 0.5}} className="dataTbl"
+         <DataGrid style={{width: "100%", padding: 0.5,fontSize:12}}
             rows={mergedData}
             columns={columns}
             getRowId={(row) => row.requirementID}

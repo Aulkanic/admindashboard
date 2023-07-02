@@ -155,3 +155,6 @@ export const NewDeadline = {
 export const DeleteReq = {
     DELETE_REQ: (data) => axiosInstance.post(Endpoints.DELETE_REQUIREMENTS,data)
 }
+export const Documentary = {
+    FETCH_DOCUMENTARY: () => axiosInstance.get(Endpoints.FETCH_DOCUMENTARY)
+}

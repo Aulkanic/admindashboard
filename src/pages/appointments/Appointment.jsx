@@ -126,7 +126,6 @@ const Appointment = () => {
   const groupAppointmentsByDate = () => {
     const groupedAppointments = {};
 
-    // Group appointments by date
     appointedList.forEach((appointment) => {
       const { schedDate, Name,Reason,Location,applicantCode,timeStart,timeEnd,applicantNum } = appointment;
 

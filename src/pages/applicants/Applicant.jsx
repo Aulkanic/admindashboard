@@ -2,7 +2,7 @@ import "./applicant.scss";
 import Sidebar from "../../components/sidebar/Sidebar";
 import Navbar from "../../components/navbar/Navbar";
 import { useState, useEffect } from "react";
-import { Tabs, Tab, Box, Modal, Card,Button } from "@mui/material"; 
+import { Tabs, Tab, Box, Modal, Card,Button, Typography } from "@mui/material"; 
 import { DataGrid} from '@mui/x-data-grid';
 import Radio from '@mui/material/Radio';
 import RadioGroup from '@mui/material/RadioGroup';
@@ -10,18 +10,87 @@ import FormControlLabel from '@mui/material/FormControlLabel';
 import FormControl from '@mui/material/FormControl';
 import FormLabel from '@mui/material/FormLabel';
 import { ApplicantsRequest, FetchingApplicantsInfo, ListofSub,
-          CheckingSubs, CheckingApplicants,UserScore,ListofReq,FailedUser,FetchingBmccSchoinfo } from "../../api/request";
+          CheckingSubs, CheckingApplicants,UserScore,ListofReq,FailedUser,FetchingBmccSchoinfo
+        ,Documentary,GrantAccess } from "../../api/request";
 import swal from "sweetalert";
 import { styled } from '@mui/material/styles';
 import { useContext } from "react";
 import { admininfo } from "../../App";
 import TextField from '@mui/material/TextField';
+import Breadcrumbs from '@mui/material/Breadcrumbs';
 import Dialog from '@mui/material/Dialog';
 import DialogActions from '@mui/material/DialogActions';
 import DialogContent from '@mui/material/DialogContent';
 import DialogContentText from '@mui/material/DialogContentText';
 import DialogTitle from '@mui/material/DialogTitle';
+import CheckCircleIcon from '@mui/icons-material/CheckCircle';
+import CancelIcon from '@mui/icons-material/Cancel';
+import Link from '@mui/material/Link';
 import './applicant.css'
+import Checkbox from '@mui/material/Checkbox';
+import CheckCircleOutlineRoundedIcon from '@mui/icons-material/CheckCircleOutlineRounded';
+import FormatListBulletedOutlinedIcon from '@mui/icons-material/FormatListBulletedOutlined';
+import AssignmentLateRoundedIcon from '@mui/icons-material/AssignmentLateRounded';
+
+const StyledButton = styled(Button)`
+  && {
+    float: right;
+    background-color: red;
+    color:white;
+    transition: opacity 0.3s ease;
+
+    &:hover {
+      opacity: 0.8;
+    }
+  }
+`;
+const StyledButtonEdit = styled(Button)`
+  && {
+    background-color: green;
+    color:white;
+    margin-right:10px;
+    transition: opacity 0.3s ease;
+
+    &:hover {
+      opacity: 0.8;
+    }
+  }
+`;
+const StyledButtonAccess = styled(Button)`
+  && {
+    background-color: yellow;
+    color:green;
+    margin-right:10px;
+    transition: opacity 0.3s ease;
+
+    &:hover {
+      opacity: 0.8;
+    }
+  }
+`;
+const ViewButton = styled(Button)`
+  && {
+    background-color: blue;
+    color:white;
+    margin-right:10px;
+    transition: opacity 0.3s ease;
+
+    &:hover {
+      opacity: 0.8;
+    }
+  }
+`;
+const StyledRadioGroup = styled(RadioGroup)`
+
+  && {
+    & .MuiFormControlLabel-root {
+      margin-right: 3px;
+      display: flex;
+      flex-direction: column;
+    }
+  }
+`;
+
 
 const Applicant = () => {
   const { loginUser,user } = useContext(admininfo);
@@ -34,25 +103,78 @@ const Applicant = () => {
   const [applicantsDocs, setApplicantDocs] = useState([]);
   const [Comments,setComments] = useState('');
   const [status,setStatusCheck] = useState('');
-  const [tabValue, setTabValue] = useState(0);
-  const [selectedRows, setSelectedRows] = useState([]);
-  const [datarows,setDatarows] = useState([]);
   const [dialog, setDialog] = useState(false);
   const [reason,setReason] = useState('');
-  const [failinf,setFailInf] = useState([]);
+  const [imageModalOpen, setImageModalOpen] = useState(false);
+  const [selectedImage, setSelectedImage] = useState('');
+  const [docslisted,setDocsListed] = useState([]);
+  const [documentaryListed,setDocumentaryListed] = useState([]);
+  const [activeState,setActiveState] = useState('All');
+  const [rowSelectionModel, setRowSelectionModel] = useState([]);
+  const [failedSelectionModel,setFailedSelectionModel] = useState([]);
+  const [who,setWho] = useState('');
+  const [isSend,setIsSend] = useState('No');
+  const [isSend1,setIsSend1] = useState('No');
+  const [checked, setChecked] = useState(false);
+  const [checked1, setChecked1] = useState(false);
+  const [email,setEmail] = useState('');
+  const [password,setPassword] = useState('')
+  const [openDialog1, setOpenDialog1] = useState(false);
+  const [openDialog2, setOpenDialog2] = useState(false);
+  const handleCloseDialog1 = () => setOpenDialog1(false);
+  const handleCloseDialog2 = () => setOpenDialog2(false);
+  const handleOpenDialog1 = (data) => {
+    setOpenDialog1(true);
+    setWho(data.applicantNum)
+  }
+  const handleOpenDialog2 = (data) => {
+    setOpenDialog2(true);
+  }
+  
 
-  const handleClickOpenDialog = (data) => {
-    console.log(data)
-    setDialog(true);
-    setFailInf(data)
+  const openImageModal = (image) => {
+    setSelectedImage(image);
+    setImageModalOpen(true);
+  };
+  
+  const closeImageModal = () => {
+    setSelectedImage('');
+    setImageModalOpen(false);
+  };
+
+  const handleChangeCheckbox = (event) => {
+    const check = event.target.checked
+    if(check){
+      setChecked(check);
+      setIsSend('Yes')
+    }else{
+      setChecked(check);
+      setIsSend('No')
+    }
+  };
+  const handleChangeCheckbox1 = (event) => {
+    const check = event.target.checked
+    if(check){
+      setChecked1(check);
+      setIsSend1('Yes')
+    }else{
+      setChecked1(check);
+      setIsSend1('No')
+    }
   };
 
   const handleCloseDialog = () => {
     setDialog(false);
   };
 
-  const handleSelectionModelChange = (newSelectionModel) => {
-    setSelectedRows(newSelectionModel);
+  const handleRowSelectionModelChange = (newRowSelectionModel) => {
+    console.log(newRowSelectionModel)
+    setRowSelectionModel(newRowSelectionModel);
+
+  };
+  const handleFailedSelectionModelChange = (newFailedSelectionModel) => {
+    console.log(newFailedSelectionModel)
+    setFailedSelectionModel(newFailedSelectionModel);
 
   };
 
@@ -63,26 +185,20 @@ const Applicant = () => {
       color: 'white', 
     },
   });
-  const style = {
-    top: '50%',
-    left: '50%',
-    transform: 'translate(-50%, -50%)',
-    width: 'max-content',
-    height: '80%',
-    border: '2px solid #000',
-    boxShadow: 24,
-  };
+
 
   useEffect(() => {
 
     async function Fetch(){
       const response = await ApplicantsRequest.ALL_APPLICANTS()
-      const docreq = await ListofReq.FETCH_REQUIREMENTS()
-      console.log(response)
+      const docreq = await ListofReq.FETCH_REQUIREMENTS();
+      const subdoc = await Documentary.FETCH_DOCUMENTARY()
+      console.log(subdoc)
+      setDocumentaryListed(subdoc.data.Documentary)
       setPost(response.data.results);
-      console.log(docreq)
       const sub = docreq.data.Requirements.results2
       const list = docreq.data.Requirements.results1
+      setDocsListed(list)
       const totalsubdiv = `${sub.length}/${list.length}`
       setReqlist(totalsubdiv)
     }
@@ -91,8 +207,6 @@ const Applicant = () => {
 
 // fucntions
   const view = async (data) => {
-    console.log(data)
-  
     const applicantNum = data.applicantNum;
     const formData = new FormData();
     formData.append('applicantNum',applicantNum)
@@ -128,21 +242,49 @@ const check = async (data, index) => {
   formData.append('requirement_Name', requirement_Name);
   formData.append('applicantCode', applicantNum);
   formData.append('status', status[requirement_Name]);
+  formData.append('applicantNum', data.applicantId);
   formData.append('adminName', adminName);
 
   try {
     const res = await CheckingSubs.CHECK_SUB(formData);
+    if(res.data.success === 1){
+      setDocumentaryListed(res.data.Documentary)
+      swal({
+        text: 'Checked',
+        timer: 2000,
+        buttons: false,
+        icon: "success",
+      })
+    }else{
+      swal({
+        text: 'Failed To Check',
+        timer: 2000,
+        buttons: false,
+        icon: "error",
+      })
+    }
 
-    console.log(res);
-    swal('Save');
   } catch (err) {
     console.log(err);
   }
 };
+const style = {
+  position: 'absolute',
+  top: '50%',
+  left: '50%',
+  transform: 'translate(-50%, -50%)',
+  width: '90%',
+  height: '95%',
+  bgcolor: 'whitesmoke',
+  border: '2px solid #000',
+  overflow: 'auto',
+  padding:'10px',
+  borderRadius:'10px'
+};
   const ApplicantCheck = async (data) =>{
     console.log(data)
     const applicantNum = data.applicantNum;
-    const applicantCode = selectedInfo.applicantCode;
+    const applicantCode = data.applicantCode;
     const status = 'Qualified';
     const adminName = user.name;
     const email = data.email
@@ -158,45 +300,128 @@ const check = async (data, index) => {
   }
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
-  const failed = async() =>{
-    console.log(failinf)
-    const res = await FetchingBmccSchoinfo.FETCH_SCHOLARSINFO(failinf.applicantNum);
+  const failed = async(data) =>{
+    console.log(data)
+    const res = await FetchingBmccSchoinfo.FETCH_SCHOLARSINFO(data.applicantNum);
     console.log(res)
     const schoapplied = res.data.ScholarInf.results1[0].SchoIarshipApplied;
     const batch = res.data.ScholarInf.results1[0].Batch;
     const formData = new FormData();
-    formData.append('applicantNum',failinf.applicantNum)
-    formData.append('Name',failinf.Name)
+    formData.append('applicantNum',data.applicantNum)
+    formData.append('Name',data.Name)
     formData.append('ScholarshipApplied', schoapplied)
     formData.append('batch',batch)
     formData.append('Reason',reason)
+    formData.append('isSend',isSend1)
     formData.append('email',res.data.ScholarInf.results1[0].email)
     const response = await FailedUser.FAILED_USER(formData)
     if(response.data.success === 1){
       swal('Status Updated')
+      setIsSend1('No')
     }else{
       swal('Something Went Wrong')
     }
+  }
+  const Access = async() =>{
+    const formData = new FormData();
+    formData.append('email',email);
+    formData.append('password',password);
+    formData.append('applicantNum',who)
+    await GrantAccess.GRANT_ACCESS(formData)
+    .then(res => {
+      if(res.data.success === 1){
+        console.log(res)
+        setPost(res.data.result);
+        setEmail('')
+        setOpenDialog1(false)
+        setPassword('')
+        swal({
+          text: res.data.message,
+          timer: 2000,
+          buttons: false,
+          icon: 'success',
+        });
+      }else{
+        swal({
+          text: res.data.message,
+          timer: 2000,
+          buttons: false,
+          icon: 'error',
+        });
+      }
+
+      }
+       )
+      .catch(err => console.log(err));
+    
+  }
+  const Addall = async () => {
+    const selectedRows = rowSelectionModel.map((selectedRow) =>
+      filteredRows.find((row) => row.applicantNum === selectedRow)
+    );
+      try {
+        for (let i = 0; i < selectedRows.length; i++) {
+          const row = selectedRows[i];
+          const applicantNum = row.applicantNum;
+          const applicantCode = row.applicantCode;
+          const status = 'Qualified';
+          const adminName = user.name;
+          const email = row.email
+          CheckingApplicants.CHECK_APP({email,adminName,applicantNum,status,applicantCode})
+          .then(res => {
+            console.log(res)
+            setPost(res.data.Applicants)
+            setOpen(false)
+            swal('Added Successfully')
+          }
+           )
+          .catch(err => console.log(err));
+        }
+      } catch (error) {
+        console.log(error);
+      }
+
+  };
+  const FailedAll = async() =>{
+    const selectedRows = failedSelectionModel.map((selectedRow) =>
+      filteredRows.find((row) => row.applicantNum === selectedRow));
+      for (let i=0 ;i<selectedRows.length;i++){
+        const row = selectedRows[i];
+        console.log(row)
+        const res = await FetchingBmccSchoinfo.FETCH_SCHOLARSINFO(row.applicantNum);
+        console.log(res)
+        const schoapplied = res.data.ScholarInf.results1[0].SchoIarshipApplied;
+        const batch = res.data.ScholarInf.results1[0].Batch;
+        const formData = new FormData();
+        formData.append('applicantNum',row.applicantNum)
+        formData.append('Name',row.Name)
+        formData.append('ScholarshipApplied', schoapplied)
+        formData.append('batch',batch)
+        formData.append('Reason',reason)
+        formData.append('isSend',isSend)
+        formData.append('email',res.data.ScholarInf.results1[0].email)
+        const response = await FailedUser.FAILED_USER(formData)
+        if(response.data.success === 1){
+          swal('Status Updated')
+          setIsSend('No')
+        }else{
+          swal('Something Went Wrong')
+        }
+      }
   }
   const columns = [
     { field: 'applicantNum', headerName: 'Applicant ID', width: 100 },
     {
       field: 'SchoIarshipApplied',
       headerName: 'Scholarship Applied',
-      width: 150,
+      width: 200,
       editable: true,
     },
     {
       field: 'Name',
       headerName: 'Name',
-      width: 250,
+      width: 200,
       editable: true,
-    },
-    {
-      field: 'email',
-      headerName: 'Email',
-      width: 250,
-      editable: false,
     },
     {
       field: 'status',
@@ -205,11 +430,38 @@ const check = async (data, index) => {
       editable: false,
     },
     {
-      field: (reqlist),
-      headerName: 'Documents',
-      width: 110,
+      field: 'stat',
+      headerName: 'Submitted',
+      width: 100,
       editable: false,
-      valueGetter: () => reqlist,
+      renderCell: (params) => {
+        const ForEva = docslisted.filter(user => user.schoName === params.row.SchoIarshipApplied);
+        const Subuser = documentaryListed.filter(user => user.applicantId === params.row.applicantNum);
+        const approve = Subuser.filter(user => user.Status === 'Approved');
+        const pval = `${Subuser.length}/${ForEva.length}`
+        console.log(Subuser)
+        return(
+        <>
+        <p>{pval}</p>
+        </>
+      )},
+    },
+    {
+      field: 'stat1',
+      headerName: 'Approved',
+      width: 100,
+      editable: false,
+      renderCell: (params) => {
+        const ForEva = docslisted.filter(user => user.schoName === params.row.SchoIarshipApplied);
+        const Subuser = documentaryListed.filter(user => user.applicantId === params.row.applicantNum);
+        const approve = Subuser.filter(user => user.Status === 'Approved');
+        const pval = `${approve.length}/${ForEva.length}`
+        console.log(Subuser)
+        return(
+        <>
+        <p>{pval}</p>
+        </>
+      )},
     },
     {
       field: 'Batch',
@@ -220,33 +472,249 @@ const check = async (data, index) => {
     {
       field: 'insert',
       headerName: 'Details',
-      width: 150,
+      width: 100,
       renderCell: (params) => (
         <>
-        <button onClick={() => view(params.row)}>View</button>
+        <ViewButton onClick={() => view(params.row)}>View</ViewButton>
         </>
       ),
     },
     {
       field: 'insert1',
       headerName: 'Actions',
-      width: 150,
-      renderCell: (params) => (
+      width: 250,
+      renderCell: (params) => {
+        const ForEva = docslisted.filter(user => user.schoName === params.row.SchoIarshipApplied);
+        const Subuser = documentaryListed.filter(user => user.applicantId === params.row.applicantNum);
+        const approve = Subuser.filter(user => user.Status === 'Approved');
+        let isApproved = false;
+        if(approve.length === ForEva.length){
+          isApproved = true;
+        }
+        return(
         <>
-        <div style={{display:'flex',flexDirection:'column',height:'100%'}}>
-        <button style={{marginLeft:'5px',backgroundColor:'green',border:'none',padding:'3px',width:'60px',margin:'2px',color:'white',borderRadius:'5px',cursor:'pointer'}}  
-        onClick={() => ApplicantCheck(params.row)}>Add</button>
-        <button style={{marginLeft:'5px',backgroundColor:'red',border:'none',padding:'3px',width:'60px',margin:'2px',color:'white',borderRadius:'5px',cursor:'pointer'}}  
-              onClick={() =>handleClickOpenDialog(params.row)}>Failed</button>
-        </div>
+        <div style={{display:'flex'}}>
+
+      {isApproved && <StyledButtonEdit onClick={() => ApplicantCheck(params.row)}>Set Qualified</StyledButtonEdit>}
+      {!isApproved && (<>
+                {params.row.grantedAccess === '' || !params.row.grantedAccess ? (<StyledButtonAccess 
+              onClick={() =>handleOpenDialog1(params.row)}>
+                Access</StyledButtonAccess>) : (<StyledButtonEdit
+              onClick={() => ApplicantCheck(params.row)}>
+                SET QUALIFIED
+                </StyledButtonEdit>)}
+                <StyledButton
+              onClick={() => setDialog(true)}>
+                Failed
+                </StyledButton>
+                </>)}
+      </div>
         </>
-      ),
+      )},
     },
   ];
+  const completeColumn = [
+    { 
+      field: 'applicantNum', 
+      headerName: 'Registry ID',
+      width: 100
+     },
+    {
+      field: 'SchoIarshipApplied',
+      headerName: 'Scholarship Applied',
+      width: 150,
+      editable: false,
+    },
+    {
+      field: 'Name',
+      headerName: 'Name',
+      width: 150,
+      editable: false,
+    },
+    {
+      field: 'DateApplied',
+      headerName: 'Date Applied',
+      width: 150,
+      editable: false,
+    },
+    {
+      field: 'status',
+      headerName: 'Status',
+      width: 100,
+      editable: false,
+    },
+    {
+      field: 'stat',
+      headerName: 'Submitted',
+      width: 100,
+      editable: false,
+      renderCell: (params) => {
+        const ForEva = docslisted.filter(user => user.schoName === params.row.SchoIarshipApplied);
+        const Subuser = documentaryListed.filter(user => user.applicantId === params.row.applicantNum);
+        const approve = Subuser.filter(user => user.Status === 'Approved');
+        const pval = `${Subuser.length}/${ForEva.length}`
+        console.log(Subuser)
+        return(
+        <>
+        <p>{pval}</p>
+        </>
+      )},
+    },
+    {
+      field: 'stat1',
+      headerName: 'Approved',
+      width: 100,
+      editable: false,
+      renderCell: (params) => {
+        const ForEva = docslisted.filter(user => user.schoName === params.row.SchoIarshipApplied);
+        const Subuser = documentaryListed.filter(user => user.applicantId === params.row.applicantNum);
+        const approve = Subuser.filter(user => user.Status === 'Approved');
+        const pval = `${approve.length}/${ForEva.length}`
+        console.log(Subuser)
+        return(
+        <>
+        <p>{pval}</p>
+        </>
+      )},
+    },
+    {
+        field: 'insert',
+        headerName: 'Actions',
+        width: 150,
+        renderCell: (params) => (
+            <>
+            <div style={{display:'flex',flexDirection:'column',height:'100%',width:'100%',justifyContent:'center',alignItems:'center'}}>
+            <ViewButton style={{marginLeft:'5px',backgroundColor:'blue',border:'none',padding:'3px',width:'100%',margin:'2px',color:'white',borderRadius:'5px',cursor:'pointer'}}
+            onClick={() => view(params.row)}>View Details</ViewButton>
+            </div>
+          </>
+        ),
+      },
+      {
+        field: 'score',
+        headerName: 'Details',
+        width: 150,
+        renderCell: (params) => {
+          return(
+            <>
+            <div style={{width:"100%",display:'flex',flexDirection:'column',height:'100%',justifyContent:'center',alignItems:'center'}}>
+          <StyledButtonEdit sx={{width:'100%'}}
+          onClick={() => ApplicantCheck(params.row)}>
+            SET QUALIFIED
+            </StyledButtonEdit>
+          </div>
+          </>)
+        },
+      },
 
-console.log(applicantsDocs)
+  ];
+  const incompleteColumn = [
+    { 
+      field: 'applicantNum', 
+      headerName: 'Registry ID',
+      width: 100
+     },
+    {
+      field: 'SchoIarshipApplied',
+      headerName: 'Scholarship Applied',
+      width: 150,
+      editable: false,
+    },
+    {
+      field: 'Name',
+      headerName: 'Name',
+      width: 150,
+      editable: false,
+    },
+    {
+      field: 'DateApplied',
+      headerName: 'Date Applied',
+      width: 150,
+      editable: false,
+    },
+    {
+      field: 'status',
+      headerName: 'Status',
+      width: 100,
+      editable: false,
+    },
+    {
+      field: 'stat',
+      headerName: 'Submitted',
+      width: 100,
+      editable: false,
+      renderCell: (params) => {
+        const ForEva = docslisted.filter(user => user.schoName === params.row.SchoIarshipApplied);
+        const Subuser = documentaryListed.filter(user => user.applicantId === params.row.applicantNum);
+        const approve = Subuser.filter(user => user.Status === 'Approved');
+        const pval = `${Subuser.length}/${ForEva.length}`
+        console.log(Subuser)
+        return(
+        <>
+        <p>{pval}</p>
+        </>
+      )},
+    },
+    {
+      field: 'stat1',
+      headerName: 'Approved',
+      width: 100,
+      editable: false,
+      renderCell: (params) => {
+        const ForEva = docslisted.filter(user => user.schoName === params.row.SchoIarshipApplied);
+        const Subuser = documentaryListed.filter(user => user.applicantId === params.row.applicantNum);
+        const approve = Subuser.filter(user => user.Status === 'Approved');
+        const pval = `${approve.length}/${ForEva.length}`
+        console.log(Subuser)
+        return(
+        <>
+        <p>{pval}</p>
+        </>
+      )},
+    },
+    {
+        field: 'insert',
+        headerName: 'Actions',
+        width: 150,
+        renderCell: (params) => (
+            <>
+            <div style={{display:'flex',flexDirection:'column',height:'100%',width:'100%',justifyContent:'center',alignItems:'center'}}>
+            <ViewButton style={{marginLeft:'5px',backgroundColor:'blue',border:'none',padding:'3px',width:'100%',margin:'2px',color:'white',borderRadius:'5px',cursor:'pointer'}}
+            onClick={() => view(params.row)}>View Details</ViewButton>
+            </div>
+          </>
+        ),
+      },
+      {
+        field: 'grantedAccess',
+        headerName: 'Details',
+        width: 250,
+        renderCell: (params) => {
+          console.log(params.row)
+          return(
+            <>
+            <div style={{display:'flex'}}>
+          {params.row.grantedAccess === '' || !params.row.grantedAccess ? (<StyledButtonAccess 
+          onClick={() =>handleOpenDialog1(params.row)}>
+            Access</StyledButtonAccess>) : (<StyledButtonEdit style={{marginLeft:'5px',backgroundColor:'green',border:'none',padding:'3px',width:'100%',margin:'2px',color:'white',borderRadius:'5px',cursor:'pointer'}} 
+          onClick={() => ApplicantCheck(params.row)}>
+            SET QUALIFIED
+            </StyledButtonEdit>)}
+            <StyledButton
+          onClick={() => handleOpenDialog2(params.row)}>
+            Failed
+            </StyledButton>
+          </div>
+          </>)
+        },
+      },
+
+  ];
+
  const docusubmitted = applicantsDocs?.map((data, index) => {
-  const { requirement_Name, File } = data;
+
+  const { requirement_Name, File,Status } = data;
+  console.log(Status)
   const handleStatusChange = (e) => {
     const { value } = e.target;
     setStatusCheck((prevStatus) => ({
@@ -262,26 +730,32 @@ console.log(applicantsDocs)
       [requirement_Name]: value || prevComments[requirement_Name] || 'No comments'
     }));
   };
-
   return (
     <>
-      <div className="PA">
         <div className="Docuinfo">
-          <div>
             <Card elevation={5}>
-              <div className="sublist" key={index}>
-                <div>
-                  <div className="actions">
-                    <h1>{requirement_Name}</h1>
-                    <FormControl>
+              <div className="sublist"  key={index}>
+                <div className="actions">
+                  <div >
+                    <Typography>Check the Submitted Requirements/Documents if it valid and viewable</Typography>
+                    <FormControl style={{fontSize:15}}>
                       <FormLabel id="demo-row-radio-buttons-group-label">
-                        Status
+                        Status:{Status}
                       </FormLabel>
                       <RadioGroup
+                        size='small'
                         row
                         aria-labelledby="demo-row-radio-buttons-group-label"
                         name="row-radio-buttons-group"
-                        value={status[requirement_Name] || 'Unchecked'}
+                        value={
+                          status[Status] === 'Approved'
+                            ? 'Approved'
+                            : status[Status] === 'Reject'
+                            ? 'Reject'
+                            : status[Status] === 'For Further Evaluation'
+                            ? 'For Further Evaluation'
+                            : 'Unchecked'
+                        }
                         onChange={handleStatusChange}
                       >
                         <FormControlLabel
@@ -332,56 +806,96 @@ console.log(applicantsDocs)
                     </FormControl>
                   </div>
                   <div>
-                    <button onClick={() => check(data, index)}> Save </button>
+                    <StyledButtonEdit onClick={() => check(data, index)}><CheckCircleOutlineRoundedIcon/> Check </StyledButtonEdit>
                   </div>
                 </div>
                 <div className="subdocsprev">
+                  <button onClick={() => openImageModal(File)}>
                   <img
-                    style={{ width: '70%', height: '80%' }}
+                    style={{ width: '200px', height: '300px' }}
                     src={File}
                     alt=""
                   />
+                  <span className="requirement-name">{requirement_Name}</span>
+                  </button>
                 </div>
               </div>
             </Card>
-          </div>
         </div>
-      </div>
     </>
   );
 });
-      console.log(post)
+
       const filteredRows = post?.filter((row) => row.status === 'Applicants' || row.status ==='Applicant');
+      const getDocumentsByApplicant = (applicantId) => {
+        return documentaryListed.filter(doc => doc.applicantId === applicantId);
+      };
+      const getRequiredDocuments = (scholarshipName) => {
+        return docslisted.filter(req => req.schoName === scholarshipName);
+      };
+    
+      const isRequirementCompleted = (applicantId, requirementName) => {
+        const applicantDocuments = getDocumentsByApplicant(applicantId);
+        console.log(applicantDocuments)
+        return applicantDocuments.some(doc => doc.requirement_Name === requirementName && doc.Status === 'Approved');
+      };
+    
+      const groupedUsers = filteredRows.reduce((groups, user) => {
+        const requiredDocuments = getRequiredDocuments(user.SchoIarshipApplied);
+        const completed = requiredDocuments.every(req =>
+          isRequirementCompleted(user.applicantNum, req.requirementName)
+        );
+    
+        if (completed) {
+          groups.completed.push(user);
+        } else {
+          groups.incomplete.push(user);
+        }
+    
+        return groups;
+      }, { completed: [], incomplete: [] });
+
+      console.log(groupedUsers)
+      console.log(docusubmitted)
   return (
     <>
+  {/* Dialog for Image Expandin */}
+    <Dialog open={imageModalOpen} onClose={closeImageModal} maxWidth="lg">
+  <DialogTitle>Full Image</DialogTitle>
+  <DialogContent>
+    <img src={selectedImage} alt="Full Image" style={{ width: '100%', height: '100%' }} />
+  </DialogContent>
+  <DialogActions>
+    <Button onClick={closeImageModal}>Close</Button>
+  </DialogActions>
+    </Dialog>
+  {/* End of Dialog for Image Expandin */}
+  {/* Modal For Viewing */}
     <Modal className="modalContainer"
         open={open}
         onClose={handleClose}
       >
-        <Box sx={{
-          margin: 'auto',
-          padding: 2,
-          backgroundColor: 'white',
-          border: 1 ,
-          color: '#005427',
-          borderRadius: 5,
-          height:'90%',
-          overflow:'auto',
-          width:'90%'
-        }}>
+        <Box sx={style}>
           <div className="docusersub">
-           <div className="buttonclosed" >
-            <button onClick={handleClose}> X </button>
-            </div>  
-            <h1>Documents:{reqlist}</h1>
-            <div className="clas"> 
+          <div style={{width:'100%'}}>
+              <StyledButton onClick={handleClose}> X </StyledButton>
+            </div> 
+            {docusubmitted.length > 0 ? (<div className="clas"> 
           {docusubmitted}
-          </div>
+          </div>) : (<div style={{display:'flex',justifyContent:'center',alignItems:'center',width:'100%',height:'100%',flexDirection:'column'}}>
+             <AssignmentLateRoundedIcon style={{fontSize:100}}/><br />
+            <p style={{fontSize:30,fontStyle:'italic'}}>No Submitted Requirement/Documents</p></div>)}
           </div>
         </Box>
     </Modal>
+  {/* End of Modal For Viewing */}
+  {/* Dialog for Failed User */}
     <Dialog open={dialog} onClose={handleCloseDialog}>
+      <div style={{display:'flex',alignItems:'center'}}>
+        <div>
         <DialogTitle>Failed</DialogTitle>
+        </div>
+      </div>
         <DialogContent>
           <DialogContentText>
             Please Enter the Reason for Failing
@@ -398,39 +912,221 @@ console.log(applicantsDocs)
             variant="standard"
           />
         </DialogContent>
+        <div style={{display:'flex',alignItems:'center',marginLeft:'10px'}}>
+        <Checkbox
+                    checked={checked1}
+                    onChange={handleChangeCheckbox1}
+                    inputProps={{ 'aria-label': 'controlled' }}
+                  /><span>Sent Notification</span>
+        </div>
         <DialogActions>
           <Button onClick={handleCloseDialog}>Cancel</Button>
           <Button onClick={failed}>Submit</Button>
         </DialogActions>
-      </Dialog>
-
+    </Dialog>
+  {/* End of Dialog for Failed User */}
+  {/* Dialog for All Failed User */}
+  <Dialog open={openDialog2} onClose={handleCloseDialog2}>
+      <div style={{display:'flex',alignItems:'center'}}>
+        <div>
+        <DialogTitle>Failed</DialogTitle>
+        </div>
+      </div>
+        <DialogContent>
+          <DialogContentText>
+            Please Enter the Reason for Failing
+          </DialogContentText>
+          <TextField
+            autoFocus
+            margin="dense"
+            id="name"
+            label="Reason"
+            type="text"
+            value={reason}
+            fullWidth
+            onChange={(e) => setReason(e.target.value)}
+            variant="standard"
+          />
+        </DialogContent>
+        <div style={{display:'flex',alignItems:'center',marginLeft:'10px'}}>
+        <Checkbox
+                    checked={checked}
+                    onChange={handleChangeCheckbox}
+                    inputProps={{ 'aria-label': 'controlled' }}
+                  /><span>Sent Notification</span>
+        </div>
+        <DialogActions>
+          <Button onClick={handleCloseDialog}>Cancel</Button>
+          <Button onClick={failed}>Submit</Button>
+        </DialogActions>
+    </Dialog>
+  {/* End of Dialog for All Failed User */}
+  {/* Dialog for Access */}
+    <Dialog open={openDialog1} onClose={handleCloseDialog1}>
+        <DialogTitle>Login to Grant Access</DialogTitle>
+        <DialogContent>
+          <DialogContentText>
+            This will use for the special case scenario if the Admin, Employee or Mayor wants an applicants with an incomplete Documents to be proceed to the next step
+          </DialogContentText>
+          <TextField
+            autoFocus
+            margin="dense"
+            id="name"
+            value={email}
+            onChange={(e) =>setEmail(e.target.value)}
+            label="Email Address"
+            type="email"
+            fullWidth
+            variant="standard"
+          />
+          <TextField
+            autoFocus
+            margin="dense"
+            id="name"
+            value={password}
+            onChange={(e) =>setPassword(e.target.value)}
+            label="Password"
+            type="password"
+            fullWidth
+            variant="standard"
+          />
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={handleCloseDialog1}>Cancel</Button>
+          <Button onClick={Access}>Submit</Button>
+        </DialogActions>
+    </Dialog>
+  {/* End of Dialog for Access */}
+    <div style={{width:'100%'}}>
     <div className="applicant">
       <Sidebar/>
-    <div className="applicantContainer">
+          <div className="applicantContainer">
       <Navbar/>
-      <div className="top" >
-      <h1> Applicants </h1>      
-      <Box sx={{ height: 400, width: '100%' }}>
-      <CustomDataGrid
-        rows={filteredRows}
-        columns={columns}
-        getRowId={(row) => row.applicantNum}
-        scrollbarSize={10}
-        initialState={{
-          pagination: {
-            paginationModel: {
-              pageSize: 5,
-            },
-          },
-        }}
-        pageSizeOptions={[25]}
-        checkboxSelection   
-        disableRowSelectionOnClick
-        rowSelectionModel={selectedRows}
-        onRowSelectionModelChange={handleSelectionModelChange}
-      />
+
+      <div className="top">
+        <div style={{width:'100%',padding:10}}>
+      <h1> Applicants </h1>
+      <Breadcrumbs sx={{backgroundColor:'green'}} aria-label="breadcrumb">
+                  <Button onClick={() => setActiveState('All')}>
+                    <Link
+                      underline="none"
+                      sx={{
+                        color: activeState === 'All' ? 'white' : 'black',
+                      }}
+                    >
+                      <FormatListBulletedOutlinedIcon fontSize="inherit" />
+                      All({filteredRows.length})
+                    </Link>
+                  </Button>
+                  <Button onClick={() => setActiveState('Complete')}>
+                    <Link
+                      underline="none"
+                      sx={{
+                        color: activeState === 'Complete' ? 'white' : 'black',
+                      }}
+                    >
+                      <CheckCircleIcon sx={{ mr: 0.5 }} fontSize="inherit" />
+                      Complete and Approved Documents({groupedUsers.completed.length})
+                    </Link>
+                  </Button>
+                  <Button onClick={() => setActiveState('Incomplete')}>
+                    <Link
+                      underline="none"
+                      sx={{
+                        color: activeState === 'Incomplete' ? 'white' : 'black',
+                      }}
+                    >
+                      <CancelIcon sx={{ mr: 0.5 }} fontSize="inherit" />
+                      Incomplete Documents({groupedUsers.incomplete.length})
+                    </Link>
+                  </Button>
+                  </Breadcrumbs>      
+      <Box sx={{ height: 400, width: '100%'}}>
+                {activeState === 'All' && (filteredRows && filteredRows.length > 0 ? (
+                  <DataGrid
+                    rows={filteredRows}
+                    columns={columns}
+                    getRowId={(row) => row.applicantNum}
+                    scrollbarSize={10}
+                    initialState={{
+                      pagination: {
+                        paginationModel: {
+                          pageSize: 5,
+                        },
+                      },
+                    }}
+                    pageSizeOptions={[25]}
+                    checkboxSelection
+                    disableRowSelectionOnClick
+                  />
+                ) : (
+                  <div style={{width:'100%',height:'100%',display:'flex',justifyContent:'center',alignItems:'center',backgroundColor:'whitesmoke'}}>
+                  <p style={{ textAlign: 'center',fontSize:30,fontWeight:700,fontStyle:'italic' }}>No records</p>
+                  </div>
+                ))}
+                  {activeState === 'Complete' && (groupedUsers.completed && groupedUsers.completed.length > 0 ? (
+                    <DataGrid
+                      rows={groupedUsers.completed}
+                      columns={completeColumn}
+                      getRowId={(row) => row.applicantNum}
+                      scrollbarSize={10}
+                      initialState={{
+                        pagination: {
+                          paginationModel: {
+                            pageSize: 5,
+                          },
+                        },
+                      }}
+                      pageSizeOptions={[25]}
+                      checkboxSelection
+                      onRowSelectionModelChange={handleRowSelectionModelChange}
+                      rowSelectionModel={rowSelectionModel}
+                      disableRowSelectionOnClick
+                    />
+                  ) : (
+                    <div style={{width:'100%',height:'100%',display:'flex',justifyContent:'center',alignItems:'center',backgroundColor:'whitesmoke'}}>
+                    <p style={{ textAlign: 'center',fontSize:30,fontWeight:700,fontStyle:'italic' }}>No records</p>
+                    </div>
+                  ))}
+                  {activeState === 'Incomplete' && (groupedUsers.incomplete && groupedUsers.incomplete.length > 0 ? (
+                    <DataGrid
+                      rows={groupedUsers.incomplete}
+                      columns={incompleteColumn}
+                      getRowId={(row) => row.applicantNum}
+                      scrollbarSize={10}
+                      initialState={{
+                        pagination: {
+                          paginationModel: {
+                            pageSize: 5,
+                          },
+                        },
+                      }}
+                      pageSizeOptions={[25]}
+                      checkboxSelection
+                      onRowSelectionModelChange={handleFailedSelectionModelChange}
+                      rowSelectionModel={failedSelectionModel}
+                      disableRowSelectionOnClick
+                    />
+                  ) : (
+                    <div style={{width:'100%',height:'100%',display:'flex',justifyContent:'center',alignItems:'center',backgroundColor:'whitesmoke'}}>
+                    <p style={{ textAlign: 'center',fontSize:30,fontWeight:700,fontStyle:'italic' }}>No records</p>
+                    </div>
+                  ))}
     </Box>
       </div>
+      {activeState === 'Complete' && <div sx={{width:'90%',margin:'10px',display:'flex',justifyContent:'flex-end',flexDirection:'column',alignItems:'flex-end'}}>
+              <Button onClick={Addall} sx={{margin:'10px'}} variant='contained'>ADD ALL SELECTED TO QUALIFIED LIST</Button>
+            </div>}
+      {activeState === 'Incomplete' && <div sx={{width:'90%',margin:'10px',display:'flex',justifyContent:'flex-end',flexDirection:'column',alignItems:'flex-end'}}>
+                  <Checkbox
+                    checked={checked}
+                    onChange={handleChangeCheckbox}
+                    inputProps={{ 'aria-label': 'controlled' }}
+                  /><span>Sent Notification</span>
+                <Button onClick={FailedAll} sx={{margin:'10px'}} variant='contained'>SET FAILED THE SELECTED USERS</Button>
+            </div>}
+    </div>
+    </div>
     </div>
   </div>
     </>
