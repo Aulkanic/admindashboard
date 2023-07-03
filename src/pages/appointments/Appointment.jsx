@@ -757,67 +757,72 @@ const Failed = async() =>{
          </div>
         </Card>}
         </Box>}
-        {value === 1 && <Box sx={{display:'flex',height:'100%',padding:'10px',width:'98%',backgroundColor:'grey'}}>
+        {value === 1 && 
+        <Box sx={{display:'flex',height:'100%',padding:'10px',width:'98%'}}>
             <div style={{width:'45%',height:'500px',margin:'10px'}}>
-              <Card sx={{width:'100%',height:'100%',overflow:'auto'}}>
-              {selectedAppointment && (
-              <div>
-                {Object.entries(timeGroup).map(([date, timeBatch]) => {
-                  console.log(timeBatch)
-        if (date === selectedAppointment.selectedDate) {
-          return (
-            <>
-            <div key={date} style={{width:'90%',display:'flex',justifyContent:'center',alignItems:'center',padding:'10px',flexDirection:'column'}}>
-              <h3>{date}</h3>
-              <button onClick={() => cancelAppointment(timeGroup[selectedAppointment.selectedDate], date)}>Cancel</button>
-              {Object.entries(timeBatch).map(([timeRange, data]) => {
-                if (timeRange) {
-                  return (
-                    <>
-                    <div style={{width:'100%',display:'flex',justifyContent:'center',alignItems:'center'}}>
-                    <Card elevation={2} sx={{width:'90%',display:'flex',justifyContent:'center',alignItems:'center',padding:'10px'}}>
-                    <div key={timeRange}>
-                      <h3>{data[0].Reason}</h3>
-                      <h4>{timeRange}</h4>
-                      <p>{data[0].Location}</p>
-                      <ul>
-                        {data.map((item, index) => (
-                          <li key={index}>
-                            {item.Name}
-                          </li>
-                        ))}
-                      </ul>
-                      <button onClick={() => addOtherUser(timeGroup)}>Add User</button>
-                    </div>
-                    </Card>
-                    </div>
-                    </>
-                  );
-                }
-                return null;
-              })}
-            </div>
-            </>
-          );
-        }
-        return null;
-      })}
-              </div>
-            )}
+            <Card sx={{width:'96%',height:'96%',overflow:'auto',padding:'10px',backgroundColor:'transparent'}} elevation={0}>
+                    {selectedAppointment && (
+                      <div>
+                        {Object.entries(timeGroup).map(([date, timeBatch]) => {
+                          if (date === selectedAppointment.selectedDate) {
+                            return (
+                              <>
+                              <div key={date} 
+                              style={{width:'100%',display:'flex',justifyContent:'center',alignItems:'center',flexDirection:'column'}}>
+                                <div style={{width:'100%',display:'flex',justifyContent:'space-around',alignItems:'center'}}>
+                                <Card style={{width:'100%',display:'flex',justifyContent:'space-around',alignItems:'center',padding:'10px'}}>
+                                <h3>{date}</h3>
+                                <Button variant="contained" onClick={() => cancelAppointment(timeGroup[selectedAppointment.selectedDate], date)}>Cancel Schedule</Button>
+                                </Card>
+                                </div>
+                                {Object.entries(timeBatch).map(([timeRange, data]) => {
+                                  if (timeRange) {
+                                    return (
+                                      <>
+                                      <div style={{width:'100%',display:'flex',justifyContent:'center',alignItems:'center',margin:'10px'}}>
+                                      <Card elevation={2} sx={{width:'100%',display:'flex',justifyContent:'center',alignItems:'center',padding:'10px'}}>
+                                      <div key={timeRange}>
+                                        <h3>{data[0].Reason}</h3>
+                                        <h4>{timeRange}</h4>
+                                        <p>{data[0].Location}</p>
+                                        <ul>
+                                          {data.map((item, index) => (
+                                            <li key={index}>
+                                              {item.Name}
+                                            </li>
+                                          ))}
+                                        </ul>
+                                        <button onClick={() => addOtherUser(timeGroup)}>Add User</button>
+                                      </div>
+                                      </Card>
+                                      </div>
+                                      </>
+                                    );
+                                  }
+                                  return null;
+                                })}
+                              </div>
+                              </>
+                            );
+                          }
+                          return null;
+                        })}
+                      </div>
+                    )}
             </Card>
             </div>
-          <div style={{ height: '500px',width:'52%',margin:'10px' }}>
-            <Card sx={{width:'100%',height:'100%'}}>
-            <Calendar 
-            localizer={localizer} 
-            events={events} 
-            startAccessor="start" 
-            endAccessor="end"
-            onSelectEvent={handleEventSelect} />
-            </Card>
-          </div>
-
-          </Box>}
+            {/* Calendar */}
+            <div style={{ height: '500px',width:'52%',margin:'10px' }}>
+                <Card sx={{width:'100%',height:'100%'}}>
+                <Calendar 
+                localizer={localizer} 
+                events={events} 
+                startAccessor="start" 
+                endAccessor="end"
+                onSelectEvent={handleEventSelect} />
+                </Card>
+            </div>
+        </Box>}
        </div>
 
       </div>
