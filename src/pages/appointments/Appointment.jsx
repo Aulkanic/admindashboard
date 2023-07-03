@@ -24,6 +24,7 @@ import DialogContent from '@mui/material/DialogContent';
 import DialogContentText from '@mui/material/DialogContentText';
 import DialogTitle from '@mui/material/DialogTitle';
 import { Calendar, momentLocalizer } from "react-big-calendar";
+import { DateCalendar } from '@mui/x-date-pickers/DateCalendar';
 import moment from "moment";
 import "react-big-calendar/lib/css/react-big-calendar.css";
 import TextField from '@mui/material/TextField';
@@ -34,16 +35,39 @@ const localizer = momentLocalizer(moment);
 
 const columns = [
   { field: 'applicantNum', headerName: 'ID', width: 90 },
-  { field: 'applicantCode', headerName: 'Applicant Code', width: 150 },
   {
     field: 'Name',
     headerName: 'Name',
-    width: 250,
+    width: 150,
     editable: true,
   },
   {
     field: 'status',
     headerName: 'Status',
+    width: 150,
+    editable: true,
+  },
+  {
+    field: 'email',
+    headerName: 'Email',
+    width: 250,
+    editable: true,
+  },
+  {
+    field: 'contactNum',
+    headerName: 'Contact Number',
+    width: 150,
+    editable: true,
+  },
+  {
+    field: 'yearLevel',
+    headerName: 'Year Level',
+    width: 150,
+    editable: true,
+  },
+  {
+    field: 'DateApplied',
+    headerName: 'Date Applied',
     width: 150,
     editable: true,
   },
@@ -69,20 +93,18 @@ const Appointment = () => {
   const { loginUser,user } = useContext(admininfo);
   const [Qualified, setQualified] = useState([]);
   const [appointedList, setAppointedList] = useState([]);
-  const [appointmentDate, setAppointmentDate] = useState('');
+  const [appointmentDate, setAppointmentDate] = useState(null);
   const [Agenda, setAgenda] = useState('');
   const [Location, setLocation] = useState('');
-  const [startTime, setStartTime] = useState(dayjs('2022-04-17T15:30'));
-  const [endTime, setEndTime] = useState(dayjs('2022-04-17T15:30'));
+  const [startTime, setStartTime] = useState(dayjs(null));
+  const [endTime, setEndTime] = useState(dayjs(null));
+  const [appDetails,setAppDetails] = useState({})
   const [appointmentDate1, setAppointmentDate1] = useState('');
   const [Agenda1, setAgenda1] = useState('');
   const [Location1, setLocation1] = useState('');
   const [startTime1, setStartTime1] = useState(dayjs('2022-04-17T15:30'));
   const [endTime1, setEndTime1] = useState(dayjs('2022-04-17T15:30'));
-  const [selectAll, setSelectAll] = useState(false);
   const [selectedUsers, setSelectedUsers] = useState([]);
-  const [filteredData, setFilteredData] = useState([]);
-  const [selectedDate, setSelectedDate] = useState(null);
   const [errors, setErrors] = useState({});
   const [open, setOpen] = React.useState(false);
   const handleOpen = () => setOpen(true);
@@ -92,6 +114,17 @@ const Appointment = () => {
   const [dialog, setDialog] = React.useState(false);
   const [reason,setReason] = useState('');
   const [failinf,setFailInf] = useState([]);
+  const [value, setValue] = React.useState(0);
+  const [step,setStep] = useState(0)
+  const [rowSelectionModel, setRowSelectionModel] = useState([]);
+  const currentDate = dayjs();
+  const [selectedAppointment, setSelectedAppointment] = useState(null);
+
+
+
+  const handleChange = (event, newValue) => {
+    setValue(newValue);
+  };
 
   const handleClickOpenDialog = (data) => {
     console.log(data)
@@ -103,12 +136,10 @@ const Appointment = () => {
     setDialog(false);
   };
 
-  const handleSelectDate = (date) => {
-    const formattedDate = moment(date).format('YYYY-MM-DD');
-    setSelectedDate(formattedDate);
-  };
-  const handleSelectionModelChange = (newSelectionModel) => {
-    setSelectedRows(newSelectionModel);
+
+  const handleRowSelectionModelChange = (newRowSelectionModel) => {
+    console.log(newRowSelectionModel)
+    setRowSelectionModel(newRowSelectionModel);
 
   };
 
@@ -116,7 +147,9 @@ const Appointment = () => {
     async function Fetch(){
       const response = await FetchingQualified.FETCH_QUALIFIED();
       const listing  = await FetchingAppointList.FETCH_LISTAPPOINT();
-      setQualified(response.data.List);
+      console.log(response)
+      const list = response.data.List.filter(user => user.isAppointed === 'No');
+      setQualified(list);
       setAppointedList(listing.data.AppointmentList)
     }
     Fetch();
@@ -125,171 +158,114 @@ const Appointment = () => {
 
   const groupAppointmentsByDate = () => {
     const groupedAppointments = {};
-
+  
     appointedList.forEach((appointment) => {
-      const { schedDate, Name,Reason,Location,applicantCode,timeStart,timeEnd,applicantNum } = appointment;
-
+      const { schedDate, Name, Reason, Location, applicantCode, timeStart, timeEnd, applicantNum } = appointment;
+      console.log(schedDate)
+      const date = schedDate.split('T')[0];
+      console.log(date)
+      const time = `${timeStart} - ${timeEnd}`;
+  
       if (!groupedAppointments[schedDate]) {
-        groupedAppointments[schedDate] = [];
+        groupedAppointments[schedDate] = {};
       }
-
-      groupedAppointments[schedDate].push({Name,Reason,Location,applicantCode,timeStart,timeEnd,applicantNum});
+  
+      if (!groupedAppointments[schedDate][time]) {
+        groupedAppointments[schedDate][time] = [];
+      }
+  
+      groupedAppointments[schedDate][time].push({ Name, Reason, Location, applicantCode, timeStart, timeEnd, applicantNum });
     });
-
+  
     return groupedAppointments;
   };
-  const RenderAppointmentsByDate = () => {
-    const groupedAppointments = groupAppointmentsByDate();
-    const [open2, setOpen2] = React.useState(false);
-    const handleOpen2 = () => {
-      setOpen2(true);
-    };
-  
-    const handleClose2 = () => {
-      setOpen2(false);
-    };
-    return Object.keys(groupedAppointments).map((date) => {
-      console.log(groupedAppointments)
-      const appointments = groupedAppointments[date];
-      const { Reason, Location,timeStart,timeEnd,applicantNum } = appointments[0];
-  
-      return (
-        <>
-        <Card sx={{padding:'10px'}}>
-        <div key={date}>
-          <div style={{display:'flex',justifyContent:'space-between'}}>
-            <div>
-            <h3>Date: {date}</h3>
-            <p>Agenda: {Reason}</p>
-          <p>Location: {Location}</p>
-          <p>Time: {timeStart}-{timeEnd}</p>
-            </div>
+  const timeGroup = groupAppointmentsByDate()
+  console.log(groupAppointmentsByDate())
+  // const RenderAppointmentsByDate = selectedAppointment?.map((data,index) =>{
+  //     return(
+  //       <>
+  //               {Object.keys(timeGroup).map((timeRange) => (
+  //       <div key={timeRange}>
+  //               <h1></h1>
+  //               <h3>{timeRange}</h3>
+  //         <ul>
+  //           {timeGroup[timeRange].map((item, index) => (
+  //           <>
+  //             <li key={index}>
+  //               {item.Name}
+  //             </li>
+  //           </>
+  //           ))}
+  //         </ul>
+  //       </div>
+  //     ))}
+  //       </>
+  //     )
+  // })
 
-          <div style={{display:'flex',justifyContent:'space-between',height:'30px'}}>
-          <ChildModalEdit
-                 open={open2}
-                 handleOpen={handleOpen2}
-                 handleClose={handleClose2}
-          data={date} deta={appointments}/>
-            <ChildModal data={date} deta={appointments[0]}/>
-          </div>
-          </div>
-          <div className="listuserapp">
-          <ul>
-            {appointments.map((user) => (
-              
-              <li key={user.id}>
-                <p>ApplicantCode:{user.applicantCode}</p>
-                <p>Name: {user.Name}</p>
-              </li>
-             
-            ))}
-          </ul>
-          </div>
-        </div>
-        </Card>
-        </>
-      );
-    });
-  };
-  
-  const getAppointedUsersCount = (date) => {
-    console.log(date)
-    console.log(appointedList)
-    return appointedList.filter(
-      (appointment) =>
-        moment(appointment.schedDate).isSame(date, "day")
-    ).length;
-  };
-  const eventList = appointedList.map((appointment) => ({
-    title: `${appointment.Reason} - ${appointment.Name}`,
-    start: moment(appointment.schedDate).toDate(),
-    end: moment(appointment.schedDate).toDate(),
-  }));
+  const handleNext = (e) =>{
+    e.preventDefault();
+    let errors = {}
 
-  const handleFilter = async (filterValue) => {
-    const filtered = Qualified.filter(item =>
-      Object.values(item).some(value =>
-        value && value.toString().toLowerCase().includes(filterValue.toLowerCase())
-      )
-    );
-    setFilteredData(filtered);
-  };
-
-  const handleUserSelection = (userId,name,email,scho,date,code) => {
-    const currentIndex = selectedUsers.indexOf(userId);
-    const newChecked = [...selectedUsers];
-    const isSelected = selectedUsers.includes({userId,name,email,scho,date,code});
-    console.log(currentIndex)
-    if (currentIndex === -1) {
-      newChecked.push({userId,name,email,scho,date,code});
-    } else {
-      newChecked.splice(currentIndex, 1);
+    if(!startTime || startTime === null){
+      errors.start = 'This Field is Required'
     }
-
-    if (isSelected) {
-      setSelectedUsers(selectedUsers.filter((id,uname) => id !== userId && uname !== name));
-    } else {
-      setSelectedUsers(newChecked)
+    if(!endTime || endTime === null){
+      errors.start = 'This Field is Required'
     }
-  };
-
-  const handleSelectAllChange = (event) => {
-    const isChecked = event.target.checked;
-    setSelectAll(isChecked);
-
-    if (isChecked) {
     
-      setSelectedUsers([...Qualified]);
-    } else {
-      
-      setSelectedUsers([]);
+    const currentDate = moment();
+    const officeHourStart = moment('08:00 AM', 'hh:mm A');
+    const officeHourEnd = moment('05:00 PM', 'hh:mm A');
+    const date = new Date(appointmentDate).toDateString();
+    const targetDate = moment(date);
+    const value = { $d: new Date(startTime) };
+    const start = value.$d.toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit', hour12: true });
+    const value1 = { $d: new Date(endTime) };
+    const end = value1.$d.toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit', hour12: true })
+    const startcheck = moment(start, 'hh:mm A'); 
+    const endcheck = moment(end, 'hh:mm A');
+
+    console.log(start,end)
+    if(Agenda === ''){
+      errors.agenda = 'This Field is Required'
     }
-  };
+    if(Location === ''){
+      errors.location = 'This Field is Required'
+    }
+    if (endcheck.isBefore(startcheck)) {
+      errors.end = 'End time cannot be before the start time!'
+    } else if (!endcheck.isBetween(officeHourStart, officeHourEnd, undefined, "(]")) {
+      errors.end = 'Please select a time within office hours!(9AM-5PM)';
+    }
+   if (!startcheck.isBetween(officeHourStart, officeHourEnd, undefined, "(]")) {
+      errors.start = 'Please select a time within office hours!(9AM-5PM)';
+    }
+    console.log(errors)
+    if (Object.keys(errors).length > 0) {
+      setErrors(errors);
+      console.log(errors)
+      return;
+    }
+    setAppDetails({start,end,date})
+    setStep(1)
+  }
 
   const handleSave = (e) => {
     e.preventDefault()
-    let errors = {}
-    selectedUsers.forEach((data,index) =>{
+    const selectedRows = rowSelectionModel.map((selectedRow) =>
+    Qualified.find((row) => row.applicantNum === selectedRow)
+  );
+  selectedRows.forEach((data,index) =>{
       console.log(data)
-      const currentDate = moment();
-      const officeHourStart = moment('08:00 AM', 'hh:mm A');
-      const officeHourEnd = moment('05:00 PM', 'hh:mm A');
-      const date = new Date(appointmentDate).toDateString();
-      const targetDate = moment(date);
-      const value = { $d: new Date(startTime) };
-      const start = value.$d.toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit', hour12: true });
-      const value1 = { $d: new Date(endTime) };
-      const end = value1.$d.toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit', hour12: true })
-      const startcheck = moment(start, 'hh:mm A'); 
-      const endcheck = moment(end, 'hh:mm A');
-      const startTimemin = endcheck.clone().subtract(1, 'hour');
-      if(!date || date === ''){
-        errors.date = 'Select A Scheduled Date First'
-      }
-      if (targetDate.isBefore(currentDate)) {
-        errors.date ='Selected date is less than the current date!';
-      }
-      if (endcheck.isBefore(startcheck)) {
-        errors.end = 'End time cannot be before the start time!'
-      } else if (!endcheck.isBetween(officeHourStart, officeHourEnd, undefined, "(]")) {
-        errors.end = 'Please select a time within office hours!(9AM-5PM)';
-      }
-     if (!startcheck.isBetween(officeHourStart, officeHourEnd, undefined, "(]")) {
-        errors.start = 'Please select a time within office hours!(9AM-5PM)';
-      }
-      console.log(errors)
-      if (Object.keys(errors).length > 0) {
-        setErrors(errors);
-        console.log(errors)
-        return;
-      }
-      const applicantCode = data.code || data.code;
-      const applicantNum = data.userId
-      const Name = data.name || data.Name;
-      const Email = data.email || data.email;
-      const Status = data.scho || data.status;
-
+      const applicantCode = data.applicantCode
+      const applicantNum = data.applicantNum
+      const Name = data.Name;
+      const Email = data.email
+      const Status = data.status;
+      const start = appDetails.start;
+      const end = appDetails.end;
+      const date = appDetails.date
       const adminName = user.name;
       const formData = new FormData();
       formData.append('applicantCode',applicantCode);
@@ -308,10 +284,12 @@ const Appointment = () => {
       .then((res) => {
         if(res.data.success === 1){
           console.log(res)
-          setQualified(res.data.List.data1);
+          const list = res.data.List.data1.filter(user => user.isAppointed === 'No');
+          setQualified(list);
           setAppointedList(res.data.List.data2)
           swal(res.data.message)
           setErrors('')
+          
         }
         swal(res.data.message)
         setErrors('')
@@ -443,178 +421,6 @@ const Failed = async() =>{
     });
   }
 
-  function ChildModal(props) {
-    const [open1, setOpen1] = React.useState(false);
-    const handleOpen1 = () => {
-      setOpen1(true);
-    };
-    const handleClose1 = () => {
-      setOpen1(false);
-    };
-    console.log(props)
-
-    return (
-      <React.Fragment>
-        <Button variant="contained" onClick={handleOpen1}>Add</Button>
-        <Modal
-          open={open1}
-          aria-labelledby="child-modal-title"
-          aria-describedby="child-modal-description"
-        >
-          <Box sx={{ height:'85%' }}>
-            <button onClick={handleClose1}>X</button>
-
-            <div style={{display:'flex',justifyContent:'space-between'}}>
-            <h1>Applicant List</h1>
-
-            <Button onClick={() =>AddtoApp(props)}>Add</Button>
-            </div>
-
-          <DataGrid
-          sx={{height:'70%'}}
-          rows={Qualified}
-          columns={columns}
-          getRowId={(row) => row.applicantNum}
-          initialState={{
-            pagination: {
-              paginationModel: {
-                pageSize: 5,
-              },
-            },
-          }}
-          pageSizeOptions={[5]}
-          checkboxSelection
-          disableRowSelectionOnClick
-          rowSelectionModel={selectedRows}
-          onRowSelectionModelChange={handleSelectionModelChange}
-        />
-
-          </Box>
-        </Modal>
-      </React.Fragment>
-    );
-  }
-
-  function ChildModalEdit(props) {
-    const [open2, setOpen2] = React.useState(false);
-    const handleOpen2 = (event) => {
-      event.stopPropagation();
-      setOpen2(true);
-    };
-    const handleClose2 = (event) => {
-      event.stopPropagation();
-      setOpen2(false);
-    };
-
-    console.log(open2)
-    return (
-      <React.Fragment>
-        <Button variant="contained" onClick={handleOpen2}>Edit</Button>
-        {open2 && <Modal
-          open={open2}
-          aria-labelledby="child-modal-title"
-          aria-describedby="child-modal-description"
-        >
-          <Box sx={{height:'55%' }}>
-            <button onClick={handleClose2}>X</button>
-            <div style={{display:'flex',justifyContent:'space-between'}}>
-            <Button onClick={() =>EditSched(props)}>Edit</Button>
-            </div>
-
-      <Card style={{height:'100%'}} elevation={3}>
-        <div className="frmappoint">
-          <h1 style={{marginBottom:'10px',fontSize:'15px'}}>Update Appointment Schedule</h1>
-        <div className="datagloc">
-      <div>
-
-{/* APPOINTMENT DATE */}
-        <LocalizationProvider dateAdapter={AdapterDayjs}>
-        <DateField 
-          label="Appointment Date"
-          value={appointmentDate1}
-          size='small'
-          onChange={(newValue) => setAppointmentDate1(newValue)}
-          format="MMM DD, YYYY"
-        />
-          {errors.date1 && 
-          <MuiAlert 
-          elevation={0} severity="error">
-          {errors.date1}
-        </MuiAlert>}
-      </LocalizationProvider>
-    </div>
-
-{/* AGENDA */}
-    <div>
-      <TextField 
-        id="outlined-basic" 
-        label="Agenda"
-        size='small'
-        value={Agenda1}
-        onChange={(e) => setAgenda1(e.target.value)} 
-        variant="outlined" />     
-      </div>
-
-{/* LOCATION */}
-    <div>
-      <TextField 
-        id="outlined-basic" 
-        label="Location"
-        size='small'
-        value={Location1}
-        onChange={(e) => setLocation1(e.target.value)}
-        variant="outlined" /> 
-      </div>
-    </div>
-
-{/* TIMESTART */}
-    <div className="timestend">
-
-      <div >
-      <LocalizationProvider dateAdapter={AdapterDayjs}>
-        <DemoContainer components={['TimeField', 'TimeField', 'TimeField']}>
-          <TimeField size='small'
-            label="Time Start"
-            value={startTime1}
-            onChange={(newValue) => setStartTime1(newValue)}
-            format="hh:mm A"
-          />
-
-      {errors.start1 && 
-      <MuiAlert 
-        variant='outlined' 
-        elevation={0} severity="error">
-          {errors.start1}
-        </MuiAlert>}
-      </DemoContainer>
-      </LocalizationProvider>
-      </div>
-
-{/* TIME END      */}
-      <div>
-        <LocalizationProvider dateAdapter={AdapterDayjs}>
-        <DemoContainer components={['TimeField', 'TimeField', 'TimeField']}>
-          <TimeField size='small'
-            label="Time End"
-            value={endTime1}
-            onChange={(newValue) => setEndTime1(newValue)}
-            format="hh:mm A"
-          />
-            {errors.end1 && <MuiAlert variant='outlined' 
-             elevation={0} severity="error">
-            {errors.end1}
-            </MuiAlert>}
-          </DemoContainer>
-          </LocalizationProvider>
-        </div>
-
-      </div>
-    </div>
-            </Card>
-          </Box>
-        </Modal>}
-      </React.Fragment>
-    );}
 
   const EditSched = async(data) =>{
     console.log(data)
@@ -687,25 +493,23 @@ const Failed = async() =>{
       .catch(err => console.log(err));
     })
   }
-
-  const listqua = Qualified?.map((data,index)=>{
-    return(
-      <>
-       {!data.isAppointed || data.isAppointed === 'No' ? (<TableRow key ={data.applicantNum}>  
-              <TableCell className="tableCell"><FormControlLabel required control={<Checkbox
-            checked={selectedUsers.some((item) => item.userId === data.applicantNum) || selectAll}
-            onChange={() => handleUserSelection(data.applicantNum,data.Name,data.email,data.status,data.DateApplied,data.applicantCode)} />}/></TableCell> 
-              <TableCell className="tableCell"> {data.applicantNum} </TableCell>  
-              <TableCell className="tableCell"> {data.SchoIarshipApplied} </TableCell>  
-              <TableCell className="tableCell"> {data.Name} </TableCell>
-              <TableCell className="tableCell"> {data.DateApplied} </TableCell>
-              <TableCell className="tableCell"> {data.email} </TableCell>
-              <TableCell className="tableCell"> {data.status} </TableCell>
-              <TableCell className="tableCell"> {data.checkedBy} </TableCell>
-        </TableRow>) : null}
-      </>
-    )
-  })
+  const events = appointedList.map((appointment) => {
+    const { Reason, schedDate, end } = appointment;
+    return {
+      title:Reason,
+      start: new Date(schedDate),
+      end: new Date(schedDate),
+    };
+  });
+  const handleEventSelect = (event) => {
+    const date = new Date(event.start).toDateString();
+    const list = appointedList.filter(user => user.schedDate === date);
+    console.log(list)
+    const Agenda = list[0].Reason;
+    const selectedDate = list[0].schedDate; 
+    const selectedTime =  `${list[0].timeStart} - ${list[0].timeEnd}`;
+    setSelectedAppointment({selectedDate,selectedTime,Agenda});
+  };
 
   const appointmentList = appointedList?.map((data,index) =>{
     console.log(data.isInterview)
@@ -727,9 +531,18 @@ const Failed = async() =>{
       </>
     )
   })
+  const cancelAppointment = (timeBatch, selectedAppointment) => {
+    console.log(timeBatch)
+    // setSelectedAppointment(null);
+  };
+
+  const addOtherUser = (timeBatch) => {
+    console.log(timeBatch)
+  };
+
   return (
     <>
-         <Dialog open={dialog} onClose={handleCloseDialog}>
+      <Dialog open={dialog} onClose={handleCloseDialog}>
         <DialogTitle>Failed</DialogTitle>
         <DialogContent>
           <DialogContentText>
@@ -752,51 +565,8 @@ const Failed = async() =>{
           <Button onClick={Failed}>Submit</Button>
         </DialogActions>
       </Dialog>
-          <Modal
-        open={open}
-        aria-labelledby="modal-modal-title"
-        aria-describedby="modal-modal-description"
-      >
-        <Box sx={style}>
-        <div >
-            <button onClick={handleClose}> X </button>
-        </div> 
-        
-        <div className="listAppointed">
-        <div>
-            <h3>Appointed List</h3>
-        </div>
 
-      <TableContainer component={Paper} className="table">
-        <Table sx={{ minWidth: 650 }} aria-label="simple table">
-          <TableHead>
-            <TableRow>
-              <TableCell className="tableCell"> Applicant Number </TableCell>
-              <TableCell className="tableCell"> Name </TableCell>
-              <TableCell className="tableCell"> Status </TableCell>  
-              <TableCell className="tableCell"> Email </TableCell>
-              <TableCell className="tableCell"> Date Scheduled </TableCell>
-              <TableCell className="tableCell"> Time </TableCell>
-              <TableCell className="tableCell"> Location </TableCell>
-              <TableCell className="tableCell"> Agenda </TableCell>
-              <TableCell className="tableCell"> Appointed By </TableCell>
-              <TableCell className="tableCell"> Details </TableCell>
-              <TableCell className="tableCell"> Action </TableCell>
-            </TableRow>
-          </TableHead>
-          <TableBody>
-            {appointmentList}
-          </TableBody>
-        </Table>
-      </TableContainer>
-        </div>
-        <div className="calendarContainer">
-        {RenderAppointmentsByDate()}
-        </div>
-        </Box>
-      </Modal>
 
-{/* APPOINTMENT CONTAINER */}
     <div className="appointment">
         <Sidebar/>
         <div className="appointmentContainer">
@@ -805,159 +575,250 @@ const Failed = async() =>{
 
           <div className="headerAppoint">
           <h1> Appointments </h1>
-          <button className="viewAppointbtn" onClick={handleOpen}> View Appointed Applicants </button>
           </div>
-
-        <Card className="cards">
+          <Box sx={{ width:'100%', bgcolor: 'background.paper' }}>
+      <Tabs
+        value={value}
+        onChange={handleChange}
+        variant="scrollable"
+        scrollButtons="auto"
+        aria-label="scrollable auto tabs example"
+      >
+        <Tab label="Create Appointment" />
+        <Tab label="View and Edit Appointed Schedule" />
+        <Tab label="User Appointment" />
+      </Tabs>
+          </Box>
+        {value === 0 && <Box>
+        {step === 0 && <Card className="cards">
+          <div style={{width:'100%',backgroundColor:'blue',display:'flex',alignItems:'center',justifyContent:'center'}}>
+        <h2 style={{color:'white'}}>Set Appointment Schedule</h2>
+        </div>
         <div className="frmappoint">
-              <h2>Set Appointment Schedule</h2>
-
         <div className="datagloc">
-
-        <div className="dateAppoint">
-        <LocalizationProvider dateAdapter={AdapterDayjs}>
-        <DateField 
-          className="dataField"
-          label="Appointment Date"
-          value={appointmentDate}
-          onChange={(newValue) => setAppointmentDate(newValue)}
-          format="MMM DD, YYYY"
-        />
-
-        {errors.date && <MuiAlert 
-        elevation={0} severity="error">
-        {errors.date}
-        </MuiAlert>}
-        </LocalizationProvider>
+            <div className="dateAppoint">
+            <LocalizationProvider dateAdapter={AdapterDayjs}>
+            <DemoItem label={'Select Appointment Date'}>
+          <Card elevation={3}>
+          <DateCalendar
+            sx={{
+              width:'100%',
+              backgroundColor: 'whitesmoke',
+              borderRadius: '8px',
+              padding: '16px',
+              fontFamily: 'Arial, sans-serif',
+              fontSize: '18px',
+            }}
+            value={appointmentDate}
+            onChange={(newValue) => setAppointmentDate(newValue)}
+            defaultValue={dayjs('2022-04-17')}
+            views={['year', 'month', 'day']}
+            minDate={currentDate}
+          />
+          </Card>
+        </DemoItem>
+            {errors.date && <MuiAlert 
+                  style={{ 
+                    width: '90%', 
+                    marginTop: '10px', 
+                    color:'white', 
+                    fontSize:'15px' }}  
+                    variant="filled" severity="error" 
+            elevation={0}>
+            {errors.date}
+            </MuiAlert>}
+            </LocalizationProvider>
+            </div>
         </div>
-
-      <div className="agenda">
-        <TextField 
-        className="dataField"
-        id="outlined-basic" 
-        label="Agenda"
-        value={Agenda}
-        onChange={(e) => setAgenda(e.target.value)} 
-        variant="outlined" />     
-      </div>
-      
-      <div className="location">
-      <TextField 
-        className="dataField"
-        id="outlined-basic" 
-        label="Location"
-        value={Location}
-        onChange={(e) => setLocation(e.target.value)}
-        variant="outlined" /> 
-      </div>
+        <div className="timestend">
+          <h3 style={{color:'green'}}>Set Appointment Details</h3>
+            <div className="appinf">
+            <TextField 
+            fullWidth
+            id="outlined-basic" 
+            label="Agenda"
+            value={Agenda}
+            onChange={(e) => setAgenda(e.target.value)} 
+            variant="outlined" /> 
+          {errors.agenda && <MuiAlert 
+                  style={{ 
+                    width: '90%', 
+                    marginTop: '10px', 
+                    color:'white', 
+                    fontSize:'15px', }}              
+                    variant="filled" severity="error" 
+              elevation={0}>
+              {errors.agenda}
+              </MuiAlert>}    
+            </div>
+            <div className="appinf">
+          <TextField 
+            fullWidth
+            id="outlined-basic" 
+            label="Location"
+            value={Location}
+            onChange={(e) => setLocation(e.target.value)}
+            variant="outlined" /> 
+              {errors.location && <MuiAlert 
+                  style={{ 
+                    width: '90%', 
+                    marginTop: '10px', 
+                    color:'white', 
+                    fontSize:'15px', }}              
+                    variant="filled" severity="error" 
+              elevation={0}>
+              {errors.location}
+              </MuiAlert>}
+            </div>
+            <div className="appinf">
+            <LocalizationProvider dateAdapter={AdapterDayjs}>
+            <DemoContainer components={['TimeField', 'TimeField', 'TimeField']}>
+              <TimeField 
+                label="Time Start"
+                value={startTime}
+                onChange={(newValue) => setStartTime(newValue)}
+                format="hh:mm A"
+              />
+              {errors.start && <MuiAlert 
+                  style={{ 
+                    width: '90%', 
+                    marginTop: '10px', 
+                    color:'white', 
+                    fontSize:'15px', }}              
+                    variant="filled" severity="error" 
+              elevation={0}>
+              {errors.start}
+              </MuiAlert>}
+            </DemoContainer>
+            </LocalizationProvider>
+            </div>
+            <div className="appinf">
+            <LocalizationProvider dateAdapter={AdapterDayjs}>
+            <DemoContainer components={['TimeField', 'TimeField', 'TimeField']}>
+              <TimeField 
+                label="Time End"
+                value={endTime}
+                onChange={(newValue) => setEndTime(newValue)}
+                format="hh:mm A"
+              />
+                {errors.end && <><MuiAlert
+                    style={{ 
+                      width: '90%', 
+                      marginTop: '10px', 
+                      color:'white', 
+                      fontSize:'15px',
+                }} 
+                variant="filled" severity="error" 
+                elevation={0}>
+                {errors.end}
+              </MuiAlert></>}
+            </DemoContainer>
+            </LocalizationProvider>
+            </div>
         </div>
-
-      <div className="timestend">
-
-      <div>
-      <LocalizationProvider dateAdapter={AdapterDayjs}>
-      <DemoContainer components={['TimeField', 'TimeField', 'TimeField']}>
-        <TimeField 
-          className="timeField"
-          label="Time Start"
-          value={startTime}
-          onChange={(newValue) => setStartTime(newValue)}
-          format="hh:mm A"
-        />
-        {errors.start && <MuiAlert variant='outlined' 
-        elevation={0} severity="error">
-        {errors.start}
-        </MuiAlert>}
-      </DemoContainer>
-      </LocalizationProvider>
       </div>
+      <div style={{display:'flex',width:'95%',alignItems:'flex-end',justifyContent:'flex-end',margin:10}}>
+      <Button onClick={handleNext} variant="contained">Next</Button>
+      </div>
+        </Card>
+        }
 
-      <div>
-      <LocalizationProvider dateAdapter={AdapterDayjs}>
-      <DemoContainer components={['TimeField', 'TimeField', 'TimeField']}>
-        <TimeField 
-          className="timeField"
-          label="Time End"
-          value={endTime}
-          onChange={(newValue) => setEndTime(newValue)}
-          format="hh:mm A"
-        />
-          {errors.end && <MuiAlert variant='outlined' 
-          elevation={0} severity="error">
-          {errors.end}
-        </MuiAlert>}
-      </DemoContainer>
-      </LocalizationProvider>
-      </div>
-      </div>
-      </div>
-      </Card>
-
-    <Card className="cards">
+        {step === 1 && <Card className="cards">
       <div className="applicalist">
-        <div className="dataList">
-
- {/* APPLICANT */}
-
-    <div className="appHead">
-     <h2>Applicants List</h2>
-      <label className="searchBox"> Search </label>
-      <input type="text" onChange={(e) => handleFilter(e.target.value)} />  
-      </div>
-    </div>
-
-      <TableContainer component={Paper} className="table">
-        <Table aria-label="simple table">
-          <TableHead>
-            <TableRow>
-            <TableCell className="tableCell">
-              <FormControlLabel required control={<Checkbox 
-              checked={selectAll}
-              onChange={handleSelectAllChange} />}/>
-            </TableCell>
-
-              <TableCell className="tableCell"> Applicant Number </TableCell>
-              <TableCell className="tableCell"> Scholarship Applied </TableCell>
-              <TableCell className="tableCell"> Full Name </TableCell>
-              <TableCell className="tableCell"> Date Applied </TableCell>
-              <TableCell className="tableCell"> Email </TableCell>
-              <TableCell className="tableCell"> Status </TableCell>  
-              <TableCell className="tableCell"> Added By </TableCell>
-            </TableRow>
-          </TableHead>
-
-          {filteredData.length > 0 ? (
-            filteredData?.map((data,index) =>{
-              return (
-                <>
-                <TableBody>
-                {!data.isAppointed || data.isAppointed === 'No' ? (<TableRow key ={index}>  
-            <TableCell className="tableCell"><FormControlLabel required control={<Checkbox
-            checked={selectedUsers.some((item) => item.userId === data.applicantNum) || selectAll}
-            onChange={() => handleUserSelection(data.applicantNum,data.Name,data.email,data.status,data.DateApplied)} />}/></TableCell> 
-              <TableCell className="tableCell"> {data.applicantNum} </TableCell>  
-              <TableCell className="tableCell"> {data.SchoIarshipApplied} </TableCell>  
-              <TableCell className="tableCell"> {data.Name} </TableCell>
-              <TableCell className="tableCell"> {data.DateApplied} </TableCell>
-              <TableCell className="tableCell"> {data.email} </TableCell>
-              <TableCell className="tableCell"> {data.status} </TableCell>
-        </TableRow>) : null}                  
-                </TableBody>
-                </>
-              )})
-          ) : (<TableBody>
-            {listqua}
-          </TableBody>)}
-        </Table>
-      </TableContainer>
-
+        <div>
+            <Card>
+            <div style={{width:'100%',backgroundColor:'blue',display:'flex',alignItems:'center',justifyContent:'center'}}>
+            <h2 style={{color:'white'}}>Select User to be Appointed</h2>
+            </div>
+            <DataGrid
+                      rows={Qualified}
+                      columns={columns}
+                      getRowId={(row) => row.applicantNum}
+                      scrollbarSize={10}
+                      initialState={{
+                        pagination: {
+                          paginationModel: {
+                            pageSize: 5,
+                          },
+                        },
+                      }}
+                      pageSizeOptions={[25]}
+                      checkboxSelection
+                      onRowSelectionModelChange={handleRowSelectionModelChange}
+                      rowSelectionModel={rowSelectionModel}
+                      disableRowSelectionOnClick
+                    />
+            </Card>
+       </div>
           <div className="applicantList">
+          <Button className="dselectBtn" onClick={() => setStep(0)} variant="contained">BACK</Button>
             <Button className="appointBtn" onClick={handleSave} variant="contained">APPOINT</Button>
-            <Button className="dselectBtn" onClick={() => setSelectedUsers([])} variant="contained">DESELECT</Button>
           </div>
          </div>
-      </Card>
-  </div>
+        </Card>}
+        </Box>}
+        {value === 1 && <Box sx={{display:'flex',height:'100%',padding:'10px',width:'98%',backgroundColor:'grey'}}>
+            <div style={{width:'45%',height:'500px',margin:'10px'}}>
+              <Card sx={{width:'100%',height:'100%',overflow:'auto'}}>
+              {selectedAppointment && (
+              <div>
+                {Object.entries(timeGroup).map(([date, timeBatch]) => {
+                  console.log(timeBatch)
+        if (date === selectedAppointment.selectedDate) {
+          return (
+            <>
+            <div key={date} style={{width:'90%',display:'flex',justifyContent:'center',alignItems:'center',padding:'10px',flexDirection:'column'}}>
+              <h3>{date}</h3>
+              <button onClick={() => cancelAppointment(timeGroup[selectedAppointment.selectedDate], date)}>Cancel</button>
+              {Object.entries(timeBatch).map(([timeRange, data]) => {
+                if (timeRange) {
+                  return (
+                    <>
+                    <div style={{width:'100%',display:'flex',justifyContent:'center',alignItems:'center'}}>
+                    <Card elevation={2} sx={{width:'90%',display:'flex',justifyContent:'center',alignItems:'center',padding:'10px'}}>
+                    <div key={timeRange}>
+                      <h3>{data[0].Reason}</h3>
+                      <h4>{timeRange}</h4>
+                      <p>{data[0].Location}</p>
+                      <ul>
+                        {data.map((item, index) => (
+                          <li key={index}>
+                            {item.Name}
+                          </li>
+                        ))}
+                      </ul>
+                      <button onClick={() => addOtherUser(timeGroup)}>Add User</button>
+                    </div>
+                    </Card>
+                    </div>
+                    </>
+                  );
+                }
+                return null;
+              })}
+            </div>
+            </>
+          );
+        }
+        return null;
+      })}
+              </div>
+            )}
+            </Card>
+            </div>
+          <div style={{ height: '500px',width:'52%',margin:'10px' }}>
+            <Card sx={{width:'100%',height:'100%'}}>
+            <Calendar 
+            localizer={localizer} 
+            events={events} 
+            startAccessor="start" 
+            endAccessor="end"
+            onSelectEvent={handleEventSelect} />
+            </Card>
+          </div>
+
+          </Box>}
+       </div>
 
       </div>
     </div>

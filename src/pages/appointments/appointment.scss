@@ -9,11 +9,8 @@
 
         .top{
             display: flex;
-            -webkit-box-shadow: 2px 4px 10px 1px rgba(0, 0, 0, 0.47);
-            box-shadow: 2px 4px 10px 1px rgba(201, 201, 201, 0.47);
-            width: max-content;
+            width: 95%;
             margin: 10px;
-            padding: 10px;
             flex-direction: column;
 
             h1{
@@ -55,55 +52,45 @@
            .frmappoint{
                 margin: 10px;
                 padding: 10px;     
-                justify-content: space-between;
-                text-align: center;
-                height: max-content;
+                display: flex;
+                justify-content: space-around;
+                width: 95%;
+                height: 100%;
 
             .datagloc{
-                width: max-content;
-                color: #005427;
+                width: 45%;
+                height: 100%;
                 
                 
                 .dateAppoint, .agenda, .location{
+                    width: 90%;
                     display: flex;
                     flex-direction: column;
-                    margin: 5px;
+                    margin-bottom: 5px;
                     padding: 5px;
-                    color: #005427;
 
-                    .dataField{
+                    .DateCalendar{
                         display: flex;
-                        margin-left: 10px;
-                        width: 500px;
-                        height: 70px;
-                        color: #005427;
+                        width: 100%;
+                        height: 100%;
                     }
 
-                    label{
-                        color: #005427;
-                        font-style: italic;
-                    }
                 }  
             }
 
             .timestend{
-                float: right;
+                width: 45%;
+                height: 100%;
                 display: flex;
                 flex-direction: column;
-                margin-top: -260px;
-                margin-right: 20px;
-                padding: 10px;
-                gap: 25px;
-
-                .timeField{
-                    width: 500px;
-                    height: 40px;
+                justify-content: space-between;
+                align-items: top;
+                .appinf{
+                    width: 100%;
+                    margin-bottom: 20px;
+                    height: 100%;
                 }
 
-                label{
-                    color: #005427;
-                    font-style: italic;
-                }
             }
         }
         }
@@ -117,6 +104,7 @@
     .dataList{
         display: flex;
         padding: 5px;
+        background-color: #005427;
         
         .appHead{
             display: flex;
