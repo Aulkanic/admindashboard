@@ -1,51 +1,9 @@
-/* .frmappoint{
-    width: 100%;
-    height: 100%;
-    margin: 10px;
-    padding: 10px;
-    display: flex;
-    flex-direction: column;
-}
-.datagloc{
-    width: 100%;
-    display: flex;
-    justify-content: space-around;
-    margin-bottom: 15px;
-}
-.timestend{
-    width: 100%;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-}
-.applicalist{
-    width: 100%;
-    height: 100%;
-
-}
-.heaaplpli{
-    display: flex;
-    width: 100%;
-    justify-content: space-between;
-    align-items: center;
-}
-.appoiintedlistsed{
-    width: 100%;
-    display: flex;
-    flex-direction: column;
-}
-.calendarContainer{
-    width: 100%;
+.subdocsappdet{
+    margin: 0;
+    padding: 30px;
+    width: 90%;
     display: grid;
-    grid-template-columns: repeat(auto-fit,minmax(100%, 1fr));
+    grid-template-columns: repeat(auto-fit,minmax(300px, 1fr));
     grid-gap: 10px;
     height: 100%;
-    margin: 10px;
 }
-.listuserapp{
-
-    display: grid;
-    grid-template-columns: repeat(auto-fit,minmax(400px, 1fr));
-    grid-gap: 10px;
-    height: 100%;
-} */

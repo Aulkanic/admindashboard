@@ -1040,7 +1040,7 @@ const style = {
                       Incomplete Documents({groupedUsers.incomplete.length})
                     </Link>
                   </Button>
-                  </Breadcrumbs>      
+      </Breadcrumbs>      
       <Box sx={{ height: 400, width: '100%'}}>
                 {activeState === 'All' && (filteredRows && filteredRows.length > 0 ? (
                   <DataGrid

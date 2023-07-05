@@ -1,16 +1,13 @@
 .appointment{
+    width: 100%;
     display: flex;
     background-color: whitesmoke;
 
     .appointmentContainer{
-        width: 100%;
-        flex: 7;
-        
-
+        width: 90%;
         .top{
+            width: 100%;
             display: flex;
-            width: 95%;
-            margin: 10px;
             flex-direction: column;
 
             h1{

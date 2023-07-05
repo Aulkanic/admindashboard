@@ -173,3 +173,6 @@ export const FetchingBatchlist = {
 export const FetchingUserAppdetails = {
     FETCH_USERDET: (data) => axiosInstance.get(Endpoints.FETCH_USERINFORMATION+data)
 }
+export const SetInterview = {
+    SET_INTERVIEW: (data) => axiosInstance.post(Endpoints.SET_INTERVIEW,data)
+}

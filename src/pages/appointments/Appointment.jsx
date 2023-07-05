@@ -5,7 +5,7 @@ import Navbar from "../../components/navbar/Navbar";
 import { Tabs, Tab,Table, TableBody, TableCell, TableContainer, TableHead,TableRow, Paper, Box, Button, Typography, Modal,Card} from "@mui/material"; 
 import { FetchingQualified, CreateAppointment,FetchingAppointList
   , Reaapointed, SetApproved,FetchingApplicantsInfo,SetApplicant,Addusertolistapp,UpdateScheduleApp,FetchingBmccSchoinfo,FailedUser,
-    CancelApp,CancelBatch,FetchingApplist,FetchingBatchlist,FetchingUserAppdetails } from "../../api/request";
+    CancelApp,CancelBatch,FetchingApplist,FetchingBatchlist,FetchingUserAppdetails,ListofSub, SetInterview,GrantAccess } from "../../api/request";
 import FormControlLabel from '@mui/material/FormControlLabel';
 import dayjs from 'dayjs';
 import CardContent from '@mui/material/CardContent';
@@ -37,6 +37,11 @@ import TextField from '@mui/material/TextField';
 import MuiAlert from '@mui/material/Alert';
 import { DataGrid } from '@mui/x-data-grid';
 import IconButton from '@mui/material/IconButton';
+import Breadcrumbs from '@mui/material/Breadcrumbs';
+import Link from '@mui/material/Link';
+import CheckCircleIcon from '@mui/icons-material/CheckCircle';
+import FormatListBulletedOutlinedIcon from '@mui/icons-material/FormatListBulletedOutlined';
+import CancelIcon from '@mui/icons-material/Cancel';
 import './appointment.css'
 import CloseIcon from '@mui/icons-material/Close';
 import Slide from '@mui/material/Slide';
@@ -172,11 +177,31 @@ const Appointment = () => {
   const [value1, setValue1] = React.useState(0);
   const [step,setStep] = useState(0)
   const [rowSelectionModel, setRowSelectionModel] = useState([]);
+  const [failedSelectionModel,setFailedSelectionModel] = useState([]);
+  const [reappSelectionModel,setReappSelectionModel] = useState([]);
   const currentDate = dayjs();
   const [selectedAppointment, setSelectedAppointment] = useState(null);
   const [adduserAppoint,setAdduserApp] = useState('');
   const [Useropen, setUserOpen] = React.useState(false);
   const [userFulldet,setUserFulldet] = useState([]);
+  const [userFulldocs,setUserFulldocs] = useState([]);
+  const [imageModalOpen, setImageModalOpen] = useState(false);
+  const [selectedImage, setSelectedImage] = useState({});
+  const [who,setWho] = useState('');
+  const [isSend,setIsSend] = useState('No');
+  const [email,setEmail] = useState('');
+  const [password,setPassword] = useState('')
+  const [openDialog1, setOpenDialog1] = useState(false);
+  const handleCloseDialog1 = () => setOpenDialog1(false);
+  const [openDialog2, setOpenDialog2] = useState(false);
+  const handleCloseDialog2 = () => setOpenDialog2(false);
+  const handleOpenDialog2 = (data) => setOpenDialog2(true);
+  const [activeState,setActiveState] = useState('All');
+
+  const handleOpenDialog1 = (data) => {
+    setOpenDialog1(true);
+    setWho(data.applicantNum)
+  }
 
   const handleClickOpenUserDetails = () => {
     setUserOpen(true);
@@ -206,6 +231,15 @@ const Appointment = () => {
   const handleChange1 = (event, newValue) => {
     setValue1(newValue);
   };
+  const openImageModal = (image,name) => {
+    setSelectedImage({image,name});
+    setImageModalOpen(true);
+  };
+  
+  const closeImageModal = () => {
+    setSelectedImage('');
+    setImageModalOpen(false);
+  };
 
   const handleClickOpenDialog = (data) => {
     console.log(data)
@@ -221,6 +255,16 @@ const Appointment = () => {
   const handleRowSelectionModelChange = (newRowSelectionModel) => {
     console.log(newRowSelectionModel)
     setRowSelectionModel(newRowSelectionModel);
+
+  };
+  const handleFailedSelectionModelChange = (newFailedSelectionModel) => {
+    console.log(newFailedSelectionModel)
+    setFailedSelectionModel(newFailedSelectionModel);
+
+  };
+  const handleReappSelectionModelChange = (newFailedSelectionModel) => {
+    console.log(newFailedSelectionModel)
+    setReappSelectionModel(newFailedSelectionModel);
 
   };
 
@@ -340,12 +384,12 @@ const Appointment = () => {
 
   const Reapp = async(data) => {
     console.log(data)
-    const res = await FetchingBmccSchoinfo.FETCH_SCHOLARSINFO(data.applicantNum);
-    console.log(res)
-    const email = res.data.ScholarInf.results1[0].email
-    const adminName = user.name;
     const applicantNum = data.applicantNum;
-    const applicantCode = data.applicantCode;
+    const res = await FetchingUserAppdetails.FETCH_USERDET(applicantNum);
+    const info = res.data.result[0];
+    const email = info.Email
+    const adminName = user.name;
+    const applicantCode = info.applicantCode;
     const formData = new FormData();
     formData.append('adminName',adminName);
     formData.append('applicantNum',applicantNum);
@@ -412,6 +456,122 @@ const Failed = async() =>{
   FailedUser.FAILED_USER(formData)
 
 }
+ const InterviewResult = (data) =>{
+      
+      const formData = new FormData()
+      formData.append('isPassed',data)
+      formData.append('applicantNum',userFulldet.applicantNum)
+      SetInterview.SET_INTERVIEW(formData)
+      .then((res) => {
+        if(res.data.success === 1){
+          console.log(res)
+          setAppointedList(res.data.result)
+          swal('Done')
+        }else{
+          swal('Something Went Wrong')
+        }
+
+      }
+       )
+      .catch(err => console.log(err));
+
+ }
+ const Access = async() =>{
+  const formData = new FormData();
+  formData.append('email',email);
+  formData.append('password',password);
+  formData.append('applicantNum',who)
+  await GrantAccess.GRANT_ACCESS(formData)
+  .then(res => {
+    if(res.data.success === 1){
+      console.log(res)
+      setEmail('')
+      setOpenDialog1(false)
+      setPassword('')
+      swal({
+        text: res.data.message,
+        timer: 2000,
+        buttons: false,
+        icon: 'success',
+      });
+    }else{
+      swal({
+        text: res.data.message,
+        timer: 2000,
+        buttons: false,
+        icon: 'error',
+      });
+    }
+
+    }
+     )
+    .catch(err => console.log(err));
+  
+}
+const FailedAll = async() =>{
+  const selectedRows = failedSelectionModel.map((selectedRow) =>
+    appointedList.find((row) => row.applicantNum === selectedRow));
+    for (let i=0 ;i<selectedRows.length;i++){
+      const row = selectedRows[i];
+      console.log(row)
+      const res = await FetchingBmccSchoinfo.FETCH_SCHOLARSINFO(row.applicantNum);
+      console.log(res)
+      const schoapplied = res.data.ScholarInf.results1[0].SchoIarshipApplied;
+      const batch = res.data.ScholarInf.results1[0].Batch;
+      const formData = new FormData();
+      formData.append('applicantNum',row.applicantNum)
+      formData.append('Name',row.Name)
+      formData.append('ScholarshipApplied', schoapplied)
+      formData.append('batch',batch)
+      formData.append('Reason',reason)
+      formData.append('isSend',isSend)
+      formData.append('email',res.data.ScholarInf.results1[0].email)
+      const response = await FailedUser.FAILED_USER(formData)
+      if(response.data.success === 1){
+        swal('Status Updated')
+        setIsSend('No')
+      }else{
+        swal('Something Went Wrong')
+      }
+    }
+}
+const Addall = async () => {
+  const selectedRows = rowSelectionModel.map((selectedRow) =>
+    appointedList.find((row) => row.applicantNum === selectedRow)
+  );
+    try {
+      for (let i = 0; i < selectedRows.length; i++) {
+        const row = selectedRows[i];
+        const applicantNum = row.applicantNum;
+        const response = await Promise.all([
+          FetchingApplicantsInfo.FETCH_INFO(applicantNum)
+        ]);
+        console.log(response)
+        const dataappinfo = response[0].data.results[0];
+        console.log(dataappinfo)
+        const Name = `${dataappinfo.firstName} ${dataappinfo.middleName} ${dataappinfo.lastName}`;
+        const applicantCode = dataappinfo.applicantCode;
+        const yearLevel =dataappinfo.currentYear;
+        const baranggay = dataappinfo.baranggay;
+        const email = dataappinfo.email;
+        const scholarshipApplied = dataappinfo.SchoIarshipApplied;
+        const adminName = user.name;
+        console.log(dataappinfo)
+        SetApproved.SET_APPROVE({email,applicantCode,adminName,Name,applicantNum,yearLevel,baranggay,scholarshipApplied})
+      .then(res => {
+        console.log(res)
+        setQualified(res.data.results.data1);
+        setAppointedList(res.data.results.data2)
+        swal('Success')
+      }
+       )
+      .catch(err => console.log(err));
+      }
+    } catch (error) {
+      console.log(error);
+    }
+
+};
 
   const events = {};
   const ongoingEvents = appointedList.filter((data) =>{
@@ -592,12 +752,13 @@ try {
   }
   const appointUserInfo = async(data) =>{
       setUserOpen(true);
-      console.log(data)
       const applicantNum = data.applicantNum
-      const res = await FetchingUserAppdetails.FETCH_USERDET(applicantNum)
-      console.log(res)
+      const res = await FetchingUserAppdetails.FETCH_USERDET(applicantNum);
+      const docs = await ListofSub.FETCH_SUB(applicantNum)
       const info = res.data.result[0];
+      const sub = docs.data.Document
       setUserFulldet(info)
+      setUserFulldocs(sub)
   }
   const Appointedcolumns = [
     { field: 'applicantNum', headerName: 'ID', width: 70 },
@@ -662,11 +823,286 @@ try {
         </>
       ),
     },
+
+  
+  ];
+  const Passedcolumns = [
+    { field: 'applicantNum', headerName: 'ID', width: 70 },
+    {
+      field: 'Name',
+      headerName: 'Name',
+      width: 150,
+      editable: true,
+    },
+    {
+      field: 'Status',
+      headerName: 'Status',
+      width: 100,
+      editable: true,
+    },
+    {
+      field: 'Reason',
+      headerName: 'Agenda',
+      width: 150,
+      editable: true,
+    },
+    {
+      field: 'schedDate',
+      headerName: 'Appointment Date',
+      width: 150,
+      editable: true,
+    },
+    {
+      field: 'Time',
+      headerName: 'Time',
+      width: 150,
+      renderCell: (params) => {
+        const time = `${params.row.timeStart} - ${params.row.timeEnd}`
+        return(
+        <>
+        <p>{time}</p>
+        </>
+      )},
+    },
+    {
+      field: 'Location',
+      headerName: 'Location',
+      width: 150,
+      editable: true,
+    },
+    {
+      field: 'yearLevel',
+      headerName: 'Year Level',
+      width: 150,
+      editable: true,
+    },
+    {
+      field: 'score',
+      headerName: 'Details',
+      width: 150,
+      renderCell: (params) => {
+        return(
+          <>
+          <div style={{width:"100%",display:'flex',flexDirection:'column',height:'100%',justifyContent:'center',alignItems:'center'}}>
+        <StyledButtonEdit sx={{width:'100%'}}
+        onClick={() => Approved(params.row)}>
+          SET QUALIFIED
+          </StyledButtonEdit>
+        </div>
+        </>)
+      },
+    },
+  
+  ];
+  const Rejectcolumns = [
+    { field: 'applicantNum', headerName: 'ID', width: 70 },
+    {
+      field: 'Name',
+      headerName: 'Name',
+      width: 150,
+      editable: true,
+    },
+    {
+      field: 'Status',
+      headerName: 'Status',
+      width: 100,
+      editable: true,
+    },
+    {
+      field: 'Reason',
+      headerName: 'Agenda',
+      width: 150,
+      editable: true,
+    },
+    {
+      field: 'schedDate',
+      headerName: 'Appointment Date',
+      width: 150,
+      editable: true,
+    },
+    {
+      field: 'Time',
+      headerName: 'Time',
+      width: 150,
+      renderCell: (params) => {
+        const time = `${params.row.timeStart} - ${params.row.timeEnd}`
+        return(
+        <>
+        <p>{time}</p>
+        </>
+      )},
+    },
+    {
+      field: 'Location',
+      headerName: 'Location',
+      width: 150,
+      editable: true,
+    },
+    {
+      field: 'yearLevel',
+      headerName: 'Year Level',
+      width: 150,
+      editable: true,
+    },
+    {
+      field: 'grantedAccess',
+      headerName: 'Details',
+      width: 250,
+      renderCell: (params) => {
+        console.log(params.row)
+        return(
+          <>
+          <div style={{display:'flex'}}>
+        {params.row.grantedAccess === '' || !params.row.grantedAccess ? (<StyledButtonAccess 
+        onClick={() =>handleOpenDialog1(params.row)}>
+          Access</StyledButtonAccess>) : (<StyledButtonEdit style={{marginLeft:'5px',backgroundColor:'green',border:'none',padding:'3px',width:'100%',margin:'2px',color:'white',borderRadius:'5px',cursor:'pointer'}} 
+        onClick={() => Approved(params.row)}>
+          SET QUALIFIED
+          </StyledButtonEdit>)}
+          <StyledButton
+        onClick={() => handleOpenDialog2(params.row)}>
+          Failed
+          </StyledButton>
+        </div>
+        </>)
+      },
+    },
+  
+  ];
+  const ReAppcolumns = [
+    { field: 'applicantNum', headerName: 'ID', width: 70 },
+    {
+      field: 'Name',
+      headerName: 'Name',
+      width: 150,
+      editable: true,
+    },
+    {
+      field: 'Status',
+      headerName: 'Status',
+      width: 100,
+      editable: true,
+    },
+    {
+      field: 'Reason',
+      headerName: 'Agenda',
+      width: 150,
+      editable: true,
+    },
+    {
+      field: 'schedDate',
+      headerName: 'Appointment Date',
+      width: 150,
+      editable: true,
+    },
+    {
+      field: 'Time',
+      headerName: 'Time',
+      width: 150,
+      renderCell: (params) => {
+        const time = `${params.row.timeStart} - ${params.row.timeEnd}`
+        return(
+        <>
+        <p>{time}</p>
+        </>
+      )},
+    },
+    {
+      field: 'Location',
+      headerName: 'Location',
+      width: 150,
+      editable: true,
+    },
+    {
+      field: 'yearLevel',
+      headerName: 'Year Level',
+      width: 150,
+      editable: true,
+    },
+    {
+      field: 'excuse',
+      headerName: 'Reason ',
+      width: 150,
+      editable: true,
+    },
+    {
+      field: 'score',
+      headerName: 'Details',
+      width: 150,
+      renderCell: (params) => {
+        return(
+          <>
+          <div style={{width:"100%",display:'flex',flexDirection:'column',height:'100%',justifyContent:'center',alignItems:'center'}}>
+        <StyledButtonEdit sx={{width:'100%'}}
+        onClick={() => Reapp(params.row)}>
+          Reappoint
+          </StyledButtonEdit>
+        </div>
+        </>)
+      },
+    },
   
   ];
 
+  const PassedInterview = appointedList && appointedList.length > 0
+  ? appointedList.filter(user => user.isPassed === 'True')
+  : '';
+  const RejectInterview = appointedList && appointedList.length > 0
+  ? appointedList.filter(user => user.isPassed === 'False')
+  : '';
+  const ReappointList = appointedList && appointedList.length > 0
+  ? appointedList.filter(user => user.canGo === 'No')
+  : '';
+  
   return (
     <>
+      {/* Dialog for Image Expandin */}
+      <Dialog fullScreen open={imageModalOpen} onClose={closeImageModal}>
+      <DialogTitle>{selectedImage.name}</DialogTitle>
+      <DialogContent>
+        <img src={selectedImage.image} alt="Full Image" style={{ width: '100%', height: '100%' }} />
+      </DialogContent>
+      <DialogActions>
+        <Button onClick={closeImageModal}>Close</Button>
+      </DialogActions>
+      </Dialog>
+      {/* End of Dialog for Image Expandin */}
+      {/* Dialog for Access */}
+      <Dialog open={openDialog1} onClose={handleCloseDialog1}>
+          <DialogTitle>Login to Grant Access</DialogTitle>
+          <DialogContent>
+            <DialogContentText>
+              This will use for the special case scenario if the Admin, Employee or Mayor wants an applicants with an incomplete Documents to be proceed to the next step
+            </DialogContentText>
+            <TextField
+              autoFocus
+              margin="dense"
+              id="name"
+              value={email}
+              onChange={(e) =>setEmail(e.target.value)}
+              label="Email Address"
+              type="email"
+              fullWidth
+              variant="standard"
+            />
+            <TextField
+              autoFocus
+              margin="dense"
+              id="name"
+              value={password}
+              onChange={(e) =>setPassword(e.target.value)}
+              label="Password"
+              type="password"
+              fullWidth
+              variant="standard"
+            />
+          </DialogContent>
+          <DialogActions>
+            <Button onClick={handleCloseDialog1}>Cancel</Button>
+            <Button onClick={Access}>Submit</Button>
+          </DialogActions>
+      </Dialog>
+      {/* End of Dialog for Access */}
       <Dialog open={dialog} onClose={handleCloseDialog}>
         <DialogTitle>Failed</DialogTitle>
         <DialogContent>
@@ -741,7 +1177,7 @@ try {
     </Card>
       </Box>
       </Modal>
-            <Dialog
+      <Dialog
         fullScreen
         open={Useropen}
         onClose={handleCloseUserDetails}
@@ -760,9 +1196,12 @@ try {
             <Typography sx={{ ml: 2, flex: 1 }} variant="h6" component="div">
               Applicant Information
             </Typography>
-            <Button autoFocus color="inherit" onClick={handleClose}>
-              save
-            </Button>
+            <StyledButton autoFocus color="inherit" onClick={() =>InterviewResult('False')}>
+              REJECT
+            </StyledButton>
+            <StyledButtonEdit sx={{marginLeft:'15px'}} autoFocus color="inherit" onClick={() =>InterviewResult('True')}>
+              PASS
+            </StyledButtonEdit>
           </Toolbar>
         </AppBar>
       <Box sx={{width:'100%',padding:'10px',height:'100%',display:'flex',backgroundColor:'whitesmoke'}}>
@@ -787,7 +1226,7 @@ try {
               </Card>
             </div>
          </div>
-         <div style={{width:'60%',padding:'10px'}}>
+         <div style={{width:'65%',padding:'10px'}}>
           <Card sx={{width:'100%',height:'100%',overflow:'auto'}}>
             <Tabs
             value={value1}
@@ -988,6 +1427,28 @@ try {
             </div>
            </Card>
           </>}
+          {value1 === 1 && <>
+            <div className="subdocsappdet">
+            {userFulldocs?.map((data) =>{
+              return (
+                <>
+
+                <div style={{width:'100%',display:'flex',justifyContent:'center',alignItems:'center'}}>
+                  <button onClick={() => openImageModal(data.File,data.requirement_Name)}>
+                    <p>{data.requirement_Name}</p>
+                  <img
+                    style={{ width: '300px', height: '300px' }}
+                    src={data.File}
+                    alt=""
+                  />
+                  </button>
+                </div>
+
+                </>
+              )
+            })}
+        </div>
+          </>}
           </Card>
          </div>
       </Box>
@@ -1001,7 +1462,7 @@ try {
           <div className="headerAppoint">
           <h1> Appointments </h1>
           </div>
-          <Box sx={{ width:'100%', bgcolor: 'background.paper' }}>
+          <Box sx={{ width:'90%' }}>
       <Tabs
         value={value}
         onChange={handleChange}
@@ -1203,7 +1664,7 @@ try {
         </Card>}
         </Box>}
         {value === 1 && 
-        <Box sx={{display:'flex',height:'100%',padding:'10px',width:'98%'}}>
+        <Box sx={{display:'flex',height:'100%',width:'90%'}}>
             <div style={{width:'45%',height:'500px',margin:'10px'}}>
             <Card sx={{width:'96%',height:'96%',overflow:'auto',padding:'10px',backgroundColor:'transparent'}} elevation={0}>
                     {selectedAppointment && (
@@ -1274,19 +1735,58 @@ try {
             </div>
         </Box>}
         {value === 2 &&
-        <Box sx={{display:'flex',height:'100%',padding:'10px',width:'100%'}}>
-        <Card style={{height:'100%',width:'100%',padding:'10px'}}>
-            <h3>Select User To be Added in Appointed Schedule</h3>
-            <div style={{width:'100%'}}>
-                  <StyledButton onClick={handleClose}> X </StyledButton>
-            </div> 
-            <div style={{margin:'10px',width:'100%'}}>
-            <Button variant="contained" onClick={addOtherUser}>
-              ADD TO LIST
-            </Button>
-            </div>  
-            <Card sx={{width:'100%'}}>
+        <Box sx={{display:'flex',height:'100%',padding:'10px',width:'auto'}}>
+        <Card style={{height:'100%',width:'95%'}}>
+        <Breadcrumbs sx={{backgroundColor:'green'}} aria-label="breadcrumb">
+                  <Button onClick={() => setActiveState('All')}>
+                    <Link
+                      underline="none"
+                      sx={{
+                        color: activeState === 'All' ? 'white' : 'black',
+                      }}
+                    >
+                      <FormatListBulletedOutlinedIcon fontSize="inherit" />
+                      All({appointedList.length})
+                    </Link>
+                  </Button>
+                  <Button onClick={() => setActiveState('Passed')}>
+                    <Link
+                      underline="none"
+                      sx={{
+                        color: activeState === 'Passed' ? 'white' : 'black',
+                      }}
+                    >
+                      <CheckCircleIcon sx={{ mr: 0.5 }} fontSize="inherit" />
+                      Passed Interview({PassedInterview.length})
+                    </Link>
+                  </Button>
+                  <Button onClick={() => setActiveState('Reject')}>
+                    <Link
+                      underline="none"
+                      sx={{
+                        color: activeState === 'Reject' ? 'white' : 'black',
+                      }}
+                    >
+                      <CancelIcon sx={{ mr: 0.5 }} fontSize="inherit" />
+                      Interview Failed({RejectInterview.length})
+                    </Link>
+                  </Button>
+                  <Button onClick={() => setActiveState('Reapp')}>
+                    <Link
+                      underline="none"
+                      sx={{
+                        color: activeState === 'Reapp' ? 'white' : 'black',
+                      }}
+                    >
+                      <CancelIcon sx={{ mr: 0.5 }} fontSize="inherit" />
+                      Reappoint List({ReappointList.length})
+                    </Link>
+                  </Button>
+      </Breadcrumbs>  
+            <Card sx={{width:'100%%'}}>
+            {activeState === 'All' && (appointedList && appointedList.length > 0 ? (
               <DataGrid
+                sx={{width:'100%'}}
                 rows={appointedList}
                 columns={Appointedcolumns}
                 getRowId={(row) => row.applicantNum}
@@ -1299,12 +1799,93 @@ try {
                   },
                   }}
                 pageSizeOptions={[25]}
-                checkboxSelection
-                onRowSelectionModelChange={handleRowSelectionModelChange}
-                rowSelectionModel={rowSelectionModel}
                 disableRowSelectionOnClick
-                /> 
+                />
+                ) : (
+                  <div style={{width:'100%',height:'100%',display:'flex',justifyContent:'center',alignItems:'center',backgroundColor:'whitesmoke'}}>
+                  <p style={{ textAlign: 'center',fontSize:30,fontWeight:700,fontStyle:'italic' }}>No records</p>
+                  </div>
+                ))}
+                  {activeState === 'Passed' && (PassedInterview && PassedInterview.length > 0 ? (
+                    <DataGrid
+                      rows={PassedInterview}
+                      columns={Passedcolumns}
+                      getRowId={(row) => row.applicantNum}
+                      scrollbarSize={10}
+                      initialState={{
+                        pagination: {
+                          paginationModel: {
+                            pageSize: 5,
+                          },
+                        },
+                      }}
+                      pageSizeOptions={[25]}
+                      checkboxSelection
+                      onRowSelectionModelChange={handleRowSelectionModelChange}
+                      rowSelectionModel={rowSelectionModel}
+                      disableRowSelectionOnClick
+                    />
+                  ) : (
+                    <div style={{width:'100%',height:'100%',display:'flex',justifyContent:'center',alignItems:'center',backgroundColor:'whitesmoke'}}>
+                    <p style={{ textAlign: 'center',fontSize:30,fontWeight:700,fontStyle:'italic' }}>No records</p>
+                    </div>
+                  ))}
+                  {activeState === 'Reject' && (RejectInterview && RejectInterview.length > 0 ? (
+                    <DataGrid
+                      rows={RejectInterview}
+                      columns={Rejectcolumns}
+                      getRowId={(row) => row.applicantNum}
+                      scrollbarSize={10}
+                      initialState={{
+                        pagination: {
+                          paginationModel: {
+                            pageSize: 5,
+                          },
+                        },
+                      }}
+                      pageSizeOptions={[25]}
+                      checkboxSelection
+                      onRowSelectionModelChange={handleFailedSelectionModelChange}
+                      rowSelectionModel={failedSelectionModel}
+                      disableRowSelectionOnClick
+                    />
+                  ) : (
+                    <div style={{width:'100%',height:'100%',display:'flex',justifyContent:'center',alignItems:'center',backgroundColor:'whitesmoke'}}>
+                    <p style={{ textAlign: 'center',fontSize:30,fontWeight:700,fontStyle:'italic' }}>No records</p>
+                    </div>
+                  ))}
+                  {activeState === 'Reapp' && (ReappointList && ReappointList.length > 0 ? (
+                    <DataGrid
+                      rows={ReappointList}
+                      columns={ReAppcolumns}
+                      getRowId={(row) => row.applicantNum}
+                      scrollbarSize={10}
+                      initialState={{
+                        pagination: {
+                          paginationModel: {
+                            pageSize: 5,
+                          },
+                        },
+                      }}
+                      pageSizeOptions={[25]}
+                      checkboxSelection
+                      onRowSelectionModelChange={handleReappSelectionModelChange}
+                      rowSelectionModel={reappSelectionModel}
+                      disableRowSelectionOnClick
+                    />
+                  ) : (
+                    <div style={{width:'100%',height:'100%',display:'flex',justifyContent:'center',alignItems:'center',backgroundColor:'whitesmoke'}}>
+                    <p style={{ textAlign: 'center',fontSize:30,fontWeight:700,fontStyle:'italic' }}>No records</p>
+                    </div>
+                  ))}
             </Card>
+            {activeState === 'Passed' && <div sx={{width:'90%',margin:'10px',display:'flex',justifyContent:'flex-end',flexDirection:'column',alignItems:'flex-end'}}>
+              <Button onClick={Addall} sx={{margin:'10px'}} variant='contained'>SET ALL SELECTED TO SCHOLARS</Button>
+            </div>}
+      {activeState === 'Reject' && <div sx={{width:'90%',margin:'10px',display:'flex',justifyContent:'flex-end',flexDirection:'column',alignItems:'flex-end'}}>
+
+                <Button onClick={FailedAll} sx={{margin:'10px'}} variant='contained'>SET FAILED THE SELECTED USERS</Button>
+            </div>}
         </Card>          
         </Box>}
        </div>

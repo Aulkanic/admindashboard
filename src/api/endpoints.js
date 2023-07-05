@@ -27,6 +27,7 @@ const Endpoints = {
     FETCH_APPLI: 'Appointment/Applist',
     FETCH_BATCH: 'Appointment/Batchlist',
     FAILED_USER: 'Appointment/Failed',
+    SET_INTERVIEW: 'Appointment/Interview',
     FETCH_USERINFORMATION: 'Appointment/UserDetails/',
     FETCH_BMCCSCHOLAR: 'BMCCScholar/Scholars',
     UPDATE_BMCCSCHOLAR: 'BMCCScholar/Schostanding',
