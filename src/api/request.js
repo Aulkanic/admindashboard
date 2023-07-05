@@ -158,3 +158,18 @@ export const DeleteReq = {
 export const Documentary = {
     FETCH_DOCUMENTARY: () => axiosInstance.get(Endpoints.FETCH_DOCUMENTARY)
 }
+export const CancelApp = {
+    CANCEL_APP: (data) => axiosInstance.patch(Endpoints.CANCEL_APP,data)
+}
+export const CancelBatch = {
+    CANCEL_BATCH: (data) => axiosInstance.patch(Endpoints.CANCEL_BATCH,data)
+}
+export const FetchingApplist = {
+    FETCH_APP: (data) => axiosInstance.post(Endpoints.FETCH_APPLI,data)
+}
+export const FetchingBatchlist = {
+    FETCH_BATCH: (data) => axiosInstance.post(Endpoints.FETCH_BATCH,data)
+}
+export const FetchingUserAppdetails = {
+    FETCH_USERDET: (data) => axiosInstance.get(Endpoints.FETCH_USERINFORMATION+data)
+}
