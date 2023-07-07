@@ -137,6 +137,9 @@ export const LogoutAdmin = {
 export const GrantAccess = {
     GRANT_ACCESS: (data) => axiosInstance.post(Endpoints.GRANT_ACCESS,data)
 }
+export const GrantAccess1 = {
+    GRANT_ACCESS1: (data) => axiosInstance.post(Endpoints.GRANT_ACCESS1,data)
+}
 export const CreateAnnouncement = {
     CREATE_ANNOUNCEMENT: (data) => axiosInstance.post(Endpoints.CREATE_ANNOUNCEMENT,data)
 }

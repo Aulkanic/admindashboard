@@ -52,6 +52,7 @@ const Endpoints = {
     FETCH_REPORTUSER:'Reports/UserAccounts',
     SET_OFFLINE:"admin/Logout",
     GRANT_ACCESS:"admin/GrantAccess",
+    GRANT_ACCESS1:"admin/GrantAccessApp",
     CREATE_ANNOUNCEMENT:'announce/createannounced',
     UPDATE_SCORESLOT:'Dynamic/Update',
     FETCH_SCORESLOT:'Dynamic/PassSlot',

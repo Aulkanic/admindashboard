@@ -5,7 +5,7 @@ import Navbar from "../../components/navbar/Navbar";
 import { Tabs, Tab,Table, TableBody, TableCell, TableContainer, TableHead,TableRow, Paper, Box, Button, Typography, Modal,Card} from "@mui/material"; 
 import { FetchingQualified, CreateAppointment,FetchingAppointList
   , Reaapointed, SetApproved,FetchingApplicantsInfo,SetApplicant,Addusertolistapp,UpdateScheduleApp,FetchingBmccSchoinfo,FailedUser,
-    CancelApp,CancelBatch,FetchingApplist,FetchingBatchlist,FetchingUserAppdetails,ListofSub, SetInterview,GrantAccess } from "../../api/request";
+    CancelApp,CancelBatch,FetchingApplist,FetchingBatchlist,FetchingUserAppdetails,ListofSub, SetInterview,GrantAccess1 } from "../../api/request";
 import FormControlLabel from '@mui/material/FormControlLabel';
 import dayjs from 'dayjs';
 import CardContent from '@mui/material/CardContent';
@@ -481,12 +481,13 @@ const Failed = async() =>{
   formData.append('email',email);
   formData.append('password',password);
   formData.append('applicantNum',who)
-  await GrantAccess.GRANT_ACCESS(formData)
+  await GrantAccess1.GRANT_ACCESS1(formData)
   .then(res => {
     if(res.data.success === 1){
       console.log(res)
       setEmail('')
       setOpenDialog1(false)
+      setAppointedList(res.data.result)
       setPassword('')
       swal({
         text: res.data.message,
