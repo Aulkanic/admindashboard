@@ -1077,44 +1077,9 @@ const Evaluation = () => {
             <Navbar/>
             <Card sx={{width:'97%',margin:'10px',padding:'10px',display:'flex',justifyContent:'flex-end',flexDirection:'column',alignItems:'flex-end'}} elevation={3}>
             <div className='evluationcon'>
-              <div style={{width:'100%',height: 100,display:'flex',justifyContent:'space-between',padding:10}}>
+              <div style={{width:'100%',height: 50,display:'flex',justifyContent:'space-between',padding:10}}>
                   <div style={{width:'30%',display:'flex',flexDirection:'column',justifyContent:'space-between',height:'100%'}}>
                   <h1>Registered Applicants</h1>
-                  <Breadcrumbs sx={{backgroundColor:'green'}} aria-label="breadcrumb">
-                  <Button onClick={() => setActiveState('All')}>
-                    <Link
-                      underline="none"
-                      sx={{
-                        color: activeState === 'All' ? 'white' : 'black',
-                      }}
-                    >
-                      <FormatListBulletedOutlinedIcon fontSize="inherit" />
-                      All({data.length})
-                    </Link>
-                  </Button>
-                  <Button onClick={() => setActiveState('Passed')}>
-                    <Link
-                      underline="none"
-                      sx={{
-                        color: activeState === 'Passed' ? 'white' : 'black',
-                      }}
-                    >
-                      <CheckCircleIcon sx={{ mr: 0.5 }} fontSize="inherit" />
-                      Passed({Passed.length})
-                    </Link>
-                  </Button>
-                  <Button onClick={() => setActiveState('Failed')}>
-                    <Link
-                      underline="none"
-                      sx={{
-                        color: activeState === 'Failed' ? 'white' : 'black',
-                      }}
-                    >
-                      <CancelIcon sx={{ mr: 0.5 }} fontSize="inherit" />
-                      Failed({Failed.length})
-                    </Link>
-                  </Button>
-                  </Breadcrumbs>
                   </div>
                   <div style={{marginRight:5,height:'100%'}}>
                     <div style={{display:'flex',flexDirection:'column',height:'100%',width:'100%',alignItems:'center'}}>
@@ -1153,6 +1118,42 @@ const Evaluation = () => {
                   </div>
               </div>
               <Box sx={{ height: 400, width: '100%' }}>
+                <Card sx={{height:'100%'}}>
+                <Breadcrumbs sx={{backgroundColor:'green'}} aria-label="breadcrumb">
+                  <Button onClick={() => setActiveState('All')}>
+                    <Link
+                      underline="none"
+                      sx={{
+                        color: activeState === 'All' ? 'white' : 'black',
+                      }}
+                    >
+                      <FormatListBulletedOutlinedIcon fontSize="inherit" />
+                      All({data.length})
+                    </Link>
+                  </Button>
+                  <Button onClick={() => setActiveState('Passed')}>
+                    <Link
+                      underline="none"
+                      sx={{
+                        color: activeState === 'Passed' ? 'white' : 'black',
+                      }}
+                    >
+                      <CheckCircleIcon sx={{ mr: 0.5 }} fontSize="inherit" />
+                      Passed({Passed.length})
+                    </Link>
+                  </Button>
+                  <Button onClick={() => setActiveState('Failed')}>
+                    <Link
+                      underline="none"
+                      sx={{
+                        color: activeState === 'Failed' ? 'white' : 'black',
+                      }}
+                    >
+                      <CancelIcon sx={{ mr: 0.5 }} fontSize="inherit" />
+                      Failed({Failed.length})
+                    </Link>
+                  </Button>
+                  </Breadcrumbs>
                     {activeState === 'All' && (data && data.length > 0 ? (
                   <DataGrid
                     rows={data}
@@ -1223,6 +1224,7 @@ const Evaluation = () => {
                     <p style={{ textAlign: 'center',fontSize:30,fontWeight:700,fontStyle:'italic' }}>No records</p>
                     </div>
                   ))}
+                </Card>
               </Box>
               
             </div>

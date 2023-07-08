@@ -179,3 +179,6 @@ export const FetchingUserAppdetails = {
 export const SetInterview = {
     SET_INTERVIEW: (data) => axiosInstance.post(Endpoints.SET_INTERVIEW,data)
 }
+export const UserActivity = {
+    USER_LOG: (data) => axiosInstance.get(Endpoints.USER_ACTIVITY+data)
+}

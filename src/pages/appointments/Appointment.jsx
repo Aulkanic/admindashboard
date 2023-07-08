@@ -421,11 +421,12 @@ const Appointment = () => {
       const applicantCode = data.applicantCode;
       const yearLevel =dataappinfo.currentYear;
       const baranggay = dataappinfo.baranggay;
+      const contactNum = dataappinfo.contactNum
       const email = dataappinfo.email;
       const scholarshipApplied = dataappinfo.SchoIarshipApplied;
       const adminName = user.name;
       console.log(dataappinfo)
-      SetApproved.SET_APPROVE({email,applicantCode,adminName,data,Name,applicantNum,yearLevel,baranggay,scholarshipApplied})
+      SetApproved.SET_APPROVE({contactNum,email,applicantCode,adminName,data,Name,applicantNum,yearLevel,baranggay,scholarshipApplied})
     .then(res => {
       console.log(res)
       setQualified(res.data.results.data1);

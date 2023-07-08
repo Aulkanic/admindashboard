@@ -45,6 +45,7 @@ const Endpoints = {
     ACTIVITY_LOG: 'admin/Activitylog',
     UPDATE_EMP: 'admin/Update',
     UPDATE_PASS: 'admin/Updatepassword',
+    USER_ACTIVITY: 'admin/Userlog/',
     UPDATE_PROFILE: 'admin/Updateprofile',
     FETCH_ANNOUNCEMENT:'announce/Announced',
     FETCH_REPORTAPP:'Reports/Applicants',

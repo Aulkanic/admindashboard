@@ -7,7 +7,7 @@ import Button from '@mui/material/Button';
 import Typography from '@mui/material/Typography';
 import { DataGrid} from '@mui/x-data-grid';
 import React, {useEffect, useState} from 'react'
-import { FetchingBmccScho, FetchingBmccSchoinfo,ScholarStand ,ListofReq} from '../../api/request';
+import { FetchingBmccScho, FetchingBmccSchoinfo,ScholarStand ,ListofReq,UserActivity} from '../../api/request';
 import './scholar.css'
 import { styled } from '@mui/material/styles';
 import Badge from '@mui/material/Badge';
@@ -30,7 +30,6 @@ import FormLabel from '@mui/material/FormLabel';
 import TextField from '@mui/material/TextField';
 import CloseIcon from '@mui/icons-material/Close';
 import Slide from '@mui/material/Slide';
-import { TransitionProps } from '@mui/material/transitions';
 import AppBar from '@mui/material/AppBar';
 import Toolbar from '@mui/material/Toolbar';
 import IconButton from '@mui/material/IconButton';
@@ -127,12 +126,16 @@ const Scholars = () => {
   const [openDialog, setOpenDialog] = useState(false);
   const [imageModalOpen, setImageModalOpen] = useState(false);
   const [selectedImage, setSelectedImage] = useState({});
+  const [userLog,setUserlog] = useState([]);
+  const [rowSelectionModel, setRowSelectionModel] = useState([]);
 
   useEffect(() => {
     async function Fetch(){
       const scholars = await FetchingBmccScho.FETCH_SCHOLARS()
       const req = await ListofReq.FETCH_REQUIREMENTS()
-      setData(scholars.data.Scholars)
+      console.log(scholars)
+      const data = scholars.data.Scholars.filter(data => data.status === 'Active')
+      setData(data)
       setComplete(req.data.Requirements)
     }
     Fetch();
@@ -170,26 +173,50 @@ const Scholars = () => {
     setImageModalOpen(false);
   };
   
-  const view = async(data) =>{
-    setOpen(true)
-    const applicantNum = data.applicantNum
-    const response = await FetchingBmccSchoinfo.FETCH_SCHOLARSINFO(applicantNum)
-    const req = await ListofReq.FETCH_REQUIREMENTS()
-    setSchodocs(req.data.Requirements.results1)
-    setSchoInf1(response.data.ScholarInf.results1[0])
-    setSchoInf2(response.data.ScholarInf.results2[0])
-    const RequireDocs = req.data.Requirements.results1?.filter(docs => docs.schoName === schoinf2.scholarshipApplied)
-    const renewalReq = RequireDocs?.filter((data) => data.docsfor === 'Renewal')
-    const application = response.data.ScholarInf.results3?.filter((data) => data.docsFor === 'Application')
-    const renewal = response.data.ScholarInf.results3?.filter((data) => data.docsFor === 'Renewal')
-    const combinedData = renewalReq.map(requirement => {
+  const view = async (data) => {
+    const applicantNum = data.applicantNum;
+    const response = await FetchingBmccSchoinfo.FETCH_SCHOLARSINFO(applicantNum);
+    const req = await ListofReq.FETCH_REQUIREMENTS();
+    const log = await UserActivity.USER_LOG(applicantNum);
+    const userAct = log.data.result;
+    
+    const [RequireDocs, renewalReq] = req.data.Requirements.results1
+      ?.filter((docs) => docs.schoName === response.data.ScholarInf.results2[0].scholarshipApplied)
+      ?.reduce(
+        ([RequireDocs, renewalReq], doc) => {
+          if (doc.docsfor === 'Renewal') renewalReq.push(doc);
+          RequireDocs.push(doc);
+          return [RequireDocs, renewalReq];
+        },
+        [[], []]
+      );
+  
+    const [application, renewal] = response.data.ScholarInf.results3
+      ?.reduce(
+        ([application, renewal], data) => {
+          if (data.docsFor === 'Application') application.push(data);
+          if (data.docsFor === 'Renewal') renewal.push(data);
+          return [application, renewal];
+        },
+        [[], []]
+      );
+  
+    const combinedData = renewalReq.map((requirement) => {
       const requirementName = requirement.requirementName;
-      const matchingApplicantData = renewal.filter(applicant => applicant.requirement_Name === requirementName);
+      const matchingApplicantData = renewal.filter(
+        (applicant) => applicant.requirement_Name === requirementName
+      );
       return { ...requirement, applicantData: matchingApplicantData };
     });
-    setSchoInf3(application)
-    setSchoInf4(combinedData)
-  }
+    setSchodocs(req.data.Requirements.results1);
+    setUserlog(userAct.reverse());
+    setSchoInf1(response.data.ScholarInf.results1[0]);
+    setSchoInf2(response.data.ScholarInf.results2[0]);
+    setSchoInf3(application);
+    setSchoInf4(combinedData);
+    setOpen(true);
+  };
+  
 
   const columns = [
     { 
@@ -205,7 +232,7 @@ const Scholars = () => {
     {
       field: 'scholarshipApplied',
       headerName: 'Scholarship Applied',
-      width: 165,
+      width: 150,
       editable: false,
     },
     {
@@ -243,23 +270,46 @@ const Scholars = () => {
       headerName: 'Actions',
       width: 90,
       renderCell: (params) => (
-        <button className="viewBtnScholars" onClick={() => view(params.row)}>View</button>
+        <ViewButton className="viewBtnScholars" onClick={() => view(params.row)}>View</ViewButton>
       ),
     },
     {
-      field: 'standing',
-      headerName: 'Standing',
-      width: 110,
+      field: 'req',
+      headerName: 'Renewal Documents',
+      width: 170,
+      renderCell: (params) =>{
+  
+        const renewal = isComplete.results1.filter(docs => docs.schoName === params.row.scholarshipApplied)
+        const renewal1 = renewal.filter(docs => docs.docsfor === 'Renewal')
+        const renewalSubmitted = isComplete.results2.filter(docs => docs.applicantId === parseFloat(params.row.applicantNum) && docs.docsFor === 'Renewal');
+        const Status = `${renewalSubmitted.length}/ ${renewal1.length}`
+        return (
+          <>
+          {Status}
+          </>
+        )   
+      }
+    },
+    {
+      field: 'k',
+      headerName: 'Actions',
+      width: 170,
       renderCell: (params) =>{
         const renewal = isComplete.results1.filter(docs => docs.schoName === params.row.scholarshipApplied)
         const renewal1 = renewal.filter(docs => docs.docsfor === 'Renewal')
         const renewalSubmitted = isComplete.results2.filter(docs => docs.applicantId === parseFloat(params.row.applicantNum) && docs.docsFor === 'Renewal');
-        const Status = `${renewalSubmitted.length}/${renewal1.length}`
+        const Status = renewalSubmitted.length === renewal1.length
+        params.row.k = {
+          Status: Status,
+        };
+        console.log(params.row)
         return (
           <>
-          <p>{Status}</p>
+          {Status ? (<><p>Updated</p></>) : (<>
+          <StyledButton onClick={() =>RemoveGrant(params.row)}> REMOVE GRANT </StyledButton>
+          </>)}
           </>
-        )
+        )   
       }
     },
 
@@ -288,6 +338,11 @@ const Scholars = () => {
   const handleOpen1 = () => setOpen1(true);
   const handleClose1 = () => setOpen1(false);
 
+  const handleRowSelectionModelChange = (newRowSelectionModel) => {
+    console.log(newRowSelectionModel)
+    setRowSelectionModel(newRowSelectionModel);
+
+  };
 
     const handleButtonOpenDialog = async () => {
       if (status === 'Hold' || status === 'Disqualified') {
@@ -323,6 +378,70 @@ const Scholars = () => {
           swal('Something went Wrong')
         }
     }
+    const RemoveGrant = (data) =>{
+      console.log(data)
+        const status = 'Revoke'
+        const formData = new FormData();
+        formData.append('applicantNum',data.applicantNum)
+        formData.append('status',status)
+        formData.append('email',data.email)
+        ScholarStand.UPDATE_SCHOSTAND(formData)
+        .then(res => {
+          console.log(res)
+          const data = res.data.result?.filter(data => data.status === 'Active')
+          setData(data)
+          swal('Successfully Revoke')
+        }
+         )
+        .catch(err => console.log(err));
+
+    }
+    const RemoveGrantAll = () =>{
+      const selectedRows = rowSelectionModel.map((selectedRow) =>
+      data.find((row) => row.applicantNum === selectedRow)
+    );
+      for (let i = 0; i < selectedRows.length; i++) {
+        const row = selectedRows[i];
+        const status = 'Revoke'
+        const formData = new FormData();
+        formData.append('applicantNum',row.applicantNum)
+        formData.append('status',status)
+        formData.append('email',row.email)
+        ScholarStand.UPDATE_SCHOSTAND(formData)
+        .then(res => {
+          console.log(res)
+          const data = res.data.result?.filter(data => data.status === 'Active')
+          setData(data)
+          swal('Successfully Revoke')
+        }
+         )
+        .catch(err => console.log(err));
+      }
+
+    }
+    const NotifyAll = () =>{
+      const selectedRows = rowSelectionModel.map((selectedRow) =>
+      data.find((row) => row.applicantNum === selectedRow)
+    );
+      for (let i = 0; i < selectedRows.length; i++) {
+        const row = selectedRows[i];
+        const status = 'Hold'
+        const formData = new FormData();
+        formData.append('applicantNum',row.applicantNum)
+        formData.append('status',status)
+        formData.append('email',row.email)
+        ScholarStand.UPDATE_SCHOSTAND(formData)
+        .then(res => {
+          console.log(res)
+          const data = res.data.result?.filter(data => data.status === 'Active')
+          setData(data)
+          swal('Successfully Revoke')
+        }
+         )
+        .catch(err => console.log(err));
+      }
+
+    }
     const renewalStatus = schoinf4.map((data) => {
       console.log(data)
       const imageFile = data.applicantData.length > 0 ? data.applicantData[0].File : 'https://drive.google.com/uc?id=1EXWK8SeamLARC7wnCTj4YXQhT74Z-zIn';
@@ -344,7 +463,7 @@ const Scholars = () => {
         }
       }
     
-      const status = getStatus();
+      const status =  getStatus();
     
       return (
         <Card>
@@ -430,17 +549,11 @@ const Scholars = () => {
             <Typography sx={{ ml: 2, flex: 1 }} variant="h6" component="div">
               Scholar Information
             </Typography>
-            <StyledButton autoFocus color="inherit">
-              REJECT
-            </StyledButton>
-            <StyledButtonEdit sx={{marginLeft:'15px'}} autoFocus color="inherit">
-              PASS
-            </StyledButtonEdit>
           </Toolbar>
         </AppBar>
       <Box sx={{width:'100%',padding:'10px',height:'100%',display:'flex',backgroundColor:'whitesmoke'}}>
          <div style={{width:'35%'}}>
-            <div style={{width:'95%',padding:'10px',height:'100%',backgroundColor:'grey'}}>
+            <div style={{width:'95%',padding:'10px',height:'100%'}}>
               <Card elevation={5}>
             <img
                 alt="Remy Sharp"
@@ -452,12 +565,23 @@ const Scholars = () => {
                 <Typography>Scholar Code: {schoinf2.scholarCode}</Typography>
               </Card>
               </Card>
-              <Card sx={{margin:'10px',height:'250px'}}>
+              <Card sx={{margin:'10px',height:'250px',overflow:'auto'}}>
                 <div style={{textAlign:'center'}}>
                 <Typography sx={{fontSize:'18px',fontWeight:'700'}}>
                   Activity Log
                 </Typography>
+                <div style={{padding:'10px'}}>
+                {userLog?.map((data) =>{
+                  console.log(data)
+                  return (
+                    <>
+                    <p>{data.actions} on {data.date}</p>
+                    <Divider />
+                    </>
+                  )
+                })}
                 </div>
+                </div> 
               </Card>
             </div>
          </div>
@@ -475,7 +599,7 @@ const Scholars = () => {
               <Tab label="Documents" />
             </Tabs>             
             </Card>
-            <Card>
+            <Card sx={{margin:'10px'}}>
               {value === 0 && <>
                 <div>
                   <Card>
@@ -583,10 +707,16 @@ const Scholars = () => {
         }}
         pageSizeOptions={[25]}
         checkboxSelection
+        onRowSelectionModelChange={handleRowSelectionModelChange}
+        rowSelectionModel={rowSelectionModel}
         disableRowSelectionOnClick
+        isRowSelectable={(params) => !params.row.k || !params.row.k.Status}
       />
               </Box>
-
+            <div style={{width:'100%',display:'flex',justifyContent:'space-around',margin:'15px'}}>
+          <StyledButtonEdit onClick={NotifyAll}>Notify All Selected Scholars</StyledButtonEdit>
+          <StyledButton onClick={RemoveGrantAll}>Revoke Grant To All Selected Scholars</StyledButton>
+          </div>
             </div>
         </div>
     </div>

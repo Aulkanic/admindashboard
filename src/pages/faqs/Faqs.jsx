@@ -2,7 +2,7 @@ import Navbar from '../../components/navbar/Navbar';
 import Sidebar from '../../components/sidebar/Sidebar';
 import './faqs.scss';
 import './employeeaccs.css'
-import { useEffect, useState } from 'react';
+import React, {useEffect, useState} from 'react'
 import { AddBMCC,FetchingBMCC,Activitylog,UpdateEmp } from '../../api/request';
 import { Box, Modal,Card,Button, Typography} from "@mui/material"; 
 import TextField from '@mui/material/TextField';
@@ -20,6 +20,12 @@ import Chip from '@mui/material/Chip';
 import { purple } from '@mui/material/colors';
 import '../Button style/button.css'
 import swal from 'sweetalert';
+import CloseIcon from '@mui/icons-material/Close';
+import Slide from '@mui/material/Slide';
+import AppBar from '@mui/material/AppBar';
+import Toolbar from '@mui/material/Toolbar';
+import IconButton from '@mui/material/IconButton';
+import Dialog from '@mui/material/Dialog';
 
 const StyledButton = styled(Button)`
   && {
@@ -32,6 +38,9 @@ const StyledButton = styled(Button)`
     }
   }
 `;
+const Transition = React.forwardRef(function Transition(props, ref) {
+  return <Slide direction="up" ref={ref} {...props} />;
+});
 
 const Faqs = () => {
   const { loginUser,user } = useContext(admininfo);
@@ -45,6 +54,7 @@ const Faqs = () => {
   const [actlog,setActlog] = useState([]);
   const [open, setOpen] = useState(false);
   const [open1, setOpen1] = useState(false);
+  const [open2, setOpen2] = useState(false);
   const [errors, setErrors] = useState({});
   const [activeState,setActiveState] = useState('log');
 
@@ -174,7 +184,9 @@ const CustomDataGrid = styled(DataGrid)({
     },
   ];
   const handleOpen = () => setOpen(true);
+  const handleOpen2 = () => setOpen2(true);
   const handleClose = () => setOpen(false);
+  const handleClose2 = () => setOpen2(false);
   const handleOpen1 = (data) => {
     console.log(data)
     setOlddata(data)
@@ -345,6 +357,38 @@ const UpdateBMCC = (event) =>{
                 </div>
                 </Box>
             </Modal>
+            <Dialog
+        fullScreen
+        open={open2}
+        onClose={handleClose2}
+        TransitionComponent={Transition}
+      >
+        <AppBar sx={{ position: 'relative' }}>
+          <Toolbar>
+            <IconButton
+              edge="start"
+              color="inherit"
+              onClick={handleClose2}
+              aria-label="close"
+            >
+              <CloseIcon />
+            </IconButton>
+            <Typography sx={{ ml: 2, flex: 1 }} variant="h6" component="div">
+              Manage Employee Access
+            </Typography>
+          </Toolbar>
+        </AppBar>
+            <Box sx={{width:'100%',padding:'10px',height:'100%',display:'flex',backgroundColor:'whitesmoke',justifyContent:'center',alignItems:'center'}}>
+                    <Card sx={{width:'70%',backgroundColor:'green'}}>
+                      <div>
+                        
+                      </div>
+                      <div>
+
+                      </div>
+                    </Card>
+            </Box>
+        </Dialog>
 
             <div className="top">
               <Card elevation={0} style={{width:'100%',display:'flex',justifyContent:'space-around',height:100,alignItems:'center',border:'none'}}>
@@ -361,8 +405,12 @@ const UpdateBMCC = (event) =>{
                     {activeState === 'admin' && <div className="emacsslist">
                       <div style={{width:'90%',display:'flex',justifyContent:'space-between',padding:10,alignItems:'center'}}>
                       <h1>Employee List</h1>
+                      <div>
+                      <Button sx={{backgroundColor:'green',height:'50%',marginRight:'10px'}}
+                       className="addBtnEmp" variant='contained' onClick={handleOpen2}> MANAGE ACCESS </Button>
                       <Button sx={{backgroundColor:'green',height:'50%'}}
                        className="addBtnEmp" variant='contained' onClick={handleOpen}> ADD EMPLOYEE </Button>
+                       </div>
                       </div>
                       <div className='bmccEmp'>
                       <CustomDataGrid 
