@@ -14,7 +14,12 @@ import TextField from '@mui/material/TextField';
 import Breadcrumbs from '@mui/material/Breadcrumbs';
 import Link from '@mui/material/Link';
 import { DataGrid, GridToolbar } from '@mui/x-data-grid';
+import { Bar,Pie } from 'react-chartjs-2';
+import { Chart, CategoryScale, LinearScale, Title, Tooltip } from 'chart.js/auto';
 import { FetchingReportApp,FetchingReportScho,FetchingReportUser } from '../../api/request';
+
+
+
 
 const Report = () => {
     const [applicants,setApplicants] = useState([]);
@@ -176,7 +181,59 @@ const Report = () => {
         
         },
       ];
-      console.log(applicants)
+      const originalData = {
+        labels: ['Failed Applicants', 'Applicants', 'Scholars'],
+        datasets: [
+          {
+            label: 'Sample Bar Graph',
+            data: [12, 19, 3],
+            backgroundColor: ['red', 'blue', 'yellow'],
+          },
+        ],
+      };
+    
+      const total = originalData.datasets[0].data.reduce((acc, curr) => acc + curr, 0);
+      const percentageData = originalData.datasets[0].data.map((value) => ((value / total) * 100).toFixed(2));
+    
+      const data = {
+        ...originalData,
+        datasets: [
+          {
+            ...originalData.datasets[0],
+            data: percentageData,
+          },
+        ],
+      };
+      const options = {
+        plugins: {
+          legend: {
+            display: false,
+          },
+          tooltip: {
+            callbacks: {
+              label: (context) => {
+                const label = data.labels[context.dataIndex];
+                const value = data.datasets[0].data[context.dataIndex];
+                return `${label}: ${value}%`;
+              },
+            },
+          },
+          datalabels: {
+            formatter: (value, ctx) => {
+              const label = data.labels[ctx.dataIndex];
+              return `${label}: ${value}%`;
+            },
+            color: '#fff',
+            font: {
+              size: 14,
+              weight: 'bold',
+            },
+          },
+        },
+      };
+    
+  Chart.register(CategoryScale, LinearScale, Title, Tooltip);
+
   return (
     <>
     <div className="scholarships" style={{backgroundColor:'whitesmoke'}}>
@@ -187,8 +244,11 @@ const Report = () => {
             <Typography style={{fontSize:30,fontWeight:'bold',margin:10}}>
                 Reports
             </Typography>
-        <Card style={{width:'95%',display:'flex',flexDirection:'column',justifyContent:'center',alignItems:'center',height:'100%',margin:20}}>
-        <div style={{margin:10}}>
+        <Card style={{width:'97.5%',display:'flex',justifyContent:'center',alignItems:'center',height:'100%',padding:'10px'}}>
+        <div style={{margin:10,width:'25%'}}>
+        <Pie style={{height:'auto'}} data={data} options={options} />
+        </div>
+        <div style={{width:'67%'}}>
         <div style={{backgroundColor:'green',width:'100%'}}>
         <Breadcrumbs aria-label="breadcrumb">
         <Button onClick={() => setActiveSection('applicants')}>
@@ -224,7 +284,8 @@ const Report = () => {
         </div>
                         {activeSection === 'applicants' && (
                 <DataGrid
-                slots={{ toolbar: GridToolbar }}
+                    sx={{width:'100%'}}
+                    slots={{ toolbar: GridToolbar }}
                     columns={column}
                     rows={applicants}
                     getRowId={(row) => row.applicantNum}
@@ -278,8 +339,8 @@ const Report = () => {
                     pageSizeOptions={[25]}
                 />
                 )}
-                </div>
-                </Card>
+        </div>
+        </Card>
         </div>
         </div>
     </div>

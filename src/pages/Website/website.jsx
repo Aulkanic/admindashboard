@@ -16,6 +16,7 @@ import { ChromePicker } from 'react-color';
 import { useState } from 'react';
 import swal from 'sweetalert'
 
+
 const Website = () => {
   const [selectedColor, setSelectedColor] = useState('#ffffff'); // Initial color
   const [selectedColor1, setSelectedColor1] = useState('#ffffff'); // Initial color
