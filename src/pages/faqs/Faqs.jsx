@@ -3,7 +3,7 @@ import Sidebar from '../../components/sidebar/Sidebar';
 import './faqs.scss';
 import './employeeaccs.css'
 import React, {useEffect, useState} from 'react'
-import { AddBMCC,FetchingBMCC,Activitylog,UpdateEmp } from '../../api/request';
+import { AddBMCC,FetchingBMCC,Activitylog,UpdateEmp,ListAccess,EmpAuthorized } from '../../api/request';
 import { Box, Modal,Card,Button, Typography} from "@mui/material"; 
 import TextField from '@mui/material/TextField';
 import { useContext } from "react";
@@ -26,6 +26,7 @@ import AppBar from '@mui/material/AppBar';
 import Toolbar from '@mui/material/Toolbar';
 import IconButton from '@mui/material/IconButton';
 import Dialog from '@mui/material/Dialog';
+
 
 const StyledButton = styled(Button)`
   && {
@@ -56,6 +57,24 @@ const Faqs = () => {
   const [open1, setOpen1] = useState(false);
   const [open2, setOpen2] = useState(false);
   const [errors, setErrors] = useState({});
+  const [emp1,setEmp1] = useState('');
+  const [emp2,setEmp2] = useState('');
+  const [scho,setScho] = useState('');
+  const [score,setScore] = useState('');
+  const [require,setRequire] = useState('');
+  const [eva1,setEva1] = useState('');
+  const [eva2,setEva2] = useState('');
+  const [app1,setApp1] = useState('');
+  const [app2,setApp2] = useState('');
+  const [appoint1,setAppoint1] = useState('');
+  const [appoint2,setAppoint2] = useState('');
+  const [appoint3,setAppoint3] = useState('');
+  const [scholar,setScholar] = useState('');
+  const [newan,setNewan] = useState('');
+  const [rule,setRule] = useState('');
+  const [web,setWeb] = useState('');
+  const [report,setReport] = useState(null);
+  const [accessEmp,setAccessEmp] = useState([])
   const [activeState,setActiveState] = useState('log');
 
 const CustomDataGrid = styled(DataGrid)({
@@ -79,7 +98,7 @@ const CustomDataGrid = styled(DataGrid)({
   };
 
   const handleClick = () => {
-    if(user.name !== 'Admin'){
+    if(user.jobDescription !== accessEmp.empSec1){
       swal({
         text: 'UnAuthorized Access',
         timer: 2000,
@@ -127,8 +146,6 @@ const CustomDataGrid = styled(DataGrid)({
       headerAlign: 'center',
 
       renderCell: (params) => {
-
-        console.log(params)
         const isOnline = params.row.isOnline;
         
         let chipColor = 'error'; 
@@ -188,7 +205,6 @@ const CustomDataGrid = styled(DataGrid)({
   const handleClose = () => setOpen(false);
   const handleClose2 = () => setOpen2(false);
   const handleOpen1 = (data) => {
-    console.log(data)
     setOlddata(data)
         setOpen1(true);
   } 
@@ -198,9 +214,9 @@ const CustomDataGrid = styled(DataGrid)({
         async function Fetch(){
         const list = await FetchingBMCC.FETCH_BMCC()
         const actlog = await Activitylog.ACTIVITY_LOG()
-        console.log(list)
-        console.log(actlog)
+        const access = await ListAccess.ACCESS()
           setBmcc(list.data.message)
+          setAccessEmp(access.data.result[0])
           const activitylog = actlog.data.Log
           setActlog(activitylog.reverse())
         }
@@ -252,6 +268,35 @@ const UpdateBMCC = (event) =>{
     console.log(res)
     setBmcc(res.data.employees);
     setOpen1(false)
+  }
+   )
+  .catch(err => console.log(err));
+}
+const Authorization = (e) =>{
+  e.preventDefault()
+  const formData = new FormData();
+  formData.append('emp1',emp1 || accessEmp.empSec1)
+  formData.append('emp2',emp2 || accessEmp.empSec2)
+  formData.append('scho',scho || accessEmp.schoSec)
+  formData.append('score',score || accessEmp.scoreSec)
+  formData.append('require',require || accessEmp.requireSec)
+  formData.append('eva1',eva1 || accessEmp.evaSec1)
+  formData.append('eva2',eva2 || accessEmp.evaSec2)
+  formData.append('app1',app1 || accessEmp.appSec1)
+  formData.append('app2',app2 || accessEmp.appSec2)
+  formData.append('appoint1',appoint1 || accessEmp.appointSec1)
+  formData.append('appoint2',appoint2 || accessEmp.appointSec2)
+  formData.append('appoint3',appoint3 || accessEmp.appointSec3)
+  formData.append('scholar',scholar || accessEmp.scholarSec)
+  formData.append('newan',newan || accessEmp.newanSec)
+  formData.append('rule',rule || accessEmp.ruleSec)
+  formData.append('web',web || accessEmp.webSec)
+  formData.append('report',report || accessEmp.repSec)
+  EmpAuthorized.AUTHORIZATION(formData)
+  .then(res => {
+    console.log(res)
+    setAccessEmp(res.data.result)
+    swal('Success')
   }
    )
   .catch(err => console.log(err));
@@ -357,7 +402,7 @@ const UpdateBMCC = (event) =>{
                 </div>
                 </Box>
             </Modal>
-            <Dialog
+        <Dialog
         fullScreen
         open={open2}
         onClose={handleClose2}
@@ -376,17 +421,112 @@ const UpdateBMCC = (event) =>{
             <Typography sx={{ ml: 2, flex: 1 }} variant="h6" component="div">
               Manage Employee Access
             </Typography>
+            <Button variant='none' onClick={Authorization}>
+              Save
+            </Button>
           </Toolbar>
         </AppBar>
-            <Box sx={{width:'100%',padding:'10px',height:'100%',display:'flex',backgroundColor:'whitesmoke',justifyContent:'center',alignItems:'center'}}>
-                    <Card sx={{width:'70%',backgroundColor:'green'}}>
-                      <div>
-                        
-                      </div>
-                      <div>
-
+            <Box sx={{width:'100%',padding:'10px',height:'100%',display:'flex',backgroundColor:'whitesmoke',justifyContent:'space-around'}}>
+                    <div style={{width:'30%',height:'auto'}}>
+                    <Card sx={{width:'100%%',height:'auto',display:'flex',flexDirection:'column',padding:'10px',margin:'10px'}} elevation={5}>
+                      <Typography>Employee Section</Typography>
+                      <div style={{width:'100%',display:'flex',flexDirection:'column'}}>
+                      <Typography>Creation Of Accounts:</Typography>
+                      <TextField value={emp1} placeholder={accessEmp.empSec1} onChange={(e) => setEmp1(e.target.value)}/>
+                      <Typography>Managing Of Accounts:</Typography>
+                      <TextField value={emp2} placeholder={accessEmp.empSec2} onChange={(e) => setEmp2(e.target.value)}/>
                       </div>
                     </Card>
+                    <Card sx={{width:'100%%',height:'auto',display:'flex',flexDirection:'column',padding:'10px',margin:'10px'}} elevation={5}>
+                      <Typography>Scholarship Program Section</Typography>
+                      <div style={{width:'100%',display:'flex',flexDirection:'column'}}>
+                      <Typography>Creation and Managing Scholarship Program:</Typography>
+                      <TextField value={scho} placeholder={accessEmp.schoSec} onChange={(e) => setScho(e.target.value)}/>
+                      </div>
+                    </Card>
+                    <Card sx={{width:'100%%',height:'auto',display:'flex',flexDirection:'column',padding:'10px',margin:'10px'}} elevation={5}>
+                      <Typography>Score Card Section</Typography>
+                      <div style={{width:'100%',display:'flex',flexDirection:'column'}}>
+                      <Typography>Set Score Card Scoring:</Typography>
+                      <TextField value={score} placeholder={accessEmp.scoreSec} onChange={(e) => setScore(e.target.value)}/>
+                      </div>
+                    </Card>
+                    <Card sx={{width:'100%%',height:'auto',display:'flex',flexDirection:'column',padding:'10px',margin:'10px'}} elevation={5}>
+                      <Typography>Requirement Section</Typography>
+                      <div style={{width:'100%',display:'flex',flexDirection:'column'}}>
+                      <Typography>Adding and Managing List of Requirements:</Typography>
+                      <TextField value={require} placeholder={accessEmp.requireSec} onChange={(e) =>setRequire(e.target.value)}/>
+                      </div>
+                    </Card>
+                    </div>
+                    <div style={{width:'30%',height:'auto'}}>
+                    <Card sx={{width:'100%%',height:'auto',display:'flex',flexDirection:'column',padding:'10px',margin:'10px'}} elevation={5}>
+                      <Typography>Evaluation of Registered Applicants Section</Typography>
+                      <div style={{width:'100%',display:'flex',flexDirection:'column'}}>
+                      <Typography>Approval and Rejecting Registered Applicants:</Typography>
+                      <TextField value={eva1} placeholder={accessEmp.evaSec1} onChange={(e) => setEva1(e.target.value)}/>
+                      <Typography>Setup Passing Score and Available Slots:</Typography>
+                      <TextField value={eva2} placeholder={accessEmp.evaSec2} onChange={(e) => setEva2(e.target.value)}/>
+                      </div>
+                    </Card>
+                    <Card sx={{width:'100%%',height:'auto',display:'flex',flexDirection:'column',padding:'10px',margin:'10px'}} elevation={5}>
+                      <Typography>Applicants Section</Typography>
+                      <div style={{width:'100%',display:'flex',flexDirection:'column'}}>
+                      <Typography>Checking Documents/Requirements Of Applicants:</Typography>
+                      <TextField value={app1} placeholder={accessEmp.appSec1} onChange={(e) => setApp1(e.target.value)}/>
+                      <Typography>Approval and Failing Of Applicants:</Typography>
+                      <TextField value={app2} placeholder={accessEmp.appSec2} onChange={(e) => setApp2(e.target.value)}/>
+                      </div>
+                    </Card>
+                    <Card sx={{width:'100%%',height:'auto',display:'flex',flexDirection:'column',padding:'10px',margin:'10px'}} elevation={5}>
+                      <Typography>Appointment Section</Typography>
+                      <div style={{width:'100%',display:'flex',flexDirection:'column'}}>
+                      <Typography>Creation Of Appointment:</Typography>
+                      <TextField value={appoint1} placeholder={accessEmp.appointSec1} onChange={(e) => setAppoint1(e.target.value)}/>
+                      <Typography>Interviewer:</Typography>
+                      <TextField value={appoint2} placeholder={accessEmp.appointSec2} onChange={(e) => setAppoint2(e.target.value)}/>
+                      <Typography>Approval and Failing Of Appointed Applicants:</Typography>
+                      <TextField value={appoint3} placeholder={accessEmp.appointSec3} onChange={(e) => setAppoint3(e.target.value)}/>
+                      </div>
+                    </Card>
+                    </div>
+                    <div style={{width:'30%',height:'auto'}}>
+                    <Card sx={{width:'100%%',height:'auto',display:'flex',flexDirection:'column',padding:'10px',margin:'10px'}} elevation={5}>
+                      <Typography>Scholars Section</Typography>
+                      <div style={{width:'100%',display:'flex',flexDirection:'column'}}>
+                      <Typography>Managing Scholars Status:</Typography>
+                      <TextField value={scholar} placeholder={accessEmp.scholarSec} onChange={(e) =>setScholar(e.target.value)}/>
+                      </div>
+                    </Card>
+                    <Card sx={{width:'100%%',height:'auto',display:'flex',flexDirection:'column',padding:'10px',margin:'10px'}} elevation={5}>
+                      <Typography>New and Announcement Section</Typography>
+                      <div style={{width:'100%',display:'flex',flexDirection:'column'}}>
+                      <Typography>Creation of News and Annoucement:</Typography>
+                      <TextField value={newan} placeholder={accessEmp.newanSec} onChange={(e) =>setNewan(e.target.value)}/>
+                      </div>
+                    </Card>
+                    <Card sx={{width:'100%%',height:'auto',display:'flex',flexDirection:'column',padding:'10px',margin:'10px'}} elevation={5}>
+                      <Typography>Scholarship Rules Section</Typography>
+                      <div style={{width:'100%',display:'flex',flexDirection:'column'}}>
+                      <Typography>Setting up the Rules of the Scholarship Program:</Typography>
+                      <TextField value={rule} placeholder={accessEmp.ruleSec} onChange={(e) =>setRule(e.target.value)}/>
+                      </div>
+                    </Card>
+                    <Card sx={{width:'100%%',height:'auto',display:'flex',flexDirection:'column',padding:'10px',margin:'10px'}} elevation={5}>
+                      <Typography>Website Maintenance Section</Typography>
+                      <div style={{width:'100%',display:'flex',flexDirection:'column'}}>
+                      <Typography>Setting up the Design of the Website:</Typography>
+                      <TextField value={web} placeholder={accessEmp.webSec} onChange={(e) =>setWeb(e.target.value)}/>
+                      </div>
+                    </Card>
+                    <Card sx={{width:'100%%',height:'auto',display:'flex',flexDirection:'column',padding:'10px',margin:'10px'}} elevation={5}>
+                      <Typography>Reports Section</Typography>
+                      <div style={{width:'100%',display:'flex',flexDirection:'column'}}>
+                      <Typography>Generating Reports:</Typography>
+                    <TextField value={report} placeholder={accessEmp.repSec} onChange={(e) => setReport(e.target.value)}/>
+                      </div>
+                    </Card>
+                    </div>
             </Box>
         </Dialog>
 

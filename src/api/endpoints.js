@@ -46,6 +46,8 @@ const Endpoints = {
     UPDATE_EMP: 'admin/Update',
     UPDATE_PASS: 'admin/Updatepassword',
     USER_ACTIVITY: 'admin/Userlog/',
+    EMP_AUTHORIZATION: 'admin/Authorization',
+    ACCESS: 'admin/Access',
     UPDATE_PROFILE: 'admin/Updateprofile',
     FETCH_ANNOUNCEMENT:'announce/Announced',
     FETCH_REPORTAPP:'Reports/Applicants',
@@ -54,10 +56,14 @@ const Endpoints = {
     SET_OFFLINE:"admin/Logout",
     GRANT_ACCESS:"admin/GrantAccess",
     GRANT_ACCESS1:"admin/GrantAccessApp",
+    WEBSITE:"admin/WebsiteImg",
+    FETCH_WEBSITE:"admin/WebImg",
     CREATE_ANNOUNCEMENT:'announce/createannounced',
     UPDATE_SCORESLOT:'Dynamic/Update',
     FETCH_SCORESLOT:'Dynamic/PassSlot',
     DECRE_SCORESLOT:'Dynamic/DecreSlot',
+    COLOR:'Dynamic/Colors',
+    FFETCH_COLOR:'Dynamic/Colorslist',
 }
 
 export default Endpoints

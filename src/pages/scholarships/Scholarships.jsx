@@ -3,7 +3,7 @@ import Sidebar from "../../components/sidebar/Sidebar"
 import "./scholarships.scss"
 import { Paper, Box, Modal,Button,TextField, Typography} from "@mui/material"; 
 import './scholarship.css'
-import { FetchingSchoProg, CreateSchoProg, UpdateSchoProg } from "../../api/request";
+import { FetchingSchoProg, CreateSchoProg, UpdateSchoProg,ListAccess } from "../../api/request";
 import { useEffect } from "react";
 import { useState } from "react";
 import Radio from '@mui/material/Radio';
@@ -15,6 +15,8 @@ import { styled } from '@mui/material/styles';
 import { DataGrid, GridCellParams } from '@mui/x-data-grid';
 import Avatar from '@mui/material/Avatar';
 import Card from '@mui/material/Card';
+import { useContext } from "react";
+import { admininfo } from "../../App";
 import CardActions from '@mui/material/CardActions';
 import CardContent from '@mui/material/CardContent';
 import '../Button style/button.css'
@@ -39,6 +41,7 @@ const StyledButton = styled(Button)`
 
 
 const Scholarships = () => {
+  const { loginUser,user } = useContext(admininfo);
     const [schocat, setSchocat] = useState([]);
     const [open, setOpen] = useState(false);
     const [open1, setOpen1] = useState(false);
@@ -53,10 +56,40 @@ const Scholarships = () => {
     const [olddata, setOlddata] = useState([]);
     const [iconprev, setSchoprev] = useState();
     const [iconprev1, setSchoprev1] = useState();
+    const [accessList,setAccesslist] = useState([]);
 
-  const handleOpen = () => setOpen(true);
+  const handleOpen = () => {
+    if(user.jobDescription !== 'Admin'){
+      if(user.jobDescription !== accessList.schoSec){
+        swal({
+          text: 'UnAuthorized Access',
+          timer: 2000,
+          buttons: false,
+          icon: "error",
+        })
+        return
+      }else{
+        setOpen(true)
+      }
+    }
+    setOpen(true)
+  };
   const handleClose = () => setOpen(false);
   const handleOpen1 = (data) => {
+    if(user.jobDescription !== 'Admin'){
+      if(user.jobDescription !== accessList.schoSec){
+        swal({
+          text: 'UnAuthorized Access',
+          timer: 2000,
+          buttons: false,
+          icon: "error",
+        })
+        return
+      }else{
+        setOlddata(data)
+        setOpen1(true);
+      }
+    }
     setOlddata(data)
     setOpen1(true);
   }
@@ -81,9 +114,11 @@ const Scholarships = () => {
       try {
         const response = await Promise.all([
           FetchingSchoProg.FETCH_SCHOPROG(),
+          ListAccess.ACCESS()
         ]);
         console.log(response)
         setSchocat(response[0].data.SchoCat);
+        setAccesslist(response[1].data.result[0])
         
       } catch (error) {
         console.error('Error fetching data:', error);
@@ -140,9 +175,10 @@ const Scholarships = () => {
 
 function Edit(event){
   event.preventDefault();
+  console.log(olddata)
   const schoid =  olddata.schoProgId;
   const icon = icon1 || olddata.icon;
-  const title1 = titleu || olddata.title
+  const title1 = titleu || olddata.name;
   const description1 = descriptionu || olddata.description;
   const status1 = statusu || olddata.status; 
   const formData = new FormData();
@@ -167,7 +203,6 @@ function Edit(event){
   .catch(err => console.log(err));
 }
 
-console.log(icon1)
     const columns = [
       { field: 'schoProgId', headerName: 'Scholarship ID', width: 150 },
       {

@@ -7,12 +7,15 @@ import { useEffect, useState } from 'react';
 import Select from '@mui/material/Select';
 import InputLabel from '@mui/material/InputLabel';
 import MenuItem from '@mui/material/MenuItem';
+import { useContext } from "react";
+import { admininfo } from "../../App";
 import FormControl from '@mui/material/FormControl';
-import { CreatingScore,FetchingScore } from '../../api/request';
+import { CreatingScore,FetchingScore,ListAccess } from '../../api/request';
 import swal from 'sweetalert';
 
 
 export const About = () => {
+  const { loginUser,user } = useContext(admininfo);
     const [schoprog, setSchoProg] = useState([]);
     const[scho,setScho] = useState('');
     const[schoname,setSchoname] = useState('');
@@ -63,6 +66,7 @@ export const About = () => {
     const[sgwa5,setGwa5] = useState('');
     const [errors, setErrors] = useState({}); 
     const [scorelist, setScorelist] = useState([])
+    const [accessList,setAccesslist] = useState([])
 
     const handleChange = async (event) => {
       const value = await event.target.value;
@@ -82,13 +86,314 @@ export const About = () => {
 
       async function Fetch(){
         const response = await FetchingSchoProg.FETCH_SCHOPROG()
-        console.log(response)
+        const res = await ListAccess.ACCESS()
+        setAccesslist(res.data.result[0])
         setSchoProg(response.data.SchoCat);
       }
       Fetch();
     }, []);
     const handleSubmit = (e) => {
       e.preventDefault();
+      console.log(user.jobDescription)
+      if(user.jobDescription !== 'Admin'){
+        if(user.jobDescription !== accessList.scoreSec){
+          swal({
+            text: 'UnAuthorized Access',
+            timer: 2000,
+            buttons: false,
+            icon: "error",
+          })
+          return
+        }else{
+          if(scorelist && scorelist.length > 0){
+            const errors = {};
+          const wl = swl || scorelist[0].wlsc;
+          const wl1 = swl1 || scorelist[0].wlsc1;
+          const wl2 = swl2 || scorelist[0].wlsc2;
+          const wl3 = swl3 || scorelist[0].wlsc3;
+          const hl = shl || scorelist[0].hlsc;
+          const hl1 = shl1 || scorelist[0].hlsc1;
+          const hl2 = shl2 || scorelist[0].hlsc2;
+          const hl3 = shl3 || scorelist[0].hlsc3;
+          const hl4 = shl4 || scorelist[0].hlsc4;
+          const os = sos || scorelist[0].ossc;
+          const os1 = sos1 || scorelist[0].ossc1;
+          const os2 = sos2 || scorelist[0].ossc2;
+          const os3 = sos3 || scorelist[0].ossc3;
+          const os4 = sos4 || scorelist[0].ossc4;
+          const mi = smi || scorelist[0].misc;
+          const mi1 = smi1 || scorelist[0].misc1;
+          const mi2 = smi2 || scorelist[0].misc2;
+          const mi3 = smi3 || scorelist[0].misc3;
+          const mi4 = smi4 || scorelist[0].misc4;
+          const mi5 = smi5 || scorelist[0].misc5;
+          const fa = sfa || scorelist[0].fasc;
+          const fa1 = sfa1 || scorelist[0].fasc1;
+          const fa2 = sfa2 || scorelist[0].fasc2;
+          const fa3 = sfa3 || scorelist[0].fasc3;
+          const fa4 = sfa4 || scorelist[0].fasc4;
+          const fa5 = sfa5 || scorelist[0].fasc5;
+          const fa6 = sfa6 || scorelist[0].fasc6;
+          const ts = sts || scorelist[0].tssc;
+          const ts1 = sts1 || scorelist[0].tssc1;
+          const ts2 = sts2 || scorelist[0].tssc2;
+          const ts3 = sts3 || scorelist[0].tssc3;
+          const ts4 = sts4 || scorelist[0].tssc4;
+          const ts5 = sts5 || scorelist[0].tssc5;
+          const ts6 = sts6 || scorelist[0].tssc6;
+          const gwa = sgwa || scorelist[0].gwasc;
+          const gwa1= sgwa1 || scorelist[0].gwasc1;
+          const gwa2 = sgwa2 || scorelist[0].gwasc2;
+          const gwa3 = sgwa3 || scorelist[0].gwasc3;
+          const gwa4 = sgwa4 || scorelist[0].gwasc4;
+          const gwa5 = sgwa5 || scorelist[0].gwasc5;
+          const fn = sfn || scorelist[0].fnsc;
+          const fn1 = sfn1 || scorelist[0].fnsc1;
+          const fn2 = sfn2 || scorelist[0].fnsc2;
+          const fn3 = sfn3 || scorelist[0].fnsc3;
+          const fn4 = sfn4 || scorelist[0].fnsc4;
+          if(schoname === ''){
+            errors.schoname = 'This Field is required';
+          }
+          if(wl === '' || wl1 === '' || wl2 === '' || wl3 === ''){
+            errors.wl = 'This Field is required';
+          }
+          if(wl1 > 100 || wl2 > 100 || wl3 > 100){
+            errors.wl1 = 'Rate must not greater than 100 Percent';
+          }
+          if(wl1 < 0 || wl2 < 0 || wl3 < 0){
+            errors.wl2 = 'Rate must not less than 0 Percent';
+          }
+          if(hl === '' || hl1 === '' || hl2 === '' || hl3 === '' || hl4 === ''){
+            errors.hl = 'This Field is required';
+          }
+          if(hl1 > 100 || hl2 > 100 || hl3 > 100 || hl4 > 100){
+            errors.hl1 = 'Rate must not greater than 100 Percent';
+          }
+          if(hl1 < 0 || hl2 < 0 || hl3 < 0 || hl4 < 0){
+            errors.hl2 = 'Rate must not less than 0 Percent';
+          }
+          if(os === '' || os1 === '' || os2 === '' || os3 === '' || os4 === ''){
+            errors.os = 'This Field is required';
+          }
+          if(os1 > 100 || os2 > 100 || os3 > 100 || os4 > 100){
+            errors.os1 = 'Rate must not greater than 100 Percent';
+          }
+          if(os1 < 0 || os2 < 0 || os3 < 0 || os4 < 0){
+            errors.os2 = 'Rate must not less than 0 Percent';
+          }
+          if(mi === '' || mi1 === '' || mi2 === '' || mi3 === '' || mi4 === '' || mi5 === ''){
+            errors.mi = 'This Field is required';
+          }
+          if(mi1 > 100 || mi2 > 100 || mi3 > 100 || mi4 > 100 || mi5 > 100){
+            errors.mi1 = 'Rate must not greater than 100 Percent';
+          }
+          if(mi1 < 0 || mi2 < 0 || mi3 < 0 || mi4 < 0 || mi5 < 0){
+            errors.mi2 = 'Rate must not less than 0 Percent';
+          }
+          if(fa === '' || fa1 === '' || fa2 === '' || fa3 === '' || fa4 === '' || fa5 === '' || fa6 === ''){
+            errors.fa = 'This Field is required';
+          }
+          if(fa1 > 100 || fa2 > 100 || fa3 > 100 || fa4 > 100 || fa5 > 100 || fa6 > 100){
+            errors.fa1 = 'Rate must not greater than 100 Percent';
+          }
+          if(fa1 < 0 || fa2 < 0 || fa3 < 0 || fa4 < 0 || fa5 < 0 || fa6 < 0){
+            errors.fa2 = 'Rate must not less than 0 Percent';
+          }
+          if(ts === '' || ts1 === '' || ts2 === '' || ts3 === '' || ts4 === '' || ts5 === '' || ts6 === ''){
+            errors.ts = 'This Field is required';
+          }
+          if(ts1 > 100 || ts2 > 100 || ts3 > 100 || ts4 > 100 || ts5 > 100 || ts6 > 100){
+            errors.ts1 = 'Rate must not greater than 100 Percent';
+          }
+          if(ts1 < 0 || ts2 < 0 || ts3 < 0 || ts4 < 0 || ts5 < 0 || ts6 < 0){
+            errors.ts2 = 'Rate must not less than 0 Percent';
+          }
+          if(gwa === '' || gwa1 === '' || gwa2 === '' || gwa3 === '' || gwa4 === '' || gwa5 === ''){
+            errors.gwa = 'This Field is required';
+          }
+          if(gwa1 > 100 || gwa2 > 100 || gwa3 > 100 || gwa4 > 100 || gwa5 > 100){
+            errors.gwa1 = 'Rate must not greater than 100 Percent';
+          }
+          if(gwa1 < 0 || gwa2 < 0 || gwa3 < 0 || gwa4 < 0 || gwa5 < 0){
+            errors.gwa2 = 'Rate must not less than 0 Percent';
+          }
+          if(fn === '' || fn1 === '' || fn2 === '' || fn3 === '' || fn4 === ''){
+            errors.fn = 'This Field is required';
+          }
+          if(fn1 > 100 || fn2 > 100 || fn3 > 100 || fn4 > 100){
+            errors.fn1 = 'Rate must not greater than 100 Percent';
+          }
+          if(fn1 < 0 || fn2 < 0 || fn3 < 0 || fn4 < 0){
+            errors.fn2 = 'Rate must not less than 0 Percent';
+          }
+          const totalsc = parseFloat(wl) + parseFloat(hl) + parseFloat(os) + parseFloat(mi) + parseFloat(fa)
+                          + parseFloat(ts) + parseFloat(gwa) + parseFloat(fn);
+          console.log(totalsc);
+          if(totalsc !== 100){
+            errors.total = 'Total Rate must be 100 Percent';
+          }
+          console.log(Object.keys(errors).length)
+        if (Object.keys(errors).length > 0) {
+          setErrors(errors);
+          console.log(errors)
+          return;
+        }
+        CreatingScore.CREATE_SCORECARD({schoname,wl,wl1,wl2,wl3,hl,hl1,hl2,hl3,hl4,os,os1,os2,os3,os4,
+          mi,mi1,mi2,mi3,mi4,mi5,fa,fa1,fa2,fa3,fa4,fa5,fa6,ts,ts1,ts2,ts3,ts4,
+          ts5,ts6,gwa,gwa1,gwa2,gwa3,gwa4,gwa5,fn,fn1,fn2,fn3,fn4})
+          .then(res => {
+            console.log(res)
+            swal('Save')
+          }
+           )
+          .catch(err => console.log(err));
+          }else{
+            const errors = {};
+            const wl = swl
+            const wl1 = swl1
+            const wl2 = swl2
+            const wl3 = swl3
+            const hl = shl
+            const hl1 = shl1
+            const hl2 = shl2
+            const hl3 = shl3
+            const hl4 = shl4
+            const os = sos
+            const os1 = sos1
+            const os2 = sos2
+            const os3 = sos3
+            const os4 = sos4
+            const mi = smi
+            const mi1 = smi1
+            const mi2 = smi2
+            const mi3 = smi3
+            const mi4 = smi4
+            const mi5 = smi5
+            const fa = sfa
+            const fa1 = sfa1
+            const fa2 = sfa2
+            const fa3 = sfa3
+            const fa4 = sfa4
+            const fa5 = sfa5
+            const fa6 = sfa6
+            const ts = sts
+            const ts1 = sts1
+            const ts2 = sts2
+            const ts3 = sts3
+            const ts4 = sts4
+            const ts5 = sts5
+            const ts6 = sts6
+            const gwa = sgwa
+            const gwa1= sgwa1
+            const gwa2 = sgwa2
+            const gwa3 = sgwa3
+            const gwa4 = sgwa4
+            const gwa5 = sgwa5
+            const fn = sfn
+            const fn1 = sfn1
+            const fn2 = sfn2
+            const fn3 = sfn3
+            const fn4 = sfn4
+            if(schoname === ''){
+              errors.schoname = 'This Field is required';
+            }
+            if(wl === '' || wl1 === '' || wl2 === '' || wl3 === ''){
+              errors.wl = 'This Field is required';
+            }
+            if(wl1 > 100 || wl2 > 100 || wl3 > 100){
+              errors.wl1 = 'Rate must not greater than 100 Percent';
+            }
+            if(wl1 < 0 || wl2 < 0 || wl3 < 0){
+              errors.wl2 = 'Rate must not less than 0 Percent';
+            }
+            if(hl === '' || hl1 === '' || hl2 === '' || hl3 === '' || hl4 === ''){
+              errors.hl = 'This Field is required';
+            }
+            if(hl1 > 100 || hl2 > 100 || hl3 > 100 || hl4 > 100){
+              errors.hl1 = 'Rate must not greater than 100 Percent';
+            }
+            if(hl1 < 0 || hl2 < 0 || hl3 < 0 || hl4 < 0){
+              errors.hl2 = 'Rate must not less than 0 Percent';
+            }
+            if(os === '' || os1 === '' || os2 === '' || os3 === '' || os4 === ''){
+              errors.os = 'This Field is required';
+            }
+            if(os1 > 100 || os2 > 100 || os3 > 100 || os4 > 100){
+              errors.os1 = 'Rate must not greater than 100 Percent';
+            }
+            if(os1 < 0 || os2 < 0 || os3 < 0 || os4 < 0){
+              errors.os2 = 'Rate must not less than 0 Percent';
+            }
+            if(mi === '' || mi1 === '' || mi2 === '' || mi3 === '' || mi4 === '' || mi5 === ''){
+              errors.mi = 'This Field is required';
+            }
+            if(mi1 > 100 || mi2 > 100 || mi3 > 100 || mi4 > 100 || mi5 > 100){
+              errors.mi1 = 'Rate must not greater than 100 Percent';
+            }
+            if(mi1 < 0 || mi2 < 0 || mi3 < 0 || mi4 < 0 || mi5 < 0){
+              errors.mi2 = 'Rate must not less than 0 Percent';
+            }
+            if(fa === '' || fa1 === '' || fa2 === '' || fa3 === '' || fa4 === '' || fa5 === '' || fa6 === ''){
+              errors.fa = 'This Field is required';
+            }
+            if(fa1 > 100 || fa2 > 100 || fa3 > 100 || fa4 > 100 || fa5 > 100 || fa6 > 100){
+              errors.fa1 = 'Rate must not greater than 100 Percent';
+            }
+            if(fa1 < 0 || fa2 < 0 || fa3 < 0 || fa4 < 0 || fa5 < 0 || fa6 < 0){
+              errors.fa2 = 'Rate must not less than 0 Percent';
+            }
+            if(ts === '' || ts1 === '' || ts2 === '' || ts3 === '' || ts4 === '' || ts5 === '' || ts6 === ''){
+              errors.ts = 'This Field is required';
+            }
+            if(ts1 > 100 || ts2 > 100 || ts3 > 100 || ts4 > 100 || ts5 > 100 || ts6 > 100){
+              errors.ts1 = 'Rate must not greater than 100 Percent';
+            }
+            if(ts1 < 0 || ts2 < 0 || ts3 < 0 || ts4 < 0 || ts5 < 0 || ts6 < 0){
+              errors.ts2 = 'Rate must not less than 0 Percent';
+            }
+            if(gwa === '' || gwa1 === '' || gwa2 === '' || gwa3 === '' || gwa4 === '' || gwa5 === ''){
+              errors.gwa = 'This Field is required';
+            }
+            if(gwa1 > 100 || gwa2 > 100 || gwa3 > 100 || gwa4 > 100 || gwa5 > 100){
+              errors.gwa1 = 'Rate must not greater than 100 Percent';
+            }
+            if(gwa1 < 0 || gwa2 < 0 || gwa3 < 0 || gwa4 < 0 || gwa5 < 0){
+              errors.gwa2 = 'Rate must not less than 0 Percent';
+            }
+            if(fn === '' || fn1 === '' || fn2 === '' || fn3 === '' || fn4 === ''){
+              errors.fn = 'This Field is required';
+            }
+            if(fn1 > 100 || fn2 > 100 || fn3 > 100 || fn4 > 100){
+              errors.fn1 = 'Rate must not greater than 100 Percent';
+            }
+            if(fn1 < 0 || fn2 < 0 || fn3 < 0 || fn4 < 0){
+              errors.fn2 = 'Rate must not less than 0 Percent';
+            }
+            const totalsc = parseFloat(wl) + parseFloat(hl) + parseFloat(os) + parseFloat(mi) + parseFloat(fa)
+                            + parseFloat(ts) + parseFloat(gwa) + parseFloat(fn);
+            console.log(totalsc);
+            if(totalsc !== 100){
+              errors.total = 'Total Rate must be 100 Percent';
+            }
+            console.log(Object.keys(errors).length)
+        if (Object.keys(errors).length > 0) {
+          setErrors(errors);
+          console.log(errors)
+          return;
+        }
+        CreatingScore.CREATE_SCORECARD({schoname,wl,wl1,wl2,wl3,hl,hl1,hl2,hl3,hl4,os,os1,os2,os3,os4,
+          mi,mi1,mi2,mi3,mi4,mi5,fa,fa1,fa2,fa3,fa4,fa5,fa6,ts,ts1,ts2,ts3,ts4,
+          ts5,ts6,gwa,gwa1,gwa2,gwa3,gwa4,gwa5,fn,fn1,fn2,fn3,fn4})
+          .then(res => {
+            console.log(res)
+            swal('Save')
+          }
+           )
+          .catch(err => console.log(err));
+          }
+        }
+      }
       if(scorelist && scorelist.length > 0){
         const errors = {};
       const wl = swl || scorelist[0].wlsc;

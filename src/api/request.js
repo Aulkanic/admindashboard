@@ -182,3 +182,21 @@ export const SetInterview = {
 export const UserActivity = {
     USER_LOG: (data) => axiosInstance.get(Endpoints.USER_ACTIVITY+data)
 }
+export const EmpAuthorized = {
+    AUTHORIZATION: (data) => axiosInstance.post(Endpoints.EMP_AUTHORIZATION,data)
+}
+export const ListAccess = {
+    ACCESS: () => axiosInstance.get(Endpoints.ACCESS)
+}
+export const Colors = {
+    COLOR: (data) => axiosInstance.patch(Endpoints.COLOR,data)
+}
+export const Colorlist = {
+    FETCH_COLOR: () => axiosInstance.get(Endpoints.FFETCH_COLOR)
+}
+export const WebsiteImg = {
+    WEB_IMG: (data) => axiosInstance.patch(Endpoints.WEBSITE,data)
+}
+export const WebImg = {
+    FETCH_WEB: () => axiosInstance.get(Endpoints.FETCH_WEBSITE)
+}

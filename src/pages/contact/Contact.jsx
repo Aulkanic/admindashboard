@@ -3,7 +3,7 @@ import Sidebar from '../../components/sidebar/Sidebar';
 import './contact.scss';
 import { Box, Modal,Button,Card} from "@mui/material"; 
 import { DataGrid} from '@mui/x-data-grid';
-import { ListofReq, FetchingSchoProg, Addrequirements,NewDeadline,DeleteReq } from '../../api/request';
+import { ListofReq, FetchingSchoProg, Addrequirements,NewDeadline,DeleteReq,ListAccess } from '../../api/request';
 import { useState } from 'react';
 import { useEffect } from 'react';
 import Select from '@mui/material/Select';
@@ -24,6 +24,8 @@ import '../Button style/button.css';
 import Dialog from '@mui/material/Dialog';
 import DialogActions from '@mui/material/DialogActions';
 import DialogContent from '@mui/material/DialogContent';
+import { useContext } from "react";
+import { admininfo } from "../../App";
 import DialogContentText from '@mui/material/DialogContentText';
 import DialogTitle from '@mui/material/DialogTitle';
 
@@ -54,6 +56,7 @@ const StyledButtonEdit = styled(Button)`
 `;
 
 const Contact = () => {
+  const { loginUser,user } = useContext(admininfo);
   const [reqlist, setReqlist] = useState([]);
   const [submitted, setSublist] = useState([]);
   const [open, setOpen] = useState(false);
@@ -68,9 +71,22 @@ const Contact = () => {
   const [openDialog, setOpenDialog] = useState(false);
   const [selected,setSelected] = useState([])
   const handleCloseDialog = () => setOpenDialog(false);
+  const [accessList,setAccesslist] = useState([]);
   const handleOpenDialog = (data) => {
-    setOpenDialog(true);
-    setSelected(data)
+    console.log(user.jobDescription)
+    if (user.jobDescription === 'Admin' || user.jobDescription === accessList.reqSec) {
+      setOpenDialog(true);
+      setSelected(data)
+    } 
+    else{
+      swal({
+        text: 'UnAuthorized Access',
+        timer: 2000,
+        buttons: false,
+        icon: "error",
+      });
+      return;
+    }
   }
 
   const handleYearChange = (event) => {
@@ -87,7 +103,22 @@ const Contact = () => {
 
     return years;
   };
-  const handleOpen = () => setOpen(true);
+  const handleOpen = () => {
+    if(user.jobDescription !== 'Admin'){
+      if(user.jobDescription !== accessList.reqSec){
+        swal({
+          text: 'UnAuthorized Access',
+          timer: 2000,
+          buttons: false,
+          icon: "error",
+        })
+        return
+      }else{
+        setOpen(true)
+      }
+    }
+    setOpen(true)
+  };
   const handleClose = () => setOpen(false);
 
   
@@ -109,7 +140,8 @@ const Contact = () => {
     async function Fetch(){
       const req = await ListofReq.FETCH_REQUIREMENTS()
       const scho = await FetchingSchoProg.FETCH_SCHOPROG()
-      console.log(req)
+      const res = await ListAccess.ACCESS()
+      setAccesslist(res.data.result[0])
       setReqlist(req.data.Requirements.results1);
       setSublist(req.data.Requirements.results2);
       setSchocat(scho.data.SchoCat);
@@ -219,7 +251,16 @@ const Contact = () => {
   }
   }
   const Delete = (data) =>{
-    console.log(data)
+    console.log(user.jobDescription)
+    if (user.jobDescription !== 'Admin' || user.jobDescription !== accessList.reqSec) {
+      swal({
+        text: 'UnAuthorized Access',
+        timer: 2000,
+        buttons: false,
+        icon: "error",
+      });
+      return;
+    } 
     const formData = new FormData();
     formData.append('reqID',data.requirementID)
     DeleteReq.DELETE_REQ(formData)

@@ -1077,7 +1077,7 @@ const Evaluation = () => {
             <Navbar/>
             <Card sx={{width:'97%',margin:'10px',padding:'10px',display:'flex',justifyContent:'flex-end',flexDirection:'column',alignItems:'flex-end'}} elevation={3}>
             <div className='evluationcon'>
-              <div style={{width:'100%',height: 50,display:'flex',justifyContent:'space-between',padding:10}}>
+              <div style={{width:'100%',height: 100,display:'flex',justifyContent:'space-between',padding:10}}>
                   <div style={{width:'30%',display:'flex',flexDirection:'column',justifyContent:'space-between',height:'100%'}}>
                   <h1>Registered Applicants</h1>
                   </div>

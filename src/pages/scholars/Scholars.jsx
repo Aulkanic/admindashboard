@@ -443,17 +443,17 @@ const Scholars = () => {
 
     }
     const renewalStatus = schoinf4.map((data) => {
-      console.log(data)
       const imageFile = data.applicantData.length > 0 ? data.applicantData[0].File : 'https://drive.google.com/uc?id=1EXWK8SeamLARC7wnCTj4YXQhT74Z-zIn';
       const deadline = new Date(data.deadline);
       const currentDate = new Date();
     
       function getStatus() {
-        if (currentDate > deadline) {
+        if (currentDate > deadline && data.applicantData.length === 0) {
           return 'No response';
         } else if (data.applicantData.length > 0) {
           const submissionDate = new Date(data.deadline);
-          if (currentDate > submissionDate) {
+          const userSudDate = new Date(data.applicantData[0].Date);
+          if (userSudDate > submissionDate) {
             return 'Submitted Late';
           } else {
             return 'Passed on Time';
