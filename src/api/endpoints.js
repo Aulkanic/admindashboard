@@ -64,6 +64,10 @@ const Endpoints = {
     DECRE_SCORESLOT:'Dynamic/DecreSlot',
     COLOR:'Dynamic/Colors',
     FFETCH_COLOR:'Dynamic/Colorslist',
+    FETCH_RULE:'Dynamic/Rulelist',
+    FETCH_LOGOS:'Dynamic/Logolist',
+    LOGOS:'Dynamic/Logo',
+    RULE:'Dynamic/Rule',
 }
 
 export default Endpoints

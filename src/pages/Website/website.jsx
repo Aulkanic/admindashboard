@@ -61,7 +61,7 @@ const Website = () => {
         { ImgFor: 'Carousel2', File: carouimg1 || (imgList[2] && imgList[2].File) },
         { ImgFor: 'Carousel3', File: carouimg2 || (imgList[3] && imgList[3].File) },
       ];
-      console.log(Images)
+  
       for(let i=0;i<Images.length;i++){
         const list = Images[i];
         const formData = new FormData()

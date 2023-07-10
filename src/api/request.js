@@ -200,3 +200,15 @@ export const WebsiteImg = {
 export const WebImg = {
     FETCH_WEB: () => axiosInstance.get(Endpoints.FETCH_WEBSITE)
 }
+export const Logolist = {
+    FETCH_LOGO: () => axiosInstance.get(Endpoints.FETCH_LOGOS)
+}
+export const Rulelist = {
+    FETCH_RULE: () => axiosInstance.get(Endpoints.FETCH_RULE)
+}
+export const Rule = {
+    RULE: (data) => axiosInstance.patch(Endpoints.RULE,data)
+}
+export const Logos = {
+    LOGOS: (data) => axiosInstance.patch(Endpoints.LOGOS,data)
+}

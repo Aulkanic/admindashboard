@@ -1,20 +1,105 @@
-import React from 'react'
+import React, { useState } from 'react'
 import Navbar from "../../components/navbar/Navbar"
 import Sidebar from "../../components/sidebar/Sidebar"
 import Box from '@mui/material/Box';
 import Card from '@mui/material/Card';
+import { Logos,Logolist,Rule,Rulelist } from '../../api/request';
 import CardActions from '@mui/material/CardActions';
 import CardContent from '@mui/material/CardContent';
 import Button from '@mui/material/Button';
 import Typography from '@mui/material/Typography';
 import TextField from '@mui/material/TextField';
-import Diversity1Icon from '@mui/icons-material/Diversity1';
-import SchoolIcon from '@mui/icons-material/School';
-import HowToRegIcon from '@mui/icons-material/HowToReg';
 import Avatar from '@mui/material/Avatar';
 import './rule.css'
+import { useEffect } from 'react';
+import swal from 'sweetalert';
 
-const Rule = () => {
+const Rulesect = () => {
+  const [bmcclogo,setBmcc] = useState('');
+  const [bmcclogoPrev,setBmccPrev] = useState('');
+  const [mayorlogo,setMayor] = useState('');
+  const [mayorlogoPrev,setMayorPrev] = useState('');
+  const [famRule,setFamRule] = useState('');
+  const [schoRule,setSchoRule] = useState('');
+  const [ageRule,setAgeRule] = useState('');
+  const [priv1,setPriv1] = useState('');
+  const [priv2,setPriv2] = useState('');
+  const [priv3,setPriv3] = useState('');
+  const [logolist,setLogo] = useState([])
+  const [rulelist,setRule] = useState([])
+
+  useEffect(() =>{
+      async function Fetch(){
+        const res = await Logolist.FETCH_LOGO()
+        const req = await Rulelist.FETCH_RULE()
+        console.log(res)
+        console.log(req)
+        setLogo(res.data.result)
+        setRule(req.data.result[0])
+      }
+      Fetch()
+  },[])
+
+  useEffect(() => {
+    if (!bmcclogo) {
+        setBmccPrev(undefined)
+        return
+    }
+    
+    const objectUrl = URL.createObjectURL(bmcclogo)
+    setBmccPrev(objectUrl)
+    
+    return () => URL.revokeObjectURL(objectUrl)
+    }, [bmcclogo])
+  useEffect(() => {
+    if (!mayorlogo) {
+        setMayorPrev(undefined)
+        return
+    }
+    
+    const objectUrl = URL.createObjectURL(mayorlogo)
+    setMayorPrev(objectUrl)
+    
+    return () => URL.revokeObjectURL(objectUrl)
+    }, [mayorlogo])
+
+  const uploadLogo = async() =>{
+    const LogoOF = [
+      {official: 'BMCC',Logo: bmcclogo || (logolist[0] && logolist[0].logo)},
+      {official: 'Mayor',Logo: mayorlogo || (logolist[1] && logolist[1].logo)},
+    ]
+    for(let i=0;i<LogoOF.length;i++){
+      const list = LogoOF[i];
+      const formData = new FormData()
+      formData.append('file',list.Logo)
+      formData.append('official',list.official)
+      await Logos.LOGOS(formData)
+      .then((res) =>{
+        swal('Uploaded Successfully')
+        setLogo(res.data.result)
+      })
+      .catch((err)=>{
+        console.log(err)
+      })
+    }
+  }
+  const setUpRule = async() =>{
+    const formData = new FormData()
+    formData.append('rule1',famRule || (rulelist && rulelist.famNum))
+    formData.append('rule2',schoRule || (rulelist && rulelist.schoNum))
+    formData.append('rule3',ageRule || (rulelist && rulelist.ageNum))
+    formData.append('rule4',priv1 || (rulelist && rulelist.priv1))
+    formData.append('rule5',priv2 || (rulelist && rulelist.priv2))
+    formData.append('rule6',priv3 || (rulelist && rulelist.priv3))
+    await Rule.RULE(formData)
+    .then((res) =>{
+      swal('Save Successfully')
+      setRule(res.data.result)
+    })
+    .catch((err)=>{
+      console.log(err)
+    })
+  }
   return (
     <>
     <div className="scholarships" style={{backgroundColor:'whitesmoke'}}>
@@ -24,151 +109,79 @@ const Rule = () => {
         <div>
           <h1 style={{marginTop:10,marginLeft:30}}>Set Up the different Rules and Information of Scholarhip Program</h1>
           <div style={{display:'flex'}}>
-          <div className='rulecon'>
-            <Box sx={{width:'200px',height:'200px'}}>
-          <Card sx={{ minWidth: 275 }} elevation={3}>
-      <CardContent>
-        <Typography sx={{ fontSize: 17 }} color="text.secondary" gutterBottom>
-          Number Of Scholar per Family Members
-        </Typography>
-        <Typography variant="h5" component="div">
-        <Box sx={{ display: 'flex', alignItems: 'flex-end' }}>
-        <Diversity1Icon sx={{ color: 'white', mr: 1, my: 0.5,backgroundColor:'green',borderRadius:'5px',fontSize:'30px',padding:'5px' }} />
-        <TextField id="input-with-sx" label="" variant="standard" />
-      </Box>
-        </Typography>
-      </CardContent>
-      <CardActions>
-        <Button size="small" variant='contained'>Save</Button>
-      </CardActions>
-    </Card>
-            </Box>
-            <Box sx={{width:'200px',height:'200px'}}>
-          <Card sx={{ minWidth: 275 }} elevation={3}>
-      <CardContent>
-        <Typography sx={{ fontSize: 17 }} color="text.secondary" gutterBottom>
-          Number of Scholarship Must a Applicants Has
-        </Typography>
-        <Typography variant="h5" component="div">
-        <Box sx={{ display: 'flex', alignItems: 'flex-end' }}>
-        <SchoolIcon sx={{ color: 'white', mr: 1, my: 0.5,backgroundColor:'green',borderRadius:'5px',fontSize:'30px',padding:'5px' }} />
-        <TextField id="input-with-sx" label="" variant="standard" />
-      </Box>
-        </Typography>
-      </CardContent>
-      <CardActions>
-        <Button size="small" variant='contained'>Save</Button>
-      </CardActions>
-    </Card>
-            </Box>
-            <Box sx={{width:'200px',height:'200px'}}>
-          <Card sx={{ minWidth: 275,minHeight:180 }} elevation={3}>
-      <CardContent>
-        <Typography sx={{ fontSize: 17 }} color="text.secondary" gutterBottom>
-          Age of Applicants Accepted
-        </Typography>
-        <Typography variant="h5" component="div">
-        <Box sx={{ display: 'flex', alignItems: 'flex-end' }}>
-        <HowToRegIcon sx={{ color: 'white', mr: 1, my: 0.5,backgroundColor:'green',borderRadius:'5px',fontSize:'30px',padding:'5px' }} />
-        <TextField id="input-with-sx" label="" variant="standard" />
-      </Box>
-        </Typography>
-      </CardContent>
-      <CardActions>
-        <Button size="small" variant='contained'>Save</Button>
-      </CardActions>
-    </Card>
-            </Box>
-          </div>
           <div className='rulecon1'>
+          <Card sx={{padding:'10px',width:'99%',marginBottom:'10px',backgroundColor:'blue',marginLeft:'10px'}}>
+                <Typography sx={{color:'white'}}> Scholarship Program Officials</Typography>
+            </Card>
             <div className='logos'>
-            <Box sx={{width:'400px',height:'100%'}}>
-          <Card sx={{ minWidth: 275 }} elevation={3}>
-      <CardContent>
-        <Typography sx={{ fontSize: 17 }} color="text.secondary" gutterBottom>
-          BMCC Logo
-        </Typography>
-        <Typography variant="h5" component="div">
-        <Box sx={{ display: 'flex', alignItems: 'flex-end' }}>
-      <Avatar
-        alt="BMCC"
-        src="/static/images/avatar/1.jpg"
-        sx={{ width: 76, height: 76 }}
-      />
-        <Button>
-        <TextField sx={{backgroundColor:'whitesmoke',border:'none'}}
-         type='file' id="input-with-sx" label="" variant="outlined" />
-        </Button>
-      </Box>
-        </Typography>
-      </CardContent>
-      <CardActions>
-        <Button size="small" variant='contained'>Save</Button>
-      </CardActions>
-          </Card>
-            </Box>
-            <Box sx={{width:'400px',height:'250px'}}>
-          <Card sx={{ minWidth: 275 }} elevation={3}>
-      <CardContent>
-        <Typography sx={{ fontSize: 17 }} color="text.secondary" gutterBottom>
-          Current Mayor Logo
-        </Typography>
-        <Typography variant="h5" component="div">
-        <Box sx={{ display: 'flex', alignItems: 'flex-end' }}>
-      <Avatar
-        alt="Mayor"
-        src="/static/images/avatar/1.jpg"
-        sx={{ width: 76, height: 76 }}
-      />
-        <Button>
-        <TextField sx={{backgroundColor:'whitesmoke',border:'none'}}
-         type='file' id="input-with-sx" label="" variant="outlined" />
-        </Button>
-      </Box>
-        </Typography>
-      </CardContent>
-      <CardActions>
-        <Button size="small" variant='contained'>Save</Button>
-      </CardActions>
-          </Card>
-            </Box>
-            </div>
-            <div className='privilege'>
-            <Box sx={{width:'85%',height:'100%'}}>
-          <Card sx={{ minWidth: 275 }} elevation={3}>
-      <CardContent>
-        <Typography sx={{ fontSize: 17 }} color="text.secondary" gutterBottom>
-          Scholarship Privilege
-        </Typography>
-        <Typography sx={{ fontSize: 17 }} color="text.secondary" gutterBottom>
-          Scholarship Allowance to be receive of a particular Scholar
-        </Typography>
-        <Typography variant="h5" component="div">
-        <Box sx={{ display: 'flex', alignItems: 'flex-end' }}>
-        <SchoolIcon sx={{ color: 'white', mr: 1, my: 0.5,backgroundColor:'green',borderRadius:'5px',fontSize:'30px',padding:'5px' }} />
-        <TextField id="input-with-sx" label="Elementary Scholars" variant="standard" />
-      </Box>
-        </Typography>
-        <Typography variant="h5" component="div">
-        <Box sx={{ display: 'flex', alignItems: 'flex-end' }}>
-        <SchoolIcon sx={{ color: 'white', mr: 1, my: 0.5,backgroundColor:'green',borderRadius:'5px',fontSize:'30px',padding:'5px' }} />
-        <TextField id="input-with-sx" label="High School Scholars" variant="standard" />
-      </Box>
-        </Typography>
-        <Typography variant="h5" component="div">
-        <Box sx={{ display: 'flex', alignItems: 'flex-end' }}>
-        <SchoolIcon sx={{ color: 'white', mr: 1, my: 0.5,backgroundColor:'green',borderRadius:'5px',fontSize:'30px',padding:'5px' }} />
-        <TextField id="input-with-sx" label="College Scholars" variant="standard" />
-      </Box>
-        </Typography>
-      </CardContent>
-      <CardActions>
-        <Button size="small" variant='contained'>Save</Button>
-      </CardActions>
-          </Card>
-            </Box>
+                  <Box sx={{width:'100%',height:'100%'}}>
+                    <Card sx={{ minWidth: 275 }} elevation={3}>
+                      <CardContent>
+                        <Typography sx={{ fontSize: 17 }} color="text.secondary" gutterBottom>
+                          BMCC Logo
+                        </Typography>
+                        <Typography variant="h5" component="div">
+                        <Box sx={{ display: 'flex', alignItems: 'flex-end' }}>
+                      <Avatar
+                        alt="BMCC"
+                        src={bmcclogoPrev || (logolist[0] && logolist[0].logo)}
+                        sx={{ width: 76, height: 76 }}
+                      />
+                        <Button>
+                        <TextField sx={{backgroundColor:'whitesmoke',border:'none'}}
+                        type='file' onChange={(e) =>setBmcc(e.target.files[0])} id="input-with-sx" label="" variant="outlined" />
+                        </Button>
+                      </Box>
+                        </Typography>
+                      </CardContent>
+                    </Card>
+                  </Box>
+                  <Box sx={{width:'100%',height:'100%'}}>
+                        <Card sx={{ minWidth: 275 }} elevation={3}>
+                              <CardContent>
+                                <Typography sx={{ fontSize: 17 }} color="text.secondary" gutterBottom>
+                                  Current Mayor Logo
+                                </Typography>
+                                <Typography variant="h5" component="div">
+                                <Box sx={{ display: 'flex', alignItems: 'flex-end' }}>
+                              <Avatar
+                                alt="Mayor"
+                                src={mayorlogoPrev || (logolist[1] && logolist[1].logo)}
+                                sx={{ width: 76, height: 76 }}
+                              />
+                                <Button>
+                                <TextField sx={{backgroundColor:'whitesmoke',border:'none'}}
+                                type='file' onChange={(e) =>setMayor(e.target.files[0])} id="input-with-sx" label="" variant="outlined" />
+                                </Button>
+                              </Box>
+                                </Typography>
+                              </CardContent>
+                        </Card>
+                  </Box>
+                  <Button onClick={uploadLogo} variant='contained'>Save</Button>
             </div>
           </div>
+          <div className='rulecon'>
+            <Box sx={{width:'100%',height:'100%'}}>
+              <Card sx={{padding:'10px',width:'100%',marginBottom:'10px',backgroundColor:'blue'}}>
+                <Typography sx={{color:'white'}}>Rules and Privileges of Scholarship Program</Typography>
+              </Card>
+              <Card sx={{padding:'10px',width:'99%'}}>
+                 <Typography>Number of Applicants/Scholars must have in a Family</Typography>
+                 <TextField value={famRule} placeholder={rulelist && rulelist.famNum} onChange={(e) => setFamRule(e.target.value)} />
+                 <Typography>Number of Scholarship must Scholars Has</Typography>
+                 <TextField value={schoRule} placeholder={rulelist && rulelist.schoNum} onChange={(e) =>setSchoRule(e.target.value)} />
+                 <Typography> Age limit for Applicants </Typography>
+                 <TextField value={ageRule} placeholder={rulelist && rulelist.ageNum} onChange={(e) => setAgeRule(e.target.value)}/>
+                 <Typography>Scholarship Privilege</Typography>
+                 <TextField value={priv1} placeholder={rulelist && rulelist.priv1} onChange={(e) => setPriv1(e.target.value)} label='ELementary'/>
+                 <TextField value={priv2} placeholder={rulelist && rulelist.priv2} onChange={(e) => setPriv2(e.target.value)} sx={{margin:'0px 10px 0px 10px'}} label='High School' />
+                 <TextField value={priv3} placeholder={rulelist && rulelist.priv3} onChange={(e) => setPriv3(e.target.value)} label='College'/>
+              </Card>
+            </Box>
+            <Button onClick={setUpRule} variant='contained'>Save</Button>
+          </div>
+
           </div>
           </div>
             </div>
@@ -177,4 +190,4 @@ const Rule = () => {
   )
 }
 
-export default Rule
+export default Rulesect
