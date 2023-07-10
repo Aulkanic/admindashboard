@@ -17,6 +17,7 @@ import { DataGrid, GridToolbar } from '@mui/x-data-grid';
 import { Bar,Pie } from 'react-chartjs-2';
 import { Chart, CategoryScale, LinearScale, Title, Tooltip } from 'chart.js/auto';
 import { FetchingReportApp,FetchingReportScho,FetchingReportUser } from '../../api/request';
+import { blue } from '@mui/material/colors';
 
 
 
@@ -187,7 +188,7 @@ const Report = () => {
           {
             label: 'Sample Bar Graph',
             data: [12, 19, 3],
-            backgroundColor: ['red', 'blue', 'yellow'],
+            backgroundColor: ['red', 'blue', 'green'],
           },
         ],
       };
@@ -246,6 +247,17 @@ const Report = () => {
             </Typography>
         <Card style={{width:'97.5%',display:'flex',justifyContent:'center',alignItems:'center',height:'100%',padding:'10px'}}>
         <div style={{margin:10,width:'25%'}}>
+          <div style={{display:'flex',width:'100%',marginBottom:'20px'}}>
+            <div>
+            <Typography>Applicants:</Typography><button style={{backgroundColor:'blue',color:'blue'}}>button</button>
+            </div>
+            <div style={{margin:'0px 20px 0px 20px'}}>
+            <Typography>Scholars:</Typography><button style={{backgroundColor:'green',color:'green'}}>button</button>
+            </div>
+            <div>
+            <Typography>Failed Applicants:</Typography><button style={{backgroundColor:'red',color:'red'}}>button</button>
+            </div>
+          </div>
         <Pie style={{height:'auto'}} data={data} options={options} />
         </div>
         <div style={{width:'67%'}}>
