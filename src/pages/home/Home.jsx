@@ -17,7 +17,7 @@ import { styled } from '@mui/material/styles';
 const CustomDataGrid = styled(DataGrid)({
   '& .MuiDataGrid-columnHeaders': {
     backgroundColor: 'white', 
-    color: '#005427', 
+    color: 'black', 
   },
 });
 const Home = () => {
@@ -97,7 +97,7 @@ const Home = () => {
         },
       }}>
 
-    <Card elevation={10} sx={{ minWidth: 275}}>
+    <Card elevation={0} sx={{ minWidth: 275}}>
       <CardContent>
         <Typography sx={{ fontSize: 20 }} color="text.secondary" gutterBottom>
           Total Scholars
@@ -107,11 +107,11 @@ const Home = () => {
         </Typography>
       </CardContent>
       <CardActions>
-        <Button size="small">See More</Button>
+        <Button size="small" href="/scholars" sx={{color:'#666'}}>See More</Button>
       </CardActions>
     </Card>
 
-    <Card elevation={10} sx={{ minWidth: 275}}>
+    <Card elevation={0} sx={{ minWidth: 275}}>
       <CardContent>
         <Typography sx={{ fontSize: 20 }} color="text.secondary" gutterBottom>
           Total Applicants
@@ -121,11 +121,11 @@ const Home = () => {
         </Typography>
       </CardContent>
       <CardActions>
-        <Button size="small">See More</Button>
+        <Button size="small" href="/applicants" sx={{color:'#666'}}>See More</Button>
       </CardActions>
     </Card>
 
-    <Card elevation={10} sx={{ minWidth: 275}}>
+    <Card elevation={0} sx={{ minWidth: 275}}>
       <CardContent>
         <Typography sx={{ fontSize: 20 }} color="text.secondary" gutterBottom>
           Appointed Today
@@ -135,7 +135,7 @@ const Home = () => {
         </Typography>
       </CardContent>
       <CardActions>
-        <Button size="small">Learn More</Button>
+        <Button href="/appointments" size="small" sx={{color:'#666'}}>See More</Button>
       </CardActions>
     </Card>
 
@@ -145,6 +145,8 @@ const Home = () => {
       <Box 
             sx={{
               margin:'15px',
+              color:'#666',
+              fontFamily:'font-family: "Open Sans",sans-serif;'
             }}>
       <h1>Recent Applicants</h1>
       <CustomDataGrid className="dataGrid"

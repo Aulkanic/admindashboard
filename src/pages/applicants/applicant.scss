@@ -1,17 +1,17 @@
 .applicant{
     display: flex;
     width: 100%;
-
+    background-color: #f1f3fa;  
     .applicantContainer{
         flex: 7;
-        
+        background-color: #f1f3fa;  
         .top{
             width: 100%;
             border: none;
 
         h1{
             padding: 10px;
-            color: #005427;
+            color: #666;
         }
     }
         .cellAction{

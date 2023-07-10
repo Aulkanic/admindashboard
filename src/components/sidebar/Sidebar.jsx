@@ -18,11 +18,22 @@ import { Link, useNavigate } from 'react-router-dom';
 import { useContext } from "react";
 import { admininfo } from "../../App";
 import swal from 'sweetalert';
+import GroupsIcon from '@mui/icons-material/Groups';
+import MoneyIcon from '@mui/icons-material/Money';
+import NoteAddIcon from '@mui/icons-material/NoteAdd';
+import VerifiedIcon from '@mui/icons-material/Verified';
+import PeopleAltIcon from '@mui/icons-material/PeopleAlt';
+import CampaignIcon from '@mui/icons-material/Campaign';
+import GavelIcon from '@mui/icons-material/Gavel';
+import LanguageIcon from '@mui/icons-material/Language';
+import AssessmentIcon from '@mui/icons-material/Assessment';
+import { useState } from 'react';
 
 
 const Sidebar = () => {
   const { loginUser,user } = useContext(admininfo);
   const navigate = useNavigate();
+  const [activeSection,setActiveSection] = useState(0)
   const Logout = async() =>{
     const formData = new FormData();
     formData.append('id',user.id)
@@ -44,24 +55,22 @@ const Sidebar = () => {
     <div className='sidebar'>
 
       <div className='top'> 
-          <span className='logo'> Mar-Isko </span>
+          <span className='logo'> BMCC </span>
         </div>
-        <hr/>
+
 
       <div className='center'> 
           <ul>
-
-          <Link to="/home" style={{ textDecoration: "none" }}>
-            <li>
+          <Link to="/home" onClick={() =>setActiveSection(0)} style={{backgroundColor: activeSection === 0 ? 'lightgreen' : 'none',textDecoration: "none"}}>
+            <li >
               <DashboardIcon className='icon' />
               <span> Dashboard </span>
             </li>
             </Link>
-
             <p className="title"> Web </p>
             <Link to='/faqs' style={{ textDecoration: "none" }}>
-            <li>
-              <LiveHelpIcon className='icon'/>
+            <li onClick={() =>setActiveSection(1)} style={{backgroundColor: activeSection === 1 ? 'lightgreen' : 'null'}}>
+              <GroupsIcon className='icon'/>
               <span> Employees </span>
             </li>
             </Link>
@@ -75,14 +84,14 @@ const Sidebar = () => {
 
             <Link to='/about' style={{ textDecoration: "none" }}>
             <li>
-              <InfoIcon className='icon'/>
+              <MoneyIcon className='icon'/>
               <span> Score Card </span>
             </li>
             </Link>
 
             <Link to="/contact" style={{ textDecoration: "none" }}>
             <li>
-              <RecentActorsIcon className='icon'/>
+              <NoteAddIcon className='icon'/>
               <span> Requirements </span>
             </li>
             </Link>
@@ -100,13 +109,13 @@ const Sidebar = () => {
 
             <Link to="/Evaluation" style={{ textDecoration: "none" }}>
             <li>
-              <ViewListIcon className='icon'/>
+              <VerifiedIcon className='icon'/>
               <span> Evaluation </span>
             </li>
             </Link>
             <Link to="/applicants" style={{ textDecoration: "none" }}>
             <li>
-              <ViewListIcon className='icon'/>
+              <PeopleAltIcon className='icon'/>
               <span> Applicants </span>
             </li>
             </Link>
@@ -126,22 +135,22 @@ const Sidebar = () => {
             </Link>
 
             <p className="title"> Maintenance </p>
+            <Link to='/Website-Maintenance' style={{ textDecoration: 'none'}}>
+            <li>
+              <LanguageIcon className='icon'/>
+              <span> BMCC Website </span>
+            </li>
+            </Link>
             <Link to='/Announcement' style={{ textDecoration: 'none'}}>
             <li>
-              <AnnouncementIcon className='icon'/>
+              <CampaignIcon className='icon'/>
               <span> Announcement </span>
             </li>
             </Link>
             <Link to='/Rules' style={{ textDecoration: 'none'}}>
             <li>
-              <AnnouncementIcon className='icon'/>
+              <GavelIcon className='icon'/>
               <span> Rules </span>
-            </li>
-            </Link>
-            <Link to='/Website-Maintenance' style={{ textDecoration: 'none'}}>
-            <li>
-              <AnnouncementIcon className='icon'/>
-              <span> BMCC Website </span>
             </li>
             </Link>
 
@@ -154,7 +163,7 @@ const Sidebar = () => {
             
             <Link to='/Report' style={{ textDecoration: 'none'}}>
             <li>
-              <AnnouncementIcon className='icon'/>
+              <AssessmentIcon className='icon'/>
               <span> Reports </span>
             </li>
             </Link>

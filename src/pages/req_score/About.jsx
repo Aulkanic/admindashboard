@@ -12,6 +12,7 @@ import { admininfo } from "../../App";
 import FormControl from '@mui/material/FormControl';
 import { CreatingScore,FetchingScore,ListAccess } from '../../api/request';
 import swal from 'sweetalert';
+import { Card } from '@mui/material';
 
 
 export const About = () => {
@@ -851,7 +852,8 @@ export const About = () => {
         <Sidebar/>
         <div className="aboutContainer">
         <Navbar/>
-        <div   className="top">
+        <div className="top">
+          <Card sx={{padding:'10px'}}>
           <h1>Score Card</h1>
           This Score Card will apply to the Scholarship Application Form
           <p>Instructions:</p>
@@ -1070,9 +1072,10 @@ export const About = () => {
             </div>    
             </div>)}
                 <div>
-                  <button onClick={handleSubmit}> Save </button>
+                  <button className='myButton1' onClick={handleSubmit}> Save </button>
                 </div>
           </div>
+          </Card>
         </div>
         </div>
 

@@ -1,19 +1,17 @@
 .faqs{
     display: flex;
-
+    background-color: #f1f3fa;  
     .faqsContainer{
         flex: 7;
-
+        background-color: #f1f3fa;  
         .top{
-            -webkit-box-shadow: 2px 4px 10px 1px rgba(0, 0, 0, 0.47);
-            box-shadow: 2px 4px 10px 1px rgba(105, 105, 105, 0.47);
             margin: 10px;
             padding: 10px;
             border-radius: 10px;
-            
+      
 
             h1{
-                color: #005427;
+                color: #333;
                 font-weight: 1000;
                 font-size: 30px;
                 margin: 5px;
@@ -29,7 +27,7 @@
                     flex-direction: column;
                     width:100%;
                     padding: 10px;
-
+                    
                     .bmccEmp{
                         display: flex;
                         flex-direction: column;
@@ -79,8 +77,6 @@
                 align-items: center;
                 margin: 10px;
                 gap: 20px;
-                -webkit-box-shadow: 2px 4px 10px 1px rgba(0, 0, 0, 0.47);
-                box-shadow: 2px 4px 10px 1px rgba(105, 105, 105, 0.47);
                 border-radius: 10px;
                 padding: 10px;
                 
@@ -89,8 +85,7 @@
                     margin: 5px;
                     display: flex;
                     padding: 10px;
-                    -webkit-box-shadow: 2px 4px 10px 1px rgba(0, 0, 0, 0.47);
-                    box-shadow: 2px 4px 10px 1px rgba(105, 105, 105, 0.47);
+
                     border-radius: 50px;
                     
                 }

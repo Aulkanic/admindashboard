@@ -128,9 +128,8 @@ const Contact = () => {
     left: '50%',
     transform: 'translate(-50%, -50%)',
     width: '60%',
-    height: '90%',
+    height: '80%',
     bgcolor: 'background.paper',
-    border: '2px solid #000',
     overflow: 'auto',
     padding:'10px',
     borderRadius:'10px'
@@ -327,8 +326,8 @@ const Contact = () => {
 
       return(
         <>
-      <StyledButtonEdit onClick={() => handleOpenDialog(params.row)}>Edit Deadline</StyledButtonEdit>
-      <StyledButton onClick={() => Delete(params.row)}>Delete</StyledButton>
+      <StyledButtonEdit className='myButton1' onClick={() => handleOpenDialog(params.row)}>Edit Deadline</StyledButtonEdit>
+      <StyledButton className='myButton2' onClick={() => Delete(params.row)}>Delete</StyledButton>
       </>
     )},
     },
@@ -351,7 +350,7 @@ const Contact = () => {
             </div>
             <div className="form">
               <div style={{margin:10,width:'90%'}}>
-              <h1 style={{color:'#005247',fontWeight:1000}}>Create Requirements For Scholarship Program</h1>
+              <h1 style={{color:'#666',fontWeight:1000}}>Create Requirements For Scholarship Program</h1>
               </div>
                     <div style={{width:'100%'}}>
                     <FormControl sx={{ width:'100%'}}>
@@ -452,14 +451,14 @@ const Contact = () => {
                             </div>
                     </div>
                     <div style={{width:'100%',display:'flex',justifyContent:'space-around',margin:10}}>
-                      <button className="buttonStyle" onClick={handleClose}>Cancel</button>
-                      <button className="buttonStyle" onClick={AddReq}>Add</button>
+                      <button className="myButton" onClick={handleClose}>Cancel</button>
+                      <button className="myButton1" onClick={AddReq}>Add</button>
                     </div>
             </div>
         </Box>
       </Modal>
       <Dialog open={openDialog} onClose={handleCloseDialog}>
-        <DialogTitle>Edit Requirements Deadline of Submission</DialogTitle>
+        <DialogTitle sx={{color:'#666'}}>Edit Requirements Deadline of Submission</DialogTitle>
         <DialogContent>
           <div style={{margin:10}}>
           <LocalizationProvider dateAdapter={AdapterDayjs}>
@@ -481,14 +480,15 @@ const Contact = () => {
                     </div>
         </DialogContent>
         <DialogActions>
-          <Button onClick={handleCloseDialog}>Cancel</Button>
-          <Button onClick={Edit}>Save</Button>
+          <Button sx={{color:'white'}} className='myButton' onClick={handleCloseDialog}>Cancel</Button>
+          <Button sx={{color:'white'}} className='myButton1' onClick={Edit}>Save</Button>
         </DialogActions>
       </Dialog>
           <Card style={{padding:5,display:'flex',justifyContent:'space-between',margin:10}}>
         <h1>Requirements</h1>
-          <button className="buttonStyle" onClick={handleOpen}> Add </button>
+          <button className="myButton1" onClick={handleOpen}> Add </button>
           </Card>
+          <Card>
          <DataGrid style={{width: "100%", padding: 0.5,fontSize:12}}
             rows={mergedData}
             columns={columns}
@@ -502,6 +502,7 @@ const Contact = () => {
                   pageSizeOptions={[25]}
                 checkboxSelection
               disableRowSelectionOnClick/>
+              </Card>
          </div>
       </div>
     </div>

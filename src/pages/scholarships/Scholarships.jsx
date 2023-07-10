@@ -23,7 +23,7 @@ import '../Button style/button.css'
 
 const CustomDataGrid = styled(DataGrid)({
   '& .MuiDataGrid-columnHeaders': {
-    color: '#005427', 
+    color: 'black', 
   },
 
 });
@@ -240,7 +240,7 @@ function Edit(event){
         headerName: 'Actions',
         width: 150,
         renderCell: (params) => (
-          <Button style={{backgroundColor:'yellow',color:'blue',border:'2px solid blue'}} variant='contained' onClick={() => handleOpen1(params.row)}>
+          <Button className="myButton1" variant='contained' onClick={() => handleOpen1(params.row)}>
             Edit Details</Button>
         ),
       },
@@ -261,7 +261,7 @@ function Edit(event){
               <StyledButton sx={{float:'right'}} variant="contained" onClick={handleClose}> X </StyledButton>
             </div>
             <div style={{width:'100%',height:'70px'}}>
-            <Typography sx={{fontSize:'30px',fontWeight:'700',textAlign:'center'}}>Create Scholarship Program</Typography>
+            <Typography sx={{fontSize:'30px',fontWeight:'700',textAlign:'center',color:'#666'}}>Create Scholarship Program</Typography>
             </div>
             <div style={{width:'100%',height:'80%',display:'flex',justifyContent:'center',alignItems:'center'}}>
               
@@ -320,8 +320,8 @@ function Edit(event){
                 </CardContent>
                 </div>
                 <div className="buttonbacapp2">
-                <button onClick={handleClose} className="buttonStyle">Cancel</button>
-                <button onClick={Create} className="buttonStyle">Create</button>
+                <button onClick={handleClose} className="myButton">Cancel</button>
+                <button onClick={Create} className="myButton1">Create</button>
                 </div>
                 </Card>
             </div>           
@@ -341,7 +341,7 @@ function Edit(event){
               variant="contained" onClick={handleClose1}> X </StyledButton>
             </div>
             <div style={{width:'100%',height:'10%'}}>
-            <Typography sx={{fontSize:'30px',fontWeight:'700',textAlign:'center'}}>Edit Scholarship Program</Typography>
+            <Typography sx={{fontSize:'30px',fontWeight:'700',textAlign:'center',color:'#666'}}>Edit Scholarship Program</Typography>
             </div>
             <div style={{width:'100%',height:'80%',display:'flex',justifyContent:'center',alignItems:'center'}}>
               
@@ -402,8 +402,8 @@ function Edit(event){
                 </CardContent>
                 </div>
                 <div className="buttonbacapp2">
-                <button onClick={handleClose1} className="buttonStyle">Cancel</button>
-                <button onClick={Edit} className="buttonStyle">Save Changes</button>
+                <button onClick={handleClose1} className="myButton">Cancel</button>
+                <button onClick={Edit} className="myButton1">Save</button>
                  </div>
                 </Card>
             </div>
@@ -415,10 +415,11 @@ function Edit(event){
     <div className="scholarshipsContainer">
         <Navbar/>
         <div className="top">
+          <Card>
           <div style={{width:'95%',display:'flex',justifyContent:'space-between',alignItems:'center'}}>
-          <h1>Scholarships Program 
+          <h1 style={{color:'#666'}}>Scholarships Program 
           </h1>
-          <button className="buttonStyle" onClick={handleOpen}>ADD</button>
+          <button className="myButton" onClick={handleOpen}>ADD</button>
           </div>
           {schocat.length > 0 ? (
     <CustomDataGrid
@@ -442,7 +443,9 @@ function Edit(event){
   ) : (
     <p>No data available</p>
   )}
+    </Card>
           </div>
+        
             </div>
     </div>
   </>

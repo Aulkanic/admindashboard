@@ -3,7 +3,7 @@
 
     .homeContainer{
         flex: 7;
-        background-color: whitesmoke;
+        background-color: #f1f3fa;
 
         .widgets, .charts{
             display: flex;
@@ -16,8 +16,6 @@
         }
 
         .listContainer{
-        -webkit-box-shadow: 2px 4px 10px 1px rgba(0, 0, 0, 0.47);
-        box-shadow: 2px 4px 10px 1px rgba(201, 201, 201, 0.47);
         padding: 10px;
         margin: 20px;
         border-radius: 5px;
@@ -26,12 +24,11 @@
             font-size: 35px;
             font-weight: 600;
             margin: 5px;
-            color: #005427;
         }
 
         .dataGrid{
             font-size: 12px;
-            color: #005427;
+            color: #333;
             background-color: #fff;
             border-radius: 10px;
         }
@@ -41,7 +38,7 @@
         
         .listTitle{
             font-weight: 500;
-            color: gray;
+            color: #333;
             margin-bottom: 15px;
         }
     }

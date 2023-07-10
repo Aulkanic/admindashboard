@@ -1,12 +1,10 @@
 .about{
     display: flex;
-
+    background-color: #f1f3fa;
     .aboutContainer{
         flex: 7;
-
+        background-color: #f1f3fa;
         .top{
-        -webkit-box-shadow: 2px 4px 10px 1px rgba(0, 0, 0, 0.47);
-        box-shadow: 2px 4px 10px 1px rgba(201, 201, 201, 0.47);
         margin: 20px;
         padding: 20px;
         }
@@ -14,7 +12,7 @@
         h1{
             font-size: 40px;
             font-weight: 1000;
-            color: #005427;
+            color: #666;
 
         }
     }
@@ -33,15 +31,13 @@
         margin: 10px;
         padding: 10px;
         border-radius: 10px;
-        -webkit-box-shadow: 2px 4px 10px 1px rgba(0, 0, 0, 0.47);
-        box-shadow: 2px 4px 10px 1px rgba(201, 201, 201, 0.47);
 
     .hshe{
         display: flex;
         width: 100%;
 
         p{
-            color: #005427;
+            color: black;
             font-size: 15px;
             font-weight: 500;
             justify-content: center;
@@ -54,7 +50,6 @@
             border-radius: 5px;
             border: none;
             box-shadow: 1px 1px 1px 1px rgba(63, 50, 14, 0.47);
-            color: #005427;
         }
     }
 }
@@ -67,12 +62,9 @@
         padding: 8px;
         font-size: 15px;
         font-weight: 600;
-        color: #005427;
         border-radius: 5px;
-        background-color: #a1f1c6;
         width: 100px;
         cursor: pointer;
-        box-shadow: 1px 1px 1px 1px#b1b8b4;
     }
 }
 

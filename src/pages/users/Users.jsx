@@ -113,7 +113,7 @@ const Users = () => {
     {
       field: 'status',
       headerName: 'Remarks',
-      width: 90,
+      width: 150,
       editable: false,
     
     },
@@ -121,7 +121,7 @@ const Users = () => {
     {
       field: 'remarks',
       headerName: 'Account Status',
-      width: 110,
+      width: 150,
       headerAlign: 'center',
       renderCell: (params) => {
         let color1 = 'green'
@@ -133,7 +133,7 @@ const Users = () => {
         }
         return(
         <>
-        <button style={{backgroundColor: color1,color:'white'}}  className="deactivateBtn" onClick={() => handleButtonClick(params.row.applicantNum)}>
+        <button  className="myButton1">
           {params.row.remarks === 'Active'
             ? 'Active'
             : params.row.remarks === 'Inactive'
@@ -147,7 +147,7 @@ const Users = () => {
 
   const CustomDataGrid = styled(DataGrid)({
     '& .MuiDataGrid-columnHeaders': {
-      color: '#005427',
+      color: 'black',
       
     },
   });
@@ -172,6 +172,7 @@ const Users = () => {
           <h1> Users Account List </h1>
 
       <Box>
+        <Card>
         <CustomDataGrid
               className='dataGrid'
               rows={display}
@@ -188,6 +189,7 @@ const Users = () => {
               disableRowSelectionOnClick
               pageSizeOptions={[25]}
             />
+            </Card>
           </Box>
         </div>
       

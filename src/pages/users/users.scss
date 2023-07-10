@@ -1,12 +1,10 @@
 .users{
     display: flex;
-
+    background-color: #f1f3fa;  
     .usersContainer{
         flex: 7;
-
+        background-color: #f1f3fa;  
         .userlistcon{
-        -webkit-box-shadow: 2px 4px 10px 1px rgba(0, 0, 0, 0.47);
-        box-shadow: 2px 4px 10px 1px rgba(201, 201, 201, 0.47);
         margin: 10px;
         padding: 10px;
         display: flex;
@@ -16,13 +14,12 @@
 
         h1{
             margin: 5px;
-            color: #005427;
+            color: #666;
             font-weight: 1000;
         }
 
         .dataGrid{
            width: max-content;
-            color: #005427;
             font-size: 12px;
             font-weight: 600;
         }

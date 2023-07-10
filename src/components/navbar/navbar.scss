@@ -1,6 +1,6 @@
 .navbar{
    height: 60px;
-   border-bottom: 3px solid #005427;
+
    display: flex;
    font-size: 14px;
    color: #005427;
@@ -11,7 +11,7 @@
     display: flex;
     align-items: center;
     justify-content: space-between;
-    background-color: #EDFFF2;
+    background-color: blue;
 
     .search{
         display: flex;
@@ -19,7 +19,7 @@
         border: 0.5px solid #005427;
         padding: 2px;
         border-radius: 10px;
-
+        background-color: white;
         input{
             border: none;
             outline: none;
@@ -40,10 +40,10 @@
              align-items: center;
              margin-right: 20px;
              position: relative;
-             
-
+             color: white;
              .icon{
-                font-size: 20px;
+                font-size: 30px;
+                color: white;
              }
 
             .avatar{

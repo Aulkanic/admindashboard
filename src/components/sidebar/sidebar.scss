@@ -1,27 +1,27 @@
 .sidebar{
-    background-color: #EDFFF2;
+    background-color: yellow;
     flex: 1;
-    border-right: 3px solid #005427;
+
     min-height: 100vh;
+
     
 
     .top{
-        background-color: #EDFFF2;
+        background-color: blue;
         height: 60px;
         display: flex;
         align-items: center;
         justify-content: center;
-        
 
         .logo{
-            font-size: 18px;
+            font-size: 28px;
             font-weight: bold;
-            color: #005427;
+            color: yellow;
         }
     }
     hr{
         height: 0;
-        border: 1.5px solid #005427;
+
     }
 
     .center{
@@ -49,19 +49,26 @@
                 cursor: pointer;
 
                 &:hover{
-                    background-color: lightgreen;
+                    background-color: blue;
+                    color: white;
                 }
 
                 .icon{
-                    font-size: 18px;
-                    color: #005427;
+                    font-size: 25px;
+                    color: blue;
                     padding: 2px;
+
+
+                    &:hover{
+                        color: white;
+                    }
                 }
 
                 span{
                     font-size: 13px;
                     font-weight: 700;
                     color: #005427;
+                    color: black;
                     margin-left: 10px;
                 } 
             }

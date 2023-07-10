@@ -79,7 +79,8 @@ const Faqs = () => {
 
 const CustomDataGrid = styled(DataGrid)({
   '& .MuiDataGrid-columnHeaders': {
-    color: '#005427', 
+    color: 'black', 
+    backgroundColor:'white'
   },
 
 });
@@ -88,10 +89,10 @@ const CustomDataGrid = styled(DataGrid)({
     top: '50%',
     left: '50%',
     transform: 'translate(-50%, -50%)',
-    width: '700',
+    width: '800',
     height: '400',
     bgcolor: 'background.paper',
-    border: '2px solid #000',
+
     overflow: 'auto',
     padding:'10px',
     borderRadius:'10px'
@@ -196,7 +197,7 @@ const CustomDataGrid = styled(DataGrid)({
       headerName: 'Actions',
       width: 150,
       renderCell: (params) => (
-        <Button style={{backgroundColor:'yellow',color:'blue',border:'2px solid blue'}} variant='contained' onClick={() => handleOpen1(params.row)}>Edit Details</Button>
+        <Button className='myButton1' variant='contained' onClick={() => handleOpen1(params.row)}>Edit Details</Button>
       ),
     },
   ];
@@ -316,7 +317,7 @@ const Authorization = (e) =>{
                 </div>
 
               <div className="form">
-                <Typography sx={{fontSize:35}}>
+                <Typography sx={{fontSize:35,color:'#666'}}>
                   Create Employee Accounts.
                 </Typography>
                 <Typography>
@@ -351,8 +352,8 @@ const Authorization = (e) =>{
                     color='secondary'
                     />
                 <div style={{margin:10,width:'100%',height:'30px',display:'flex',alignItems:'center',justifyContent:'space-between'}}>
-                <Button variant='contained' onClick={handleClose}>Cancel</Button>
-                <Button variant='contained' onClick={AddbMCC}>Add Employee</Button>
+                <Button className="myButton" variant='contained' onClick={handleClose}>Cancel</Button>
+                <Button className="myButton1" variant='contained' onClick={AddbMCC}>Add Employee</Button>
                 </div>
                 </div>
 
@@ -365,7 +366,7 @@ const Authorization = (e) =>{
                 aria-describedby="modal-modal-description">
                 <Box sx={style}>
                 <div style={{margin:10,width:'100%',height:'30px',display:'flex',alignItems:'center',justifyContent:'space-between'}}>
-                <Typography sx={{fontSize:35,fontWeight:700}}>Edit Employee Details</Typography>
+                <Typography sx={{fontSize:35,fontWeight:700,color:'#666'}}>Edit Employee Details</Typography>
                 <StyledButton variant='contained' style={{padding:10,height:'100%',float:'right',marginRight:20}} onClick={handleClose1}>
                   X</StyledButton>
                 </div>
@@ -397,8 +398,8 @@ const Authorization = (e) =>{
                 </RadioGroup>
                 </div>
                 <div style={{width:'100%',display:'flex',justifyContent:'space-around'}}>
-                <Button variant='contained' onClick={handleClose1}>Cancel</Button>
-                <Button variant='contained' onClick={UpdateBMCC}>Save Changes</Button>
+                <Button className="myButton" variant='contained' onClick={handleClose1}>Cancel</Button>
+                <Button className="myButton1" variant='contained' onClick={UpdateBMCC}>Save Changes</Button>
                 </div>
                 </Box>
             </Modal>
@@ -532,8 +533,8 @@ const Authorization = (e) =>{
 
             <div className="top">
               <Card elevation={0} style={{width:'100%',display:'flex',justifyContent:'space-around',height:100,alignItems:'center',border:'none'}}>
-              <h1>Employee Accounts</h1>
-              <button  className='buttonStyle'
+              <h1 style={{color:'#666'}}>Employee Accounts</h1>
+              <button  className='myButton'
               onClick={handleClick}
               variant='contained' size='small'>
                 {activeState === 'log' && 'Manage Employee'}
@@ -542,19 +543,20 @@ const Authorization = (e) =>{
               </Card>
               
               <div className="containeremaccs">
-                    {activeState === 'admin' && <div className="emacsslist">
+                    {activeState === 'admin' && 
+                    <Card><div className="emacsslist">
                       <div style={{width:'90%',display:'flex',justifyContent:'space-between',padding:10,alignItems:'center'}}>
-                      <h1>Employee List</h1>
+                      <h1 style={{color:'#666'}}>Employee List</h1>
                       <div>
                       <Button sx={{backgroundColor:'green',height:'50%',marginRight:'10px'}}
-                       className="addBtnEmp" variant='contained' onClick={handleOpen2}> MANAGE ACCESS </Button>
+                       className="myButton1" variant='contained' onClick={handleOpen2}> MANAGE ACCESS </Button>
                       <Button sx={{backgroundColor:'green',height:'50%'}}
-                       className="addBtnEmp" variant='contained' onClick={handleOpen}> ADD EMPLOYEE </Button>
+                       className="myButton1" variant='contained' onClick={handleOpen}> ADD EMPLOYEE </Button>
                        </div>
                       </div>
                       <div className='bmccEmp'>
-                      <CustomDataGrid 
-                      className='dataGrid'
+                        <Card>
+                      <CustomDataGrid    
                         rows={bmcc}
                         columns={columns1}
                         autoHeight 
@@ -571,16 +573,18 @@ const Authorization = (e) =>{
                         pageSizeOptions={[25]}  
                         disableRowSelectionOnClick
                       />
-                        
+                        </Card>
                       </div>
                       
-                    </div>}
+                    </div></Card>}
 
-                    {activeState === 'log' && <div className="emaccsact">
-                      <h1>Activity Log</h1>
+                    {activeState === 'log' && 
+                    <Card sx={{backgroundColor:'white'}}>
+                    <div className="emaccsact">
+                      <h1 style={{color:'#666'}}>Activity Log</h1>
                       <div className='dataGridCon' style={{width:'100%'}}>
+                        <Card sx={{margin:'10px'}}>
                       <CustomDataGrid 
-                      className='dataGrid'
                         rows={actlog}
                         columns={columns}
                         autoHeight 
@@ -597,9 +601,12 @@ const Authorization = (e) =>{
                         pageSizeOptions={[25]}  
                         disableRowSelectionOnClick
                       />
+                      </Card>
                       </div>
-                    </div>}
+                    </div>
+                    </Card>}
               </div>
+          
             </div>
         </div>
     </div>

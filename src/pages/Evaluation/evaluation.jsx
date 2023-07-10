@@ -185,7 +185,7 @@ const Evaluation = () => {
             renderCell: (params) => (
                 <>
                 <div style={{display:'flex',flexDirection:'column',height:'100%',width:'100%',justifyContent:'center',alignItems:'center'}}>
-                <button style={{marginLeft:'5px',backgroundColor:'blue',border:'none',padding:'3px',width:'100%',margin:'2px',color:'white',borderRadius:'5px',cursor:'pointer'}}
+                <button className='myButton'
                 onClick={() => view(params.row)}>View Details</button>
                 </div>
               </>
@@ -206,18 +206,18 @@ const Evaluation = () => {
               return(
                 <>
                 <div style={{width:"100%",display:'flex',flexDirection:'column',height:'100%',justifyContent:'center',alignItems:'center'}}>
-              {status === 'Passed' && <button style={{marginLeft:'5px',backgroundColor:'green',border:'none',padding:'3px',width:'100%',margin:'2px',color:'white',borderRadius:'5px',cursor:'pointer'}} 
+              {status === 'Passed' && <button className='myButton1' 
               onClick={() => setFirsttoSecStat(params.row)}>
                 Add to Applicants List
                 </button>}
               {status === 'Failed' && (<>
-                {params.row.grantedAccess === '' || !params.row.grantedAccess ? (<button style={{marginLeft:'5px',backgroundColor:'yellow',color:'green',border:'none',padding:'3px',width:'100%',margin:'2px',borderRadius:'5px',cursor:'pointer'}}  
+                {params.row.grantedAccess === '' || !params.row.grantedAccess ? (<button className='myButton'  
               onClick={() =>handleOpenDialog(params.row)}>
-                Access</button>) : (<button style={{marginLeft:'5px',backgroundColor:'green',border:'none',padding:'3px',width:'100%',margin:'2px',color:'white',borderRadius:'5px',cursor:'pointer'}} 
+                Access</button>) : (<button className='myButton1' 
               onClick={() => setFirsttoSecStat(params.row)}>
                 Add to Applicants List
                 </button>)}
-                <button style={{marginLeft:'5px',backgroundColor:'red',border:'none',padding:'3px',width:'100%',margin:'2px',color:'white',borderRadius:'5px',cursor:'pointer'}} 
+                <button className='myButton2' 
               onClick={() => failed(params.row)}>
                 Failed
                 </button>
@@ -281,7 +281,7 @@ const Evaluation = () => {
             renderCell: (params) => (
                 <>
                 <div style={{display:'flex',flexDirection:'column',height:'100%',width:'100%',justifyContent:'center',alignItems:'center'}}>
-                <button style={{marginLeft:'5px',backgroundColor:'blue',border:'none',padding:'3px',width:'100%',margin:'2px',color:'white',borderRadius:'5px',cursor:'pointer'}}
+                <button className='myButton'
                 onClick={() => view(params.row)}>View Details</button>
                 </div>
               </>
@@ -295,7 +295,7 @@ const Evaluation = () => {
               return(
                 <>
                 <div style={{width:"100%",display:'flex',flexDirection:'column',height:'100%',justifyContent:'center',alignItems:'center'}}>
-              <button style={{marginLeft:'5px',backgroundColor:'green',border:'none',padding:'3px',width:'100%',margin:'2px',color:'white',borderRadius:'5px',cursor:'pointer'}} 
+              <button className='myButton1' 
               onClick={() => setFirsttoSecStat(params.row)}>
                 Add to Applicants List
                 </button>
@@ -305,7 +305,7 @@ const Evaluation = () => {
           },
     
       ];
-      const failedColumn = [
+    const failedColumn = [
         { 
           field: 'applicantNum', 
           headerName: 'Registry ID',
@@ -358,7 +358,7 @@ const Evaluation = () => {
             renderCell: (params) => (
                 <>
                 <div style={{display:'flex',flexDirection:'column',height:'100%',width:'100%',justifyContent:'center',alignItems:'center'}}>
-                <button style={{marginLeft:'5px',backgroundColor:'blue',border:'none',padding:'3px',width:'100%',margin:'2px',color:'white',borderRadius:'5px',cursor:'pointer'}}
+                <button className='myButton'
                 onClick={() => view(params.row)}>View Details</button>
                 </div>
               </>
@@ -373,13 +373,13 @@ const Evaluation = () => {
               return(
                 <>
                 <div style={{width:"100%",display:'flex',flexDirection:'column',height:'100%',justifyContent:'center',alignItems:'center'}}>
-              {params.row.grantedAccess === '' || !params.row.grantedAccess ? (<button style={{marginLeft:'5px',backgroundColor:'yellow',color:'green',border:'none',padding:'3px',width:'100%',margin:'2px',borderRadius:'5px',cursor:'pointer'}}  
+              {params.row.grantedAccess === '' || !params.row.grantedAccess ? (<button className='myButton'
               onClick={() =>handleOpenDialog(params.row)}>
-                Access</button>) : (<button style={{marginLeft:'5px',backgroundColor:'green',border:'none',padding:'3px',width:'100%',margin:'2px',color:'white',borderRadius:'5px',cursor:'pointer'}} 
+                Access</button>) : (<button className='myButton1' 
               onClick={() => setFirsttoSecStat(params.row)}>
                 Add to Applicants List
                 </button>)}
-                <button style={{marginLeft:'5px',backgroundColor:'red',border:'none',padding:'3px',width:'100%',margin:'2px',color:'white',borderRadius:'5px',cursor:'pointer'}} 
+                <button className='myButton2'
               onClick={() => failed(params.row)}>
                 Failed
                 </button>
@@ -1073,13 +1073,13 @@ const Evaluation = () => {
     <div style={{width:'100%'}}>
            <div className="scholars">
         <Sidebar/>
-        <div className="scholarsContainer">
+        <div className="scholarsContainer" style={{backgroundColor:'#f1f3fa'}}>
             <Navbar/>
-            <Card sx={{width:'97%',margin:'10px',padding:'10px',display:'flex',justifyContent:'flex-end',flexDirection:'column',alignItems:'flex-end'}} elevation={3}>
+            <Card sx={{width:'97%',margin:'10px',padding:'10px',display:'flex',justifyContent:'flex-end',flexDirection:'column',alignItems:'flex-end'}} elevation={0}>
             <div className='evluationcon'>
               <div style={{width:'100%',height: 100,display:'flex',justifyContent:'space-between',padding:10}}>
                   <div style={{width:'30%',display:'flex',flexDirection:'column',justifyContent:'space-between',height:'100%'}}>
-                  <h1>Registered Applicants</h1>
+                  <h1 style={{color:'#666'}}>Registered Applicants</h1>
                   </div>
                   <div style={{marginRight:5,height:'100%'}}>
                     <div style={{display:'flex',flexDirection:'column',height:'100%',width:'100%',alignItems:'center'}}>
@@ -1112,7 +1112,7 @@ const Evaluation = () => {
                       />
                       </div>
                       <div>
-                      {isButtonVisible && <Button onClick={ScoreSlot} variant='contained' size='small'>Save Changes</Button>}
+                      {isButtonVisible && <Button className='myButton1' onClick={ScoreSlot} variant='contained' size='small'>Save Changes</Button>}
                       </div>
                     </div>
                   </div>
@@ -1229,7 +1229,7 @@ const Evaluation = () => {
               
             </div>
             {activeState === 'Passed' && <div sx={{width:'90%',margin:'10px',display:'flex',justifyContent:'flex-end',flexDirection:'column',alignItems:'flex-end'}}>
-              <Button onClick={Addall} sx={{margin:'10px'}} variant='contained'>ADD ALL SELECTED TO APPLICANT LIST</Button>
+              <Button className='myButton' onClick={Addall} sx={{margin:'10px'}} variant='contained'>ADD ALL SELECTED TO APPLICANT LIST</Button>
             </div>}
             {activeState === 'Failed' && <div sx={{width:'90%',margin:'10px',display:'flex',justifyContent:'flex-end',flexDirection:'column',alignItems:'flex-end'}}>
                   <Checkbox
@@ -1237,7 +1237,7 @@ const Evaluation = () => {
                     onChange={handleChangeCheckbox}
                     inputProps={{ 'aria-label': 'controlled' }}
                   /><span>Sent Notification</span>
-                <Button onClick={FailedAll} sx={{margin:'10px'}} variant='contained'>SET FAILED THE SELECTED USERS</Button>
+                <Button className='myButton2' onClick={FailedAll} sx={{margin:'10px'}} variant='contained'>SET FAILED THE SELECTED USERS</Button>
             </div>}
             </Card>
         </div>
