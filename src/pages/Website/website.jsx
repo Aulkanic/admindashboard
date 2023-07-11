@@ -25,10 +25,10 @@ const StyledBackdrop = styled(Backdrop)`
 
 
 const Website = () => {
-  const [selectedColor, setSelectedColor] = useState('#ffffff'); // Initial color
-  const [selectedColor1, setSelectedColor1] = useState('#ffffff'); // Initial color
-  const [btnColor, setBtnColor] = useState('#ffffff'); // Initial color
-  const [btnColor1, setBtnColor1] = useState('#ffffff'); // Initial color
+  const [selectedColor, setSelectedColor] = useState(''); // Initial color
+  const [selectedColor1, setSelectedColor1] = useState(''); // Initial color
+  const [btnColor, setBtnColor] = useState(''); // Initial color
+  const [btnColor1, setBtnColor1] = useState(''); // Initial color
   const [colorList,setColorlist] = useState([]);
   const [imgList,setImglist] = useState([])
   const [limg,setLimg] = useState(null);
@@ -163,12 +163,12 @@ const Website = () => {
                 </div>
                 <div>
                   <Typography>Background 2:</Typography>
-                  <div style={{width:'200px',height:'50px',border:'1px solid black',backgroundColor:selectedColor1}}></div>
+                  <div style={{width:'200px',height:'50px',border:'1px solid black',backgroundColor:selectedColor1 || (colorList && colorList.bgColor1)}}></div>
                 </div>
                 <div>
                   <Typography>Button:</Typography>
-                  <button style={{width:'200px',height:'50px',border:'1px solid black',backgroundColor:btnColor,borderRadius:'10px'}}>
-                    <Typography sx={{fontSize:'20px',fontWeight:'700',color:btnColor1}}>Button</Typography> 
+                  <button style={{width:'200px',height:'50px',border:'1px solid black',backgroundColor:btnColor || (colorList && colorList.btnColor),borderRadius:'10px'}}>
+                    <Typography sx={{fontSize:'20px',fontWeight:'700',color:btnColor1 || (colorList && colorList.btnTextColor)}}>Button</Typography> 
                   </button>
                 </div>
                 <div style={{margin:'10px'}}>
