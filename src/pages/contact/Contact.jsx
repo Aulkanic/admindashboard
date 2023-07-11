@@ -19,7 +19,6 @@ import { DemoContainer, DemoItem } from '@mui/x-date-pickers/internals/demo';
 import MuiAlert from '@mui/material/Alert';
 import swal from 'sweetalert';
 import moment from "moment";
-import { styled } from '@mui/material/styles';
 import '../Button style/button.css';
 import Dialog from '@mui/material/Dialog';
 import DialogActions from '@mui/material/DialogActions';
@@ -28,6 +27,13 @@ import { useContext } from "react";
 import { admininfo } from "../../App";
 import DialogContentText from '@mui/material/DialogContentText';
 import DialogTitle from '@mui/material/DialogTitle';
+import { styled, ThemeProvider, createTheme } from '@mui/material';
+import { Backdrop, CircularProgress } from '@mui/material';
+
+const theme = createTheme();
+const StyledBackdrop = styled(Backdrop)`
+  z-index: ${({ theme }) => theme.zIndex.drawer + 1};
+`;
 
 const StyledButton = styled(Button)`
   && {
@@ -63,6 +69,7 @@ const Contact = () => {
   const [schocat, setSchocat] = useState([]);
   const[schoName,setSchoname] = useState('');
   const[requirementName,setReqname] = useState('');
+  const [showBackdrop, setShowBackdrop] = useState(false);
   const[batch,setBatch] = useState('');
   const [deadline,setDeadline] = useState('');
   const [newDeadline,setNewDeadline] = useState('');
@@ -73,7 +80,6 @@ const Contact = () => {
   const handleCloseDialog = () => setOpenDialog(false);
   const [accessList,setAccesslist] = useState([]);
   const handleOpenDialog = (data) => {
-    console.log(user.jobDescription)
     if (user.jobDescription === 'Admin' || user.jobDescription === accessList.reqSec) {
       setOpenDialog(true);
       setSelected(data)
@@ -120,7 +126,6 @@ const Contact = () => {
     setOpen(true)
   };
   const handleClose = () => setOpen(false);
-
   
   const style = {
     position: 'absolute',
@@ -134,9 +139,11 @@ const Contact = () => {
     padding:'10px',
     borderRadius:'10px'
   };
+
   useEffect(() => {
 
     async function Fetch(){
+      setShowBackdrop(true);
       const req = await ListofReq.FETCH_REQUIREMENTS()
       const scho = await FetchingSchoProg.FETCH_SCHOPROG()
       const res = await ListAccess.ACCESS()
@@ -144,6 +151,7 @@ const Contact = () => {
       setReqlist(req.data.Requirements.results1);
       setSublist(req.data.Requirements.results2);
       setSchocat(scho.data.SchoCat);
+      setShowBackdrop(false);
     }
     Fetch();
   }, []);
@@ -193,17 +201,23 @@ const Contact = () => {
     formData.append('batch',batch)
     formData.append('deadline',date)
     formData.append('docsfor',docsfor)
+    setShowBackdrop(true);
       Addrequirements.ADD_REQUIREMENTS(formData)
       .then(res => {
         console.log(res)
         setReqlist(res.data.Requirements);
-        swal('Success');
+        setShowBackdrop(false);
+        swal({
+          title: "Success",
+          text: "Created Successfilly!",
+          icon: "success",
+          button: "OK",
+        });
       }
        )
       .catch(err => console.log(err));
   }
   const Edit = () =>{
-    console.log(selected)
     let errors = {};
     const currentDate = moment();
 
@@ -232,10 +246,13 @@ const Contact = () => {
     const formData = new FormData();
     formData.append('newDeadline',date);
     formData.append('reqid',selected.requirementID)
+    setShowBackdrop(true);
     NewDeadline.NEW_DEADLINE(formData)
     .then(res => {
       console.log(res)
       setReqlist(res.data.Requirements.results1);
+      setOpenDialog(false)
+      setShowBackdrop(false);
       swal({
         text: 'Updated Successfully',
         timer: 2000,
@@ -243,14 +260,13 @@ const Contact = () => {
         icon: "success",
       })
       setErrors('')
-      setOpenDialog(false)
+
     }
      )
     .catch(err => console.log(err));
   }
   }
   const Delete = (data) =>{
-    console.log(user.jobDescription)
     if (user.jobDescription !== 'Admin' || user.jobDescription !== accessList.reqSec) {
       swal({
         text: 'UnAuthorized Access',
@@ -262,10 +278,12 @@ const Contact = () => {
     } 
     const formData = new FormData();
     formData.append('reqID',data.requirementID)
+    setShowBackdrop(true);
     DeleteReq.DELETE_REQ(formData)
     .then(res => {
-      console.log(res)
       setReqlist(res.data.Requirements.results1);
+      setShowBackdrop(false);
+      setOpenDialog(false)
       swal({
         text: 'Deleted Successfully',
         timer: 2000,
@@ -273,7 +291,7 @@ const Contact = () => {
         icon: "success",
       })
       setErrors('')
-      setOpenDialog(false)
+
     }
      )
     .catch(err => console.log(err));
@@ -334,6 +352,10 @@ const Contact = () => {
 
   ];
   return (
+    <>
+    <StyledBackdrop open={showBackdrop}>
+    <CircularProgress color="inherit" />
+  </StyledBackdrop>
     <div className="contact">
       <Sidebar/>
     <div className="contactContainer">
@@ -506,6 +528,7 @@ const Contact = () => {
          </div>
       </div>
     </div>
+    </>
   )
 }
 

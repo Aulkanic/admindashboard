@@ -13,7 +13,8 @@ import { ApplicantsRequest, FetchingApplicantsInfo, ListofSub,
           CheckingSubs, CheckingApplicants,UserScore,ListofReq,FailedUser,FetchingBmccSchoinfo
         ,Documentary,GrantAccess } from "../../api/request";
 import swal from "sweetalert";
-import { styled } from '@mui/material/styles';
+import { styled, ThemeProvider, createTheme } from '@mui/material';
+import { Backdrop, CircularProgress } from '@mui/material';
 import { useContext } from "react";
 import { admininfo } from "../../App";
 import TextField from '@mui/material/TextField';
@@ -90,7 +91,10 @@ const StyledRadioGroup = styled(RadioGroup)`
     }
   }
 `;
-
+const theme = createTheme();
+const StyledBackdrop = styled(Backdrop)`
+  z-index: ${({ theme }) => theme.zIndex.drawer + 1};
+`;
 
 const Applicant = () => {
   const { loginUser,user } = useContext(admininfo);
@@ -119,6 +123,7 @@ const Applicant = () => {
   const [checked1, setChecked1] = useState(false);
   const [email,setEmail] = useState('');
   const [password,setPassword] = useState('')
+  const [showBackdrop, setShowBackdrop] = useState(false);
   const [openDialog1, setOpenDialog1] = useState(false);
   const [openDialog2, setOpenDialog2] = useState(false);
   const handleCloseDialog1 = () => setOpenDialog1(false);
@@ -190,10 +195,10 @@ const Applicant = () => {
   useEffect(() => {
 
     async function Fetch(){
+      setShowBackdrop(true);
       const response = await ApplicantsRequest.ALL_APPLICANTS()
       const docreq = await ListofReq.FETCH_REQUIREMENTS();
       const subdoc = await Documentary.FETCH_DOCUMENTARY()
-      console.log(subdoc)
       setDocumentaryListed(subdoc.data.Documentary)
       setPost(response.data.results);
       const sub = docreq.data.Requirements.results2
@@ -201,12 +206,14 @@ const Applicant = () => {
       setDocsListed(list)
       const totalsubdiv = `${sub.length}/${list.length}`
       setReqlist(totalsubdiv)
+      setShowBackdrop(false);
     }
     Fetch();
   }, []);
 
 // fucntions
   const view = async (data) => {
+    setShowBackdrop(true);
     const applicantNum = data.applicantNum;
     const formData = new FormData();
     formData.append('applicantNum',applicantNum)
@@ -216,11 +223,11 @@ const Applicant = () => {
         ListofSub.FETCH_SUB(applicantNum),
         UserScore.USER_SCORE(applicantNum)
       ]);
-      console.log(response)
       setApplicantInfo(response[0].data.results);
       setApplicantDocs(response[1].data.Document);
       setUserScore(response[2].data.result)
       setSelectedInfo(data)
+      setShowBackdrop(false);
       handleOpen()
       
     } catch (error) {
@@ -229,11 +236,8 @@ const Applicant = () => {
 
   }
 const check = async (data, index) => { 
-  console.log(data)
-  console.log(applicantsInfo)
+
   const requirement_Name = data.requirement_Name;
-  console.log(status[requirement_Name])
-  console.log(Comments[requirement_Name])
   const applicantNum = applicantsInfo[0].applicantCode;
   const adminName = user.name;
   const applicantCode = selectedInfo.applicantCode;
@@ -246,9 +250,11 @@ const check = async (data, index) => {
   formData.append('adminName', adminName);
 
   try {
+    setShowBackdrop(true);
     const res = await CheckingSubs.CHECK_SUB(formData);
     if(res.data.success === 1){
       setDocumentaryListed(res.data.Documentary)
+      setShowBackdrop(false);
       swal({
         text: 'Checked',
         timer: 2000,
@@ -256,6 +262,7 @@ const check = async (data, index) => {
         icon: "success",
       })
     }else{
+      setShowBackdrop(false);
       swal({
         text: 'Failed To Check',
         timer: 2000,
@@ -282,17 +289,18 @@ const style = {
   borderRadius:'10px'
 };
   const ApplicantCheck = async (data) =>{
-    console.log(data)
     const applicantNum = data.applicantNum;
     const applicantCode = data.applicantCode;
     const status = 'Qualified';
     const adminName = user.name;
     const email = data.email
+    setShowBackdrop(true);
     CheckingApplicants.CHECK_APP({email,adminName,applicantNum,status,applicantCode})
     .then(res => {
-      console.log(res)
+
       setPost(res.data.Applicants)
       setOpen(false)
+      setShowBackdrop(false);
       swal('Added Successfully')
     }
      )
@@ -301,9 +309,7 @@ const style = {
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
   const failed = async(data) =>{
-    console.log(data)
     const res = await FetchingBmccSchoinfo.FETCH_SCHOLARSINFO(data.applicantNum);
-    console.log(res)
     const schoapplied = res.data.ScholarInf.results1[0].SchoIarshipApplied;
     const batch = res.data.ScholarInf.results1[0].Batch;
     const formData = new FormData();
@@ -314,11 +320,14 @@ const style = {
     formData.append('Reason',reason)
     formData.append('isSend',isSend1)
     formData.append('email',res.data.ScholarInf.results1[0].email)
+    setShowBackdrop(true);
     const response = await FailedUser.FAILED_USER(formData)
     if(response.data.success === 1){
+      setShowBackdrop(false);
       swal('Status Updated')
       setIsSend1('No')
     }else{
+      setShowBackdrop(false);
       swal('Something Went Wrong')
     }
   }
@@ -327,14 +336,15 @@ const style = {
     formData.append('email',email);
     formData.append('password',password);
     formData.append('applicantNum',who)
+    setShowBackdrop(true);
     await GrantAccess.GRANT_ACCESS(formData)
     .then(res => {
       if(res.data.success === 1){
-        console.log(res)
         setPost(res.data.result);
         setEmail('')
         setOpenDialog1(false)
         setPassword('')
+        setShowBackdrop(false);
         swal({
           text: res.data.message,
           timer: 2000,
@@ -342,6 +352,7 @@ const style = {
           icon: 'success',
         });
       }else{
+        setShowBackdrop(false);
         swal({
           text: res.data.message,
           timer: 2000,
@@ -359,6 +370,7 @@ const style = {
     const selectedRows = rowSelectionModel.map((selectedRow) =>
       filteredRows.find((row) => row.applicantNum === selectedRow)
     );
+    setShowBackdrop(true);
       try {
         for (let i = 0; i < selectedRows.length; i++) {
           const row = selectedRows[i];
@@ -371,8 +383,6 @@ const style = {
           .then(res => {
             console.log(res)
             setPost(res.data.Applicants)
-            setOpen(false)
-            swal('Added Successfully')
           }
            )
           .catch(err => console.log(err));
@@ -380,16 +390,17 @@ const style = {
       } catch (error) {
         console.log(error);
       }
-
+      setOpen(false)
+      setShowBackdrop(false);
+      swal('Added Successfully')
   };
   const FailedAll = async() =>{
     const selectedRows = failedSelectionModel.map((selectedRow) =>
       filteredRows.find((row) => row.applicantNum === selectedRow));
+      setShowBackdrop(true);
       for (let i=0 ;i<selectedRows.length;i++){
         const row = selectedRows[i];
-        console.log(row)
         const res = await FetchingBmccSchoinfo.FETCH_SCHOLARSINFO(row.applicantNum);
-        console.log(res)
         const schoapplied = res.data.ScholarInf.results1[0].SchoIarshipApplied;
         const batch = res.data.ScholarInf.results1[0].Batch;
         const formData = new FormData();
@@ -402,12 +413,15 @@ const style = {
         formData.append('email',res.data.ScholarInf.results1[0].email)
         const response = await FailedUser.FAILED_USER(formData)
         if(response.data.success === 1){
-          swal('Status Updated')
+          
           setIsSend('No')
         }else{
+          setShowBackdrop(false);
           swal('Something Went Wrong')
         }
       }
+      setShowBackdrop(false);
+      swal('Status Updated')
   }
   const columns = [
     { field: 'applicantNum', headerName: 'Applicant ID', width: 100 },
@@ -712,7 +726,6 @@ const style = {
   ];
 
  const docusubmitted = applicantsDocs?.map((data, index) => {
-
   const { requirement_Name, File,Status } = data;
   console.log(Status)
   const handleStatusChange = (e) => {
@@ -855,10 +868,11 @@ const style = {
         return groups;
       }, { completed: [], incomplete: [] });
 
-      console.log(groupedUsers)
-      console.log(docusubmitted)
   return (
     <>
+    <StyledBackdrop open={showBackdrop}>
+      <CircularProgress color="inherit" />
+    </StyledBackdrop>
   {/* Dialog for Image Expandin */}
     <Dialog open={imageModalOpen} onClose={closeImageModal} maxWidth="lg">
   <DialogTitle>Full Image</DialogTitle>
@@ -1117,7 +1131,7 @@ const style = {
     </Card>
       </div>
       {activeState === 'Complete' && <div sx={{width:'90%',margin:'10px',display:'flex',justifyContent:'flex-end',flexDirection:'column',alignItems:'flex-end'}}>
-              <Button onClick={Addall} sx={{margin:'10px'}} variant='contained'>ADD ALL SELECTED TO QUALIFIED LIST</Button>
+              <Button className="myButton" onClick={Addall} sx={{margin:'10px'}} variant='contained'>ADD ALL SELECTED TO QUALIFIED LIST</Button>
             </div>}
       {activeState === 'Incomplete' && <div sx={{width:'90%',margin:'10px',display:'flex',justifyContent:'flex-end',flexDirection:'column',alignItems:'flex-end'}}>
                   <Checkbox
@@ -1125,7 +1139,7 @@ const style = {
                     onChange={handleChangeCheckbox}
                     inputProps={{ 'aria-label': 'controlled' }}
                   /><span>Sent Notification</span>
-                <Button onClick={FailedAll} sx={{margin:'10px'}} variant='contained'>SET FAILED THE SELECTED USERS</Button>
+                <Button className="myButton2" onClick={FailedAll} sx={{margin:'10px'}} variant='contained'>SET FAILED ALL SELECTED USERS</Button>
             </div>}
     </div>
     </div>

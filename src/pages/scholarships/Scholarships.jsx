@@ -11,7 +11,6 @@ import RadioGroup from '@mui/material/RadioGroup';
 import FormControlLabel from '@mui/material/FormControlLabel';
 import FormLabel from '@mui/material/FormLabel';
 import swal from "sweetalert";
-import { styled } from '@mui/material/styles';
 import { DataGrid, GridCellParams } from '@mui/x-data-grid';
 import Avatar from '@mui/material/Avatar';
 import Card from '@mui/material/Card';
@@ -20,6 +19,13 @@ import { admininfo } from "../../App";
 import CardActions from '@mui/material/CardActions';
 import CardContent from '@mui/material/CardContent';
 import '../Button style/button.css'
+import { styled, ThemeProvider, createTheme } from '@mui/material';
+import { Backdrop, CircularProgress } from '@mui/material';
+
+const theme = createTheme();
+const StyledBackdrop = styled(Backdrop)`
+  z-index: ${({ theme }) => theme.zIndex.drawer + 1};
+`;
 
 const CustomDataGrid = styled(DataGrid)({
   '& .MuiDataGrid-columnHeaders': {
@@ -43,6 +49,7 @@ const StyledButton = styled(Button)`
 const Scholarships = () => {
   const { loginUser,user } = useContext(admininfo);
     const [schocat, setSchocat] = useState([]);
+    const [showBackdrop, setShowBackdrop] = useState(false);
     const [open, setOpen] = useState(false);
     const [open1, setOpen1] = useState(false);
     const [icon, setSchoimg] = useState('');
@@ -103,7 +110,6 @@ const Scholarships = () => {
     width: '60%',
     height: '90%',
     bgcolor: 'background.paper',
-    border: '2px solid #000',
     overflow: 'auto',
     padding:'10px',
     borderRadius:'10px'
@@ -112,13 +118,14 @@ const Scholarships = () => {
   useEffect(() => {
     const fetchData = async () => {
       try {
+        setShowBackdrop(true);
         const response = await Promise.all([
           FetchingSchoProg.FETCH_SCHOPROG(),
           ListAccess.ACCESS()
         ]);
-        console.log(response)
         setSchocat(response[0].data.SchoCat);
         setAccesslist(response[1].data.result[0])
+        setShowBackdrop(false);
         
       } catch (error) {
         console.error('Error fetching data:', error);
@@ -152,22 +159,22 @@ const Scholarships = () => {
   function Create(event){
     event.preventDefault();
     const data = {icon,title,description,status};
-    console.log(data)
+    setShowBackdrop(true);
     CreateSchoProg.CREATE_SCHOPROG(data)
     .then(res => {
-      console.log(res)
       setSchocat(res.data.Scholarship)
+      setSchodesc('')
+      setSchoimg('')
+      setStatusCheck('');
+      setSchotitle('')
+      setOpen(false)
+      setShowBackdrop(false);
       swal({
         title: "Success",
         text: "Scholarship Program has been Added!",
         icon: "success",
         button: "OK",
       });
-      setSchodesc('')
-      setSchoimg('')
-      setStatusCheck('');
-      setSchotitle('')
-      setOpen(false)
     }
      )
     .catch(err => console.log(err));
@@ -175,7 +182,6 @@ const Scholarships = () => {
 
 function Edit(event){
   event.preventDefault();
-  console.log(olddata)
   const schoid =  olddata.schoProgId;
   const icon = icon1 || olddata.icon;
   const title1 = titleu || olddata.name;
@@ -189,15 +195,16 @@ function Edit(event){
   formData.append('schoid',schoid);
   UpdateSchoProg.UPDATE_SCHOPROG(formData)
   .then(res => {
-    console.log(res)
     setSchocat(res.data.Scholarship)
+    setOpen(false)
+    setShowBackdrop(false);
     swal({
       title: "Success",
       text: "Scholarship Program has been Changed!",
       icon: "success",
       button: "OK",
     });
-    setOpen(false)
+
   }
    )
   .catch(err => console.log(err));
@@ -248,6 +255,9 @@ function Edit(event){
 
   return (
     <>
+  <StyledBackdrop open={showBackdrop}>
+    <CircularProgress color="inherit" />
+  </StyledBackdrop>
 {/* Modal for Add button */}
       <Modal
         open={open}

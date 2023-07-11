@@ -22,7 +22,6 @@ import swal from "sweetalert";
 import { useState } from "react";
 import { useEffect } from "react";
 import { useContext } from "react";
-import { styled } from '@mui/material/styles';
 import { admininfo } from "../../App";
 import Dialog from '@mui/material/Dialog';
 import DialogActions from '@mui/material/DialogActions';
@@ -46,6 +45,13 @@ import './appointment.css'
 import CloseIcon from '@mui/icons-material/Close';
 import Slide from '@mui/material/Slide';
 import { TransitionProps } from '@mui/material/transitions';
+import { styled, ThemeProvider, createTheme } from '@mui/material';
+import { Backdrop, CircularProgress } from '@mui/material';
+
+const theme = createTheme();
+const StyledBackdrop = styled(Backdrop)`
+  z-index: ${({ theme }) => theme.zIndex.drawer + 1};
+`;
 const localizer = momentLocalizer(moment);
 
 const columns = [
@@ -172,6 +178,7 @@ const Appointment = () => {
   const [dialog, setDialog] = React.useState(false);
   const [reminder,setReminders] = useState('');
   const [reason,setReason] = useState('');
+  const [showBackdrop, setShowBackdrop] = useState(false);
   const [failinf,setFailInf] = useState([]);
   const [value, setValue] = React.useState(0);
   const [value1, setValue1] = React.useState(0);
@@ -270,12 +277,14 @@ const Appointment = () => {
 
   useEffect(() => {
     async function Fetch(){
+      setShowBackdrop(true);
       const response = await FetchingQualified.FETCH_QUALIFIED();
       const listing  = await FetchingAppointList.FETCH_LISTAPPOINT();
       console.log(response)
       const list = response.data.List.filter(user => user.isAppointed === 'No');
       setQualified(list);
       setAppointedList(listing.data.AppointmentList)
+      setShowBackdrop(false);
     }
     Fetch();
 
@@ -335,6 +344,7 @@ const Appointment = () => {
     const selectedRows = rowSelectionModel.map((selectedRow) =>
     Qualified.find((row) => row.applicantNum === selectedRow)
   );
+  setShowBackdrop(true);
   selectedRows.forEach((data,index) =>{
       console.log(data)
       const applicantCode = data.applicantCode
@@ -369,22 +379,38 @@ const Appointment = () => {
           const list = res.data.List.data1.filter(user => user.isAppointed === 'No');
           setQualified(list);
           setAppointedList(res.data.List.data2)
-          swal(res.data.message)
+
           setErrors('')
           setRowSelectionModel([])
           
         }
-        swal(res.data.message)
-        setErrors('')
+        else{
+          setShowBackdrop(false);
+          swal({
+            title: "Success",
+            text: res.data.message,
+            icon: "error",
+            button: "OK",
+          });
+          setErrors('')
+        }
+
       }
        )
       .catch(err => console.log(err));
     })
+    setShowBackdrop(false);
+    swal({
+      title: "Success",
+      text: "Appointed Successfully!",
+      icon: "success",
+      button: "OK",
+    });
   };
 
   const Reapp = async(data) => {
-    console.log(data)
     const applicantNum = data.applicantNum;
+    setShowBackdrop(true);
     const res = await FetchingUserAppdetails.FETCH_USERDET(applicantNum);
     const info = res.data.result[0];
     const email = info.Email
@@ -397,10 +423,10 @@ const Appointment = () => {
     formData.append('email',email)
       Reaapointed.RE_APPOINT(formData)
       .then(res => {
-        console.log(res)
         setQualified(res.data.results.data1);
         setAppointedList(res.data.results.data2);
         setSelectedUsers([]);
+        setShowBackdrop(false);
         swal('Success')
       }
        )
@@ -408,14 +434,11 @@ const Appointment = () => {
   };
 
   const Approved = async (data) => {
-    console.log(data)
     try {
       const response = await Promise.all([
         FetchingApplicantsInfo.FETCH_INFO(data.applicantNum)
       ]);
-      console.log(response)
       const dataappinfo = response[0].data.results[0];
-      console.log(dataappinfo)
       const Name = `${dataappinfo.firstName} ${dataappinfo.middleName} ${dataappinfo.lastName}`;
       const applicantNum = data.applicantNum;
       const applicantCode = data.applicantCode;
@@ -425,13 +448,18 @@ const Appointment = () => {
       const email = dataappinfo.email;
       const scholarshipApplied = dataappinfo.SchoIarshipApplied;
       const adminName = user.name;
-      console.log(dataappinfo)
+      setShowBackdrop(true);
       SetApproved.SET_APPROVE({contactNum,email,applicantCode,adminName,data,Name,applicantNum,yearLevel,baranggay,scholarshipApplied})
     .then(res => {
-      console.log(res)
       setQualified(res.data.results.data1);
       setAppointedList(res.data.results.data2)
-      swal('Success')
+      setShowBackdrop(false);
+      swal({
+        title: "Success",
+        text: "Approved Successfully!",
+        icon: "success",
+        button: "OK",
+      });
     }
      )
     .catch(err => console.log(err));
@@ -442,9 +470,7 @@ const Appointment = () => {
 };
 
 const Failed = async() =>{
-  console.log(failinf)
   const res = await FetchingBmccSchoinfo.FETCH_SCHOLARSINFO(failinf.applicantNum);
-  console.log(res)
   const schoapplied = res.data.ScholarInf.results1[0].SchoIarshipApplied;
   const batch = res.data.ScholarInf.results1[0].Batch;
   const formData = new FormData();
@@ -455,6 +481,17 @@ const Failed = async() =>{
   formData.append('Reason',reason)
   formData.append('email',failinf.Email)
   FailedUser.FAILED_USER(formData)
+  .then(res => {
+    setShowBackdrop(false);
+    swal({
+      title: "Success",
+      text: "Success!",
+      icon: "success",
+      button: "OK",
+    });
+  }
+   )
+  .catch(err => console.log(err));
 
 }
  const InterviewResult = (data) =>{
@@ -462,14 +499,27 @@ const Failed = async() =>{
       const formData = new FormData()
       formData.append('isPassed',data)
       formData.append('applicantNum',userFulldet.applicantNum)
+      setShowBackdrop(true);
       SetInterview.SET_INTERVIEW(formData)
       .then((res) => {
         if(res.data.success === 1){
           console.log(res)
           setAppointedList(res.data.result)
-          swal('Done')
+          setShowBackdrop(false);
+          swal({
+            title: "Success",
+            text: "Done!",
+            icon: "success",
+            button: "OK",
+          });
         }else{
-          swal('Something Went Wrong')
+          setShowBackdrop(false);
+          swal({
+            title: "Failed",
+            text: "Somthing Went Wrong!",
+            icon: "error",
+            button: "OK",
+          });
         }
 
       }
@@ -482,14 +532,15 @@ const Failed = async() =>{
   formData.append('email',email);
   formData.append('password',password);
   formData.append('applicantNum',who)
+  setShowBackdrop(true);
   await GrantAccess1.GRANT_ACCESS1(formData)
   .then(res => {
     if(res.data.success === 1){
-      console.log(res)
       setEmail('')
       setOpenDialog1(false)
       setAppointedList(res.data.result)
       setPassword('')
+      setShowBackdrop(false);
       swal({
         text: res.data.message,
         timer: 2000,
@@ -497,6 +548,7 @@ const Failed = async() =>{
         icon: 'success',
       });
     }else{
+      setShowBackdrop(false);
       swal({
         text: res.data.message,
         timer: 2000,
@@ -513,11 +565,10 @@ const Failed = async() =>{
 const FailedAll = async() =>{
   const selectedRows = failedSelectionModel.map((selectedRow) =>
     appointedList.find((row) => row.applicantNum === selectedRow));
+    setShowBackdrop(true);
     for (let i=0 ;i<selectedRows.length;i++){
       const row = selectedRows[i];
-      console.log(row)
       const res = await FetchingBmccSchoinfo.FETCH_SCHOLARSINFO(row.applicantNum);
-      console.log(res)
       const schoapplied = res.data.ScholarInf.results1[0].SchoIarshipApplied;
       const batch = res.data.ScholarInf.results1[0].Batch;
       const formData = new FormData();
@@ -530,17 +581,31 @@ const FailedAll = async() =>{
       formData.append('email',res.data.ScholarInf.results1[0].email)
       const response = await FailedUser.FAILED_USER(formData)
       if(response.data.success === 1){
-        swal('Status Updated')
+
         setIsSend('No')
       }else{
-        swal('Something Went Wrong')
+        setShowBackdrop(false);
+        swal({
+          text: 'Something Went Wrong',
+          timer: 2000,
+          buttons: false,
+          icon: 'error',
+        });
       }
     }
+    setShowBackdrop(false);
+    swal({
+      text: 'Status Updated',
+      timer: 2000,
+      buttons: false,
+      icon: 'success',
+    });
 }
 const Addall = async () => {
   const selectedRows = rowSelectionModel.map((selectedRow) =>
     appointedList.find((row) => row.applicantNum === selectedRow)
   );
+  setShowBackdrop(true);
     try {
       for (let i = 0; i < selectedRows.length; i++) {
         const row = selectedRows[i];
@@ -548,9 +613,7 @@ const Addall = async () => {
         const response = await Promise.all([
           FetchingApplicantsInfo.FETCH_INFO(applicantNum)
         ]);
-        console.log(response)
         const dataappinfo = response[0].data.results[0];
-        console.log(dataappinfo)
         const Name = `${dataappinfo.firstName} ${dataappinfo.middleName} ${dataappinfo.lastName}`;
         const applicantCode = dataappinfo.applicantCode;
         const yearLevel =dataappinfo.currentYear;
@@ -558,13 +621,10 @@ const Addall = async () => {
         const email = dataappinfo.email;
         const scholarshipApplied = dataappinfo.SchoIarshipApplied;
         const adminName = user.name;
-        console.log(dataappinfo)
         SetApproved.SET_APPROVE({email,applicantCode,adminName,Name,applicantNum,yearLevel,baranggay,scholarshipApplied})
       .then(res => {
-        console.log(res)
         setQualified(res.data.results.data1);
         setAppointedList(res.data.results.data2)
-        swal('Success')
       }
        )
       .catch(err => console.log(err));
@@ -572,7 +632,13 @@ const Addall = async () => {
     } catch (error) {
       console.log(error);
     }
-
+    setShowBackdrop(false);
+    swal({
+      title: "Success",
+      text: "Done!",
+      icon: "success",
+      button: "OK",
+    });
 };
 
   const events = {};
@@ -645,13 +711,12 @@ const Addall = async () => {
 
   const cancelAppointment = async(e) => {
       e.preventDefault()
-      console.log(selectedAppointment);
       const formData = new FormData();
       formData.append('schedDate', selectedAppointment.selectedDate);
       const res = await FetchingApplist.FETCH_APP(formData);
       const userlist = res.data.AppointedList;
-      console.log(userlist)
 try {
+  setShowBackdrop(true);
   for (let i=0 ;i<userlist.length;i++){
           const data = userlist[i];
           console.log(data);
@@ -661,13 +726,24 @@ try {
           cancelFormData.append('applicantNum', data.applicantNum);
           const response = await CancelApp.CANCEL_APP(cancelFormData)
           if(response.data.success === 1){
-            console.log(response)
-            swal(response.data.message)
             setAppointedList(response.data.AppointmentList)
           }else{
-            swal('Something Went Wrong')
+            setShowBackdrop(false);
+            swal({
+              text: 'Something Went Wrong',
+              timer: 2000,
+              buttons: false,
+              icon: 'error',
+            });
           }
         }
+        setShowBackdrop(false);
+        swal({
+          title: "Success",
+          text: "Done!",
+          icon: "success",
+          button: "OK",
+        });
 } catch (error) {
   console.error('Error fetching data:', error);
 }
@@ -680,9 +756,8 @@ try {
     const selectedRows = rowSelectionModel.map((selectedRow) =>
     Qualified.find((row) => row.applicantNum === selectedRow)
   );
+  setShowBackdrop(true);
   selectedRows.forEach((data,index) =>{
-      console.log(data)
-      console.log(adduserAppoint)
       const applicantCode = data.applicantCode
       const applicantNum = data.applicantNum
       const Name = data.Name;
@@ -712,27 +787,41 @@ try {
       CreateAppointment.CREATE_APPOINT(formData)
       .then((res) => {
         if(res.data.success === 1){
-          console.log(res)
           const list = res.data.List.data1.filter(user => user.isAppointed === 'No');
           setQualified(list);
           setAppointedList(res.data.List.data2)
-          swal(res.data.message)
           setErrors('')
           setRowSelectionModel([])
           
         }
-        swal(res.data.message)
-        setErrors('')
+        else{
+          setShowBackdrop(false);
+          swal({
+            text: 'Something Went Wrong',
+            timer: 2000,
+            buttons: false,
+            icon: 'error',
+          });
+          setErrors('')
+        }
+
       }
        )
       .catch(err => console.log(err));
     })
+    setShowBackdrop(false);
+    swal({
+      title: "Success",
+      text: "Done!",
+      icon: "success",
+      button: "OK",
+    });
   };
   const cancelBatch = async(date,time,data3) =>{
     try {
+      setShowBackdrop(true);
       for (let i=0 ;i<data3.length;i++){
               const data = data3[i];
-              console.log(data);
               const cancelFormData = new FormData();
               cancelFormData.append('schedDate', date);
               cancelFormData.append('timeStart', data.timeStart);
@@ -741,13 +830,25 @@ try {
               cancelFormData.append('applicantNum', data.applicantNum);
               const response = await CancelBatch.CANCEL_BATCH(cancelFormData)
               if(response.data.success === 1){
-                console.log(response)
-                swal(response.data.message)
                 setAppointedList(response.data.AppointmentList)
               }else{
-                swal('Something Went Wrong')
+                setShowBackdrop(false);
+                swal({
+                  text: 'Something Went Wrong',
+                  timer: 2000,
+                  buttons: false,
+                  icon: 'error',
+                });
+                setErrors('')
               }
             }
+            setShowBackdrop(false);
+            swal({
+              title: "Success",
+              text: "Done!",
+              icon: "success",
+              button: "OK",
+            });
     } catch (error) {
       console.error('Error fetching data:', error);
     }
@@ -1058,6 +1159,9 @@ try {
   
   return (
     <>
+      <StyledBackdrop open={showBackdrop}>
+        <CircularProgress color="inherit" />
+      </StyledBackdrop>
       {/* Dialog for Image Expandin */}
       <Dialog fullScreen open={imageModalOpen} onClose={closeImageModal}>
       <DialogTitle>{selectedImage.name}</DialogTitle>

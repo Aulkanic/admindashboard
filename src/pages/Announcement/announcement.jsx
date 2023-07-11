@@ -13,17 +13,27 @@ import Avatar from '@mui/material/Avatar';
 import TextField from '@mui/material/TextField';
 import swal from 'sweetalert';
 import { FetchingAnnounce,CreateAnnouncement } from '../../api/request';
+import { styled, ThemeProvider, createTheme } from '@mui/material';
+import { Backdrop, CircularProgress } from '@mui/material';
+
+const theme = createTheme();
+const StyledBackdrop = styled(Backdrop)`
+  z-index: ${({ theme }) => theme.zIndex.drawer + 1};
+`;
 
 const Announcement = () => {
     const [announced,setAnnounced] = useState([]);
     const [title,setTitle] = useState('');
     const [content,setContent] = useState('');
+    const [showBackdrop, setShowBackdrop] = useState(false);
 
     useEffect(() =>{
         async function Fetch(){
+          setShowBackdrop(true);
           let response = await FetchingAnnounce.FETCH_ANNOUNCE();
           const dat = response.data.Announce
           setAnnounced(dat.reverse())
+          setShowBackdrop(false);
         }
         Fetch()
     },[])
@@ -54,11 +64,12 @@ const Announcement = () => {
       const formData = new FormData();
       formData.append('title', title);
       formData.append('content',content)
+      setShowBackdrop(true);
       await CreateAnnouncement.CREATE_ANNOUNCEMENT(formData)
       .then(res => {
-        console.log(res)
         const announce = res.data.Announce
         setAnnounced(announce.reverse());
+        setShowBackdrop(false);
         swal({
           title: "Success",
           text: "Being Announced!",
@@ -68,10 +79,12 @@ const Announcement = () => {
       }
        )
       .catch(err => console.log(err));
-
     }
   return (
     <>
+              <StyledBackdrop open={showBackdrop}>
+                <CircularProgress color="inherit" />
+              </StyledBackdrop>
     <div className="scholarships" style={{backgroundColor:'whitesmoke'}}>
         <Sidebar/>
     <div className="scholarshipsContainer">
@@ -115,6 +128,7 @@ const Announcement = () => {
                 </CardContent>
                 <div style={{width:'100%',display:'flex',justifyContent:'center'}}>
               <Button className='myButton' onClick={Create} variant='contained'>Announce</Button>
+
               </div>
               </Card>
               </div>

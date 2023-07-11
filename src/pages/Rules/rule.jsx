@@ -13,9 +13,17 @@ import Avatar from '@mui/material/Avatar';
 import './rule.css'
 import { useEffect } from 'react';
 import swal from 'sweetalert';
+import { styled, ThemeProvider, createTheme } from '@mui/material';
+import { Backdrop, CircularProgress } from '@mui/material';
+
+const theme = createTheme();
+const StyledBackdrop = styled(Backdrop)`
+  z-index: ${({ theme }) => theme.zIndex.drawer + 1};
+`;
 
 const Rulesect = () => {
   const [bmcclogo,setBmcc] = useState('');
+  const [showBackdrop, setShowBackdrop] = useState(false);
   const [bmcclogoPrev,setBmccPrev] = useState('');
   const [mayorlogo,setMayor] = useState('');
   const [mayorlogoPrev,setMayorPrev] = useState('');
@@ -102,6 +110,9 @@ const Rulesect = () => {
   }
   return (
     <>
+              <StyledBackdrop open={showBackdrop}>
+                <CircularProgress color="inherit" />
+              </StyledBackdrop>
     <div className="scholarships" style={{backgroundColor:'#f1f3fa'}}>
         <Sidebar/>
     <div className="scholarshipsContainer">

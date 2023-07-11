@@ -9,7 +9,6 @@ import TextField from '@mui/material/TextField';
 import { useContext } from "react";
 import { admininfo } from "../../App";
 import { DataGrid} from '@mui/x-data-grid';
-import { styled } from '@mui/material/styles';
 import BMCC from '../../Images/logo.jpg';
 import Radio from '@mui/material/Radio';
 import RadioGroup from '@mui/material/RadioGroup';
@@ -26,7 +25,13 @@ import AppBar from '@mui/material/AppBar';
 import Toolbar from '@mui/material/Toolbar';
 import IconButton from '@mui/material/IconButton';
 import Dialog from '@mui/material/Dialog';
+import { styled, ThemeProvider, createTheme } from '@mui/material';
+import { Backdrop, CircularProgress } from '@mui/material';
 
+const theme = createTheme();
+const StyledBackdrop = styled(Backdrop)`
+  z-index: ${({ theme }) => theme.zIndex.drawer + 1};
+`;
 
 const StyledButton = styled(Button)`
   && {
@@ -45,6 +50,7 @@ const Transition = React.forwardRef(function Transition(props, ref) {
 
 const Faqs = () => {
   const { loginUser,user } = useContext(admininfo);
+  const [showBackdrop, setShowBackdrop] = useState(false);
   const [username,setUsername] = useState('');
   const [email,setEmail] = useState('');
   const [jobDes, setJobdes] = useState('');
@@ -213,6 +219,7 @@ const CustomDataGrid = styled(DataGrid)({
   const handleClose1 = () => setOpen1(false);
   useEffect(() =>{
         async function Fetch(){
+          setShowBackdrop(true);
         const list = await FetchingBMCC.FETCH_BMCC()
         const actlog = await Activitylog.ACTIVITY_LOG()
         const access = await ListAccess.ACCESS()
@@ -220,6 +227,7 @@ const CustomDataGrid = styled(DataGrid)({
           setAccessEmp(access.data.result[0])
           const activitylog = actlog.data.Log
           setActlog(activitylog.reverse())
+          setShowBackdrop(false);
         }
         Fetch();
   },[])
@@ -247,10 +255,18 @@ const CustomDataGrid = styled(DataGrid)({
   formData.append('email', email);
   formData.append('name', username);
   formData.append('jobdes', jobDes);
+  setShowBackdrop(true);
   AddBMCC.ADD_BMCC(formData)
   .then(res => {
     console.log(res)
     setBmcc(res.data.message)
+    setShowBackdrop(false);
+    swal({
+      title: "Success",
+      text: "Created Successfully!",
+      icon: "success",
+      button: "OK",
+    });
   }
    )
   .catch(err => console.log(err));
@@ -264,11 +280,19 @@ const UpdateBMCC = (event) =>{
   formData.append('updatedstatus',updatedstatus)
   formData.append('updatedjob',updatedjob)
   formData.append('id',id)
+  setShowBackdrop(true);
   UpdateEmp.UPDATE_EMP(formData)
   .then(res => {
     console.log(res)
     setBmcc(res.data.employees);
     setOpen1(false)
+    setShowBackdrop(false);
+    swal({
+      title: "Success",
+      text: "Created Successfully!",
+      icon: "success",
+      button: "OK",
+    });
   }
    )
   .catch(err => console.log(err));
@@ -293,16 +317,27 @@ const Authorization = (e) =>{
   formData.append('rule',rule || accessEmp.ruleSec)
   formData.append('web',web || accessEmp.webSec)
   formData.append('report',report || accessEmp.repSec)
+  setShowBackdrop(true);
   EmpAuthorized.AUTHORIZATION(formData)
   .then(res => {
     console.log(res)
     setAccessEmp(res.data.result)
-    swal('Success')
+    setShowBackdrop(false);
+    swal({
+      title: "Success",
+      text: "Created Successfully!",
+      icon: "success",
+      button: "OK",
+    });
   }
    )
   .catch(err => console.log(err));
 }
   return (
+    <>
+    <StyledBackdrop open={showBackdrop}>
+    <CircularProgress color="inherit" />
+  </StyledBackdrop>
     <div className="faqs">
         <Sidebar/>
         <div className="faqsContainer">
@@ -610,6 +645,7 @@ const Authorization = (e) =>{
             </div>
         </div>
     </div>
+    </>
   )
 }
 

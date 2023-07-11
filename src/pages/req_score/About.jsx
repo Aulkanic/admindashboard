@@ -13,11 +13,18 @@ import FormControl from '@mui/material/FormControl';
 import { CreatingScore,FetchingScore,ListAccess } from '../../api/request';
 import swal from 'sweetalert';
 import { Card } from '@mui/material';
+import { styled, ThemeProvider, createTheme } from '@mui/material';
+import { Backdrop, CircularProgress } from '@mui/material';
 
+const theme = createTheme();
+const StyledBackdrop = styled(Backdrop)`
+  z-index: ${({ theme }) => theme.zIndex.drawer + 1};
+`;
 
 export const About = () => {
   const { loginUser,user } = useContext(admininfo);
     const [schoprog, setSchoProg] = useState([]);
+    const [showBackdrop, setShowBackdrop] = useState(false);
     const[scho,setScho] = useState('');
     const[schoname,setSchoname] = useState('');
     const[swl,setWl] = useState('');
@@ -73,11 +80,13 @@ export const About = () => {
       const value = await event.target.value;
       setSchoname(value);
       const schoname = value;
+      setShowBackdrop(true);
      FetchingScore.FETCH_SCORECARD(schoname)
         .then(response => {
-          console.log(response.data);
+  
           const scorelist = response.data.ScholarScore;
           setScorelist(scorelist)
+          setShowBackdrop(false);
         })
         .catch(error => {
           console.error(error);
@@ -86,10 +95,12 @@ export const About = () => {
     useEffect(() => {
 
       async function Fetch(){
+        setShowBackdrop(true);
         const response = await FetchingSchoProg.FETCH_SCHOPROG()
         const res = await ListAccess.ACCESS()
         setAccesslist(res.data.result[0])
         setSchoProg(response.data.SchoCat);
+        setShowBackdrop(false);
       }
       Fetch();
     }, []);
@@ -230,7 +241,6 @@ export const About = () => {
           }
           const totalsc = parseFloat(wl) + parseFloat(hl) + parseFloat(os) + parseFloat(mi) + parseFloat(fa)
                           + parseFloat(ts) + parseFloat(gwa) + parseFloat(fn);
-          console.log(totalsc);
           if(totalsc !== 100){
             errors.total = 'Total Rate must be 100 Percent';
           }
@@ -240,12 +250,18 @@ export const About = () => {
           console.log(errors)
           return;
         }
+        setShowBackdrop(true);
         CreatingScore.CREATE_SCORECARD({schoname,wl,wl1,wl2,wl3,hl,hl1,hl2,hl3,hl4,os,os1,os2,os3,os4,
           mi,mi1,mi2,mi3,mi4,mi5,fa,fa1,fa2,fa3,fa4,fa5,fa6,ts,ts1,ts2,ts3,ts4,
           ts5,ts6,gwa,gwa1,gwa2,gwa3,gwa4,gwa5,fn,fn1,fn2,fn3,fn4})
           .then(res => {
-            console.log(res)
-            swal('Save')
+            setShowBackdrop(false);
+            swal({
+              title: "Success",
+              text: "Saved!",
+              icon: "success",
+              button: "OK",
+            });
           }
            )
           .catch(err => console.log(err));
@@ -383,12 +399,18 @@ export const About = () => {
           console.log(errors)
           return;
         }
+        
         CreatingScore.CREATE_SCORECARD({schoname,wl,wl1,wl2,wl3,hl,hl1,hl2,hl3,hl4,os,os1,os2,os3,os4,
           mi,mi1,mi2,mi3,mi4,mi5,fa,fa1,fa2,fa3,fa4,fa5,fa6,ts,ts1,ts2,ts3,ts4,
           ts5,ts6,gwa,gwa1,gwa2,gwa3,gwa4,gwa5,fn,fn1,fn2,fn3,fn4})
           .then(res => {
-            console.log(res)
-            swal('Save')
+            setShowBackdrop(false);
+            swal({
+              title: "Success",
+              text: "Being Announced!",
+              icon: "success",
+              button: "OK",
+            });
           }
            )
           .catch(err => console.log(err));
@@ -672,12 +694,18 @@ export const About = () => {
       console.log(errors)
       return;
     }
+    setShowBackdrop(true);
     CreatingScore.CREATE_SCORECARD({schoname,wl,wl1,wl2,wl3,hl,hl1,hl2,hl3,hl4,os,os1,os2,os3,os4,
       mi,mi1,mi2,mi3,mi4,mi5,fa,fa1,fa2,fa3,fa4,fa5,fa6,ts,ts1,ts2,ts3,ts4,
       ts5,ts6,gwa,gwa1,gwa2,gwa3,gwa4,gwa5,fn,fn1,fn2,fn3,fn4})
       .then(res => {
-        console.log(res)
-        swal('Save')
+        setShowBackdrop(false);
+        swal({
+          title: "Success",
+          text: "Saved!",
+          icon: "success",
+          button: "OK",
+        });
       }
        )
       .catch(err => console.log(err));
@@ -848,6 +876,10 @@ export const About = () => {
       )})
 
   return (
+    <>
+              <StyledBackdrop open={showBackdrop}>
+                <CircularProgress color="inherit" />
+              </StyledBackdrop>
     <div className="about">
         <Sidebar/>
         <div className="aboutContainer">
@@ -1081,5 +1113,6 @@ export const About = () => {
 
          
     </div>
+    </>
   )
 }

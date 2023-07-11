@@ -23,9 +23,17 @@ import { useContext } from "react";
 import { admininfo } from "../../App";
 import Link from '@mui/material/Link';
 import Checkbox from '@mui/material/Checkbox';
+import { styled, ThemeProvider, createTheme } from '@mui/material';
+import { Backdrop, CircularProgress } from '@mui/material';
+
+const theme = createTheme();
+const StyledBackdrop = styled(Backdrop)`
+  z-index: ${({ theme }) => theme.zIndex.drawer + 1};
+`;
 
 const Evaluation = () => {
   const { loginUser,user } = useContext(admininfo);
+  const [showBackdrop, setShowBackdrop] = useState(false);
     const [data, setData] = useState([]);
     const [email,setEmail] = useState('');
     const [password,setPassword] = useState('')
@@ -67,13 +75,13 @@ const Evaluation = () => {
     useEffect(() => {
 
         async function Fetch(){
+          setShowBackdrop(true);
           const response = await ApplicantsRequest.ALL_APPLICANTS();
           const pass = await FetchPassSlots.FETCH_PASSSLOTS()
-          console.log(response)
           const ForEva = response.data.results?.filter(user => user.status === 'For Evaluation')
-          console.log(ForEva)
           setData(ForEva);
           setPassSlot(pass.data.result[0])
+          setShowBackdrop(false);
         }
         Fetch();
       }, []);
@@ -82,19 +90,19 @@ const Evaluation = () => {
       }, [passscore,slots]);
     
       const view = async (data) => {
-        console.log(data)
         const applicantNum = data.applicantNum;
         const formData = new FormData();
         formData.append('applicantNum',applicantNum)
         try {
+          setShowBackdrop(true);
           const response = await Promise.all([
             FetchingApplicantsInfo.FETCH_INFO(applicantNum),
             ListofSub.FETCH_SUB(applicantNum),
             UserScore.USER_SCORE(applicantNum)
           ]);
-          console.log(response)
           setApplicantInfo(response[0].data.results);
           setUserScore(response[2].data.result)
+          setShowBackdrop(false);
           handleOpen()
         } catch (error) {
           console.error('Error fetching data:', error);
@@ -102,9 +110,7 @@ const Evaluation = () => {
     
       }
       const failed = async(data) =>{
-        console.log(data)
         const res = await FetchingBmccSchoinfo.FETCH_SCHOLARSINFO(data.applicantNum);
-        console.log(res)
         const schoapplied = res.data.ScholarInf.results1[0].SchoIarshipApplied;
         const batch = res.data.ScholarInf.results1[0].Batch;
         const reason = 'Score did not Meet Passing Score'
@@ -115,11 +121,24 @@ const Evaluation = () => {
         formData.append('batch',batch)
         formData.append('Reason',reason)
         formData.append('email',res.data.ScholarInf.results1[0].email)
+        setShowBackdrop(true);
         const response = await FailedUser.FAILED_USER(formData)
         if(response.data.success === 1){
-          swal('Status Updated')
+          setShowBackdrop(false);
+          swal({
+            title: "Success",
+            text: "Succes!",
+            icon: "success",
+            button: "OK",
+          });
         }else{
-          swal('Something Went Wrong')
+          setShowBackdrop(false);
+          swal({
+            title: "Failed",
+            text: "Something Went Wrong!",
+            icon: "error",
+            button: "OK",
+          });
         }
       }
       const handleRowSelectionModelChange = (newRowSelectionModel) => {
@@ -825,7 +844,6 @@ const Evaluation = () => {
           .catch(err => console.log(err));
     }
     const ScoreSlot = () =>{
-      console.log(user)
       if(user.name !== 'Admin'){
         swal({
           text: 'UnAuthorized Access',
@@ -841,16 +859,27 @@ const Evaluation = () => {
       const data2 = slots || passSlot.slots
       const formData = new FormData();
       formData.append('passscore',data1);
-      formData.append('slots',data2)
+      formData.append('slots',data2);
+      setShowBackdrop(true);
       UpdatePassSlots.UPDATE_PASSSLOTS(formData)
       .then(res => {
         if(res.data.success === 1){
-          console.log(res)
-          
           setPassSlot(res.data.results[0])
-          swal('Updated')
+          setShowBackdrop(false);
+          swal({
+            title: "Success",
+            text: "Updated!",
+            icon: "success",
+            button: "OK",
+          });
         }else{
-          swal('Something Went Wrong')
+          setShowBackdrop(false);
+          swal({
+            title: "Failed",
+            text: "Something Went Wrong!",
+            icon: "error",
+            button: "OK",
+          });
         }
 
         }
@@ -863,6 +892,7 @@ const Evaluation = () => {
       );
     
       if (passSlot.slots === 0) {
+   
         swal({
           text: 'No Slots Available',
           timer: 2000,
@@ -881,14 +911,14 @@ const Evaluation = () => {
       }
     
       const decre = await DecrePassSlots.DECRE_PASSSLOTS();
-      console.log(decre);
-    
       if (decre.data.success === 1) {
         try {
+          setShowBackdrop(true);
           for (let i = 0; i < selectedRows.length; i++) {
             const row = selectedRows[i];
     
             if (passSlot.slots === 0) {
+              setShowBackdrop(false);
               swal({
                 text: 'No Slots Available',
                 timer: 2000,
@@ -897,27 +927,37 @@ const Evaluation = () => {
               });
               break; 
             }
-    
             const formData = new FormData();
             formData.append('email', row.email);
             formData.append('applicantNum', row.applicantNum);
-    
             const res = await SetApplicant.SET_APPLICANT(formData);
             if (res.data.success === 1) {
-              console.log(res);
               setPassSlot(decre.data.results[0]);
               setData(res.data.result);
               setPassscore(decre.data.results[0].passingscore);
               setSlots(decre.data.results[0].slots);
-              swal('Status Updated');
             } else {
-              swal('Something Went Wrong');
+              setShowBackdrop(false);
+              swal({
+                title: "Failed",
+                text: "Something Went Wrong!",
+                icon: "error",
+                button: "OK",
+              });
             }
           }
+          setShowBackdrop(false);
+          swal({
+            title: "Success",
+            text: "Updated!",
+            icon: "success",
+            button: "OK",
+          });
         } catch (error) {
           console.log(error);
         }
       } else {
+        setShowBackdrop(false);
         swal({
           text: 'No Slots Available',
           timer: 2000,
@@ -930,9 +970,9 @@ const Evaluation = () => {
     const FailedAll = async() =>{
       const selectedRows = failedSelectionModel.map((selectedRow) =>
         data.find((row) => row.applicantNum === selectedRow));
+        setShowBackdrop(true);
         for (let i=0 ;i<selectedRows.length;i++){
           const row = selectedRows[i];
-          console.log(row)
           const schoapplied = row.SchoIarshipApplied
           const batch = row.Batch
           const reason = 'Score did not Meet Passing Score'
@@ -946,29 +986,41 @@ const Evaluation = () => {
           formData.append('isSend',isSend)
           const response = await FailedUser.FAILED_USER(formData)
           if(response.data.success === 1){
-            swal('Status Updated')
             setData(response.data.result);
             setIsSend('No')
           }else{
-            swal('Something Went Wrong')
+            setShowBackdrop(false);
+            swal({
+              title: "Failed",
+              text: "Something Went Wrong!",
+              icon: "error",
+              button: "OK",
+            });
           }
         }
+        setShowBackdrop(false);
+        swal({
+          title: "Success",
+          text: "Done!",
+          icon: "success",
+          button: "OK",
+        });
     }
     const Access = async() =>{
       const formData = new FormData();
       formData.append('email',email);
       formData.append('password',password);
       formData.append('applicantNum',who)
+      setShowBackdrop(true);
       await GrantAccess.GRANT_ACCESS(formData)
       .then(res => {
         if(res.data.success === 1){
-          console.log(res)
           const ForEva = res.data.result?.filter(user => user.status === 'For Evaluation')
-          console.log(ForEva)
           setData(ForEva);
           setEmail('')
           setOpenDialog(false)
           setPassword('')
+          setShowBackdrop(false);
           swal({
             text: res.data.message,
             timer: 2000,
@@ -976,6 +1028,7 @@ const Evaluation = () => {
             icon: 'success',
           });
         }else{
+          setShowBackdrop(false);
           swal({
             text: res.data.message,
             timer: 2000,
@@ -998,6 +1051,9 @@ const Evaluation = () => {
     : '';
   return (
     <>
+              <StyledBackdrop open={showBackdrop}>
+                <CircularProgress color="inherit" />
+              </StyledBackdrop>
       <Dialog open={openDialog} onClose={handleCloseDialog}>
         <DialogTitle>Login to Grant Access</DialogTitle>
         <DialogContent>

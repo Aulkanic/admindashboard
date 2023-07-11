@@ -5,20 +5,29 @@ import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useContext } from "react";
 import swal from "sweetalert";
+import { styled, ThemeProvider, createTheme } from '@mui/material';
+import { Backdrop, CircularProgress } from '@mui/material';
+
+const theme = createTheme();
+const StyledBackdrop = styled(Backdrop)`
+  z-index: ${({ theme }) => theme.zIndex.drawer + 1};
+`;
 
 const Login = () => {
     const { loginUser } = useContext(admininfo);
     const [email, setEmail] = useState('')
     const [password, setPassword] = useState('')
     const navigate = useNavigate();
+    const [showBackdrop, setShowBackdrop] = useState(false);
 
     const handleSubmit = async(e) => {
       e.preventDefault();
+      setShowBackdrop(true);
       await login.ADMIN_LOGIN({email,password}).then((res) =>{
-      console.log(res.data)
       if(res.data.message === 'Success'){
         loginUser(res.data.userDetails)
         localStorage.setItem('AdminisOnline',true)
+        setShowBackdrop(false);
         navigate('/home');
         swal({
           text: 'Login Success',
@@ -28,6 +37,7 @@ const Login = () => {
         })
       }
      else{
+      setShowBackdrop(false);
       swal({
         text: `${res.data.message}`,
         timer: 2000,
@@ -42,6 +52,10 @@ const Login = () => {
     const handlerPasswordInput = (e) => setPassword(e.target.value)
 
   return (
+    <>
+              <StyledBackdrop open={showBackdrop}>
+                <CircularProgress color="inherit" />
+              </StyledBackdrop>
     <div className="login">
       <div className="container">
     <h3> BMCC Admin </h3>
@@ -71,7 +85,7 @@ const Login = () => {
         onChange={handlerPasswordInput}
         />
       </div>
-      <button className="btn btn-primary btn-block" 
+      <button className="myButton" 
                 onClick={handleSubmit}
                 >
         Login
@@ -80,6 +94,7 @@ const Login = () => {
     </form>
     </div>
     </div>
+    </>
   )
 }
 

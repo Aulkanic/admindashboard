@@ -15,6 +15,13 @@ import TextField from '@mui/material/TextField';
 import { ChromePicker } from 'react-color';
 import { useState } from 'react';
 import swal from 'sweetalert'
+import { styled, ThemeProvider, createTheme } from '@mui/material';
+import { Backdrop, CircularProgress } from '@mui/material';
+
+const theme = createTheme();
+const StyledBackdrop = styled(Backdrop)`
+  z-index: ${({ theme }) => theme.zIndex.drawer + 1};
+`;
 
 
 const Website = () => {
@@ -28,14 +35,16 @@ const Website = () => {
   const [carouimg,setCarou] = useState(null)
   const [carouimg1,setCarou1] = useState(null)
   const [carouimg2,setCarou2] = useState(null)
+  const [showBackdrop, setShowBackdrop] = useState(false);
 
   useEffect(() =>{
     async function Fetch(){
+      setShowBackdrop(true);
       const res = await Colorlist.FETCH_COLOR()
       const req = await WebImg.FETCH_WEB()
-      console.log(req)
       setImglist(req.data.result)
       setColorlist(res.data.result[0])
+      setShowBackdrop(false);
     }
     Fetch();
   },[])
@@ -46,10 +55,18 @@ const Website = () => {
     formData.append('color2',selectedColor1 || colorList.bgColor1)
     formData.append('color3',btnColor || colorList.btnColor)
     formData.append('color4',btnColor1 || colorList.btnTextColor)
+    setShowBackdrop(true);
     await Colors.COLOR(formData)
     .then((res) =>{
-      console.log("success",res);
       setColorlist(res.data.result[0])
+      setShowBackdrop(false);
+      swal({
+        title: "Success",
+        text: "Being Changed!",
+        icon: "success",
+        button: "OK",
+      });
+
     })
     .catch((err)=>console.error(`Error:${err}`))
   }
@@ -61,7 +78,7 @@ const Website = () => {
         { ImgFor: 'Carousel2', File: carouimg1 || (imgList[2] && imgList[2].File) },
         { ImgFor: 'Carousel3', File: carouimg2 || (imgList[3] && imgList[3].File) },
       ];
-  
+      setShowBackdrop(true);
       for(let i=0;i<Images.length;i++){
         const list = Images[i];
         const formData = new FormData()
@@ -69,16 +86,20 @@ const Website = () => {
         formData.append('ImgFor',list.ImgFor)
         await WebsiteImg.WEB_IMG(formData)
         .then((res) =>{
-          swal('Uploaded Successfully')
           setImglist(res.data.result[0])
         })
         .catch((err)=>{
           console.log(err)
         })
       }
+      setShowBackdrop(false);
+      swal('Uploaded Successfully')
     }
   return (
     <>
+    <StyledBackdrop open={showBackdrop}>
+      <CircularProgress color="inherit" />
+    </StyledBackdrop>
     <div className="scholarships">
         <Sidebar/>
     <div className="scholarshipsContainer" style={{backgroundColor:'#f1f3fa'}}>
@@ -138,7 +159,7 @@ const Website = () => {
               </Card>
                 <div>
                   <Typography>Background 1:</Typography>
-                  <div style={{width:'200px',height:'50px',border:'1px solid black',backgroundColor:selectedColor}}></div>
+                  <div style={{width:'200px',height:'50px',border:'1px solid black',backgroundColor:selectedColor || (colorList && colorList.bgColor)}}></div>
                 </div>
                 <div>
                   <Typography>Background 2:</Typography>

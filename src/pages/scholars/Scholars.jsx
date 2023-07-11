@@ -9,7 +9,6 @@ import { DataGrid} from '@mui/x-data-grid';
 import React, {useEffect, useState} from 'react'
 import { FetchingBmccScho, FetchingBmccSchoinfo,ScholarStand ,ListofReq,UserActivity} from '../../api/request';
 import './scholar.css'
-import { styled } from '@mui/material/styles';
 import Badge from '@mui/material/Badge';
 import Avatar from '@mui/material/Avatar';
 import { green, red } from '@mui/material/colors';
@@ -33,6 +32,13 @@ import Slide from '@mui/material/Slide';
 import AppBar from '@mui/material/AppBar';
 import Toolbar from '@mui/material/Toolbar';
 import IconButton from '@mui/material/IconButton';
+import { styled, ThemeProvider, createTheme } from '@mui/material';
+import { Backdrop, CircularProgress } from '@mui/material';
+
+const theme = createTheme();
+const StyledBackdrop = styled(Backdrop)`
+  z-index: ${({ theme }) => theme.zIndex.drawer + 1};
+`;
 
 const OnlineBadge = styled(Badge)(({ theme }) => ({
   '& .MuiBadge-badge': {
@@ -128,15 +134,18 @@ const Scholars = () => {
   const [selectedImage, setSelectedImage] = useState({});
   const [userLog,setUserlog] = useState([]);
   const [rowSelectionModel, setRowSelectionModel] = useState([]);
+  const [showBackdrop, setShowBackdrop] = useState(false);
 
   useEffect(() => {
     async function Fetch(){
+      setShowBackdrop(true);
       const scholars = await FetchingBmccScho.FETCH_SCHOLARS()
       const req = await ListofReq.FETCH_REQUIREMENTS()
       console.log(scholars)
       const data = scholars.data.Scholars.filter(data => data.status === 'Active')
       setData(data)
       setComplete(req.data.Requirements)
+      setShowBackdrop(false);
     }
     Fetch();
   }, []);
@@ -174,6 +183,7 @@ const Scholars = () => {
   };
   
   const view = async (data) => {
+    setShowBackdrop(true);
     const applicantNum = data.applicantNum;
     const response = await FetchingBmccSchoinfo.FETCH_SCHOLARSINFO(applicantNum);
     const req = await ListofReq.FETCH_REQUIREMENTS();
@@ -214,6 +224,7 @@ const Scholars = () => {
     setSchoInf2(response.data.ScholarInf.results2[0]);
     setSchoInf3(application);
     setSchoInf4(combinedData);
+    setShowBackdrop(false);
     setOpen(true);
   };
   
@@ -379,17 +390,17 @@ const Scholars = () => {
         }
     }
     const RemoveGrant = (data) =>{
-      console.log(data)
         const status = 'Revoke'
         const formData = new FormData();
         formData.append('applicantNum',data.applicantNum)
         formData.append('status',status)
         formData.append('email',data.email)
+        setShowBackdrop(true);
         ScholarStand.UPDATE_SCHOSTAND(formData)
         .then(res => {
-          console.log(res)
           const data = res.data.result?.filter(data => data.status === 'Active')
           setData(data)
+          setShowBackdrop(false);
           swal('Successfully Revoke')
         }
          )
@@ -400,6 +411,7 @@ const Scholars = () => {
       const selectedRows = rowSelectionModel.map((selectedRow) =>
       data.find((row) => row.applicantNum === selectedRow)
     );
+      setShowBackdrop(true);
       for (let i = 0; i < selectedRows.length; i++) {
         const row = selectedRows[i];
         const status = 'Revoke'
@@ -412,17 +424,20 @@ const Scholars = () => {
           console.log(res)
           const data = res.data.result?.filter(data => data.status === 'Active')
           setData(data)
-          swal('Successfully Revoke')
+ 
         }
          )
         .catch(err => console.log(err));
       }
+      setShowBackdrop(false);
+      swal('Successfully Revoke')
 
     }
     const NotifyAll = () =>{
       const selectedRows = rowSelectionModel.map((selectedRow) =>
       data.find((row) => row.applicantNum === selectedRow)
     );
+    setShowBackdrop(true);
       for (let i = 0; i < selectedRows.length; i++) {
         const row = selectedRows[i];
         const status = 'Hold'
@@ -435,12 +450,13 @@ const Scholars = () => {
           console.log(res)
           const data = res.data.result?.filter(data => data.status === 'Active')
           setData(data)
-          swal('Successfully Revoke')
+
         }
          )
         .catch(err => console.log(err));
       }
-
+      setShowBackdrop(false);
+      swal('Successfully Sent and Notify the Selected Users')
     }
     const renewalStatus = schoinf4.map((data) => {
       const imageFile = data.applicantData.length > 0 ? data.applicantData[0].File : 'https://drive.google.com/uc?id=1EXWK8SeamLARC7wnCTj4YXQhT74Z-zIn';
@@ -498,6 +514,9 @@ const Scholars = () => {
     
   return (
     <>
+              <StyledBackdrop open={showBackdrop}>
+                <CircularProgress color="inherit" />
+              </StyledBackdrop>
       <Dialog fullScreen open={imageModalOpen} onClose={closeImageModal}>
       <DialogTitle>{selectedImage.name}</DialogTitle>
       <DialogContent>
