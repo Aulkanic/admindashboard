@@ -1,17 +1,15 @@
 .scholars{
     display: flex;
-
+    background-color: #f1f3fa;  
     .scholarsContainer{
         flex: 7;
-
+        background-color: #f1f3fa;  
         .top{
-            -webkit-box-shadow: 2px 4px 10px 1px rgba(0, 0, 0, 0.47);
-            box-shadow: 2px 4px 10px 1px rgba(201, 201, 201, 0.47);
             margin: 20px;
             padding: 20px;
 
             h1{
-                color: #005427;
+                color: #666;
                 font-weight: 1000;
                 font-size: 35px;
             }

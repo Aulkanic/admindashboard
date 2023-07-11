@@ -81,10 +81,10 @@ const Website = () => {
     <>
     <div className="scholarships">
         <Sidebar/>
-    <div className="scholarshipsContainer">
+    <div className="scholarshipsContainer" style={{backgroundColor:'#f1f3fa'}}>
         <Navbar/>
-        <div style={{backgroundColor:'whitesmoke',padding:10}}>
-          <h1 style={{marginTop:10,marginLeft:30}}>Website Maintenance</h1>
+        <div style={{backgroundColor:'#f1f3fa',padding:10}}>
+          <h1 style={{marginTop:10,marginLeft:30,color:'#666'}}>Website Maintenance</h1>
           <Typography style={{marginTop:10,marginLeft:30}}>
           Keep your website's content fresh and relevant by regularly updating text, images, videos, and other media. This includes adding new content, removing outdated information, and ensuring all links are working correctly.
           </Typography>
@@ -151,7 +151,7 @@ const Website = () => {
                   </button>
                 </div>
                 <div style={{margin:'10px'}}>
-                  <Button variant='contained' onClick={setColor}>Save Changes</Button>
+                  <Button className='myButton' variant='contained' onClick={setColor}>Save Changes</Button>
                 </div>
               </div>
             </Card>
@@ -222,7 +222,7 @@ const Website = () => {
                   type='file' onChange={(e) =>setCarou2(e.target.files[0])} id="input-with-sx" label="" variant="outlined" />
                   </Button><br />
                   <div style={{margin:'10px',width:'100%',display:'flex',justifyContent:'center'}}>
-                  <Button onClick={upload} variant='contained'>Save All Images</Button>
+                  <Button className='myButton' onClick={upload} variant='contained'>Save All Images</Button>
                   </div>
                 </Box>
                     </Typography>

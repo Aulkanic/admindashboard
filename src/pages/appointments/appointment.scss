@@ -1,7 +1,7 @@
 .appointment{
     width: 100%;
     display: flex;
-    background-color: whitesmoke;
+    background-color: #f1f3fa;  
 
     .appointmentContainer{
         width: 90%;
@@ -11,7 +11,7 @@
             flex-direction: column;
 
             h1{
-                color: #005427;
+                color: #666;
                 font-weight: 1000;
                 font-size: 30px;
                 display: flex;

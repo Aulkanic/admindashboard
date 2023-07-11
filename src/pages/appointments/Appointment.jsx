@@ -819,7 +819,7 @@ try {
       renderCell: (params) => (
           <>
           <div style={{display:'flex',flexDirection:'column',height:'100%',width:'100%',justifyContent:'center',alignItems:'center'}}>
-          <ViewButton style={{marginLeft:'5px',backgroundColor:'blue',border:'none',padding:'3px',width:'100%',margin:'2px',color:'white',borderRadius:'5px',cursor:'pointer'}}
+          <ViewButton className="myButton"
           onClick={() => appointUserInfo(params.row)}>View Details</ViewButton>
           </div>
         </>
@@ -886,7 +886,7 @@ try {
         return(
           <>
           <div style={{width:"100%",display:'flex',flexDirection:'column',height:'100%',justifyContent:'center',alignItems:'center'}}>
-        <StyledButtonEdit sx={{width:'100%'}}
+        <StyledButtonEdit className="myButton1" sx={{width:'100%'}}
         onClick={() => Approved(params.row)}>
           SET QUALIFIED
           </StyledButtonEdit>
@@ -955,13 +955,13 @@ try {
         return(
           <>
           <div style={{display:'flex'}}>
-        {params.row.grantedAccess === '' || !params.row.grantedAccess ? (<StyledButtonAccess 
+        {params.row.grantedAccess === '' || !params.row.grantedAccess ? (<StyledButtonAccess className="myButton"
         onClick={() =>handleOpenDialog1(params.row)}>
-          Access</StyledButtonAccess>) : (<StyledButtonEdit style={{marginLeft:'5px',backgroundColor:'green',border:'none',padding:'3px',width:'100%',margin:'2px',color:'white',borderRadius:'5px',cursor:'pointer'}} 
+          Access</StyledButtonAccess>) : (<StyledButtonEdit className="myButton1"
         onClick={() => Approved(params.row)}>
           SET QUALIFIED
           </StyledButtonEdit>)}
-          <StyledButton
+          <StyledButton className="myButton2"
         onClick={() => handleOpenDialog2(params.row)}>
           Failed
           </StyledButton>
@@ -1035,7 +1035,7 @@ try {
         return(
           <>
           <div style={{width:"100%",display:'flex',flexDirection:'column',height:'100%',justifyContent:'center',alignItems:'center'}}>
-        <StyledButtonEdit sx={{width:'100%'}}
+        <StyledButtonEdit sx={{width:'100%'}} className="myButton1"
         onClick={() => Reapp(params.row)}>
           Reappoint
           </StyledButtonEdit>
@@ -1065,7 +1065,7 @@ try {
         <img src={selectedImage.image} alt="Full Image" style={{ width: '100%', height: '100%' }} />
       </DialogContent>
       <DialogActions>
-        <Button onClick={closeImageModal}>Close</Button>
+        <Button className="myButton" onClick={closeImageModal}>Close</Button>
       </DialogActions>
       </Dialog>
       {/* End of Dialog for Image Expandin */}
@@ -1100,8 +1100,8 @@ try {
             />
           </DialogContent>
           <DialogActions>
-            <Button onClick={handleCloseDialog1}>Cancel</Button>
-            <Button onClick={Access}>Submit</Button>
+            <Button className="myButton" onClick={handleCloseDialog1}>Cancel</Button>
+            <Button className="myButton1" onClick={Access}>Submit</Button>
           </DialogActions>
       </Dialog>
       {/* End of Dialog for Access */}
@@ -1124,8 +1124,8 @@ try {
           />
         </DialogContent>
         <DialogActions>
-          <Button onClick={handleCloseDialog}>Cancel</Button>
-          <Button onClick={Failed}>Submit</Button>
+          <Button className="myButton" onClick={handleCloseDialog}>Cancel</Button>
+          <Button className="myButton1" onClick={Failed}>Submit</Button>
         </DialogActions>
       </Dialog>
       <Modal
@@ -1151,10 +1151,10 @@ try {
         <Card style={{padding:'10px',height:'90%',overflow:'auto'}}>
           <h3>Select User To be Added in Appointed Schedule</h3>
         <div style={{width:'100%'}}>
-              <StyledButton onClick={handleClose}> X </StyledButton>
+              <StyledButton className="myButton2" onClick={handleClose}> X </StyledButton>
             </div> 
           <div style={{margin:'10px',width:'100%'}}>
-          <Button variant="contained" onClick={addOtherUser}>
+          <Button variant="contained" className="myButton1" onClick={addOtherUser}>
             ADD TO LIST
           </Button>
           </div>  
@@ -1198,10 +1198,10 @@ try {
             <Typography sx={{ ml: 2, flex: 1 }} variant="h6" component="div">
               Applicant Information
             </Typography>
-            <StyledButton autoFocus color="inherit" onClick={() =>InterviewResult('False')}>
+            <StyledButton className="myButton2" autoFocus color="inherit" onClick={() =>InterviewResult('False')}>
               REJECT
             </StyledButton>
-            <StyledButtonEdit sx={{marginLeft:'15px'}} autoFocus color="inherit" onClick={() =>InterviewResult('True')}>
+            <StyledButtonEdit className="myButton1" sx={{marginLeft:'15px'}} autoFocus color="inherit" onClick={() =>InterviewResult('True')}>
               PASS
             </StyledButtonEdit>
           </Toolbar>
@@ -1680,7 +1680,7 @@ try {
                                 <div style={{width:'100%',display:'flex',justifyContent:'space-around',alignItems:'center'}}>
                                 <Card style={{width:'100%',display:'flex',justifyContent:'space-around',alignItems:'center',padding:'10px'}}>
                                 <h3>{date}</h3>
-                                <StyledButton variant="contained" onClick={cancelAppointment}>Cancel Schedule</StyledButton>
+                                <StyledButton className="myButton2" variant="contained" onClick={cancelAppointment}>Cancel Schedule</StyledButton>
                                 </Card>
                                 </div>
                                 {Object.entries(timeBatch).map(([timeRange, data]) => {
@@ -1704,8 +1704,8 @@ try {
                                         
                                       </div>
                                       <div style={{display:'flex',flexDirection:'column',justifyContent:'space-around',height:'100%'}}>
-                                      <StyledButton variant="contained" size="small" onClick={() => cancelBatch(selectedAppointment.selectedDate,timeRange, data)}>Cancel Batch</StyledButton>
-                                      <Button variant="contained" size="small" onClick={() => handleOpen(selectedAppointment.selectedDate,timeBatch, data)}>Add User</Button>
+                                      <StyledButton className="myButton" variant="contained" size="small" onClick={() => cancelBatch(selectedAppointment.selectedDate,timeRange, data)}>Cancel Batch</StyledButton>
+                                      <Button className="myButton1" variant="contained" size="small" onClick={() => handleOpen(selectedAppointment.selectedDate,timeBatch, data)}>Add User</Button>
                                       </div>
                                       </Card>
                                       </div>
@@ -1882,11 +1882,11 @@ try {
                   ))}
             </Card>
             {activeState === 'Passed' && <div sx={{width:'90%',margin:'10px',display:'flex',justifyContent:'flex-end',flexDirection:'column',alignItems:'flex-end'}}>
-              <Button onClick={Addall} sx={{margin:'10px'}} variant='contained'>SET ALL SELECTED TO SCHOLARS</Button>
+              <Button className="myButton1" onClick={Addall} sx={{margin:'10px'}} variant='contained'>SET ALL SELECTED TO SCHOLARS</Button>
             </div>}
       {activeState === 'Reject' && <div sx={{width:'90%',margin:'10px',display:'flex',justifyContent:'flex-end',flexDirection:'column',alignItems:'flex-end'}}>
 
-                <Button onClick={FailedAll} sx={{margin:'10px'}} variant='contained'>SET FAILED THE SELECTED USERS</Button>
+                <Button className="myButton2" onClick={FailedAll} sx={{margin:'10px'}} variant='contained'>SET FAILED THE SELECTED USERS</Button>
             </div>}
         </Card>          
         </Box>}

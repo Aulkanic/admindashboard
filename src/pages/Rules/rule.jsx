@@ -102,12 +102,12 @@ const Rulesect = () => {
   }
   return (
     <>
-    <div className="scholarships" style={{backgroundColor:'whitesmoke'}}>
+    <div className="scholarships" style={{backgroundColor:'#f1f3fa'}}>
         <Sidebar/>
     <div className="scholarshipsContainer">
         <Navbar/>
         <div>
-          <h1 style={{marginTop:10,marginLeft:30}}>Set Up the different Rules and Information of Scholarhip Program</h1>
+          <h1 style={{marginTop:10,marginLeft:30,color:'#666'}}>Set Up the different Rules and Information of Scholarhip Program</h1>
           <div style={{display:'flex'}}>
           <div className='rulecon1'>
           <Card sx={{padding:'10px',width:'99%',marginBottom:'10px',backgroundColor:'blue',marginLeft:'10px'}}>
@@ -158,7 +158,9 @@ const Rulesect = () => {
                               </CardContent>
                         </Card>
                   </Box>
-                  <Button onClick={uploadLogo} variant='contained'>Save</Button>
+                  <div style={{width:'100%',display:'flex',alignItems:'center',justifyContent:'center'}}>
+            <Button className='myButton' onClick={uploadLogo} variant='contained'>Save</Button>
+            </div>
             </div>
           </div>
           <div className='rulecon'>
@@ -179,12 +181,14 @@ const Rulesect = () => {
                  <TextField value={priv3} placeholder={rulelist && rulelist.priv3} onChange={(e) => setPriv3(e.target.value)} label='College'/>
               </Card>
             </Box>
-            <Button onClick={setUpRule} variant='contained'>Save</Button>
+            <div style={{width:'100%',display:'flex',alignItems:'center',justifyContent:'center'}}>
+            <Button className='myButton' onClick={setUpRule} variant='contained'>Save</Button>
+            </div>
           </div>
 
           </div>
           </div>
-            </div>
+    </div>
     </div>
     </>
   )

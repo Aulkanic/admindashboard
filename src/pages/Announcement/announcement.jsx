@@ -22,8 +22,8 @@ const Announcement = () => {
     useEffect(() =>{
         async function Fetch(){
           let response = await FetchingAnnounce.FETCH_ANNOUNCE();
-          console.log(response)
-          setAnnounced(response.data.Announce)
+          const dat = response.data.Announce
+          setAnnounced(dat.reverse())
         }
         Fetch()
     },[])
@@ -76,14 +76,14 @@ const Announcement = () => {
         <Sidebar/>
     <div className="scholarshipsContainer">
         <Navbar/>
-        <Typography style={{display:'flex',fontSize:29,justifyContent:'center',fontWeight:'bold',marginBottom:'20px'}}>
+        <Typography style={{display:'flex',fontSize:29,justifyContent:'center',fontWeight:'bold',marginBottom:'20px',color:'#666'}}>
         Announcements
         </Typography>
-          <div style={{backgroundColor:'whitesmoke',width:'100%',height:'100vh',overflow:'auto',display:'flex',justifyContent:'center',alignItems:'center'}}>
+          <div style={{backgroundColor:'#f1f3fa',width:'100%',height:'100vh',overflow:'auto',display:'flex',justifyContent:'center',alignItems:'center'}}>
             <div style={{width:'90%',height:'100%',display:'flex'}}>
               <div style={{width:'50%',height:'100%'}}>
               <Card sx={{width:'100%',height:'max',paddingBottom:'30px'}}>
-                <Typography style={{marginTop:'10px',marginLeft:'15px',fontWeight:'bold',fontSize: 27}}>
+                <Typography style={{marginTop:'10px',marginLeft:'15px',fontWeight:'bold',fontSize: 27,color:'#666'}}>
                 Create Announcement
                 </Typography>
 
@@ -114,12 +114,12 @@ const Announcement = () => {
                   </Typography>
                 </CardContent>
                 <div style={{width:'100%',display:'flex',justifyContent:'center'}}>
-              <Button onClick={Create} variant='contained'>Announce</Button>
+              <Button className='myButton' onClick={Create} variant='contained'>Announce</Button>
               </div>
               </Card>
               </div>
               <div style={{marginLeft:'10px',marginRight:'10px',width:'50%',height:'600px',overflow:'auto',display:'flex',flexDirection:'column'}}>
-              <h1>Announced</h1>
+              <h1 style={{color:'#666'}}>Announced</h1>
                 {AnnouncedList}
               </div>
             </div>

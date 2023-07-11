@@ -270,7 +270,7 @@ const Scholars = () => {
       headerName: 'Actions',
       width: 90,
       renderCell: (params) => (
-        <ViewButton className="viewBtnScholars" onClick={() => view(params.row)}>View</ViewButton>
+        <ViewButton className="myButton" onClick={() => view(params.row)}>View</ViewButton>
       ),
     },
     {
@@ -306,7 +306,7 @@ const Scholars = () => {
         return (
           <>
           {Status ? (<><p>Updated</p></>) : (<>
-          <StyledButton onClick={() =>RemoveGrant(params.row)}> REMOVE GRANT </StyledButton>
+          <StyledButton className="myButton2" onClick={() =>RemoveGrant(params.row)}> REMOVE GRANT </StyledButton>
           </>)}
           </>
         )   
@@ -693,7 +693,7 @@ const Scholars = () => {
             
     <h1>Scholars</h1>
     <Box sx={{ height: 400, width: '100%' }}>
-      <DataGrid
+      <Card><DataGrid
         rows={data}
         columns={columns}
         getRowId={(row) => row.scholarId}
@@ -711,11 +711,11 @@ const Scholars = () => {
         rowSelectionModel={rowSelectionModel}
         disableRowSelectionOnClick
         isRowSelectable={(params) => !params.row.k || !params.row.k.Status}
-      />
+      /></Card>
               </Box>
             <div style={{width:'100%',display:'flex',justifyContent:'space-around',margin:'15px'}}>
-          <StyledButtonEdit onClick={NotifyAll}>Notify All Selected Scholars</StyledButtonEdit>
-          <StyledButton onClick={RemoveGrantAll}>Revoke Grant To All Selected Scholars</StyledButton>
+          <StyledButtonEdit className="myButton1" onClick={NotifyAll}>Notify All Selected Scholars</StyledButtonEdit>
+          <StyledButton className="myButton2" onClick={RemoveGrantAll}>Revoke Grant To All Selected Scholars</StyledButton>
           </div>
             </div>
         </div>
