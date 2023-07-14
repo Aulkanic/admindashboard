@@ -240,7 +240,6 @@ const check = async (data, index) => {
   const requirement_Name = data.requirement_Name;
   const applicantNum = applicantsInfo[0].applicantCode;
   const adminName = user.name;
-  const applicantCode = selectedInfo.applicantCode;
   const formData = new FormData();
   formData.append('Comments', Comments[requirement_Name]);
   formData.append('requirement_Name', requirement_Name);
@@ -438,8 +437,8 @@ const style = {
       editable: true,
     },
     {
-      field: 'status',
-      headerName: 'Status',
+      field: 'yearLevel',
+      headerName: 'Year Level',
       width: 150,
       editable: false,
     },
@@ -449,12 +448,11 @@ const style = {
       width: 100,
       editable: false,
       renderCell: (params) => {
-        console.log(params.row)
         const ForEva = docslisted.filter(user => user.schoName === params.row.SchoIarshipApplied && user.batch === params.row.Batch && user.docsfor === 'Application');
         const Subuser = documentaryListed.filter(user => user.applicantId === params.row.applicantNum && user.docsFor === 'Application');
         const approve = Subuser.filter(user => user.Status === 'Approved');
         const pval = `${Subuser.length}/${ForEva.length}`
-        console.log(Subuser)
+
         return(
         <>
         <p>{pval}</p>
@@ -498,8 +496,8 @@ const style = {
       headerName: 'Actions',
       width: 250,
       renderCell: (params) => {
-        const ForEva = docslisted.filter(user => user.schoName === params.row.SchoIarshipApplied);
-        const Subuser = documentaryListed.filter(user => user.applicantId === params.row.applicantNum);
+        const ForEva = docslisted.filter(user => user.schoName === params.row.SchoIarshipApplied && user.batch === params.row.Batch && user.docsfor === 'Application');
+        const Subuser = documentaryListed.filter(user => user.applicantId === params.row.applicantNum && user.docsFor === 'Application');
         const approve = Subuser.filter(user => user.Status === 'Approved');
         let isApproved = false;
         if(approve.length === ForEva.length){
@@ -562,11 +560,10 @@ const style = {
       width: 100,
       editable: false,
       renderCell: (params) => {
-        const ForEva = docslisted.filter(user => user.schoName === params.row.SchoIarshipApplied);
-        const Subuser = documentaryListed.filter(user => user.applicantId === params.row.applicantNum);
+        const ForEva = docslisted.filter(user => user.schoName === params.row.SchoIarshipApplied && user.batch === params.row.Batch && user.docsfor === 'Application');
+        const Subuser = documentaryListed.filter(user => user.applicantId === params.row.applicantNum && user.docsFor === 'Application');
         const approve = Subuser.filter(user => user.Status === 'Approved');
         const pval = `${Subuser.length}/${ForEva.length}`
-        console.log(Subuser)
         return(
         <>
         <p>{pval}</p>
@@ -579,11 +576,10 @@ const style = {
       width: 100,
       editable: false,
       renderCell: (params) => {
-        const ForEva = docslisted.filter(user => user.schoName === params.row.SchoIarshipApplied);
-        const Subuser = documentaryListed.filter(user => user.applicantId === params.row.applicantNum);
+        const ForEva = docslisted.filter(user => user.schoName === params.row.SchoIarshipApplied && user.batch === params.row.Batch && user.docsfor === 'Application');
+        const Subuser = documentaryListed.filter(user => user.applicantId === params.row.applicantNum && user.docsFor === 'Application');
         const approve = Subuser.filter(user => user.Status === 'Approved');
         const pval = `${approve.length}/${ForEva.length}`
-        console.log(Subuser)
         return(
         <>
         <p>{pval}</p>
@@ -657,11 +653,10 @@ const style = {
       width: 100,
       editable: false,
       renderCell: (params) => {
-        const ForEva = docslisted.filter(user => user.schoName === params.row.SchoIarshipApplied);
-        const Subuser = documentaryListed.filter(user => user.applicantId === params.row.applicantNum);
+        const ForEva = docslisted.filter(user => user.schoName === params.row.SchoIarshipApplied && user.batch === params.row.Batch && user.docsfor === 'Application');
+        const Subuser = documentaryListed.filter(user => user.applicantId === params.row.applicantNum && user.docsFor === 'Application');
         const approve = Subuser.filter(user => user.Status === 'Approved');
         const pval = `${Subuser.length}/${ForEva.length}`
-        console.log(Subuser)
         return(
         <>
         <p>{pval}</p>
@@ -674,11 +669,10 @@ const style = {
       width: 100,
       editable: false,
       renderCell: (params) => {
-        const ForEva = docslisted.filter(user => user.schoName === params.row.SchoIarshipApplied);
-        const Subuser = documentaryListed.filter(user => user.applicantId === params.row.applicantNum);
+        const ForEva = docslisted.filter(user => user.schoName === params.row.SchoIarshipApplied && user.batch === params.row.Batch && user.docsfor === 'Application');
+        const Subuser = documentaryListed.filter(user => user.applicantId === params.row.applicantNum && user.docsFor === 'Application');
         const approve = Subuser.filter(user => user.Status === 'Approved');
         const pval = `${approve.length}/${ForEva.length}`
-        console.log(Subuser)
         return(
         <>
         <p>{pval}</p>
@@ -726,7 +720,6 @@ const style = {
 
  const docusubmitted = applicantsDocs?.map((data, index) => {
   const { requirement_Name, File,Status } = data;
-  console.log(Status)
   const handleStatusChange = (e) => {
     const { value } = e.target;
     setStatusCheck((prevStatus) => ({
@@ -749,7 +742,7 @@ const style = {
               <div className="sublist"  key={index}>
                 <div className="actions">
                   <div >
-                    <Typography>Check the Submitted Requirements/Documents if it valid and viewable</Typography>
+                    
                     <FormControl style={{fontSize:15}}>
                       <FormLabel id="demo-row-radio-buttons-group-label">
                         Status:{Status}
@@ -843,17 +836,17 @@ const style = {
         return documentaryListed.filter(doc => doc.applicantId === applicantId);
       };
       const getRequiredDocuments = (scholarshipName) => {
-        return docslisted.filter(req => req.schoName === scholarshipName);
+        return docslisted.filter(req => req.schoName === scholarshipName.SchoIarshipApplied && req.batch === scholarshipName.Batch && req.docsfor === 'Application');
       };
     
       const isRequirementCompleted = (applicantId, requirementName) => {
         const applicantDocuments = getDocumentsByApplicant(applicantId);
-        console.log(applicantDocuments)
         return applicantDocuments.some(doc => doc.requirement_Name === requirementName && doc.Status === 'Approved');
       };
     
       const groupedUsers = filteredRows.reduce((groups, user) => {
-        const requiredDocuments = getRequiredDocuments(user.SchoIarshipApplied);
+        const requiredDocuments = getRequiredDocuments(user);
+        console.log(requiredDocuments)
         const completed = requiredDocuments.every(req =>
           isRequirementCompleted(user.applicantNum, req.requirementName)
         );
@@ -873,13 +866,13 @@ const style = {
       <CircularProgress color="inherit" />
     </StyledBackdrop>
   {/* Dialog for Image Expandin */}
-    <Dialog open={imageModalOpen} onClose={closeImageModal} maxWidth="lg">
+    <Dialog open={imageModalOpen} onClose={closeImageModal} fullScreen>
   <DialogTitle>Full Image</DialogTitle>
   <DialogContent>
     <img src={selectedImage} alt="Full Image" style={{ width: '100%', height: '100%' }} />
   </DialogContent>
   <DialogActions>
-    <Button className='myButton' onClick={closeImageModal}>Close</Button>
+    <Button className='myButton' sx={{color:'white'}} onClick={closeImageModal}>Close</Button>
   </DialogActions>
     </Dialog>
   {/* End of Dialog for Image Expandin */}
@@ -892,7 +885,8 @@ const style = {
           <div className="docusersub">
           <div style={{width:'100%'}}>
               <StyledButton className='myButton2' onClick={handleClose}> X </StyledButton>
-            </div> 
+          </div> 
+          <Typography sx={{fontSize:'25px'}}>Check the Submitted Requirements/Documents if it valid and viewable</Typography>
             {docusubmitted.length > 0 ? (<div className="clas"> 
           {docusubmitted}
           </div>) : (<div style={{display:'flex',justifyContent:'center',alignItems:'center',width:'100%',height:'100%',flexDirection:'column'}}>
@@ -1051,7 +1045,7 @@ const style = {
                       }}
                     >
                       <CancelIcon sx={{ mr: 0.5 }} fontSize="inherit" />
-                      Incomplete Documents({groupedUsers.incomplete.length})
+                      Incomplete Approved Documents({groupedUsers.incomplete.length})
                     </Link>
                   </Button>
       </Breadcrumbs>      
@@ -1129,9 +1123,11 @@ const style = {
     </Box>
     </Card>
       </div>
-      {activeState === 'Complete' && <div sx={{width:'90%',margin:'10px',display:'flex',justifyContent:'flex-end',flexDirection:'column',alignItems:'flex-end'}}>
+      <div style={{width:'97%',margin:'10px',display:'flex',justifyContent:'flex-end',alignItems:'flex-end'}}>
+      {activeState === 'Complete' && 
+      <div>
               <Button className="myButton" onClick={Addall} sx={{margin:'10px'}} variant='contained'>ADD ALL SELECTED TO QUALIFIED LIST</Button>
-            </div>}
+      </div>}
       {activeState === 'Incomplete' && <div sx={{width:'90%',margin:'10px',display:'flex',justifyContent:'flex-end',flexDirection:'column',alignItems:'flex-end'}}>
                   <Checkbox
                     checked={checked}
@@ -1140,6 +1136,7 @@ const style = {
                   /><span>Sent Notification</span>
                 <Button className="myButton2" onClick={FailedAll} sx={{margin:'10px'}} variant='contained'>SET FAILED ALL SELECTED USERS</Button>
             </div>}
+      </div>
     </div>
     </div>
     </div>
