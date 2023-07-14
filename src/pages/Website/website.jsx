@@ -2,7 +2,7 @@ import React, { useEffect } from 'react'
 import Navbar from "../../components/navbar/Navbar"
 import Sidebar from "../../components/sidebar/Sidebar"
 import './website.css'
-import { Colorlist,Colors,WebImg,WebsiteImg,CreateTrivia,FetchTrivia,FetchFaqs,CreateFaqs,UpdateFaqs } from '../../api/request'
+import { Colorlist,Colors,WebImg,WebsiteImg,CreateTrivia,FetchTrivia,FetchFaqs,CreateFaqs,UpdateFaqs,DeleteFaqs } from '../../api/request'
 import Card from '@mui/material/Card';
 import CardContent from '@mui/material/CardContent';
 import CardMedia from '@mui/material/CardMedia';
@@ -17,11 +17,24 @@ import { useState } from 'react';
 import swal from 'sweetalert'
 import { styled, ThemeProvider, createTheme } from '@mui/material';
 import { Backdrop, CircularProgress } from '@mui/material';
+import ArrowForwardIosIcon from '@mui/icons-material/ArrowForwardIos';
+import Accordion from '@mui/material/Accordion';
+import AccordionSummary from '@mui/material/AccordionSummary';
+import AccordionDetails from '@mui/material/AccordionDetails';
+import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
+import Dialog from '@mui/material/Dialog';
+import DialogActions from '@mui/material/DialogActions';
+import DialogContent from '@mui/material/DialogContent';
+import DialogContentText from '@mui/material/DialogContentText';
+import DialogTitle from '@mui/material/DialogTitle';
+import AddIcon from '@mui/icons-material/Add';
 
 const theme = createTheme();
 const StyledBackdrop = styled(Backdrop)`
   z-index: ${({ theme }) => theme.zIndex.drawer + 1};
 `;
+
+
 
 
 const Website = () => {
@@ -41,9 +54,37 @@ const Website = () => {
   const [trivtitle,setTrivtitle] = useState('')
   const [trivcon,setTrivcon] = useState('')
   const [faqs,setFaqs] = useState([])
+  const [oldfaqs,setOldFaqs] = useState([])
   const [questions,setQuestions] = useState('');
   const [answer,setAnswer] = useState('')
   const [showBackdrop, setShowBackdrop] = useState(false);
+  const [expanded, setExpanded] = useState(false);
+  const [open, setOpen] = useState(false);
+  const [open1, setOpen1] = useState(false);
+
+  const handleClickOpen = (data) => {
+    setOldFaqs(data)
+    setOpen(true);
+  };
+
+  const handleClose = () => {
+    setAnswer('')
+    setQuestions('')
+    setOpen(false);
+  };
+  const handleClickOpen1 = () => {
+    setOpen1(true);
+  };
+
+  const handleClose1 = () => {
+    setAnswer('')
+    setQuestions('')
+    setOpen1(false);
+  };
+
+  const handleChange = (panel) => (event, newExpanded) => {
+    setExpanded(newExpanded ? panel : false);
+  };
 
   useEffect(() =>{
     async function Fetch(){
@@ -55,7 +96,7 @@ const Website = () => {
       setImglist(req.data.result)
       setColorlist(res.data.result[0])
       setTrivia(triv.data.Trivias[0])
-      setFaqs(fqs.data.result[0])
+      setFaqs(fqs.data.result)
       setShowBackdrop(false);
     }
     Fetch();
@@ -138,8 +179,129 @@ const Website = () => {
     })
     .catch((err)=>console.error(`Error:${err}`))    
   }
+  const createFaqs = async() =>{
+    const formData = new FormData()
+    formData.append('answer',answer)
+    formData.append('questions',questions)
+    await CreateFaqs.CREATE_FAQS(formData)
+    .then((res) =>{
+      setFaqs(res.data.result)
+      setShowBackdrop(false);
+      setAnswer('')
+      setQuestions('')
+      swal({
+        title: "Success",
+        text: "Created Successfully!",
+        icon: "success",
+        button: "OK",
+      });
+
+    })
+    .catch((err)=>console.error(`Error:${err}`)) 
+  }
+  const editFaqs = async() =>{
+    console.log(oldfaqs)
+    const formData = new FormData()
+    formData.append('answer',answer || oldfaqs.faqsAnswers)
+    formData.append('id',oldfaqs.faqsId)
+    formData.append('question',questions || oldfaqs.faqsQuestions)
+    await UpdateFaqs.UPDATE_FAQS(formData)
+    .then((res) =>{
+      setFaqs(res.data.result)
+      setShowBackdrop(false);
+      setAnswer('')
+      setQuestions('')
+      swal({
+        title: "Success",
+        text: "Updated Successfully!",
+        icon: "success",
+        button: "OK",
+      });
+
+    })
+    .catch((err)=>console.error(`Error:${err}`)) 
+  }
+  const deleteFaqs = async(data) =>{
+    const id = data.faqsId
+    await DeleteFaqs.DELETE_FAQS(id)
+    .then((res) =>{
+      console.log(res)
+      setFaqs(res.data.result)
+      setShowBackdrop(false);
+      setAnswer('')
+      setQuestions('')
+      swal({
+        title: "Success",
+        text: "Deleted Successfully!",
+        icon: "success",
+        button: "OK",
+      });
+
+    })
+    .catch((err)=>console.error(`Error:${err}`)) 
+  }
+
   return (
     <>
+      <Dialog open={open} onClose={handleClose}>
+        <DialogTitle>Edit Faqs</DialogTitle>
+        <DialogContent>
+          <TextField
+            autoFocus
+            margin="dense"
+            id="name"
+            value={questions}
+            onChange={(e) =>setQuestions(e.target.value)}
+            label={`Question: ${oldfaqs.faqsQuestions}`}
+            type="text"
+            fullWidth
+            variant="outlined"
+          />
+        <TextField
+          id="outlined-textarea"
+          label="Answer"
+          value={answer}
+          onChange={(e) =>setAnswer(e.target.value)}
+          placeholder={oldfaqs.faqsAnswers}
+          multiline
+          rows={5}
+          fullWidth
+        />
+        </DialogContent>
+        <DialogActions>
+          <Button sx={{color:'white'}} className='myButton' onClick={handleClose}>Cancel</Button>
+          <Button sx={{color:'white'}}  className='myButton1' onClick={editFaqs}>Save Changes</Button>
+        </DialogActions>
+      </Dialog>
+      <Dialog open={open1} onClose={handleClose1}>
+        <DialogTitle>Create Faqs</DialogTitle>
+        <DialogContent>
+          <TextField
+            autoFocus
+            value={questions}
+            onChange={(e) => setQuestions(e.target.value)}
+            margin="dense"
+            id="name"
+            label={`Question:`}
+            type="text"
+            fullWidth
+            variant="outlined"
+          />
+        <TextField
+          value={answer}
+          onChange={(e) =>setAnswer(e.target.value)}
+          id="outlined-textarea"
+          label="Answer"
+          multiline
+          rows={5}
+          fullWidth
+        />
+        </DialogContent>
+        <DialogActions>
+          <Button sx={{color:'white'}} className='myButton' onClick={handleClose1}>Cancel</Button>
+          <Button sx={{color:'white'}}  className='myButton1' onClick={createFaqs}>Add Faqs</Button>
+        </DialogActions>
+      </Dialog>
     <StyledBackdrop open={showBackdrop}>
       <CircularProgress color="inherit" />
     </StyledBackdrop>
@@ -358,7 +520,32 @@ const Website = () => {
                       <Typography sx={{fontSize:'20px',fontWeight:'1000',color:'white'}}>FAQs</Typography>
                     </Card>  
                 <div>
-                  
+                  <div style={{margin:'10px'}}>
+                    <Button sx={{color:'white'}} className='myButton1' onClick={handleClickOpen1}><AddIcon />Add Faqs</Button>
+                  </div>
+                  {faqs?.map((data,index) =>{
+                    const num = index
+                    return (
+                      <>
+                        <Accordion expanded={expanded === `panel${num}`} onChange={handleChange(`panel${num}`)}>
+                          <AccordionSummary
+                            expandIcon={<ExpandMoreIcon />}
+                            aria-controls="panel4bh-content"
+                            id="panel4bh-header"
+                          >
+                            <Typography sx={{ width: '33%', flexShrink: 0,fontWeight:700}}> {data.faqsQuestions}</Typography>
+                            <Button className='myButton' onClick={() =>handleClickOpen(data)} sx={{color:'white',marginLeft:'50%'}}>Edit</Button>
+                            <Button className='myButton2' onClick={() =>deleteFaqs(data)} sx={{color:'white',marginLeft:'2%'}}>Delete</Button>
+                          </AccordionSummary>
+                          <AccordionDetails>
+                            <Typography>
+                              {data.faqsAnswers}
+                            </Typography>
+                          </AccordionDetails>
+                        </Accordion>                      
+                      </>
+                    )
+                  })}
                 </div>
 
                 </div>                              

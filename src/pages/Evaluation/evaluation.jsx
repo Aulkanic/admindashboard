@@ -21,6 +21,11 @@ import CancelIcon from '@mui/icons-material/Cancel';
 import FormatListBulletedOutlinedIcon from '@mui/icons-material/FormatListBulletedOutlined';
 import { useContext } from "react";
 import { admininfo } from "../../App";
+import CloseIcon from '@mui/icons-material/Close';
+import Slide from '@mui/material/Slide';
+import AppBar from '@mui/material/AppBar';
+import Toolbar from '@mui/material/Toolbar';
+import IconButton from '@mui/material/IconButton';
 import Link from '@mui/material/Link';
 import Checkbox from '@mui/material/Checkbox';
 import { styled, ThemeProvider, createTheme } from '@mui/material';
@@ -30,6 +35,9 @@ const theme = createTheme();
 const StyledBackdrop = styled(Backdrop)`
   z-index: ${({ theme }) => theme.zIndex.drawer + 1};
 `;
+const Transition = React.forwardRef(function Transition(props, ref) {
+  return <Slide direction="up" ref={ref} {...props} />;
+});
 
 const Evaluation = () => {
   const { loginUser,user } = useContext(admininfo);
@@ -100,8 +108,9 @@ const Evaluation = () => {
             ListofSub.FETCH_SUB(applicantNum),
             UserScore.USER_SCORE(applicantNum)
           ]);
-          setApplicantInfo(response[0].data.results);
-          setUserScore(response[2].data.result)
+          console.log(response[2].data.result[0])
+          setApplicantInfo(response[0].data.results[0]);
+          setUserScore(response[2].data.result[0])
           setShowBackdrop(false);
           handleOpen()
         } catch (error) {
@@ -224,7 +233,7 @@ const Evaluation = () => {
               }
               return(
                 <>
-                <div style={{width:"100%",display:'flex',flexDirection:'column',height:'100%',justifyContent:'center',alignItems:'center'}}>
+                <div style={{width:"100%",display:'flex',height:'100%',justifyContent:'center',alignItems:'center'}}>
               {status === 'Passed' && <button className='myButton1' 
               onClick={() => setFirsttoSecStat(params.row)}>
                 Add to Applicants List
@@ -236,7 +245,7 @@ const Evaluation = () => {
               onClick={() => setFirsttoSecStat(params.row)}>
                 Add to Applicants List
                 </button>)}
-                <button className='myButton2' 
+                <button style={{marginLeft:'10px'}} className='myButton2' 
               onClick={() => failed(params.row)}>
                 Failed
                 </button>
@@ -386,19 +395,19 @@ const Evaluation = () => {
           {
             field: 'grantedAccess',
             headerName: 'Details',
-            width: 250,
+            width: 350,
             renderCell: (params) => {
               console.log(params.row)
               return(
                 <>
-                <div style={{width:"100%",display:'flex',flexDirection:'column',height:'100%',justifyContent:'center',alignItems:'center'}}>
+                <div style={{width:"100%",display:'flex',height:'100%',justifyContent:'center',alignItems:'center'}}>
               {params.row.grantedAccess === '' || !params.row.grantedAccess ? (<button className='myButton'
               onClick={() =>handleOpenDialog(params.row)}>
                 Access</button>) : (<button className='myButton1' 
               onClick={() => setFirsttoSecStat(params.row)}>
                 Add to Applicants List
                 </button>)}
-                <button className='myButton2'
+                <button className='myButton2' style={{marginLeft:'5px'}}
               onClick={() => failed(params.row)}>
                 Failed
                 </button>
@@ -411,399 +420,6 @@ const Evaluation = () => {
       const handleTabChange = (event, newValue) => {
         setTabValue(newValue);
       };
-    const applicantInfoPA = applicantsInfo?.map((data) =>{
-        return (
-          <div className="PA">
-            <div className="Pinfo">
-              <div className="fstcolm">
-                <div>
-            <TextField
-            disabled
-            sx={{color:'black'}}
-            id="outlined-disabled"
-            label="First Name"
-            defaultValue={data.firstName}
-          />
-          </div>
-          <div>
-            <TextField
-            disabled
-            id="outlined-disabled"
-            label="Last Name"
-            defaultValue={data.lastName}
-          />
-          </div>
-          <div>
-            <TextField
-            disabled
-            id="outlined-disabled"
-            label="Middle Name"
-            defaultValue={data.middleName}
-          />
-          </div>
-          <div>
-            <TextField
-            disabled
-            id="outlined-disabled"
-            label="Gender"
-            defaultValue={data.gender}
-          />
-          </div>
-          </div>
-          <div className="fstcolm">
-          <div>
-          <TextField
-            disabled
-            id="outlined-disabled"
-            label="Citizenship"
-            defaultValue={data.citizenship}
-          />
-          </div>
-          <div>
-          <TextField
-            disabled
-            id="outlined-disabled"
-            label="Birthday"
-            defaultValue={data.birthday}
-          />
-          </div>
-          <div>
-          <TextField
-            disabled
-            id="outlined-disabled"
-            label="Age"
-            defaultValue={data.age}
-          />
-          </div>
-          <div>
-          <TextField
-            disabled
-            id="outlined-disabled"
-            label="Birth of Place"
-            defaultValue={data.birthPlace}
-          />
-          </div>
-          </div>
-          <div className="fstcolm">
-          <div>
-          <TextField
-            disabled
-            id="outlined-disabled"
-            label="Contact Number"
-            defaultValue={data.contactNum}
-          />
-          </div>
-          <div>
-          <TextField
-            disabled
-            id="outlined-disabled"
-            label="Email"
-            defaultValue={data.email}
-          />
-          </div>
-          <div>
-          <TextField
-            disabled
-            id="outlined-disabled"
-            label="Permanent Address"
-            defaultValue={data.paddress}
-          />
-          </div>
-          <div>
-          <TextField
-            disabled
-            id="outlined-disabled"
-            label="Current Address"
-            defaultValue={data.caddress}
-          />
-          </div>
-          </div>
-            </div>
-        </div>
-          )});
-  
-    const applicantInfoFB = applicantsInfo?.map((data) =>{
-    const score = userscore?.map((data) =>{
-      return data
-    })
-      return (
-        <>
-        <div className="PA">
-          <div className="Finfo">
-          <h1>Mother Information</h1>
-          <div className="fmbgconlisclmn">
-          <div>
-          <TextField
-            disabled
-            id="outlined-disabled"
-            label="First Name"
-            defaultValue={data.motherName}
-          />
-          </div>
-          <div>
-          <TextField
-            disabled
-            id="outlined-disabled"
-            label="Last Name"
-            defaultValue={data.motherlName}
-          />
-          </div>
-          <div>
-          <TextField
-            disabled
-            id="outlined-disabled"
-            label="Middle Name"
-            defaultValue={data.mothermName}
-          />
-          </div>
-          </div>
-          <div className="fmbgconlisclmn">
-          <div>
-          <TextField
-            disabled
-            id="outlined-disabled"
-            label="Occupation"
-            defaultValue={data.mothermName}
-          />
-          </div>
-          <div>
-          <TextField
-            disabled
-            id="outlined-disabled"
-            label="Highest Educational Attainment"
-            defaultValue={data.motherEduc}
-          />
-          </div>
-          </div>
-          <h1>Father Information</h1>
-          <div className="fmbgconlisclmn">
-          <div>
-          <TextField
-            disabled
-            id="outlined-disabled"
-            label="First Name"
-            defaultValue={data.fatherName}
-          />
-          </div>
-          <div>
-          <TextField
-            disabled
-            id="outlined-disabled"
-            label="Last Name"
-            defaultValue={data.fatherlName}
-          />
-          </div>
-          <div>
-          <TextField
-            disabled
-            id="outlined-disabled"
-            label="Middle Name"
-            defaultValue={data.fathermname}
-          />
-          </div>
-          </div>
-          <div className="fmbgconlisclmn">
-          <div>
-          <TextField
-            disabled
-            id="outlined-disabled"
-            label="Occupation"
-            defaultValue={data.fatherOccu}
-          />
-          </div>
-          <div>
-          <TextField
-            disabled
-            id="outlined-disabled"
-            label="Highest Educational Attainment"
-            defaultValue={data.fatherEduc}
-          />
-          </div>
-          </div>
-          <div className="fmbgconlisclmn">
-          <div className='withscore'>
-          <span>Score</span>
-          <input style={{width:'40px',height:'50px',textAlign:'center'}} type="number" disabled value={score[0].fntotal}/>
-          <TextField
-            disabled
-            id="outlined-disabled"
-            label="Number of Family Members"
-            defaultValue={data.famNum}
-          />
-          </div>
-          </div>
-          <h1>Guardian Information</h1>
-          <div className="fmbgconlisclmn">
-          <div>
-          <TextField
-            disabled
-            id="outlined-disabled"
-            label="Full Name"
-            defaultValue={data.guardianName}
-          />
-          </div>
-          <div>
-          <TextField
-            disabled
-            id="outlined-disabled"
-            label="Contact Name"
-            defaultValue={data.guardianContact}
-          />
-          </div>
-          <div>
-          <TextField
-            disabled
-            id="outlined-disabled"
-            label="Relationship"
-            defaultValue={data.relationship}
-          />
-          </div>
-          </div>
-          </div>
-        </div>
-        </>
-          )})
-    const applicantInfoEcB = applicantsInfo?.map((data) =>{
-      const score = userscore?.map((data) =>{
-        return data
-      })
-      return (
-        <>
-        <div className="PA">
-          <div className="Einfo">
-          <div className="fstcolm">
-          <div className='withscore'>
-          <span>Score</span>
-            <input style={{width:'40px',height:'50px',textAlign:'center'}} type="number" disabled value={score[0].wltotal}/>
-          <TextField
-            disabled
-            id="outlined-disabled"
-            label="Where do you Live?"
-            defaultValue={data.wereLive}
-          />
-          </div>
-          <div className='withscore'>
-          <span>Score</span>
-            <input style={{width:'40px',height:'50px',textAlign:'center'}} type="number" disabled value={score[0].hltotal}/>
-          <TextField
-            disabled
-            id="outlined-disabled"
-            label="Living in Marilao"
-            defaultValue={data.howLong}
-          />
-          </div>
-          <div className='withscore'>
-          <span>Score</span>
-            <input style={{width:'40px',height:'50px',textAlign:'center'}} type="number" disabled value={score[0].ostotal}/>
-          <TextField
-            disabled
-            id="outlined-disabled"
-            label="House Ownership"
-            defaultValue={data.ownerShip}
-          />
-          </div>
-          <div className='withscore'>
-          <span>Score</span>
-            <input style={{width:'40px',height:'50px',textAlign:'center'}} type="number" disabled value={score[0].mitotal}/>
-          <TextField
-            disabled
-            id="outlined-disabled"
-            label="Parent/Guardian Monthly Income"
-            defaultValue={data.monthIncome}
-          />
-          </div>
-          <div className='withscore'>
-          <TextField
-            disabled
-            id="outlined-disabled"
-            label="Baranggay"
-            defaultValue={data.baranggay}
-          />
-          </div>
-          </div>
-        </div>
-        </div>
-        </>
-          )})
-  
-    const applicantInfoEdB = applicantsInfo?.map((data) =>{
-      const score = userscore?.map((data) =>{
-        return data
-      })
-      return (
-        <>
-        <div className="PA">
-        <div className="fmbgconlisclmn">
-          <div>
-          <TextField
-            disabled
-            id="outlined-disabled"
-            label="Year Level"
-            defaultValue={data.currentYear}
-          />
-          </div>
-          <div>
-          <span>Score</span>
-          <input style={{width:'40px',height:'50px',textAlign:'center'}} type="number" disabled value={score[0].tstotal}/>
-          <TextField
-            disabled
-            id="outlined-disabled"
-            label="Type of School"
-            defaultValue={data.typeSchool}
-          />
-          </div>
-          <div>
-          <TextField
-            disabled
-            id="outlined-disabled"
-            label="Degree Program/Course(Priority Course)"
-            defaultValue={data.course}
-          />
-          </div>
-          </div><br />
-          <div className="fmbgconlisclmn">
-          <div>
-          <TextField
-            disabled
-            id="outlined-disabled"
-            label="School Name"
-            defaultValue={data.currentSchool}
-          />
-          </div>
-          <div>
-          <TextField
-            disabled
-            id="outlined-disabled"
-            label="School Address"
-            defaultValue={data.address}
-          />
-          </div>
-          </div>
-          <div className="fmbgconlisclmn">
-          <div>
-          <span>Score</span>
-          <input style={{width:'40px',height:'50px',textAlign:'center'}} type="number" disabled value={score[0].gwatotal}/>
-          <TextField
-            disabled
-            id="outlined-disabled"
-            label="General Weighted Average"
-            defaultValue={data.gwa}
-          />
-          </div>
-          <div>
-          <span>Score</span>
-          <input style={{width:'40px',height:'50px',textAlign:'center'}} type="number" disabled value={score[0].fatotal}/>
-          <TextField
-            disabled
-            id="outlined-disabled"
-            label="Financial Support"
-            defaultValue={data.financialSupport}
-          />
-          </div>
-          </div>
-        </div>
-        </>
-          )})
 
     const TabPanel = ({ children, value, index }) => (
             <div role="tabpanel" hidden={value !== index}>
@@ -826,6 +442,7 @@ const Evaluation = () => {
         const formData = new FormData();
         formData.append('email',data.email);
         formData.append('applicantNum',data.applicantNum)
+        setShowBackdrop(true);
         SetApplicant.SET_APPLICANT(formData)
         .then(res => {
           if(res.data.success === 1){
@@ -834,9 +451,21 @@ const Evaluation = () => {
             setData(res.data.result);
             setPassscore(decre.data.results[0].passingscore);
             setSlots(decre.data.results[0].slots);
-            swal('Status Updated');
+            setShowBackdrop(false);
+            swal({
+              text: 'Status Updated',
+              timer: 2000,
+              buttons: false,
+              icon: "success",
+            })
           }else{
-            swal('Something Went Wrong')
+            setShowBackdrop(false);
+            swal({
+              text: 'Something Went Wrong',
+              timer: 2000,
+              buttons: false,
+              icon: "error",
+            })
           }
 
           }
@@ -1084,48 +713,249 @@ const Evaluation = () => {
           />
         </DialogContent>
         <DialogActions>
-          <Button onClick={handleCloseDialog}>Cancel</Button>
-          <Button onClick={Access}>Submit</Button>
+          <Button className='myButton' sx={{color:'white'}} onClick={handleCloseDialog}>Cancel</Button>
+          <Button className='myButton1' sx={{color:'white'}} onClick={Access}>Submit</Button>
         </DialogActions>
       </Dialog>
-    <Modal className="modalContainer"
+    <Dialog
+        fullScreen
         open={open}
         onClose={handleClose}
+        TransitionComponent={Transition}
       >
-        <Box sx={{
-          margin: 'auto',
-          padding: 2,
-          backgroundColor: 'white',
-          border: 1 ,
-          color: '#005427',
-          borderRadius: 5,
-          height:'100%',
-          overflow:'auto'
-        }}>
-       
-           <div className="buttonclosed" >
-            <button onClick={handleClose}> X </button>
+        <AppBar sx={{ position: 'relative' }}>
+          <Toolbar>
+            <IconButton
+              edge="start"
+              color="inherit"
+              onClick={handleClose}
+              aria-label="close"
+            >
+              <CloseIcon />
+            </IconButton>
+            <Typography sx={{ ml: 2, flex: 1 }} variant="h6" component="div">
+              Applicant Information
+            </Typography>
+          </Toolbar>
+        </AppBar>
+      <Box sx={{width:'100%',padding:'10px',height:'100%',display:'flex',backgroundColor:'whitesmoke'}}>
+         <div style={{width:'98%',padding:'10px'}}>
+          <Card sx={{width:'100%',height:'100%'}}>
+           <Card sx={{display:'flex',justifyContent:'center',alignItems:'center',backgroundColor:'blue',color:'white'}}><h1>APPLICATION FORM </h1></Card>
+           <Card>
+            <Typography sx={{paddingLeft:'60px',fontSize:'20px',fontWeight:'700'}}>Personal Information</Typography>
+            <div style={{display:'flex',width:'95%',padding:'10px'}}>
+              <div style={{width:'30%'}}>
+                <Typography>
+                  First Name:{applicantsInfo.firstName}
+                </Typography>
+                <Typography>
+                  Last Name:{applicantsInfo.lastName}
+                </Typography>
+                <Typography>
+                  Middle Name:{applicantsInfo.middleName}
+                </Typography>
+                <Typography>
+                  Gender:{applicantsInfo.gender}
+                </Typography>
+              </div>
+              <div style={{width:'30%'}}>
+              <Typography>Citizenship: {applicantsInfo.citizenship}</Typography>
+              <Typography>Date of Birth: {applicantsInfo.birthday}</Typography>
+              <Typography>Age: {applicantsInfo.age}</Typography>
+              <Typography>Birth Of Place: {applicantsInfo.birthPlace}</Typography>
+              </div>
+              <div style={{width:'37%'}}>
+              <Typography>Contact Number: {applicantsInfo.contactNum}</Typography>
+              <Typography>Email: {applicantsInfo.Email}</Typography>
+              <Typography>Permanent Address: {applicantsInfo.caddress}</Typography>
+              <Typography>Current Address: {applicantsInfo.paddress}</Typography>
+              </div>
             </div>
-        
-        <Tabs
-          value={tabValue} 
-          onChange={handleTabChange}   
-          variant="scrollable"
-          scrollButtons="auto">
-        
-        <Tab label="Personal Information" />
-        <Tab label="Family Background" />
-        <Tab label="Economic Background" />
-        <Tab label="Educational Background" />
-      </Tabs>
-      
-      <TabPanel value={tabValue} index={0}>{applicantInfoPA}</TabPanel>
-      <TabPanel value={tabValue} index={1}>{applicantInfoFB}</TabPanel>
-      <TabPanel value={tabValue} index={2}>{applicantInfoEcB}</TabPanel>
-      <TabPanel value={tabValue} index={3}>{applicantInfoEdB}</TabPanel>
-
-        </Box>
-    </Modal>
+            <Typography sx={{paddingLeft:'60px',fontSize:'20px',fontWeight:'700'}}>Economic Background</Typography>
+            <div style={{display:'flex',width:'95%',padding:'10px'}}>
+              <div style={{width:'100%'}}>
+                <div style={{display:'flex'}}>
+                <Typography sx={{whiteSpace:'nowrap'}}>
+                 Where Do you Live: {applicantsInfo.wereLive} -
+                </Typography>
+                <p style={{backgroundColor:'green',textAlign:'center',padding:'5px',color:'white',borderRadius:'3px'}}>{userscore.wltotal}</p>
+                </div>
+                <div style={{display:'flex'}}>
+                <Typography>
+                  How Long you Live in Marilao: {applicantsInfo.howLong} - 
+                </Typography>
+                <p style={{backgroundColor:'green',textAlign:'center',padding:'5px',color:'white',borderRadius:'3px'}}>{userscore.hltotal}</p>
+                </div>
+                <div style={{display:'flex'}}>
+                <Typography>
+                  House Ownership: {applicantsInfo.ownerShip} -
+                </Typography>
+                <p style={{backgroundColor:'green',textAlign:'center',padding:'5px',color:'white',borderRadius:'3px'}}>{userscore.ostotal}</p>
+                </div>
+              </div>
+              <div style={{width:'100%'}}>
+                <div style={{display:'flex'}}>
+                <Typography>
+                  Parent(s)/Guardian Annual Gross Income: {applicantsInfo.monthIncome} -
+                </Typography>
+                <p style={{backgroundColor:'green',textAlign:'center',padding:'5px',color:'white',borderRadius:'3px'}}>{userscore.mitotal}</p>
+                </div>
+                <Typography>
+                  Baranggay:{applicantsInfo.baranggay}
+                </Typography>
+              </div>
+            </div>
+            <Typography sx={{paddingLeft:'60px',fontSize:'20px',fontWeight:'700'}}>Family Information</Typography>
+            <div style={{width:'100%',display:'flex'}}>
+            <div style={{width:'30%',padding:'10px'}}>
+            <Typography sx={{paddingLeft:'20px',fontSize:'18px',fontWeight:'500',textDecoration:'underline'}}>Mother Information</Typography>
+            <div>
+              <div style={{width:'100%'}}>
+                <Typography>
+                  First Name:{applicantsInfo.motherName}
+                </Typography>
+                <Typography>
+                  Last Name:{applicantsInfo.motherlName}
+                </Typography>
+                <Typography>
+                  Middle Name:{applicantsInfo.mothermName}
+                </Typography>
+              </div>
+              <div style={{width:'100%'}}>
+                <Typography>
+                  Occupation:{applicantsInfo.motherOccu}
+                </Typography>
+                <Typography>
+                  Highest Educational Attainment:{applicantsInfo.motherEduc}
+                </Typography>
+              </div>
+            </div>
+            </div>
+            <div style={{width:'30%',padding:'10px'}}>
+            <Typography sx={{paddingLeft:'20px',fontSize:'18px',fontWeight:'500',textDecoration:'underline'}}>Father Information</Typography>
+            <div style={{width:'95%',padding:'10px'}}>
+              <div style={{width:'100%'}}>
+                <Typography>
+                  First Name:{applicantsInfo.fatherName}
+                </Typography>
+                <Typography>
+                  Last Name:{applicantsInfo.fatherlName}
+                </Typography>
+                <Typography>
+                  Middle Name:{applicantsInfo.fathermName}
+                </Typography>
+              </div>
+              <div style={{width:'100%'}}>
+                <Typography>
+                  Occupation:{applicantsInfo.fatherOccu}
+                </Typography>
+                <Typography>
+                  Highest Educational Attainment:{applicantsInfo.fatherEduc}
+                </Typography>
+              </div>
+            </div>
+            </div>
+            <div style={{width:'30%',padding:'10px'}}>
+            <Typography sx={{paddingLeft:'20px',fontSize:'18px',fontWeight:'500',textDecoration:'underline'}}>Other Information</Typography>
+              <div style={{display:'flex'}}>
+              <Typography>Number of Family Members: {applicantsInfo.famNum} -</Typography>
+              <p style={{backgroundColor:'green',textAlign:'center',padding:'5px',color:'white',borderRadius:'3px'}}>{userscore.fntotal}</p>
+              </div>
+              <Typography>Guardian: {applicantsInfo.guardianName}</Typography>
+              <Typography>Contact Number: {applicantsInfo.guardianContact}</Typography>
+              <Typography>Relationship: {applicantsInfo.relationship}</Typography>
+            </div>
+            </div>
+            <Typography sx={{paddingLeft:'60px',fontSize:'20px',fontWeight:'700'}}>Educational Background</Typography>
+            <div style={{display:'flex',width:'95%',padding:'10px'}}>
+              <div style={{width:'100%'}}>
+                <Typography>
+                  Year Level:{applicantsInfo.currentYear}
+                </Typography>
+                <div style={{display:'flex'}}>
+                <Typography>
+                  Type of School: {applicantsInfo.typeSchool} -
+                </Typography>
+                <p style={{backgroundColor:'green',textAlign:'center',padding:'5px',color:'white',borderRadius:'3px'}}>{userscore.tstotal}</p>
+                </div>
+                <Typography>
+                  School Name:{applicantsInfo.currentSchool}
+                </Typography>
+                <Typography>
+                  School Address:{applicantsInfo.address}
+                </Typography>
+              </div>
+              <div style={{width:'100%'}}>
+                <Typography>
+                  Degree Program/Course(Priority Course):{applicantsInfo.course}
+                </Typography>
+                <div style={{display:'flex'}}>
+                <Typography>
+                  General Weighted Average: {applicantsInfo.gwa} - 
+                </Typography>
+                <p style={{backgroundColor:'green',textAlign:'center',padding:'5px',color:'white',borderRadius:'3px'}}>{userscore.gwatotal}</p>
+                </div>
+                <div style={{display:'flex'}}>
+                <Typography>
+                  Financial Support: {applicantsInfo.financialSupport} -
+                </Typography>
+                <p style={{backgroundColor:'green',textAlign:'center',padding:'5px',color:'white',borderRadius:'3px'}}>{userscore.fatotal}</p>
+                </div>
+              </div>
+            </div>
+            <div style={{display:'flex',width:'95%',padding:'10px',justifyContent:'space-between'}}>
+              <div style={{width:'30%'}}>
+                <Typography sx={{paddingLeft:'20px',fontSize:'18px',fontWeight:'500',textDecoration:'underline'}}>Elementary Background</Typography>
+                <Typography>
+                  School Name:{applicantsInfo.elemSchool}
+                </Typography>
+                <Typography>
+                  Address:{applicantsInfo.elemAddress}
+                </Typography>
+                <Typography>
+                  School Year:{applicantsInfo.elemYear}
+                </Typography>
+                <Typography>
+                  Award:{applicantsInfo.elemAward}
+                </Typography>
+              </div>
+              <div style={{width:'30%'}}>
+              <Typography sx={{paddingLeft:'20px',fontSize:'18px',fontWeight:'500',textDecoration:'underline'}}>Highschool Background</Typography>
+              <Typography>
+                  School Name:{applicantsInfo.highSchool}
+                </Typography>
+                <Typography>
+                  Address:{applicantsInfo.highAddress}
+                </Typography>
+                <Typography>
+                  School Year:{applicantsInfo.highYear}
+                </Typography>
+                <Typography>
+                  Award:{applicantsInfo.highAward}
+                </Typography>
+              </div>
+              <div style={{width:'30%'}}>
+              <Typography sx={{paddingLeft:'20px',fontSize:'18px',fontWeight:'500',textDecoration:'underline'}}>College Background</Typography>
+              <Typography>
+                  School Name:{applicantsInfo.collegeSchool}
+                </Typography>
+                <Typography>
+                  Address:{applicantsInfo.collegeAddress}
+                </Typography>
+                <Typography>
+                  School Year:{applicantsInfo.collegeYear}
+                </Typography>
+                <Typography>
+                  Award:{applicantsInfo.collegeAward}
+                </Typography>
+              </div>
+            </div>
+           </Card>
+          </Card>
+         </div>
+      </Box>
+    </Dialog>
     <div style={{width:'100%'}}>
            <div className="scholars">
         <Sidebar/>

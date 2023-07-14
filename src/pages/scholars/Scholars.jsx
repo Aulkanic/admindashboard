@@ -142,7 +142,7 @@ const Scholars = () => {
       const scholars = await FetchingBmccScho.FETCH_SCHOLARS()
       const req = await ListofReq.FETCH_REQUIREMENTS()
       console.log(scholars)
-      const data = scholars.data.Scholars.filter(data => data.status === 'Active')
+      const data = scholars.data.Scholars.filter(data => data.status === 'Active' || data.status === 'Hold')
       setData(data)
       setComplete(req.data.Requirements)
       setShowBackdrop(false);
@@ -398,7 +398,7 @@ const Scholars = () => {
         setShowBackdrop(true);
         ScholarStand.UPDATE_SCHOSTAND(formData)
         .then(res => {
-          const data = res.data.result?.filter(data => data.status === 'Active')
+          const data = res.data.result?.filter(data => data.status === 'Active' || data.status === 'Hold')
           setData(data)
           setShowBackdrop(false);
           swal('Successfully Revoke')
@@ -422,7 +422,7 @@ const Scholars = () => {
         ScholarStand.UPDATE_SCHOSTAND(formData)
         .then(res => {
           console.log(res)
-          const data = res.data.result?.filter(data => data.status === 'Active')
+          const data = res.data.result?.filter(data => data.status === 'Active' || data.status === 'Hold')
           setData(data)
  
         }
@@ -434,12 +434,16 @@ const Scholars = () => {
 
     }
     const NotifyAll = () =>{
+      console.log(data)
       const selectedRows = rowSelectionModel.map((selectedRow) =>
       data.find((row) => row.applicantNum === selectedRow)
     );
+
     setShowBackdrop(true);
       for (let i = 0; i < selectedRows.length; i++) {
+
         const row = selectedRows[i];
+        console.log(row)
         const status = 'Hold'
         const formData = new FormData();
         formData.append('applicantNum',row.applicantNum)
@@ -448,7 +452,7 @@ const Scholars = () => {
         ScholarStand.UPDATE_SCHOSTAND(formData)
         .then(res => {
           console.log(res)
-          const data = res.data.result?.filter(data => data.status === 'Active')
+          const data = res.data.result?.filter(data => data.status === 'Active' || data.status === 'Hold')
           setData(data)
 
         }
@@ -715,7 +719,7 @@ const Scholars = () => {
       <Card><DataGrid
         rows={data}
         columns={columns}
-        getRowId={(row) => row.scholarId}
+        getRowId={(row) => row.applicantNum}
         scrollbarSize={10}
         initialState={{
           pagination: {

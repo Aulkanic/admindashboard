@@ -227,3 +227,6 @@ export const UpdateFaqs = {
 export const FetchFaqs = {
     FETCH_FAQS: () => axiosInstance.get(Endpoints.FETCH_FAQS)
 }
+export const DeleteFaqs = {
+    DELETE_FAQS: (data) => axiosInstance.post(Endpoints.DELETE_FAQS+data)
+}

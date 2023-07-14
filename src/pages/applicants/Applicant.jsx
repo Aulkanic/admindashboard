@@ -60,7 +60,7 @@ const StyledButtonEdit = styled(Button)`
 const StyledButtonAccess = styled(Button)`
   && {
     background-color: yellow;
-    color:green;
+    color:white;
     margin-right:10px;
     transition: opacity 0.3s ease;
 
@@ -449,8 +449,9 @@ const style = {
       width: 100,
       editable: false,
       renderCell: (params) => {
-        const ForEva = docslisted.filter(user => user.schoName === params.row.SchoIarshipApplied);
-        const Subuser = documentaryListed.filter(user => user.applicantId === params.row.applicantNum);
+        console.log(params.row)
+        const ForEva = docslisted.filter(user => user.schoName === params.row.SchoIarshipApplied && user.batch === params.row.Batch && user.docsfor === 'Application');
+        const Subuser = documentaryListed.filter(user => user.applicantId === params.row.applicantNum && user.docsFor === 'Application');
         const approve = Subuser.filter(user => user.Status === 'Approved');
         const pval = `${Subuser.length}/${ForEva.length}`
         console.log(Subuser)
@@ -466,11 +467,10 @@ const style = {
       width: 100,
       editable: false,
       renderCell: (params) => {
-        const ForEva = docslisted.filter(user => user.schoName === params.row.SchoIarshipApplied);
-        const Subuser = documentaryListed.filter(user => user.applicantId === params.row.applicantNum);
+        const ForEva = docslisted.filter(user => user.schoName === params.row.SchoIarshipApplied && user.batch === params.row.Batch && user.docsfor === 'Application');
+        const Subuser = documentaryListed.filter(user => user.applicantId === params.row.applicantNum && user.docsFor === 'Application');
         const approve = Subuser.filter(user => user.Status === 'Approved');
         const pval = `${approve.length}/${ForEva.length}`
-        console.log(Subuser)
         return(
         <>
         <p>{pval}</p>
@@ -508,12 +508,11 @@ const style = {
         return(
         <>
         <div style={{display:'flex'}}>
-
       {isApproved && <StyledButtonEdit className='myButton1' onClick={() => ApplicantCheck(params.row)}>Set Qualified</StyledButtonEdit>}
       {!isApproved && (<>
-                {params.row.grantedAccess === '' || !params.row.grantedAccess ? (<StyledButtonAccess className='myButton'
+                {params.row.grantedAccess === '' || !params.row.grantedAccess ? (<StyledButtonAccess sx={{color:'white'}} className='myButton'
               onClick={() =>handleOpenDialog1(params.row)}>
-                Access</StyledButtonAccess>) : (<StyledButtonEdit className='myButton1'
+                Access</StyledButtonAccess>) : (<StyledButtonEdit sx={{color:'white'}} className='myButton1'
               onClick={() => ApplicantCheck(params.row)}>
                 SET QUALIFIED
                 </StyledButtonEdit>)}

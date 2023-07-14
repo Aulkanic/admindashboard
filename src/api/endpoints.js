@@ -73,6 +73,7 @@ const Endpoints = {
     CREATE_FAQS:'Faqs/Create',
     FETCH_FAQS:'Faqs/Fetch',
     UPDATE_FAQS:'Faqs/Update',
+    DELETE_FAQS:'Faqs/Delete/',
 }
 
 export default Endpoints
