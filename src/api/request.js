@@ -212,3 +212,18 @@ export const Rule = {
 export const Logos = {
     LOGOS: (data) => axiosInstance.patch(Endpoints.LOGOS,data)
 }
+export const CreateTrivia = {
+    TRIVIA: (data) => axiosInstance.patch(Endpoints.CREATE_TRIVIA,data)
+}
+export const FetchTrivia = {
+    ETCH_TRIVIA: () => axiosInstance.get(Endpoints.FETCH_TRIVIA)
+}
+export const CreateFaqs = {
+    CREATE_FAQS: (data) => axiosInstance.post(Endpoints.CREATE_FAQS,data)
+}
+export const UpdateFaqs = {
+    UPDATE_FAQS: (data) => axiosInstance.patch(Endpoints.UPDATE_FAQS,data)
+}
+export const FetchFaqs = {
+    FETCH_FAQS: () => axiosInstance.get(Endpoints.FETCH_FAQS)
+}

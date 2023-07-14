@@ -68,6 +68,11 @@ const Endpoints = {
     FETCH_LOGOS:'Dynamic/Logolist',
     LOGOS:'Dynamic/Logo',
     RULE:'Dynamic/Rule',
+    CREATE_TRIVIA:'trivia/create',
+    FETCH_TRIVIA:'trivia/TriviaoftheDay',
+    CREATE_FAQS:'Faqs/Create',
+    FETCH_FAQS:'Faqs/Fetch',
+    UPDATE_FAQS:'Faqs/Update',
 }
 
 export default Endpoints

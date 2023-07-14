@@ -13,10 +13,9 @@ import Avatar from '@mui/material/Avatar';
 import TextField from '@mui/material/TextField';
 import swal from 'sweetalert';
 import { FetchingAnnounce,CreateAnnouncement } from '../../api/request';
-import { styled, ThemeProvider, createTheme } from '@mui/material';
+import { styled, ThemeProvider } from '@mui/material';
 import { Backdrop, CircularProgress } from '@mui/material';
 
-const theme = createTheme();
 const StyledBackdrop = styled(Backdrop)`
   z-index: ${({ theme }) => theme.zIndex.drawer + 1};
 `;
