@@ -28,8 +28,8 @@ const Home = () => {
 
     async function Fetch(){
       const scholars = await FetchingBmccScho.FETCH_SCHOLARS()
-      console.log(scholars)
-      setTotalscho(scholars.data.Scholars)
+      const scho = scholars.data.Scholars?.filter(data => data.status === 'Active' || data.status === 'Hold')
+      setTotalscho(scho)
       const response = await ApplicantsRequest.ALL_APPLICANTS()
       const appdatali = response.data.results;
       console.log(appdatali)

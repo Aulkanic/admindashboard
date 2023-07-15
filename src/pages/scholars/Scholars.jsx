@@ -306,14 +306,13 @@ const Scholars = () => {
       headerName: 'Actions',
       width: 170,
       renderCell: (params) =>{
-        const renewal = isComplete.results1.filter(docs => docs.schoName === params.row.scholarshipApplied)
+        const renewal = isComplete.results1.filter(docs => docs.schoName === params.row.scholarshipApplied && docs.batch === params.row.Batch)
         const renewal1 = renewal.filter(docs => docs.docsfor === 'Renewal')
         const renewalSubmitted = isComplete.results2.filter(docs => docs.applicantId === parseFloat(params.row.applicantNum) && docs.docsFor === 'Renewal');
         const Status = renewalSubmitted.length === renewal1.length
         params.row.k = {
           Status: Status,
         };
-        console.log(params.row)
         return (
           <>
           {Status ? (<><p>Updated</p></>) : (<>
@@ -329,7 +328,7 @@ const Scholars = () => {
     setValue(newValue);
   };
   const OnlineAvatar = ({ user}) => {
-    console.log(user)
+
     return (
       <>
         {user.isOnline === 'True' ? (

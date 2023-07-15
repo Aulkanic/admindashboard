@@ -47,6 +47,7 @@ import Slide from '@mui/material/Slide';
 import { TransitionProps } from '@mui/material/transitions';
 import { styled, ThemeProvider, createTheme } from '@mui/material';
 import { Backdrop, CircularProgress } from '@mui/material';
+import NoAccountsIcon from '@mui/icons-material/NoAccounts';
 
 const theme = createTheme();
 const StyledBackdrop = styled(Backdrop)`
@@ -139,7 +140,7 @@ const StyledButtonEdit = styled(Button)`
 const StyledButtonAccess = styled(Button)`
   && {
     background-color: yellow;
-    color:green;
+    color:white;
     margin-right:10px;
     transition: opacity 0.3s ease;
 
@@ -302,7 +303,7 @@ const Appointment = () => {
     }
     
     const currentDate = moment();
-    const officeHourStart = moment('08:00 AM', 'hh:mm A');
+    const officeHourStart = moment('08:59 AM', 'hh:mm A');
     const officeHourEnd = moment('05:00 PM', 'hh:mm A');
     const date = new Date(appointmentDate).toDateString();
     const targetDate = moment(date);
@@ -413,13 +414,15 @@ const Appointment = () => {
     setShowBackdrop(true);
     const res = await FetchingUserAppdetails.FETCH_USERDET(applicantNum);
     const info = res.data.result[0];
-    const email = info.Email
+    const email = data.Email
     const adminName = user.name;
-    const applicantCode = info.applicantCode;
+    const applicantCode = data.applicantCode;
+    const schedDate = data.schedDate
     const formData = new FormData();
     formData.append('adminName',adminName);
     formData.append('applicantNum',applicantNum);
-    formData.append('applicantCode',applicantCode)
+    formData.append('applicantCode',applicantCode);
+    formData.append('schedDate',schedDate);
     formData.append('email',email)
       Reaapointed.RE_APPOINT(formData)
       .then(res => {
@@ -643,10 +646,9 @@ const Addall = async () => {
 
   const events = {};
   const ongoingEvents = appointedList.filter((data) =>{
-    return data.statusApp === 'Ongoing'
+    return data.statusApp === 'Ongoing' && data.isInterview === 'No'
   })
   ongoingEvents.forEach((appointment) => {
-    console.log(appointment)
     const { Reason, schedDate, end } = appointment;
     const startDate = new Date(schedDate);
     
@@ -915,7 +917,7 @@ try {
     },
     {
       field: 'insert',
-      headerName: 'Details',
+      headerName: 'Actions',
       width: 150,
       renderCell: (params) => (
           <>
@@ -981,7 +983,7 @@ try {
     },
     {
       field: 'score',
-      headerName: 'Details',
+      headerName: 'Actions',
       width: 150,
       renderCell: (params) => {
         return(
@@ -1049,16 +1051,16 @@ try {
     },
     {
       field: 'grantedAccess',
-      headerName: 'Details',
+      headerName: 'Actions',
       width: 250,
       renderCell: (params) => {
         console.log(params.row)
         return(
           <>
           <div style={{display:'flex'}}>
-        {params.row.grantedAccess === '' || !params.row.grantedAccess ? (<StyledButtonAccess className="myButton"
+        {params.row.grantedAccess === '' || params.row.grantedAccess === 'No' ? (<StyledButtonAccess sx={{color:'white'}} className="myButton"
         onClick={() =>handleOpenDialog1(params.row)}>
-          Access</StyledButtonAccess>) : (<StyledButtonEdit className="myButton1"
+          Access</StyledButtonAccess>) : (<StyledButtonEdit sx={{color:'white'}} className="myButton1"
         onClick={() => Approved(params.row)}>
           SET QUALIFIED
           </StyledButtonEdit>)}
@@ -1130,7 +1132,7 @@ try {
     },
     {
       field: 'score',
-      headerName: 'Details',
+      headerName: 'Actions',
       width: 150,
       renderCell: (params) => {
         return(
@@ -1146,7 +1148,84 @@ try {
     },
   
   ];
-
+  const Norescolumns = [
+    { field: 'applicantNum', headerName: 'ID', width: 70 },
+    {
+      field: 'Name',
+      headerName: 'Name',
+      width: 150,
+      editable: true,
+    },
+    {
+      field: 'Status',
+      headerName: 'Status',
+      width: 100,
+      editable: true,
+    },
+    {
+      field: 'Reason',
+      headerName: 'Agenda',
+      width: 150,
+      editable: true,
+    },
+    {
+      field: 'schedDate',
+      headerName: 'Appointment Date',
+      width: 150,
+      editable: true,
+    },
+    {
+      field: 'Time',
+      headerName: 'Time',
+      width: 150,
+      renderCell: (params) => {
+        const time = `${params.row.timeStart} - ${params.row.timeEnd}`
+        return(
+        <>
+        <p>{time}</p>
+        </>
+      )},
+    },
+    {
+      field: 'Location',
+      headerName: 'Location',
+      width: 150,
+      editable: true,
+    },
+    {
+      field: 'yearLevel',
+      headerName: 'Year Level',
+      width: 150,
+      editable: true,
+    },
+    {
+      field: 'grantedAccess',
+      headerName: 'Actions',
+      width: 250,
+      renderCell: (params) => {
+        console.log(params.row)
+        return(
+          <>
+          <div style={{display:'flex'}}>
+        {params.row.grantedAccess === '' || !params.row.grantedAccess ? (<StyledButtonAccess className="myButton"
+        onClick={() =>handleOpenDialog1(params.row)}>
+          Access</StyledButtonAccess>) : (<StyledButtonEdit className="myButton1"
+        onClick={() => Approved(params.row)}>
+          SET QUALIFIED
+          </StyledButtonEdit>)}
+          <StyledButton className="myButton2"
+        onClick={() => handleOpenDialog2(params.row)}>
+          Failed
+          </StyledButton>
+        </div>
+        </>)
+      },
+    },
+  
+  ];
+  const appointList = appointedList && appointedList.length > 0
+  ? appointedList.filter(user => user.canGo === 'Yes')
+  : '';
   const PassedInterview = appointedList && appointedList.length > 0
   ? appointedList.filter(user => user.isPassed === 'True')
   : '';
@@ -1156,7 +1235,10 @@ try {
   const ReappointList = appointedList && appointedList.length > 0
   ? appointedList.filter(user => user.canGo === 'No')
   : '';
-  
+  const Noresponse = appointedList && appointedList.length > 0
+  ? appointedList.filter(user => user.canGo === 'Pending')
+  : '';
+  console.log(activeState)
   return (
     <>
       <StyledBackdrop open={showBackdrop}>
@@ -1169,7 +1251,7 @@ try {
         <img src={selectedImage.image} alt="Full Image" style={{ width: '100%', height: '100%' }} />
       </DialogContent>
       <DialogActions>
-        <Button className="myButton" onClick={closeImageModal}>Close</Button>
+        <Button className="myButton" sx={{color:'white'}} onClick={closeImageModal}>Close</Button>
       </DialogActions>
       </Dialog>
       {/* End of Dialog for Image Expandin */}
@@ -1204,8 +1286,8 @@ try {
             />
           </DialogContent>
           <DialogActions>
-            <Button className="myButton" onClick={handleCloseDialog1}>Cancel</Button>
-            <Button className="myButton1" onClick={Access}>Submit</Button>
+            <Button sx={{color:'white'}} className="myButton" onClick={handleCloseDialog1}>Cancel</Button>
+            <Button sx={{color:'white'}} className="myButton1" onClick={Access}>Submit</Button>
           </DialogActions>
       </Dialog>
       {/* End of Dialog for Access */}
@@ -1842,7 +1924,7 @@ try {
         </Box>}
         {value === 2 &&
         <Box sx={{display:'flex',height:'100%',padding:'10px',width:'auto'}}>
-        <Card style={{height:'100%',width:'95%'}}>
+        <Card style={{height:'100%',width:'100%'}}>
         <Breadcrumbs sx={{backgroundColor:'green'}} aria-label="breadcrumb">
                   <Button onClick={() => setActiveState('All')}>
                     <Link
@@ -1852,7 +1934,7 @@ try {
                       }}
                     >
                       <FormatListBulletedOutlinedIcon fontSize="inherit" />
-                      All({appointedList.length})
+                      All({appointList.length})
                     </Link>
                   </Button>
                   <Button onClick={() => setActiveState('Passed')}>
@@ -1888,12 +1970,23 @@ try {
                       Reappoint List({ReappointList.length})
                     </Link>
                   </Button>
+                  <Button onClick={() => setActiveState('Nores')}>
+                    <Link
+                      underline="none"
+                      sx={{
+                        color: activeState === 'Nores' ? 'white' : 'black',
+                      }}
+                    >
+                      <CancelIcon sx={{ mr: 0.5 }} fontSize="inherit" />
+                      No Response({Noresponse.length})
+                    </Link>
+                  </Button>
       </Breadcrumbs>  
-            <Card sx={{width:'100%%'}}>
-            {activeState === 'All' && (appointedList && appointedList.length > 0 ? (
+            <Card sx={{width:'100%'}}>
+                  {activeState === 'All' && (appointList && appointList.length > 0 ? (
               <DataGrid
                 sx={{width:'100%'}}
-                rows={appointedList}
+                rows={appointList}
                 columns={Appointedcolumns}
                 getRowId={(row) => row.applicantNum}
                 scrollbarSize={10}
@@ -1908,10 +2001,11 @@ try {
                 disableRowSelectionOnClick
                 />
                 ) : (
-                  <div style={{width:'100%',height:'100%',display:'flex',justifyContent:'center',alignItems:'center',backgroundColor:'whitesmoke'}}>
-                  <p style={{ textAlign: 'center',fontSize:30,fontWeight:700,fontStyle:'italic' }}>No records</p>
-                  </div>
-                ))}
+                  <div style={{width:'100%',height:'400px',display:'flex',justifyContent:'center',alignItems:'center',backgroundColor:'whitesmoke',flexDirection:'column'}}>
+                  <NoAccountsIcon sx={{width:'200px',height:'200px'}}/>
+                <p style={{ textAlign: 'center',fontSize:30,fontWeight:700,fontStyle:'italic' }}>No records</p>
+                </div>
+                  ))}
                   {activeState === 'Passed' && (PassedInterview && PassedInterview.length > 0 ? (
                     <DataGrid
                       rows={PassedInterview}
@@ -1932,7 +2026,8 @@ try {
                       disableRowSelectionOnClick
                     />
                   ) : (
-                    <div style={{width:'100%',height:'100%',display:'flex',justifyContent:'center',alignItems:'center',backgroundColor:'whitesmoke'}}>
+                    <div style={{width:'100%',height:'400px',display:'flex',justifyContent:'center',alignItems:'center',backgroundColor:'whitesmoke',flexDirection:'column'}}>
+                      <NoAccountsIcon sx={{width:'200px',height:'200px'}}/>
                     <p style={{ textAlign: 'center',fontSize:30,fontWeight:700,fontStyle:'italic' }}>No records</p>
                     </div>
                   ))}
@@ -1956,7 +2051,8 @@ try {
                       disableRowSelectionOnClick
                     />
                   ) : (
-                    <div style={{width:'100%',height:'100%',display:'flex',justifyContent:'center',alignItems:'center',backgroundColor:'whitesmoke'}}>
+                    <div style={{width:'100%',height:'400px',display:'flex',justifyContent:'center',alignItems:'center',backgroundColor:'whitesmoke',flexDirection:'column'}}>
+                      <NoAccountsIcon sx={{width:'200px',height:'200px'}}/>
                     <p style={{ textAlign: 'center',fontSize:30,fontWeight:700,fontStyle:'italic' }}>No records</p>
                     </div>
                   ))}
@@ -1980,18 +2076,48 @@ try {
                       disableRowSelectionOnClick
                     />
                   ) : (
-                    <div style={{width:'100%',height:'100%',display:'flex',justifyContent:'center',alignItems:'center',backgroundColor:'whitesmoke'}}>
+                    <div style={{width:'100%',height:'400px',display:'flex',justifyContent:'center',alignItems:'center',backgroundColor:'whitesmoke',flexDirection:'column'}}>
+                      <NoAccountsIcon sx={{width:'200px',height:'200px'}}/>
+                    <p style={{ textAlign: 'center',fontSize:30,fontWeight:700,fontStyle:'italic' }}>No records</p>
+                    </div>
+                  ))}
+                  {activeState === 'Nores' && (Noresponse && Noresponse.length > 0 ? (
+                    <DataGrid
+                      rows={Noresponse}
+                      columns={Norescolumns}
+                      getRowId={(row) => row.applicantNum}
+                      scrollbarSize={10}
+                      initialState={{
+                        pagination: {
+                          paginationModel: {
+                            pageSize: 5,
+                          },
+                        },
+                      }}
+                      pageSizeOptions={[25]}
+                      checkboxSelection
+                      onRowSelectionModelChange={handleReappSelectionModelChange}
+                      rowSelectionModel={reappSelectionModel}
+                      disableRowSelectionOnClick
+                    />
+                  ) : (
+                    <div style={{width:'100%',height:'400px',display:'flex',justifyContent:'center',alignItems:'center',backgroundColor:'whitesmoke',flexDirection:'column'}}>
+                      <NoAccountsIcon sx={{width:'200px',height:'200px'}}/>
                     <p style={{ textAlign: 'center',fontSize:30,fontWeight:700,fontStyle:'italic' }}>No records</p>
                     </div>
                   ))}
             </Card>
+            <div style={{width:'97%',margin:'10px',display:'flex',justifyContent:'flex-end',alignItems:'flex-end'}}>
             {activeState === 'Passed' && <div sx={{width:'90%',margin:'10px',display:'flex',justifyContent:'flex-end',flexDirection:'column',alignItems:'flex-end'}}>
               <Button className="myButton1" onClick={Addall} sx={{margin:'10px'}} variant='contained'>SET ALL SELECTED TO SCHOLARS</Button>
             </div>}
-      {activeState === 'Reject' && <div sx={{width:'90%',margin:'10px',display:'flex',justifyContent:'flex-end',flexDirection:'column',alignItems:'flex-end'}}>
-
+            {activeState === 'Reject' && <div sx={{width:'90%',margin:'10px',display:'flex',justifyContent:'flex-end',flexDirection:'column',alignItems:'flex-end'}}>
                 <Button className="myButton2" onClick={FailedAll} sx={{margin:'10px'}} variant='contained'>SET FAILED THE SELECTED USERS</Button>
             </div>}
+            {activeState === 'Nores' && <div sx={{width:'90%',margin:'10px',display:'flex',justifyContent:'flex-end',flexDirection:'column',alignItems:'flex-end'}}>
+                <Button className="myButton2" onClick={FailedAll} sx={{margin:'10px'}} variant='contained'>SET FAILED THE SELECTED USERS</Button>
+            </div>}
+            </div>
         </Card>          
         </Box>}
        </div>

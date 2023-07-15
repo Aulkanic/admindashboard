@@ -14,16 +14,13 @@ import TextField from '@mui/material/TextField';
 import Breadcrumbs from '@mui/material/Breadcrumbs';
 import Link from '@mui/material/Link';
 import { DataGrid, GridToolbar } from '@mui/x-data-grid';
-import { Bar,Pie } from 'react-chartjs-2';
-import { Chart, CategoryScale, LinearScale, Title, Tooltip } from 'chart.js/auto';
 import { FetchingReportApp,FetchingReportScho,FetchingReportUser } from '../../api/request';
-import { blue } from '@mui/material/colors';
-
-
-
+import { LineChart } from '@mui/x-charts/LineChart';
+import { PieChart, pieArcLabelClasses } from '@mui/x-charts/PieChart';
 
 const Report = () => {
     const [applicants,setApplicants] = useState([]);
+    const [failed,setFailed] = useState([]);
     const [scholars,setScholars] = useState([]);
     const [useraccs,setUserAccs] = useState([]);
     const [activeSection, setActiveSection] = useState('applicants');
@@ -34,8 +31,10 @@ const Report = () => {
             let res1 = await FetchingReportApp.FETCH_APPLICANTS()
             let res2 = await FetchingReportScho.FETCH_SCHOLARS()
             let res3 = await FetchingReportUser.FETCH_USERACCS()
-            console.log(res1)
-            setApplicants(res1.data.result)
+            const res = res1.data.result?.filter(data => data.status === 'For Evaluation' || data.status !== 'Qualified' )
+            const failed = res1.data.result?.filter(data => data.status === 'Failed' || data.status === 'Revoke')
+            setApplicants(res)
+            setFailed(failed)
             setScholars(res2.data.result)
             setUserAccs(res3.data.result)
         }
@@ -47,7 +46,6 @@ const Report = () => {
           field: 'applicantNum',
           headerName: 'ID',
           width: 90, 
-          headerAlign: 'center',
         
         },
     
@@ -56,24 +54,21 @@ const Report = () => {
           headerName: 'Scholarship Applied',
           width: 200,
           editable: true,
-          headerAlign: 'center'
     
         },
         {
           field: 'Name',
           headerName: 'Name',
-          width: 150,
-          editable: true,
-          headerAlign: 'center',
+          width: 250,
+          editable: false,
         
         },
     
         {
           field: 'email',
           headerName: 'Email',
-          width: 150,
+          width: 250,
           editable: false,
-          headerAlign: 'center',
         
         },
     
@@ -81,17 +76,13 @@ const Report = () => {
           field: 'status',
           headerName: 'Remarks',
           width: 150,
-          editable: false,
-          headerAlign: 'center',
-        
+          editable: false,     
         },
         {
           field: 'Batch',
           headerName: 'Batch',
           width: 150,
-          editable: false,
-          headerAlign: 'center',
-        
+          editable: false,      
         },
       ];
     const column1 = [
@@ -182,58 +173,21 @@ const Report = () => {
         
         },
       ];
-      const originalData = {
-        labels: ['Failed Applicants', 'Applicants', 'Scholars'],
-        datasets: [
-          {
-            label: 'Sample Bar Graph',
-            data: [12, 19, 3],
-            backgroundColor: ['red', 'blue', 'green'],
-          },
-        ],
+      const data = [
+        { value: `${applicants.length}`, label: 'Applicants',color:'orange' },
+        { value: `${scholars.length}`, label: 'Scholars',color:'green' },
+        { value: `${failed.length}`, label: 'Failed',color:'red' },
+      ];
+      
+      const size = {
+        width: 450,
+        height: 400,
       };
-    
-      const total = originalData.datasets[0].data.reduce((acc, curr) => acc + curr, 0);
-      const percentageData = originalData.datasets[0].data.map((value) => ((value / total) * 100).toFixed(2));
-    
-      const data = {
-        ...originalData,
-        datasets: [
-          {
-            ...originalData.datasets[0],
-            data: percentageData,
-          },
-        ],
+      const TOTAL = data.map((item) => item.value).reduce((a, b) => a + b, 0);
+      const getArcLabel = (params) => {
+        const percent = params.value / TOTAL;
+        return `${(percent * 100).toFixed(0)}%`;
       };
-      const options = {
-        plugins: {
-          legend: {
-            display: false,
-          },
-          tooltip: {
-            callbacks: {
-              label: (context) => {
-                const label = data.labels[context.dataIndex];
-                const value = data.datasets[0].data[context.dataIndex];
-                return `${label}: ${value}%`;
-              },
-            },
-          },
-          datalabels: {
-            formatter: (value, ctx) => {
-              const label = data.labels[ctx.dataIndex];
-              return `${label}: ${value}%`;
-            },
-            color: '#fff',
-            font: {
-              size: 14,
-              weight: 'bold',
-            },
-          },
-        },
-      };
-    
-  Chart.register(CategoryScale, LinearScale, Title, Tooltip);
 
   return (
     <>
@@ -245,22 +199,43 @@ const Report = () => {
             <Typography style={{fontSize:30,fontWeight:'bold',margin:10}}>
                 Reports
             </Typography>
-        <Card style={{width:'97.5%',display:'flex',justifyContent:'center',alignItems:'center',height:'100%',padding:'10px'}}>
-        <div style={{margin:10,width:'25%'}}>
-          <div style={{display:'flex',width:'100%',marginBottom:'20px'}}>
-            <div>
-            <Typography>Applicants:</Typography><button style={{backgroundColor:'blue',color:'blue'}}>button</button>
-            </div>
-            <div style={{margin:'0px 20px 0px 20px'}}>
-            <Typography>Scholars:</Typography><button style={{backgroundColor:'green',color:'green'}}>button</button>
-            </div>
-            <div>
-            <Typography>Failed Applicants:</Typography><button style={{backgroundColor:'red',color:'red'}}>button</button>
-            </div>
-          </div>
-        <Pie style={{height:'auto'}} data={data} options={options} />
+        <Card style={{width:'98%',display:'flex',justifyContent:'center',alignItems:'center',height:'100%',padding:'10px',flexDirection:'column'}}>
+          <div style={{display:'flex',width:'100%'}}>
+              <div style={{width:'40%',margin:'10px'}}>
+              <PieChart
+                series={[
+                  {
+                  outerRadius: 150,
+                  data,
+                  arcLabel: getArcLabel,
+                  },
+                ]}
+                sx={{
+                  [`& .${pieArcLabelClasses.root}`]: {
+                    fill: 'white',
+                    fontWeight: 'bold',
+                    fontSize:'13px'
+                  },
+                  "--ChartsLegend-rootOffsetX": "0px",
+                }}
+                {...size}
+              />            
+              </div>
+              <div style={{width:'40%',height:'100%'}}>
+              <LineChart
+                  xAxis={[{ data: [1, 2, 3, 5, 8, 10] }]}
+                  series={[
+                    {
+                      data: [2, 5.5, 2, 8.5, 1.5, 5],
+                      area: true,
+                    },
+                  ]}
+                  width={600}
+                  height={400}
+                />
+              </div>
         </div>
-        <div style={{width:'67%'}}>
+        <div style={{width:'100%'}}>
         <div style={{backgroundColor:'green',width:'100%'}}>
         <Breadcrumbs aria-label="breadcrumb">
         <Button onClick={() => setActiveSection('applicants')}>
@@ -294,7 +269,7 @@ const Report = () => {
         </Button>
         </Breadcrumbs>
         </div>
-                        {activeSection === 'applicants' && (
+                {activeSection === 'applicants' && (
                 <DataGrid
                     sx={{width:'100%'}}
                     slots={{ toolbar: GridToolbar }}
@@ -313,7 +288,6 @@ const Report = () => {
                     pageSizeOptions={[25]}
                 />
                 )}
-
                 {activeSection === 'scholars' && (
                 <DataGrid
                 slots={{ toolbar: GridToolbar }}
@@ -332,7 +306,6 @@ const Report = () => {
                     pageSizeOptions={[25]}
                 />
                 )}
-
                 {activeSection === 'useraccs' && (
                 <DataGrid
                 slots={{ toolbar: GridToolbar }}
