@@ -230,3 +230,9 @@ export const FetchFaqs = {
 export const DeleteFaqs = {
     DELETE_FAQS: (data) => axiosInstance.post(Endpoints.DELETE_FAQS+data)
 }
+export const WebSection = {
+    WEB_SEC: () => axiosInstance.get(Endpoints.WEB_SECTION)
+}
+export const EmployeeAccess = {
+    EMP_ACCESS: (data) => axiosInstance.post(Endpoints.EMP_ACCESS,data)
+}

@@ -11,7 +11,7 @@ import FormControl from '@mui/material/FormControl';
 import FormLabel from '@mui/material/FormLabel';
 import { ApplicantsRequest, FetchingApplicantsInfo, ListofSub,
           CheckingSubs, CheckingApplicants,UserScore,ListofReq,FailedUser,FetchingBmccSchoinfo
-        ,Documentary,GrantAccess } from "../../api/request";
+        ,Documentary,GrantAccess,ListAccess } from "../../api/request";
 import swal from "sweetalert";
 import { styled, ThemeProvider, createTheme } from '@mui/material';
 import { Backdrop, CircularProgress } from '@mui/material';
@@ -123,6 +123,7 @@ const Applicant = () => {
   const [checked1, setChecked1] = useState(false);
   const [email,setEmail] = useState('');
   const [password,setPassword] = useState('')
+  const [access,setAccess] = useState([])
   const [showBackdrop, setShowBackdrop] = useState(false);
   const [openDialog1, setOpenDialog1] = useState(false);
   const [openDialog2, setOpenDialog2] = useState(false);
@@ -199,6 +200,9 @@ const Applicant = () => {
       const response = await ApplicantsRequest.ALL_APPLICANTS()
       const docreq = await ListofReq.FETCH_REQUIREMENTS();
       const subdoc = await Documentary.FETCH_DOCUMENTARY()
+      let acc = await ListAccess.ACCESS()
+      const empacc = acc.data.result?.filter(data => data.employeeName === user.name)
+      setAccess(empacc)
       setDocumentaryListed(subdoc.data.Documentary)
       setPost(response.data.results);
       const sub = docreq.data.Requirements.results2
@@ -236,7 +240,16 @@ const Applicant = () => {
 
   }
 const check = async (data, index) => { 
-
+  const isValueIncluded = access[0]?.sectionId.includes('Documents Checking');
+  if(!isValueIncluded){
+    swal({
+      text: 'UnAuthorized Access',
+      timer: 2000,
+      buttons: false,
+      icon: "error",
+    })
+    return
+  }
   const requirement_Name = data.requirement_Name;
   const applicantNum = applicantsInfo[0].applicantCode;
   const adminName = user.name;
@@ -288,6 +301,16 @@ const style = {
   borderRadius:'10px'
 };
   const ApplicantCheck = async (data) =>{
+    const isValueIncluded = access[0]?.sectionId.includes('Applicants');
+    if(!isValueIncluded){
+      swal({
+        text: 'UnAuthorized Access',
+        timer: 2000,
+        buttons: false,
+        icon: "error",
+      })
+      return
+    }
     const applicantNum = data.applicantNum;
     const applicantCode = data.applicantCode;
     const status = 'Qualified';
@@ -308,6 +331,16 @@ const style = {
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
   const failed = async(data) =>{
+    const isValueIncluded = access[0]?.sectionId.includes('Applicants');
+    if(!isValueIncluded){
+      swal({
+        text: 'UnAuthorized Access',
+        timer: 2000,
+        buttons: false,
+        icon: "error",
+      })
+      return
+    }
     const res = await FetchingBmccSchoinfo.FETCH_SCHOLARSINFO(data.applicantNum);
     const schoapplied = res.data.ScholarInf.results1[0].SchoIarshipApplied;
     const batch = res.data.ScholarInf.results1[0].Batch;
@@ -366,6 +399,16 @@ const style = {
     
   }
   const Addall = async () => {
+    const isValueIncluded = access[0]?.sectionId.includes('Applicants');
+    if(!isValueIncluded){
+      swal({
+        text: 'UnAuthorized Access',
+        timer: 2000,
+        buttons: false,
+        icon: "error",
+      })
+      return
+    }
     const selectedRows = rowSelectionModel.map((selectedRow) =>
       filteredRows.find((row) => row.applicantNum === selectedRow)
     );
@@ -394,6 +437,16 @@ const style = {
       swal('Added Successfully')
   };
   const FailedAll = async() =>{
+    const isValueIncluded = access[0]?.sectionId.includes('Applicants');
+    if(!isValueIncluded){
+      swal({
+        text: 'UnAuthorized Access',
+        timer: 2000,
+        buttons: false,
+        icon: "error",
+      })
+      return
+    }
     const selectedRows = failedSelectionModel.map((selectedRow) =>
       filteredRows.find((row) => row.applicantNum === selectedRow));
       setShowBackdrop(true);

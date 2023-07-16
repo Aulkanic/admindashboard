@@ -49,6 +49,7 @@ const StyledButton = styled(Button)`
 const Scholarships = () => {
   const { loginUser,user } = useContext(admininfo);
     const [schocat, setSchocat] = useState([]);
+    const [access,setAccess] = useState([])
     const [showBackdrop, setShowBackdrop] = useState(false);
     const [open, setOpen] = useState(false);
     const [open1, setOpen1] = useState(false);
@@ -83,19 +84,15 @@ const Scholarships = () => {
   };
   const handleClose = () => setOpen(false);
   const handleOpen1 = (data) => {
-    if(user.jobDescription !== 'Admin'){
-      if(user.jobDescription !== accessList.schoSec){
-        swal({
-          text: 'UnAuthorized Access',
-          timer: 2000,
-          buttons: false,
-          icon: "error",
-        })
-        return
-      }else{
-        setOlddata(data)
-        setOpen1(true);
-      }
+    const isValueIncluded = access[0]?.sectionId.includes('Scholarship Program');
+    if(!isValueIncluded){
+      swal({
+        text: 'UnAuthorized Access',
+        timer: 2000,
+        buttons: false,
+        icon: "error",
+      })
+      return
     }
     setOlddata(data)
     setOpen1(true);
@@ -123,6 +120,9 @@ const Scholarships = () => {
           FetchingSchoProg.FETCH_SCHOPROG(),
           ListAccess.ACCESS()
         ]);
+        let acc = await ListAccess.ACCESS()
+        const empacc = acc.data.result?.filter(data => data.employeeName === user.name)
+        setAccess(empacc)
         setSchocat(response[0].data.SchoCat);
         setAccesslist(response[1].data.result[0])
         setShowBackdrop(false);
@@ -158,6 +158,25 @@ const Scholarships = () => {
 
   function Create(event){
     event.preventDefault();
+    const isValueIncluded = access[0]?.sectionId.includes('Scholarship Program');
+    if(!isValueIncluded){
+      swal({
+        text: 'UnAuthorized Access',
+        timer: 2000,
+        buttons: false,
+        icon: "error",
+      })
+      return
+    }
+    if(icon === '' || title === '' || description === '' || status === ''){
+      swal({
+        text: 'Please Provide necessary Information',
+        timer: 2000,
+        buttons: false,
+        icon: "warning",
+      })
+      return
+    }
     const data = {icon,title,description,status};
     setShowBackdrop(true);
     CreateSchoProg.CREATE_SCHOPROG(data)
@@ -182,6 +201,16 @@ const Scholarships = () => {
 
 function Edit(event){
   event.preventDefault();
+  const isValueIncluded = access[0]?.sectionId.includes('Scholarship Program');
+  if(!isValueIncluded){
+    swal({
+      text: 'UnAuthorized Access',
+      timer: 2000,
+      buttons: false,
+      icon: "error",
+    })
+    return
+  }
   const schoid =  olddata.schoProgId;
   const icon = icon1 || olddata.icon;
   const title1 = titleu || olddata.name;

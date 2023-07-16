@@ -3,7 +3,7 @@ import Sidebar from '../../components/sidebar/Sidebar';
 import './faqs.scss';
 import './employeeaccs.css'
 import React, {useEffect, useState} from 'react'
-import { AddBMCC,FetchingBMCC,Activitylog,UpdateEmp,ListAccess,EmpAuthorized } from '../../api/request';
+import { AddBMCC,FetchingBMCC,Activitylog,UpdateEmp,ListAccess,EmployeeAccess,WebSection } from '../../api/request';
 import { Box, Modal,Card,Button, Typography} from "@mui/material"; 
 import TextField from '@mui/material/TextField';
 import { useContext } from "react";
@@ -27,7 +27,34 @@ import IconButton from '@mui/material/IconButton';
 import Dialog from '@mui/material/Dialog';
 import { styled, ThemeProvider, createTheme } from '@mui/material';
 import { Backdrop, CircularProgress } from '@mui/material';
+import OutlinedInput from '@mui/material/OutlinedInput';
+import InputLabel from '@mui/material/InputLabel';
+import MenuItem from '@mui/material/MenuItem';
+import FormControl from '@mui/material/FormControl';
+import Checkbox from '@mui/material/Checkbox';
+import { useTheme } from '@mui/material/styles';
+import Select from 'react-select';
+import makeAnimated from 'react-select/animated';
 
+
+const ITEM_HEIGHT = 48;
+const ITEM_PADDING_TOP = 8;
+const MenuProps = {
+  PaperProps: {
+    style: {
+      maxHeight: ITEM_HEIGHT * 4.5 + ITEM_PADDING_TOP,
+      width: 250,
+    },
+  },
+};
+function getStyles(data, sectionId, theme) {
+  return {
+    fontWeight:
+      sectionId.indexOf(data.name) === -1
+        ? theme.typography.fontWeightRegular
+        : theme.typography.fontWeightMedium,
+  };
+}
 const theme = createTheme();
 const StyledBackdrop = styled(Backdrop)`
   z-index: ${({ theme }) => theme.zIndex.drawer + 1};
@@ -48,7 +75,9 @@ const Transition = React.forwardRef(function Transition(props, ref) {
   return <Slide direction="up" ref={ref} {...props} />;
 });
 
+
 const Faqs = () => {
+  const theme = useTheme();
   const { loginUser,user } = useContext(admininfo);
   const [showBackdrop, setShowBackdrop] = useState(false);
   const [username,setUsername] = useState('');
@@ -63,25 +92,15 @@ const Faqs = () => {
   const [open1, setOpen1] = useState(false);
   const [open2, setOpen2] = useState(false);
   const [errors, setErrors] = useState({});
-  const [emp1,setEmp1] = useState('');
-  const [emp2,setEmp2] = useState('');
-  const [scho,setScho] = useState('');
-  const [score,setScore] = useState('');
-  const [require,setRequire] = useState('');
-  const [eva1,setEva1] = useState('');
-  const [eva2,setEva2] = useState('');
-  const [app1,setApp1] = useState('');
-  const [app2,setApp2] = useState('');
-  const [appoint1,setAppoint1] = useState('');
-  const [appoint2,setAppoint2] = useState('');
-  const [appoint3,setAppoint3] = useState('');
-  const [scholar,setScholar] = useState('');
-  const [newan,setNewan] = useState('');
-  const [rule,setRule] = useState('');
-  const [web,setWeb] = useState('');
-  const [report,setReport] = useState(null);
   const [accessEmp,setAccessEmp] = useState([])
   const [activeState,setActiveState] = useState('log');
+  const [websection,setWebsection] = useState([])
+  const [employeeAccess, setEmployeeAccess] = useState([]);
+  const [employeeId, setEmployeeId] = useState('');
+  const [defaultval,setDefault] = useState([])
+  const [sectionId, setSectionId] = useState([]);
+  const [access,setAccess] = useState([])
+  const animatedComponents = makeAnimated();
 
 const CustomDataGrid = styled(DataGrid)({
   '& .MuiDataGrid-columnHeaders': {
@@ -105,7 +124,10 @@ const CustomDataGrid = styled(DataGrid)({
   };
 
   const handleClick = () => {
-    if(user.jobDescription !== accessEmp.empSec1){
+
+    if (user.jobDescription === 'Admin' || user.jobDescription === accessEmp.empSec1) {
+        setActiveState(activeState === 'log' ? 'admin' : 'log');
+    } else {
       swal({
         text: 'UnAuthorized Access',
         timer: 2000,
@@ -114,7 +136,7 @@ const CustomDataGrid = styled(DataGrid)({
       })
       return
     }
-    setActiveState(activeState === 'log' ? 'admin' : 'log');
+
   };
 
   const columns = [
@@ -213,18 +235,43 @@ const CustomDataGrid = styled(DataGrid)({
   const handleClose2 = () => setOpen2(false);
   const handleOpen1 = (data) => {
     setOlddata(data)
-        setOpen1(true);
+    setOpen1(true);
   } 
+  const handleChange = (selected) => {
+    setEmployeeId(selected);
+  };
+  const handleChange1 = (selected) => {
+    setSectionId(selected);
+  };
+  const handleSelectAll = () => {
+    const allOptions = websection.map((option) => ({
+      value: option.id,
+      label: option.name,
+    }));
+    setSectionId(allOptions);
+
+  };
+
+
+  const handleClearSelection = () => {
+    setSectionId([]);
+  };
 
   const handleClose1 = () => setOpen1(false);
   useEffect(() =>{
         async function Fetch(){
-          setShowBackdrop(true);
+        setShowBackdrop(true);
         const list = await FetchingBMCC.FETCH_BMCC()
         const actlog = await Activitylog.ACTIVITY_LOG()
         const access = await ListAccess.ACCESS()
+        const web = await WebSection.WEB_SEC()
+        let acc = await ListAccess.ACCESS()
+        const empacc = acc.data.result?.filter(data => data.employeeName === user.name)
+          setAccess(empacc)
+          setWebsection(web.data.result)
           setBmcc(list.data.message)
-          setAccessEmp(access.data.result[0])
+          setAccessEmp(access.data.result)
+          setEmployeeAccess(access.data.result)
           const activitylog = actlog.data.Log
           setActlog(activitylog.reverse())
           setShowBackdrop(false);
@@ -233,6 +280,16 @@ const CustomDataGrid = styled(DataGrid)({
   },[])
 
  const AddbMCC = (event) =>{
+  const isValueIncluded = access[0]?.sectionId.includes('Create Accounts');
+  if(!isValueIncluded){
+    swal({
+      text: 'UnAuthorized Access',
+      timer: 2000,
+      buttons: false,
+      icon: "error",
+    })
+    return
+  }
   event.preventDefault();
   const errors = {};
 
@@ -272,6 +329,16 @@ const CustomDataGrid = styled(DataGrid)({
   .catch(err => console.log(err));
 }
 const UpdateBMCC = (event) =>{
+  const isValueIncluded = access[0]?.sectionId.includes('Manage Accounts');
+  if(!isValueIncluded){
+    swal({
+      text: 'UnAuthorized Access',
+      timer: 2000,
+      buttons: false,
+      icon: "error",
+    })
+    return
+  }
   event.preventDefault()
   let updatedstatus = status || olddata.status;
   let updatedjob = upjobDes || olddata.jobDescription;
@@ -298,41 +365,76 @@ const UpdateBMCC = (event) =>{
   .catch(err => console.log(err));
 }
 const Authorization = (e) =>{
+  const isValueIncluded = access[0]?.sectionId.includes('Manage Accounts');
+  if(!isValueIncluded){
+    swal({
+      text: 'UnAuthorized Access',
+      timer: 2000,
+      buttons: false,
+      icon: "error",
+    })
+    return
+  }
   e.preventDefault()
+    const labels = sectionId.map((option) => option.label).join(', ');
+    const formData = new FormData();
+    formData.append('accesslist',labels)
+    formData.append('employee',employeeId.value)
+    formData.append('employeeName',employeeId.label)
+    setShowBackdrop(true);
+    EmployeeAccess.EMP_ACCESS(formData)
+    .then(res => {
+      console.log(res)
+      setAccessEmp(res.data.result)
+      setShowBackdrop(false);
+      swal({
+        title: "Success",
+        text: "Done Successfully!",
+        icon: "success",
+        button: "OK",
+      });
+     setEmployeeId('')
+     setSectionId([])
+    }
+     )
+    .catch(err => console.log(err));
+
+
+}
+const DeleteAuth = (list,data) =>{
+  const isValueIncluded = access[0]?.sectionId.includes('Manage Accounts');
+  if(!isValueIncluded){
+    swal({
+      text: 'UnAuthorized Access',
+      timer: 2000,
+      buttons: false,
+      icon: "error",
+    })
+    return
+  }
+  const updatedSectionId = data.sectionId.replace(list, '').trim();
   const formData = new FormData();
-  formData.append('emp1',emp1 || accessEmp.empSec1)
-  formData.append('emp2',emp2 || accessEmp.empSec2)
-  formData.append('scho',scho || accessEmp.schoSec)
-  formData.append('score',score || accessEmp.scoreSec)
-  formData.append('require',require || accessEmp.requireSec)
-  formData.append('eva1',eva1 || accessEmp.evaSec1)
-  formData.append('eva2',eva2 || accessEmp.evaSec2)
-  formData.append('app1',app1 || accessEmp.appSec1)
-  formData.append('app2',app2 || accessEmp.appSec2)
-  formData.append('appoint1',appoint1 || accessEmp.appointSec1)
-  formData.append('appoint2',appoint2 || accessEmp.appointSec2)
-  formData.append('appoint3',appoint3 || accessEmp.appointSec3)
-  formData.append('scholar',scholar || accessEmp.scholarSec)
-  formData.append('newan',newan || accessEmp.newanSec)
-  formData.append('rule',rule || accessEmp.ruleSec)
-  formData.append('web',web || accessEmp.webSec)
-  formData.append('report',report || accessEmp.repSec)
+  formData.append('accesslist',updatedSectionId)
+  formData.append('employee',data.employeeId)
   setShowBackdrop(true);
-  EmpAuthorized.AUTHORIZATION(formData)
+  EmployeeAccess.EMP_ACCESS(formData)
   .then(res => {
-    console.log(res)
     setAccessEmp(res.data.result)
     setShowBackdrop(false);
     swal({
       title: "Success",
-      text: "Created Successfully!",
+      text: "Done Successfully!",
       icon: "success",
       button: "OK",
     });
+   setEmployeeId('')
+   setSectionId([])
+
   }
    )
   .catch(err => console.log(err));
 }
+
   return (
     <>
     <StyledBackdrop open={showBackdrop}>
@@ -462,108 +564,76 @@ const Authorization = (e) =>{
             </Button>
           </Toolbar>
         </AppBar>
-            <Box sx={{width:'100%',padding:'10px',height:'100%',display:'flex',backgroundColor:'whitesmoke',justifyContent:'space-around'}}>
-                    <div style={{width:'30%',height:'auto'}}>
-                    <Card sx={{width:'100%%',height:'auto',display:'flex',flexDirection:'column',padding:'10px',margin:'10px'}} elevation={5}>
-                      <Typography>Employee Section</Typography>
-                      <div style={{width:'100%',display:'flex',flexDirection:'column'}}>
-                      <Typography>Creation Of Accounts:</Typography>
-                      <TextField value={emp1} placeholder={accessEmp.empSec1} onChange={(e) => setEmp1(e.target.value)}/>
-                      <Typography>Managing Of Accounts:</Typography>
-                      <TextField value={emp2} placeholder={accessEmp.empSec2} onChange={(e) => setEmp2(e.target.value)}/>
-                      </div>
-                    </Card>
-                    <Card sx={{width:'100%%',height:'auto',display:'flex',flexDirection:'column',padding:'10px',margin:'10px'}} elevation={5}>
-                      <Typography>Scholarship Program Section</Typography>
-                      <div style={{width:'100%',display:'flex',flexDirection:'column'}}>
-                      <Typography>Creation and Managing Scholarship Program:</Typography>
-                      <TextField value={scho} placeholder={accessEmp.schoSec} onChange={(e) => setScho(e.target.value)}/>
-                      </div>
-                    </Card>
-                    <Card sx={{width:'100%%',height:'auto',display:'flex',flexDirection:'column',padding:'10px',margin:'10px'}} elevation={5}>
-                      <Typography>Score Card Section</Typography>
-                      <div style={{width:'100%',display:'flex',flexDirection:'column'}}>
-                      <Typography>Set Score Card Scoring:</Typography>
-                      <TextField value={score} placeholder={accessEmp.scoreSec} onChange={(e) => setScore(e.target.value)}/>
-                      </div>
-                    </Card>
-                    <Card sx={{width:'100%%',height:'auto',display:'flex',flexDirection:'column',padding:'10px',margin:'10px'}} elevation={5}>
-                      <Typography>Requirement Section</Typography>
-                      <div style={{width:'100%',display:'flex',flexDirection:'column'}}>
-                      <Typography>Adding and Managing List of Requirements:</Typography>
-                      <TextField value={require} placeholder={accessEmp.requireSec} onChange={(e) =>setRequire(e.target.value)}/>
-                      </div>
-                    </Card>
-                    </div>
-                    <div style={{width:'30%',height:'auto'}}>
-                    <Card sx={{width:'100%%',height:'auto',display:'flex',flexDirection:'column',padding:'10px',margin:'10px'}} elevation={5}>
-                      <Typography>Evaluation of Registered Applicants Section</Typography>
-                      <div style={{width:'100%',display:'flex',flexDirection:'column'}}>
-                      <Typography>Approval and Rejecting Registered Applicants:</Typography>
-                      <TextField value={eva1} placeholder={accessEmp.evaSec1} onChange={(e) => setEva1(e.target.value)}/>
-                      <Typography>Setup Passing Score and Available Slots:</Typography>
-                      <TextField value={eva2} placeholder={accessEmp.evaSec2} onChange={(e) => setEva2(e.target.value)}/>
-                      </div>
-                    </Card>
-                    <Card sx={{width:'100%%',height:'auto',display:'flex',flexDirection:'column',padding:'10px',margin:'10px'}} elevation={5}>
-                      <Typography>Applicants Section</Typography>
-                      <div style={{width:'100%',display:'flex',flexDirection:'column'}}>
-                      <Typography>Checking Documents/Requirements Of Applicants:</Typography>
-                      <TextField value={app1} placeholder={accessEmp.appSec1} onChange={(e) => setApp1(e.target.value)}/>
-                      <Typography>Approval and Failing Of Applicants:</Typography>
-                      <TextField value={app2} placeholder={accessEmp.appSec2} onChange={(e) => setApp2(e.target.value)}/>
-                      </div>
-                    </Card>
-                    <Card sx={{width:'100%%',height:'auto',display:'flex',flexDirection:'column',padding:'10px',margin:'10px'}} elevation={5}>
-                      <Typography>Appointment Section</Typography>
-                      <div style={{width:'100%',display:'flex',flexDirection:'column'}}>
-                      <Typography>Creation Of Appointment:</Typography>
-                      <TextField value={appoint1} placeholder={accessEmp.appointSec1} onChange={(e) => setAppoint1(e.target.value)}/>
-                      <Typography>Interviewer:</Typography>
-                      <TextField value={appoint2} placeholder={accessEmp.appointSec2} onChange={(e) => setAppoint2(e.target.value)}/>
-                      <Typography>Approval and Failing Of Appointed Applicants:</Typography>
-                      <TextField value={appoint3} placeholder={accessEmp.appointSec3} onChange={(e) => setAppoint3(e.target.value)}/>
-                      </div>
-                    </Card>
-                    </div>
-                    <div style={{width:'30%',height:'auto'}}>
-                    <Card sx={{width:'100%%',height:'auto',display:'flex',flexDirection:'column',padding:'10px',margin:'10px'}} elevation={5}>
-                      <Typography>Scholars Section</Typography>
-                      <div style={{width:'100%',display:'flex',flexDirection:'column'}}>
-                      <Typography>Managing Scholars Status:</Typography>
-                      <TextField value={scholar} placeholder={accessEmp.scholarSec} onChange={(e) =>setScholar(e.target.value)}/>
-                      </div>
-                    </Card>
-                    <Card sx={{width:'100%%',height:'auto',display:'flex',flexDirection:'column',padding:'10px',margin:'10px'}} elevation={5}>
-                      <Typography>New and Announcement Section</Typography>
-                      <div style={{width:'100%',display:'flex',flexDirection:'column'}}>
-                      <Typography>Creation of News and Annoucement:</Typography>
-                      <TextField value={newan} placeholder={accessEmp.newanSec} onChange={(e) =>setNewan(e.target.value)}/>
-                      </div>
-                    </Card>
-                    <Card sx={{width:'100%%',height:'auto',display:'flex',flexDirection:'column',padding:'10px',margin:'10px'}} elevation={5}>
-                      <Typography>Scholarship Rules Section</Typography>
-                      <div style={{width:'100%',display:'flex',flexDirection:'column'}}>
-                      <Typography>Setting up the Rules of the Scholarship Program:</Typography>
-                      <TextField value={rule} placeholder={accessEmp.ruleSec} onChange={(e) =>setRule(e.target.value)}/>
-                      </div>
-                    </Card>
-                    <Card sx={{width:'100%%',height:'auto',display:'flex',flexDirection:'column',padding:'10px',margin:'10px'}} elevation={5}>
-                      <Typography>Website Maintenance Section</Typography>
-                      <div style={{width:'100%',display:'flex',flexDirection:'column'}}>
-                      <Typography>Setting up the Design of the Website:</Typography>
-                      <TextField value={web} placeholder={accessEmp.webSec} onChange={(e) =>setWeb(e.target.value)}/>
-                      </div>
-                    </Card>
-                    <Card sx={{width:'100%%',height:'auto',display:'flex',flexDirection:'column',padding:'10px',margin:'10px'}} elevation={5}>
-                      <Typography>Reports Section</Typography>
-                      <div style={{width:'100%',display:'flex',flexDirection:'column'}}>
-                      <Typography>Generating Reports:</Typography>
-                    <TextField value={report} placeholder={accessEmp.repSec} onChange={(e) => setReport(e.target.value)}/>
-                      </div>
-                    </Card>
-                    </div>
-            </Box>
+           <Box sx={{padding:'15px',backgroundColor:'#f1f3fa'}}>
+           <div style={{margin:'15px'}}> 
+        <label htmlFor="employee">Employee:</label>
+        <Select
+          value={employeeId}
+          fullWidth
+          onChange={handleChange}
+          options={bmcc.map((option) => ({
+            value: option.id,
+            label: option.name,
+          }))}
+        />
+           </div>
+            <div style={{margin:'15px'}}>
+              <div style={{display:'flex',width:'100%',justifyContent:'space-between',alignItems:'center',margin:'5px'}}>
+              <label htmlFor="section">Website Section can Employee Accessed:</label>
+              <div>
+              <Button sx={{fontSize:'9px',marginRight:'10px'}} className='myButton1' variant="contained" onClick={handleSelectAll}>
+              Select All
+            </Button>
+            <Button sx={{fontSize:'9px'}} className='myButton2' variant="contained" onClick={handleClearSelection}>
+              Clear Selection
+            </Button>
+            </div>
+            </div>
+              <Select
+                closeMenuOnSelect={false}
+                isMulti
+                fullWidth
+                value={sectionId}
+                onChange={handleChange1}
+                components={animatedComponents}
+                input={<OutlinedInput label="Section:" />}
+                renderValue={(selected) => {
+                  console.log(selected)
+                  return(
+                  <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 0.5 }}>
+                    {selected.map((value) => (
+                      <Chip key={value} label={value} />
+                    ))}
+                  </Box>
+                )}}
+                MenuProps={MenuProps}
+                options={websection.map((option) => ({
+                  value: option.id,
+                  label: option.name,
+                }))}
+              />
+            </div>
+            <div className='authlist'>
+            {accessEmp?.map((data) => {
+              const lists = data.sectionId.split(',').map(list => list.trim());
+              return (
+                <Card sx={{width:'max-Content',height:'max-Content',padding:'10px'}} key={data.id}>
+                  <p>{data.employeeName} Access list</p>
+                  <ul>
+                    {lists?.map((list, index) => {
+                      if (list === '') return null; // Skip rendering empty list values
+                      return (
+                        <li style={{ backgroundColor: '#77a809', margin: '2px', width: 'max-Content', padding: '5px', borderRadius: '5px', color: 'white' }} key={index}>
+                          {list} <button style={{ backgroundColor: 'red', color: 'white', border: 'none', cursor: 'pointer' }} onClick={() => DeleteAuth(list, data)}>X</button>
+                        </li>
+                      );
+                    })}
+                  </ul>
+                </Card>
+              );
+            })}
+            </div>
+           </Box>
         </Dialog>
 
             <div className="top">

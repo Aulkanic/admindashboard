@@ -2,13 +2,17 @@ import React, { useEffect } from 'react'
 import './new.scss'
 import Navbar from '../../components/navbar/Navbar';
 import Sidebar from '../../components/sidebar/Sidebar';
-import { FetchNews,CreateNews } from '../../api/request';
+import { FetchNews,CreateNews,ListAccess } from '../../api/request';
 import { useState } from 'react';
 import swal from 'sweetalert';
+import { useContext } from "react";
+import { admininfo } from "../../App";
 
 
 const News = () => {
   const [news,setNews] = useState([]);
+  const { loginUser,user } = useContext(admininfo);
+  const [access,setAccess] = useState([])
   const [isOpen, setIsOpen] = useState(false);
   const [picture, setNewsimg] = useState('');
   const [title, setNewstitle] = useState('');
@@ -21,10 +25,15 @@ const News = () => {
   };
   useEffect(() => {
     FetchNews.FETCH_NEWS().then((response) => {
-         console.log(response)
          const news = response.data.News
        setNews(news.reverse());
      });
+     async function Fetch(){
+      let acc = await ListAccess.ACCESS()
+      const empacc = acc.data.result?.filter(data => data.employeeName === user.name)
+      setAccess(empacc)
+     }
+     Fetch()
    }, []);
 
    useEffect(() => {
@@ -39,6 +48,16 @@ const News = () => {
     return () => URL.revokeObjectURL(objectUrl)
   }, [picture])
   function Create(event){
+    const isValueIncluded = access[0]?.sectionId.includes('News and Announcement');
+    if(!isValueIncluded){
+      swal({
+        text: 'UnAuthorized Access',
+        timer: 2000,
+        buttons: false,
+        icon: "error",
+      })
+      return
+    }
     event.preventDefault();
     setLoading(true)
     const data = {picture,title,description};

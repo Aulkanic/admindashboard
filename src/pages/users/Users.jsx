@@ -70,7 +70,7 @@ const Users = () => {
     {
       field: 'profile',
       headerName: 'Profile',
-      width: 120,
+      width: 150,
       renderCell: (params) => {
         console.log(params)
         const isOnline = params.row.isOnline; 
@@ -113,42 +113,16 @@ const Users = () => {
     {
       field: 'status',
       headerName: 'Remarks',
-      width: 150,
+      width: 250,
       editable: false,
     
-    },
-
-    {
-      field: 'remarks',
-      headerName: 'Account Status',
-      width: 150,
-      headerAlign: 'center',
-      renderCell: (params) => {
-        let color1 = 'green'
-        if(params.value === "Inactive"){
-          color1 = 'yellow'
-        }
-        if(params.value === 'Deactivated'){
-          color1 ='red'
-        }
-        return(
-        <>
-        <button  className="myButton1">
-          {params.row.remarks === 'Active'
-            ? 'Active'
-            : params.row.remarks === 'Inactive'
-            ? 'Inactive'
-            : 'Deactivated'}
-        </button>
-        </>)
-      },
     },
   ];
 
   const CustomDataGrid = styled(DataGrid)({
     '& .MuiDataGrid-columnHeaders': {
       color: 'black',
-      
+      width:'100%'
     },
   });
   
@@ -166,13 +140,10 @@ const Users = () => {
       <Sidebar />
       <div className="usersContainer">
         <Navbar />
-
-      
         <div className='userlistcon'>
           <h1> Users Account List </h1>
-
       <Box>
-        <Card>
+        <Card sx={{width:'100%'}}>
         <CustomDataGrid
               className='dataGrid'
               rows={display}

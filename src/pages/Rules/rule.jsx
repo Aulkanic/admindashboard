@@ -3,7 +3,7 @@ import Navbar from "../../components/navbar/Navbar"
 import Sidebar from "../../components/sidebar/Sidebar"
 import Box from '@mui/material/Box';
 import Card from '@mui/material/Card';
-import { Logos,Logolist,Rule,Rulelist } from '../../api/request';
+import { Logos,Logolist,Rule,Rulelist,ListAccess } from '../../api/request';
 import CardActions from '@mui/material/CardActions';
 import CardContent from '@mui/material/CardContent';
 import Button from '@mui/material/Button';
@@ -15,6 +15,8 @@ import { useEffect } from 'react';
 import swal from 'sweetalert';
 import { styled, ThemeProvider, createTheme } from '@mui/material';
 import { Backdrop, CircularProgress } from '@mui/material';
+import { useContext } from "react";
+import { admininfo } from "../../App";
 
 const theme = createTheme();
 const StyledBackdrop = styled(Backdrop)`
@@ -22,6 +24,8 @@ const StyledBackdrop = styled(Backdrop)`
 `;
 
 const Rulesect = () => {
+  const { loginUser,user } = useContext(admininfo);
+  const [access,setAccess] = useState([])
   const [bmcclogo,setBmcc] = useState('');
   const [showBackdrop, setShowBackdrop] = useState(false);
   const [bmcclogoPrev,setBmccPrev] = useState('');
@@ -40,8 +44,9 @@ const Rulesect = () => {
       async function Fetch(){
         const res = await Logolist.FETCH_LOGO()
         const req = await Rulelist.FETCH_RULE()
-        console.log(res)
-        console.log(req)
+        let acc = await ListAccess.ACCESS()
+        const empacc = acc.data.result?.filter(data => data.employeeName === user.name)
+        setAccess(empacc)
         setLogo(res.data.result)
         setRule(req.data.result[0])
       }
@@ -72,6 +77,16 @@ const Rulesect = () => {
     }, [mayorlogo])
 
   const uploadLogo = async() =>{
+    const isValueIncluded = access[0]?.sectionId.includes('Rules');
+    if(!isValueIncluded){
+      swal({
+        text: 'UnAuthorized Access',
+        timer: 2000,
+        buttons: false,
+        icon: "error",
+      })
+      return
+    }
     const LogoOF = [
       {official: 'BMCC',Logo: bmcclogo || (logolist[0] && logolist[0].logo)},
       {official: 'Mayor',Logo: mayorlogo || (logolist[1] && logolist[1].logo)},
@@ -92,6 +107,16 @@ const Rulesect = () => {
     }
   }
   const setUpRule = async() =>{
+    const isValueIncluded = access[0]?.sectionId.includes('Rules');
+    if(!isValueIncluded){
+      swal({
+        text: 'UnAuthorized Access',
+        timer: 2000,
+        buttons: false,
+        icon: "error",
+      })
+      return
+    }
     const formData = new FormData()
     formData.append('rule1',famRule || (rulelist && rulelist.famNum))
     formData.append('rule2',schoRule || (rulelist && rulelist.schoNum))

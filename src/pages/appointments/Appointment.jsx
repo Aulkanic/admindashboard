@@ -5,7 +5,7 @@ import Navbar from "../../components/navbar/Navbar";
 import { Tabs, Tab,Table, TableBody, TableCell, TableContainer, TableHead,TableRow, Paper, Box, Button, Typography, Modal,Card} from "@mui/material"; 
 import { FetchingQualified, CreateAppointment,FetchingAppointList
   , Reaapointed, SetApproved,FetchingApplicantsInfo,SetApplicant,Addusertolistapp,UpdateScheduleApp,FetchingBmccSchoinfo,FailedUser,
-    CancelApp,CancelBatch,FetchingApplist,FetchingBatchlist,FetchingUserAppdetails,ListofSub, SetInterview,GrantAccess1 } from "../../api/request";
+    CancelApp,CancelBatch,FetchingApplist,FetchingBatchlist,FetchingUserAppdetails,ListofSub, SetInterview,GrantAccess1,ListAccess } from "../../api/request";
 import FormControlLabel from '@mui/material/FormControlLabel';
 import dayjs from 'dayjs';
 import CardContent from '@mui/material/CardContent';
@@ -48,6 +48,7 @@ import { TransitionProps } from '@mui/material/transitions';
 import { styled, ThemeProvider, createTheme } from '@mui/material';
 import { Backdrop, CircularProgress } from '@mui/material';
 import NoAccountsIcon from '@mui/icons-material/NoAccounts';
+
 
 const theme = createTheme();
 const StyledBackdrop = styled(Backdrop)`
@@ -195,6 +196,7 @@ const Appointment = () => {
   const [userFulldocs,setUserFulldocs] = useState([]);
   const [imageModalOpen, setImageModalOpen] = useState(false);
   const [selectedImage, setSelectedImage] = useState({});
+  const [access,setAccess] = useState([])
   const [who,setWho] = useState('');
   const [isSend,setIsSend] = useState('No');
   const [email,setEmail] = useState('');
@@ -281,8 +283,10 @@ const Appointment = () => {
       setShowBackdrop(true);
       const response = await FetchingQualified.FETCH_QUALIFIED();
       const listing  = await FetchingAppointList.FETCH_LISTAPPOINT();
-      console.log(response)
       const list = response.data.List.filter(user => user.isAppointed === 'No');
+      let acc = await ListAccess.ACCESS()
+      const empacc = acc.data.result?.filter(data => data.employeeName === user.name)
+      setAccess(empacc)
       setQualified(list);
       setAppointedList(listing.data.AppointmentList)
       setShowBackdrop(false);
@@ -342,12 +346,31 @@ const Appointment = () => {
 
   const handleSave = (e) => {
     e.preventDefault()
+    const isValueIncluded = access[0]?.sectionId.includes('Create Appointment');
+    if(!isValueIncluded){
+      swal({
+        text: 'UnAuthorized Access',
+        timer: 2000,
+        buttons: false,
+        icon: "error",
+      })
+      return
+    }
     const selectedRows = rowSelectionModel.map((selectedRow) =>
     Qualified.find((row) => row.applicantNum === selectedRow)
   );
+  if(selectedRows.length === 0){
+    swal({
+      text: 'Please Select Users to be Appointed',
+      timer: 2000,
+      buttons: false,
+      icon: "warning",
+    })
+    return
+  }
   setShowBackdrop(true);
+  let counter = 0;
   selectedRows.forEach((data,index) =>{
-      console.log(data)
       const applicantCode = data.applicantCode
       const applicantNum = data.applicantNum
       const Name = data.Name;
@@ -376,19 +399,26 @@ const Appointment = () => {
       CreateAppointment.CREATE_APPOINT(formData)
       .then((res) => {
         if(res.data.success === 1){
-          console.log(res)
           const list = res.data.List.data1.filter(user => user.isAppointed === 'No');
           setQualified(list);
           setAppointedList(res.data.List.data2)
-
           setErrors('')
           setRowSelectionModel([])
-          
+          counter++;
+          if (counter === selectedRows.length) {
+            setShowBackdrop(false);
+            swal({
+              title: "Success",
+              text: "Appointed Successfully!",
+              icon: "success",
+              button: "OK",
+            });
+          }
         }
         else{
           setShowBackdrop(false);
           swal({
-            title: "Success",
+            title: "Error",
             text: res.data.message,
             icon: "error",
             button: "OK",
@@ -400,16 +430,19 @@ const Appointment = () => {
        )
       .catch(err => console.log(err));
     })
-    setShowBackdrop(false);
-    swal({
-      title: "Success",
-      text: "Appointed Successfully!",
-      icon: "success",
-      button: "OK",
-    });
   };
 
   const Reapp = async(data) => {
+    const isValueIncluded = access[0]?.sectionId.includes('Appointment');
+    if(!isValueIncluded){
+      swal({
+        text: 'UnAuthorized Access',
+        timer: 2000,
+        buttons: false,
+        icon: "error",
+      })
+      return
+    }
     const applicantNum = data.applicantNum;
     setShowBackdrop(true);
     const res = await FetchingUserAppdetails.FETCH_USERDET(applicantNum);
@@ -437,6 +470,16 @@ const Appointment = () => {
   };
 
   const Approved = async (data) => {
+    const isValueIncluded = access[0]?.sectionId.includes('Appointment');
+    if(!isValueIncluded){
+      swal({
+        text: 'UnAuthorized Access',
+        timer: 2000,
+        buttons: false,
+        icon: "error",
+      })
+      return
+    }
     try {
       const response = await Promise.all([
         FetchingApplicantsInfo.FETCH_INFO(data.applicantNum)
@@ -473,6 +516,16 @@ const Appointment = () => {
 };
 
 const Failed = async() =>{
+  const isValueIncluded = access[0]?.sectionId.includes('Appointment');
+  if(!isValueIncluded){
+    swal({
+      text: 'UnAuthorized Access',
+      timer: 2000,
+      buttons: false,
+      icon: "error",
+    })
+    return
+  }
   const res = await FetchingBmccSchoinfo.FETCH_SCHOLARSINFO(failinf.applicantNum);
   const schoapplied = res.data.ScholarInf.results1[0].SchoIarshipApplied;
   const batch = res.data.ScholarInf.results1[0].Batch;
@@ -498,7 +551,16 @@ const Failed = async() =>{
 
 }
  const InterviewResult = (data) =>{
-      
+        const isValueIncluded = access[0]?.sectionId.includes('Create Appointment');
+        if(!isValueIncluded){
+          swal({
+            text: 'UnAuthorized Access',
+            timer: 2000,
+            buttons: false,
+            icon: "error",
+          })
+          return
+        }
       const formData = new FormData()
       formData.append('isPassed',data)
       formData.append('applicantNum',userFulldet.applicantNum)
@@ -566,9 +628,29 @@ const Failed = async() =>{
   
 }
 const FailedAll = async() =>{
+  const isValueIncluded = access[0]?.sectionId.includes('Appointment');
+  if(!isValueIncluded){
+    swal({
+      text: 'UnAuthorized Access',
+      timer: 2000,
+      buttons: false,
+      icon: "error",
+    })
+    return
+  }
   const selectedRows = failedSelectionModel.map((selectedRow) =>
     appointedList.find((row) => row.applicantNum === selectedRow));
+    if(selectedRows.length === 0){
+      swal({
+        text: 'Please Select Users First',
+        timer: 2000,
+        buttons: false,
+        icon: "warning",
+      })
+      return
+    }
     setShowBackdrop(true);
+    let counter = 0;
     for (let i=0 ;i<selectedRows.length;i++){
       const row = selectedRows[i];
       const res = await FetchingBmccSchoinfo.FETCH_SCHOLARSINFO(row.applicantNum);
@@ -584,8 +666,17 @@ const FailedAll = async() =>{
       formData.append('email',res.data.ScholarInf.results1[0].email)
       const response = await FailedUser.FAILED_USER(formData)
       if(response.data.success === 1){
-
         setIsSend('No')
+        counter++;
+        if (counter === selectedRows.length) {
+          setShowBackdrop(false);
+          swal({
+            title: "Success",
+            text: "Appointed Successfully!",
+            icon: "success",
+            button: "OK",
+          });
+        }
       }else{
         setShowBackdrop(false);
         swal({
@@ -596,20 +687,33 @@ const FailedAll = async() =>{
         });
       }
     }
-    setShowBackdrop(false);
-    swal({
-      text: 'Status Updated',
-      timer: 2000,
-      buttons: false,
-      icon: 'success',
-    });
 }
 const Addall = async () => {
+  const isValueIncluded = access[0]?.sectionId.includes('Appointment');
+  if(!isValueIncluded){
+    swal({
+      text: 'UnAuthorized Access',
+      timer: 2000,
+      buttons: false,
+      icon: "error",
+    })
+    return
+  }
   const selectedRows = rowSelectionModel.map((selectedRow) =>
     appointedList.find((row) => row.applicantNum === selectedRow)
   );
+  if(selectedRows.length === 0){
+    swal({
+      text: 'Please Select Users First',
+      timer: 2000,
+      buttons: false,
+      icon: "warning",
+    })
+    return
+  }
   setShowBackdrop(true);
     try {
+      let counter = 0;
       for (let i = 0; i < selectedRows.length; i++) {
         const row = selectedRows[i];
         const applicantNum = row.applicantNum;
@@ -628,6 +732,16 @@ const Addall = async () => {
       .then(res => {
         setQualified(res.data.results.data1);
         setAppointedList(res.data.results.data2)
+        counter++;
+        if (counter === selectedRows.length) {
+          setShowBackdrop(false);
+          swal({
+            title: "Success",
+            text: "Done!",
+            icon: "success",
+            button: "OK",
+          });
+        }
       }
        )
       .catch(err => console.log(err));
@@ -635,13 +749,6 @@ const Addall = async () => {
     } catch (error) {
       console.log(error);
     }
-    setShowBackdrop(false);
-    swal({
-      title: "Success",
-      text: "Done!",
-      icon: "success",
-      button: "OK",
-    });
 };
 
   const events = {};
@@ -713,12 +820,23 @@ const Addall = async () => {
 
   const cancelAppointment = async(e) => {
       e.preventDefault()
+      const isValueIncluded = access[0]?.sectionId.includes('Create Appointment');
+      if(!isValueIncluded){
+        swal({
+          text: 'UnAuthorized Access',
+          timer: 2000,
+          buttons: false,
+          icon: "error",
+        })
+        return
+      }
       const formData = new FormData();
       formData.append('schedDate', selectedAppointment.selectedDate);
       const res = await FetchingApplist.FETCH_APP(formData);
       const userlist = res.data.AppointedList;
 try {
   setShowBackdrop(true);
+  let counter = 0;
   for (let i=0 ;i<userlist.length;i++){
           const data = userlist[i];
           console.log(data);
@@ -729,6 +847,16 @@ try {
           const response = await CancelApp.CANCEL_APP(cancelFormData)
           if(response.data.success === 1){
             setAppointedList(response.data.AppointmentList)
+            counter++;
+            if (counter === userlist.length) {
+              setShowBackdrop(false);
+              swal({
+                title: "Success",
+                text: "Done!",
+                icon: "success",
+                button: "OK",
+              });
+            }
           }else{
             setShowBackdrop(false);
             swal({
@@ -739,13 +867,6 @@ try {
             });
           }
         }
-        setShowBackdrop(false);
-        swal({
-          title: "Success",
-          text: "Done!",
-          icon: "success",
-          button: "OK",
-        });
 } catch (error) {
   console.error('Error fetching data:', error);
 }
@@ -754,11 +875,30 @@ try {
 
   const addOtherUser = (e) => {
     e.preventDefault()
-
+    const isValueIncluded = access[0]?.sectionId.includes('Create Appointment');
+    if(!isValueIncluded){
+      swal({
+        text: 'UnAuthorized Access',
+        timer: 2000,
+        buttons: false,
+        icon: "error",
+      })
+      return
+    }
     const selectedRows = rowSelectionModel.map((selectedRow) =>
     Qualified.find((row) => row.applicantNum === selectedRow)
   );
+      if(selectedRows.length === 0){
+        swal({
+          text: 'Please Select Users First',
+          timer: 2000,
+          buttons: false,
+          icon: "warning",
+        })
+        return
+      }
   setShowBackdrop(true);
+  let counter = 0;
   selectedRows.forEach((data,index) =>{
       const applicantCode = data.applicantCode
       const applicantNum = data.applicantNum
@@ -794,7 +934,16 @@ try {
           setAppointedList(res.data.List.data2)
           setErrors('')
           setRowSelectionModel([])
-          
+          counter++;
+          if (counter === selectedRows.length) {
+            setShowBackdrop(false);
+            swal({
+              title: "Success",
+              text: "Done!",
+              icon: "success",
+              button: "OK",
+            });
+          }
         }
         else{
           setShowBackdrop(false);
@@ -811,17 +960,21 @@ try {
        )
       .catch(err => console.log(err));
     })
-    setShowBackdrop(false);
-    swal({
-      title: "Success",
-      text: "Done!",
-      icon: "success",
-      button: "OK",
-    });
   };
   const cancelBatch = async(date,time,data3) =>{
+    const isValueIncluded = access[0]?.sectionId.includes('Create Appointment');
+    if(!isValueIncluded){
+      swal({
+        text: 'UnAuthorized Access',
+        timer: 2000,
+        buttons: false,
+        icon: "error",
+      })
+      return
+    }
     try {
       setShowBackdrop(true);
+      let counter = 0;
       for (let i=0 ;i<data3.length;i++){
               const data = data3[i];
               const cancelFormData = new FormData();
@@ -833,6 +986,16 @@ try {
               const response = await CancelBatch.CANCEL_BATCH(cancelFormData)
               if(response.data.success === 1){
                 setAppointedList(response.data.AppointmentList)
+                counter++;
+                if (counter === data3.length) {
+                  setShowBackdrop(false);
+                  swal({
+                    title: "Success",
+                    text: "Done!",
+                    icon: "success",
+                    button: "OK",
+                  });
+                }
               }else{
                 setShowBackdrop(false);
                 swal({
@@ -844,13 +1007,6 @@ try {
                 setErrors('')
               }
             }
-            setShowBackdrop(false);
-            swal({
-              title: "Success",
-              text: "Done!",
-              icon: "success",
-              button: "OK",
-            });
     } catch (error) {
       console.error('Error fetching data:', error);
     }
@@ -1238,7 +1394,7 @@ try {
   const Noresponse = appointedList && appointedList.length > 0
   ? appointedList.filter(user => user.canGo === 'Pending')
   : '';
-  console.log(activeState)
+
   return (
     <>
       <StyledBackdrop open={showBackdrop}>

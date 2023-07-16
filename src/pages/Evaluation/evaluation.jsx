@@ -6,7 +6,7 @@ import { DataGrid,} from '@mui/x-data-grid';
 import { Tabs, Tab, Box, Modal,Card,Button } from "@mui/material";  
 import { ApplicantsRequest, FetchingApplicantsInfo, ListofSub,
     CheckingSubs, CheckingApplicants,UserScore,SetApplicant,FailedUser,FetchingBmccSchoinfo,
-      UpdatePassSlots,FetchPassSlots,DecrePassSlots,GrantAccess } from "../../api/request";
+      UpdatePassSlots,FetchPassSlots,DecrePassSlots,GrantAccess,ListAccess } from "../../api/request";
 import TextField from '@mui/material/TextField';
 import swal from 'sweetalert';
 import Typography from '@mui/material/Typography';
@@ -48,6 +48,7 @@ const Evaluation = () => {
     const [userscore,setUserScore] = useState([]);
     const [selectedInfo, setSelectedInfo] = useState({});
     const [applicantsInfo, setApplicantInfo] = useState([]);
+    const [access,setAccess] = useState([])
     const [tabValue, setTabValue] = useState(0);
     const [open, setOpen] = useState(false);
     const handleOpen = () => setOpen(true);
@@ -87,6 +88,9 @@ const Evaluation = () => {
           const response = await ApplicantsRequest.ALL_APPLICANTS();
           const pass = await FetchPassSlots.FETCH_PASSSLOTS()
           const ForEva = response.data.results?.filter(user => user.status === 'For Evaluation')
+          let acc = await ListAccess.ACCESS()
+          const empacc = acc.data.result?.filter(data => data.employeeName === user.name)
+          setAccess(empacc)
           setData(ForEva);
           setPassSlot(pass.data.result[0])
           setShowBackdrop(false);
@@ -119,6 +123,16 @@ const Evaluation = () => {
     
       }
       const failed = async(data) =>{
+        const isValueIncluded = access[0]?.sectionId.includes('Evaluation');
+        if(!isValueIncluded){
+          swal({
+            text: 'UnAuthorized Access',
+            timer: 2000,
+            buttons: false,
+            icon: "error",
+          })
+          return
+        }
         const res = await FetchingBmccSchoinfo.FETCH_SCHOLARSINFO(data.applicantNum);
         const schoapplied = res.data.ScholarInf.results1[0].SchoIarshipApplied;
         const batch = res.data.ScholarInf.results1[0].Batch;
@@ -428,7 +442,16 @@ const Evaluation = () => {
           );
 
     const setFirsttoSecStat = async(data) =>{
-        console.log(data)
+      const isValueIncluded = access[0]?.sectionId.includes('Evaluation');
+      if(!isValueIncluded){
+        swal({
+          text: 'UnAuthorized Access',
+          timer: 2000,
+          buttons: false,
+          icon: "error",
+        })
+        return
+      }
         if (passSlot.slots === 0) {
           swal({
             text: 'No Slots Available',
@@ -473,7 +496,8 @@ const Evaluation = () => {
           .catch(err => console.log(err));
     }
     const ScoreSlot = () =>{
-      if(user.name !== 'Admin'){
+      const isValueIncluded = access[0]?.sectionId.includes('Passing Score and Slots');
+      if(!isValueIncluded){
         swal({
           text: 'UnAuthorized Access',
           timer: 2000,
@@ -516,10 +540,28 @@ const Evaluation = () => {
         .catch(err => console.log(err));
     }
     const Addall = async () => {
+      const isValueIncluded = access[0]?.sectionId.includes('Evaluation');
+      if(!isValueIncluded){
+        swal({
+          text: 'UnAuthorized Access',
+          timer: 2000,
+          buttons: false,
+          icon: "error",
+        })
+        return
+      }
       const selectedRows = rowSelectionModel.map((selectedRow) =>
         data.find((row) => row.applicantNum === selectedRow)
       );
-    
+      if(selectedRows.length === 0){
+        swal({
+          text: 'Please Select Users First',
+          timer: 2000,
+          buttons: false,
+          icon: "warning",
+        })
+        return
+      }
       if (passSlot.slots === 0) {
    
         swal({
@@ -543,6 +585,7 @@ const Evaluation = () => {
       if (decre.data.success === 1) {
         try {
           setShowBackdrop(true);
+          let counter = 0;
           for (let i = 0; i < selectedRows.length; i++) {
             const row = selectedRows[i];
     
@@ -565,6 +608,16 @@ const Evaluation = () => {
               setData(res.data.result);
               setPassscore(decre.data.results[0].passingscore);
               setSlots(decre.data.results[0].slots);
+              counter++;
+              if (counter === selectedRows.length) {
+                setShowBackdrop(false);
+                swal({
+                  title: "Success",
+                  text: "Done!",
+                  icon: "success",
+                  button: "OK",
+                });
+              }
             } else {
               setShowBackdrop(false);
               swal({
@@ -575,13 +628,6 @@ const Evaluation = () => {
               });
             }
           }
-          setShowBackdrop(false);
-          swal({
-            title: "Success",
-            text: "Updated!",
-            icon: "success",
-            button: "OK",
-          });
         } catch (error) {
           console.log(error);
         }
@@ -597,9 +643,29 @@ const Evaluation = () => {
       }
     };
     const FailedAll = async() =>{
+      const isValueIncluded = access[0]?.sectionId.includes('Evaluation');
+      if(!isValueIncluded){
+        swal({
+          text: 'UnAuthorized Access',
+          timer: 2000,
+          buttons: false,
+          icon: "error",
+        })
+        return
+      }
       const selectedRows = failedSelectionModel.map((selectedRow) =>
         data.find((row) => row.applicantNum === selectedRow));
+        if(selectedRows.length === 0){
+          swal({
+            text: 'Please Select Users First',
+            timer: 2000,
+            buttons: false,
+            icon: "warning",
+          })
+          return
+        }
         setShowBackdrop(true);
+        let counter = 0;
         for (let i=0 ;i<selectedRows.length;i++){
           const row = selectedRows[i];
           const schoapplied = row.SchoIarshipApplied
@@ -617,6 +683,16 @@ const Evaluation = () => {
           if(response.data.success === 1){
             setData(response.data.result);
             setIsSend('No')
+            counter++;
+            if (counter === selectedRows.length) {
+              setShowBackdrop(false);
+              swal({
+                title: "Success",
+                text: "Done!",
+                icon: "success",
+                button: "OK",
+              });
+            }
           }else{
             setShowBackdrop(false);
             swal({
@@ -627,13 +703,6 @@ const Evaluation = () => {
             });
           }
         }
-        setShowBackdrop(false);
-        swal({
-          title: "Success",
-          text: "Done!",
-          icon: "success",
-          button: "OK",
-        });
     }
     const Access = async() =>{
       const formData = new FormData();

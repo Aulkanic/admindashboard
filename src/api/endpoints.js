@@ -56,6 +56,8 @@ const Endpoints = {
     SET_OFFLINE:"admin/Logout",
     GRANT_ACCESS:"admin/GrantAccess",
     GRANT_ACCESS1:"admin/GrantAccessApp",
+    WEB_SECTION:"admin/WebSection",
+    EMP_ACCESS:"admin/EmployeeAccess",
     WEBSITE:"admin/WebsiteImg",
     FETCH_WEBSITE:"admin/WebImg",
     CREATE_ANNOUNCEMENT:'announce/createannounced',

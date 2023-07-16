@@ -7,7 +7,7 @@ import Button from '@mui/material/Button';
 import Typography from '@mui/material/Typography';
 import { DataGrid} from '@mui/x-data-grid';
 import React, {useEffect, useState} from 'react'
-import { FetchingBmccScho, FetchingBmccSchoinfo,ScholarStand ,ListofReq,UserActivity} from '../../api/request';
+import { FetchingBmccScho, FetchingBmccSchoinfo,ScholarStand ,ListofReq,UserActivity,ListAccess} from '../../api/request';
 import './scholar.css'
 import Badge from '@mui/material/Badge';
 import Avatar from '@mui/material/Avatar';
@@ -34,6 +34,8 @@ import Toolbar from '@mui/material/Toolbar';
 import IconButton from '@mui/material/IconButton';
 import { styled, ThemeProvider, createTheme } from '@mui/material';
 import { Backdrop, CircularProgress } from '@mui/material';
+import { useContext } from "react";
+import { admininfo } from "../../App";
 
 const theme = createTheme();
 const StyledBackdrop = styled(Backdrop)`
@@ -116,6 +118,8 @@ const ViewButton = styled(Button)`
 
 const Scholars = () => {
   const [data, setData] = useState([]);
+  const { loginUser,user } = useContext(admininfo);
+  const [access,setAccess] = useState([])
   const [open, setOpen] = useState(false);
   const [open1, setOpen1] = useState(false);
   const [value, setValue] = useState(0);
@@ -141,7 +145,9 @@ const Scholars = () => {
       setShowBackdrop(true);
       const scholars = await FetchingBmccScho.FETCH_SCHOLARS()
       const req = await ListofReq.FETCH_REQUIREMENTS()
-      console.log(scholars)
+      let acc = await ListAccess.ACCESS()
+      const empacc = acc.data.result?.filter(data => data.employeeName === user.name)
+      setAccess(empacc)
       const data = scholars.data.Scholars.filter(data => data.status === 'Active' || data.status === 'Hold')
       setData(data)
       setComplete(req.data.Requirements)
@@ -389,6 +395,16 @@ const Scholars = () => {
         }
     }
     const RemoveGrant = (data) =>{
+      const isValueIncluded = access[0]?.sectionId.includes('Scholars');
+      if(!isValueIncluded){
+        swal({
+          text: 'UnAuthorized Access',
+          timer: 2000,
+          buttons: false,
+          icon: "error",
+        })
+        return
+      }
         const status = 'Revoke'
         const formData = new FormData();
         formData.append('applicantNum',data.applicantNum)
@@ -407,10 +423,30 @@ const Scholars = () => {
 
     }
     const RemoveGrantAll = () =>{
+      const isValueIncluded = access[0]?.sectionId.includes('Scholars');
+      if(!isValueIncluded){
+        swal({
+          text: 'UnAuthorized Access',
+          timer: 2000,
+          buttons: false,
+          icon: "error",
+        })
+        return
+      }
       const selectedRows = rowSelectionModel.map((selectedRow) =>
       data.find((row) => row.applicantNum === selectedRow)
     );
+    if(selectedRows.length === 0){
+      swal({
+        text: 'Please Select Scholars First',
+        timer: 2000,
+        buttons: false,
+        icon: "warning",
+      })
+      return
+    }
       setShowBackdrop(true);
+      let counter = 0;
       for (let i = 0; i < selectedRows.length; i++) {
         const row = selectedRows[i];
         const status = 'Revoke'
@@ -420,29 +456,51 @@ const Scholars = () => {
         formData.append('email',row.email)
         ScholarStand.UPDATE_SCHOSTAND(formData)
         .then(res => {
-          console.log(res)
           const data = res.data.result?.filter(data => data.status === 'Active' || data.status === 'Hold')
           setData(data)
- 
+          counter++;
+          if (counter === selectedRows.length) {
+            setShowBackdrop(false);
+            swal({
+              title: "Success",
+              text: "Done!",
+              icon: "success",
+              button: "OK",
+            });
+          }
         }
          )
         .catch(err => console.log(err));
       }
-      setShowBackdrop(false);
-      swal('Successfully Revoke')
 
     }
     const NotifyAll = () =>{
-      console.log(data)
+      const isValueIncluded = access[0]?.sectionId.includes('Scholars');
+      if(!isValueIncluded){
+        swal({
+          text: 'UnAuthorized Access',
+          timer: 2000,
+          buttons: false,
+          icon: "error",
+        })
+        return
+      }
       const selectedRows = rowSelectionModel.map((selectedRow) =>
       data.find((row) => row.applicantNum === selectedRow)
     );
-
+    if(selectedRows.length === 0){
+      swal({
+        text: 'Please Select Scholars First',
+        timer: 2000,
+        buttons: false,
+        icon: "warning",
+      })
+      return
+    }
     setShowBackdrop(true);
+    let counter = 0;
       for (let i = 0; i < selectedRows.length; i++) {
-
         const row = selectedRows[i];
-        console.log(row)
         const status = 'Hold'
         const formData = new FormData();
         formData.append('applicantNum',row.applicantNum)
@@ -450,16 +508,23 @@ const Scholars = () => {
         formData.append('email',row.email)
         ScholarStand.UPDATE_SCHOSTAND(formData)
         .then(res => {
-          console.log(res)
           const data = res.data.result?.filter(data => data.status === 'Active' || data.status === 'Hold')
           setData(data)
-
+          counter++;
+          if (counter === selectedRows.length) {
+            setShowBackdrop(false);
+            swal({
+              title: "Success",
+              text: "Successfully Sent and Notify the Selected Users",
+              icon: "success",
+              button: "OK",
+            });
+          }
         }
          )
         .catch(err => console.log(err));
       }
-      setShowBackdrop(false);
-      swal('Successfully Sent and Notify the Selected Users')
+
     }
     const renewalStatus = schoinf4.map((data) => {
       const imageFile = data.applicantData.length > 0 ? data.applicantData[0].File : 'https://drive.google.com/uc?id=1EXWK8SeamLARC7wnCTj4YXQhT74Z-zIn';

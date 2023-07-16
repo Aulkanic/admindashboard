@@ -12,15 +12,19 @@ import Button from '@mui/material/Button';
 import Avatar from '@mui/material/Avatar';
 import TextField from '@mui/material/TextField';
 import swal from 'sweetalert';
-import { FetchingAnnounce,CreateAnnouncement } from '../../api/request';
+import { FetchingAnnounce,CreateAnnouncement,ListAccess } from '../../api/request';
 import { styled, ThemeProvider } from '@mui/material';
 import { Backdrop, CircularProgress } from '@mui/material';
+import { useContext } from "react";
+import { admininfo } from "../../App";
 
 const StyledBackdrop = styled(Backdrop)`
   z-index: ${({ theme }) => theme.zIndex.drawer + 1};
 `;
 
 const Announcement = () => {
+    const { loginUser,user } = useContext(admininfo);
+    const [access,setAccess] = useState([])
     const [announced,setAnnounced] = useState([]);
     const [title,setTitle] = useState('');
     const [content,setContent] = useState('');
@@ -30,6 +34,9 @@ const Announcement = () => {
         async function Fetch(){
           setShowBackdrop(true);
           let response = await FetchingAnnounce.FETCH_ANNOUNCE();
+          let acc = await ListAccess.ACCESS()
+          const empacc = acc.data.result?.filter(data => data.employeeName === user.name)
+          setAccess(empacc)
           const dat = response.data.Announce
           setAnnounced(dat.reverse())
           setShowBackdrop(false);
@@ -60,6 +67,25 @@ const Announcement = () => {
       )
     })
     const Create = async() =>{
+      const isValueIncluded = access[0]?.sectionId.includes('News and Announcement');
+      if(!isValueIncluded){
+        swal({
+          text: 'UnAuthorized Access',
+          timer: 2000,
+          buttons: false,
+          icon: "error",
+        })
+        return
+      }
+      if(title === '' || content === ''){
+        swal({
+          text: 'Please Provide necessary Information',
+          timer: 2000,
+          buttons: false,
+          icon: "warning",
+        })
+        return
+      }
       const formData = new FormData();
       formData.append('title', title);
       formData.append('content',content)

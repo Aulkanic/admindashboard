@@ -77,6 +77,7 @@ const Contact = () => {
   const [docsfor,setDocsfor] = useState('');
   const [openDialog, setOpenDialog] = useState(false);
   const [selected,setSelected] = useState([])
+  const [access,setAccess] = useState([])
   const handleCloseDialog = () => setOpenDialog(false);
   const [accessList,setAccesslist] = useState([]);
   const handleOpenDialog = (data) => {
@@ -147,6 +148,9 @@ const Contact = () => {
       const req = await ListofReq.FETCH_REQUIREMENTS()
       const scho = await FetchingSchoProg.FETCH_SCHOPROG()
       const res = await ListAccess.ACCESS()
+      let acc = await ListAccess.ACCESS()
+      const empacc = acc.data.result?.filter(data => data.employeeName === user.name)
+      setAccess(empacc)
       setAccesslist(res.data.result[0])
       setReqlist(req.data.Requirements.results1);
       setSublist(req.data.Requirements.results2);
@@ -178,6 +182,25 @@ const Contact = () => {
 
   };
   const AddReq = (e) =>{
+    const isValueIncluded = access[0]?.sectionId.includes('Requirements');
+    if(!isValueIncluded){
+      swal({
+        text: 'UnAuthorized Access',
+        timer: 2000,
+        buttons: false,
+        icon: "error",
+      })
+      return
+    }
+    if(schoName === '' || requirementName === '' || batch === '' || date === '' || docsfor === ''){
+      swal({
+        text: 'Please Provide necessary Information',
+        timer: 2000,
+        buttons: false,
+        icon: "warning",
+      })
+      return
+    }
     e.preventDefault();
     let errors = {};
     const currentDate = moment();
@@ -219,8 +242,17 @@ const Contact = () => {
   }
   const Edit = () =>{
     let errors = {};
+    const isValueIncluded = access[0]?.sectionId.includes('Requirements');
+    if(!isValueIncluded){
+      swal({
+        text: 'UnAuthorized Access',
+        timer: 2000,
+        buttons: false,
+        icon: "error",
+      })
+      return
+    }
     const currentDate = moment();
-
     if(!newDeadline || newDeadline === ''){
       errors.newdate = 'Select A Deadline Date First'
       swal({
@@ -267,15 +299,16 @@ const Contact = () => {
   }
   }
   const Delete = (data) =>{
-    if (user.jobDescription !== 'Admin' || user.jobDescription !== accessList.reqSec) {
+    const isValueIncluded = access[0]?.sectionId.includes('Requirements');
+    if(!isValueIncluded){
       swal({
         text: 'UnAuthorized Access',
         timer: 2000,
         buttons: false,
         icon: "error",
-      });
-      return;
-    } 
+      })
+      return
+    }
     const formData = new FormData();
     formData.append('reqID',data.requirementID)
     setShowBackdrop(true);

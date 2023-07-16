@@ -2,7 +2,7 @@ import React, { useEffect } from 'react'
 import Navbar from "../../components/navbar/Navbar"
 import Sidebar from "../../components/sidebar/Sidebar"
 import './website.css'
-import { Colorlist,Colors,WebImg,WebsiteImg,CreateTrivia,FetchTrivia,FetchFaqs,CreateFaqs,UpdateFaqs,DeleteFaqs } from '../../api/request'
+import { Colorlist,Colors,WebImg,WebsiteImg,CreateTrivia,FetchTrivia,FetchFaqs,CreateFaqs,UpdateFaqs,DeleteFaqs,ListAccess } from '../../api/request'
 import Card from '@mui/material/Card';
 import CardContent from '@mui/material/CardContent';
 import CardMedia from '@mui/material/CardMedia';
@@ -28,6 +28,8 @@ import DialogContent from '@mui/material/DialogContent';
 import DialogContentText from '@mui/material/DialogContentText';
 import DialogTitle from '@mui/material/DialogTitle';
 import AddIcon from '@mui/icons-material/Add';
+import { useContext } from "react";
+import { admininfo } from "../../App";
 
 const theme = createTheme();
 const StyledBackdrop = styled(Backdrop)`
@@ -38,6 +40,8 @@ const StyledBackdrop = styled(Backdrop)`
 
 
 const Website = () => {
+  const { loginUser,user } = useContext(admininfo);
+  const [access,setAccess] = useState([])
   const [selectedColor, setSelectedColor] = useState(''); // Initial color
   const [selectedColor1, setSelectedColor1] = useState(''); // Initial color
   const [btnColor, setBtnColor] = useState(''); // Initial color
@@ -93,6 +97,9 @@ const Website = () => {
       const req = await WebImg.FETCH_WEB()
       const triv = await FetchTrivia.ETCH_TRIVIA()
       const fqs = await FetchFaqs.FETCH_FAQS()
+      let acc = await ListAccess.ACCESS()
+      const empacc = acc.data.result?.filter(data => data.employeeName === user.name)
+      setAccess(empacc)
       setImglist(req.data.result)
       setColorlist(res.data.result[0])
       setTrivia(triv.data.Trivias[0])
@@ -115,6 +122,16 @@ const Website = () => {
 
 
   const setColor = async() =>{
+    const isValueIncluded = access[0]?.sectionId.includes('Website Maintenance');
+    if(!isValueIncluded){
+      swal({
+        text: 'UnAuthorized Access',
+        timer: 2000,
+        buttons: false,
+        icon: "error",
+      })
+      return
+    }
     const formData = new FormData();
     formData.append('color1',selectedColor || colorList.bgColor)
     formData.append('color2',selectedColor1 || colorList.bgColor1)
@@ -136,6 +153,16 @@ const Website = () => {
     .catch((err)=>console.error(`Error:${err}`))
   }
   const upload = async() =>{
+    const isValueIncluded = access[0]?.sectionId.includes('Website Maintenance');
+    if(!isValueIncluded){
+      swal({
+        text: 'UnAuthorized Access',
+        timer: 2000,
+        buttons: false,
+        icon: "error",
+      })
+      return
+    }
       const Images = [
         { ImgFor: 'LandingPage', File: limg || (imgList[0] && imgList[0].File) },
         { ImgFor: 'Carousel1', File: carouimg || (imgList[1] && imgList[1].File) },
@@ -160,6 +187,16 @@ const Website = () => {
       swal('Uploaded Successfully')
   }
   const trivCreate = async() =>{
+    const isValueIncluded = access[0]?.sectionId.includes('Website Maintenance');
+    if(!isValueIncluded){
+      swal({
+        text: 'UnAuthorized Access',
+        timer: 2000,
+        buttons: false,
+        icon: "error",
+      })
+      return
+    }
     const formData = new FormData();
     formData.append('title',trivtitle || trivia.title)
     formData.append('content',trivcon || trivia.content)
@@ -180,6 +217,16 @@ const Website = () => {
     .catch((err)=>console.error(`Error:${err}`))    
   }
   const createFaqs = async() =>{
+    const isValueIncluded = access[0]?.sectionId.includes('Website Maintenance');
+    if(!isValueIncluded){
+      swal({
+        text: 'UnAuthorized Access',
+        timer: 2000,
+        buttons: false,
+        icon: "error",
+      })
+      return
+    }
     const formData = new FormData()
     formData.append('answer',answer)
     formData.append('questions',questions)
@@ -200,7 +247,16 @@ const Website = () => {
     .catch((err)=>console.error(`Error:${err}`)) 
   }
   const editFaqs = async() =>{
-    console.log(oldfaqs)
+    const isValueIncluded = access[0]?.sectionId.includes('Website Maintenance');
+    if(!isValueIncluded){
+      swal({
+        text: 'UnAuthorized Access',
+        timer: 2000,
+        buttons: false,
+        icon: "error",
+      })
+      return
+    }
     const formData = new FormData()
     formData.append('answer',answer || oldfaqs.faqsAnswers)
     formData.append('id',oldfaqs.faqsId)
@@ -222,6 +278,16 @@ const Website = () => {
     .catch((err)=>console.error(`Error:${err}`)) 
   }
   const deleteFaqs = async(data) =>{
+    const isValueIncluded = access[0]?.sectionId.includes('Website Maintenance');
+    if(!isValueIncluded){
+      swal({
+        text: 'UnAuthorized Access',
+        timer: 2000,
+        buttons: false,
+        icon: "error",
+      })
+      return
+    }
     const id = data.faqsId
     await DeleteFaqs.DELETE_FAQS(id)
     .then((res) =>{
