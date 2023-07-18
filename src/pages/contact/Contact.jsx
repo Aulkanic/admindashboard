@@ -192,7 +192,7 @@ const Contact = () => {
       })
       return
     }
-    if(schoName === '' || requirementName === '' || batch === '' || date === '' || docsfor === ''){
+    if(schoName === '' || requirementName === '' || batch === '' || deadline === '' || docsfor === ''){
       swal({
         text: 'Please Provide necessary Information',
         timer: 2000,

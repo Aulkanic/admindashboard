@@ -14,7 +14,7 @@ import TextField from '@mui/material/TextField';
 import Breadcrumbs from '@mui/material/Breadcrumbs';
 import Link from '@mui/material/Link';
 import { DataGrid, GridToolbar } from '@mui/x-data-grid';
-import { FetchingReportApp,FetchingReportScho,FetchingReportUser } from '../../api/request';
+import { FetchingReportApp,FetchingReportScho,FetchingReportUser,RevokeUserList } from '../../api/request';
 import { LineChart } from '@mui/x-charts/LineChart';
 import { PieChart, pieArcLabelClasses } from '@mui/x-charts/PieChart';
 
@@ -31,11 +31,13 @@ const Report = () => {
             let res1 = await FetchingReportApp.FETCH_APPLICANTS()
             let res2 = await FetchingReportScho.FETCH_SCHOLARS()
             let res3 = await FetchingReportUser.FETCH_USERACCS()
-            const res = res1.data.result?.filter(data => data.status === 'For Evaluation' || data.status !== 'Qualified' )
-            const failed = res1.data.result?.filter(data => data.status === 'Failed' || data.status === 'Revoke')
+            let res4 = await RevokeUserList.FETCH_REVOKE()
+            console.log(res4)
+            const res = res1.data.result?.filter(data => data.status === 'For Evaluation' || data.status === 'Qualified' || data.status === 'Applicant')
+            const activescho = res2.data.result?.filter(data => data.status === 'Active' || data.status === 'Hold')
             setApplicants(res)
-            setFailed(failed)
-            setScholars(res2.data.result)
+            setFailed(res4.data.result)
+            setScholars(activescho)
             setUserAccs(res3.data.result)
         }
         Fetch() 
@@ -121,7 +123,7 @@ const Report = () => {
         },
     
         {
-          field: 'standing',
+          field: 'status',
           headerName: 'Remarks',
           width: 90,
           editable: false,
@@ -170,6 +172,47 @@ const Report = () => {
           width: 90,
           editable: false,
           headerAlign: 'center',
+        
+        },
+      ];
+    const column3 = [
+        { 
+          field: 'applicantNum',
+          headerName: 'Applicant ID',
+          width: 90, 
+          headerAlign: 'center',
+        
+        },
+    
+        {
+          field: 'Name',
+          headerName: 'Name',
+          width: 200,
+          editable: true,
+          headerAlign: 'center'
+    
+        },
+        {
+          field: 'ScholarshipApplied',
+          headerName: 'ScholarshipApplied',
+          width: 250,
+          editable: true,
+        
+        },
+    
+        {
+          field: 'Batch',
+          headerName: 'Batch',
+          width: 200,
+          editable: false,
+        
+        },
+    
+        {
+          field: 'Reason',
+          headerName: 'Reason',
+          width: 300,
+          editable: false,
         
         },
       ];
@@ -267,6 +310,17 @@ const Report = () => {
           User Account
         </Link>
         </Button>
+        <Button onClick={() => setActiveSection('failed')}>
+        <Link
+          underline="hover"
+          sx={{
+            color: activeSection === 'failed' ? 'white' : 'black',
+          }}
+          aria-current="page"
+        >
+          Failed Applicants/Scholars
+        </Link>
+        </Button>
         </Breadcrumbs>
         </div>
                 {activeSection === 'applicants' && (
@@ -311,6 +365,24 @@ const Report = () => {
                 slots={{ toolbar: GridToolbar }}
                     columns={column2}
                     rows={useraccs}
+                    getRowId={(row) => row.applicantNum}
+                    scrollbarSize={10}
+                    initialState={{
+                    pagination: {
+                        paginationModel: {
+                        pageSize: 5,
+                        },},}}
+
+                    checkboxSelection   
+                    disableRowSelectionOnClick
+                    pageSizeOptions={[25]}
+                />
+                )}
+                {activeSection === 'failed' && (
+                <DataGrid
+                slots={{ toolbar: GridToolbar }}
+                    columns={column3}
+                    rows={failed}
                     getRowId={(row) => row.applicantNum}
                     scrollbarSize={10}
                     initialState={{

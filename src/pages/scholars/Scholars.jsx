@@ -406,8 +406,13 @@ const Scholars = () => {
         return
       }
         const status = 'Revoke'
+        const reason = 'Inactive'
         const formData = new FormData();
+        formData.append('batch',data.Batch)
+        formData.append('ScholarshipApplied',data.scholarshipApplied)
         formData.append('applicantNum',data.applicantNum)
+        formData.append('Name',data.Name)
+        formData.append('Reason',data.reason)
         formData.append('status',status)
         formData.append('email',data.email)
         setShowBackdrop(true);
@@ -450,7 +455,13 @@ const Scholars = () => {
       for (let i = 0; i < selectedRows.length; i++) {
         const row = selectedRows[i];
         const status = 'Revoke'
+        const reason = 'Inactive'
         const formData = new FormData();
+        formData.append('batch',data.Batch)
+        formData.append('ScholarshipApplied',data.scholarshipApplied)
+        formData.append('applicantNum',data.applicantNum)
+        formData.append('Name',data.Name)
+        formData.append('Reason',reason)
         formData.append('applicantNum',row.applicantNum)
         formData.append('status',status)
         formData.append('email',row.email)
@@ -689,7 +700,7 @@ const Scholars = () => {
             <Card sx={{margin:'10px'}}>
               {value === 0 && <>
                 <div>
-                  <Card>
+                  <Card style={{padding:'15px'}}>
                     <Typography>Name: {schoinf1.Name}</Typography>
                     <Typography>Age: {schoinf1.age}</Typography>
                     <Typography>Gender: {schoinf1.gender}</Typography>
@@ -703,14 +714,13 @@ const Scholars = () => {
               </>}
               {value === 1 && <>
               <div>
-                <Card>
+                <Card sx={{padding:'15px'}}>
                 <Typography>Name: {schoinf1.Name}</Typography>
                 <Typography>Applicant Code: {schoinf2.applicantCode}</Typography>
                 <Typography>Scholar Code: {schoinf2.scholarCode}</Typography>
                 <Typography>Scholarship Applied: {schoinf2.scholarshipApplied}</Typography>
                 <Typography>Date Applied: {schoinf1.DateApplied}</Typography>
                 <Typography>Date Approved: {schoinf1.DateApproved}</Typography>
-
                 </Card>
               </div>
               </>}

@@ -565,6 +565,28 @@ const DeleteAuth = (list,data) =>{
           </Toolbar>
         </AppBar>
            <Box sx={{padding:'15px',backgroundColor:'#f1f3fa'}}>
+            <Card sx={{padding:'15px'}}>
+              <Typography>Notes:</Typography>
+              <ul>
+                  <li><Typography>Create Accounts - Responsible for Creating an Accounts of Employee and assigning List of Access to the BMCC Website.</Typography></li>
+                  <li><Typography>Manage Accounts - The one who responsible for editing the details and status of the Employee.</Typography></li>
+                  <li><Typography>Scholarship Programs - Incharge of Creating Scholarship Program and managing the status of it.</Typography></li>
+                  <li><Typography>Score Card - person who set up the score of the specified questions and answer in Application Form.</Typography></li>
+                  <li><Typography>Requirements - responsible for Creating Lists of Requirements for the specific Scholarship Program.</Typography></li>
+                  <li><Typography>Evaluation - The one who evaluate and set the Registered Applicants to be an Applicants.</Typography></li>
+                  <li><Typography>Passing Score and Slots - Incharge of Limiting and Changing the Passing Score and the Available Slots for a Certain Scholarship.</Typography></li>
+                  <li><Typography>Documents Checking - The one who will check the submitted Documents of the Applicants.</Typography></li>
+                  <li><Typography>Applicants - Responsible for Adding and Failing the Applicants.</Typography></li>
+                  <li><Typography>Create Appointment - The one who will Scheduled the Appointment of the Qualified Applicants and also evaluate if the Qualified Applicants passed the Interview.</Typography></li>
+                  <li><Typography>Appointment - Responsible for Adding and Failing the Qualified Applicants.</Typography></li>
+                  <li><Typography>Scholars - Incharge of Monitoring the Scholars.</Typography></li>
+                  <li><Typography>News and Announcement - The one who will create A Latest News/Announcement for Informing the Scholars and Applicants.</Typography></li>
+                  <li><Typography>Rules - Person who Implement Rules of the Scholarship Program.</Typography></li>
+                  <li><Typography>Website Maintenance - Responsible for regularly updating the content of The Website For Applicants and Scholars.</Typography></li>
+                  <li><Typography>Reports - The one who will create a Summary of Data for Scholarship Program .</Typography></li>
+
+              </ul>
+            </Card>
            <div style={{margin:'15px'}}> 
         <label htmlFor="employee">Employee:</label>
         <Select

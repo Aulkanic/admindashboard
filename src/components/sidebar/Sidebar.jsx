@@ -69,7 +69,7 @@ const Sidebar = () => {
             </Link>
             <p className="title"> Web </p>
             <Link to='/faqs' style={{ textDecoration: "none" }}>
-            <li onClick={() =>setActiveSection(1)} style={{backgroundColor: activeSection === 1 ? 'lightgreen' : 'null'}}>
+            <li>
               <GroupsIcon className='icon'/>
               <span> Employees </span>
             </li>

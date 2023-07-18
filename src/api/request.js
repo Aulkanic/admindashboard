@@ -233,6 +233,12 @@ export const DeleteFaqs = {
 export const WebSection = {
     WEB_SEC: () => axiosInstance.get(Endpoints.WEB_SECTION)
 }
+export const RevokeUserList = {
+    FETCH_REVOKE: () => axiosInstance.get(Endpoints.FETCH_REVOKE)
+}
 export const EmployeeAccess = {
     EMP_ACCESS: (data) => axiosInstance.post(Endpoints.EMP_ACCESS,data)
+}
+export const Weblinks = {
+    UPDATE_LINKS: (data) => axiosInstance.patch(Endpoints.LINKS,data)
 }

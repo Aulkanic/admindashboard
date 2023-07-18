@@ -2,7 +2,8 @@ import React, { useEffect } from 'react'
 import Navbar from "../../components/navbar/Navbar"
 import Sidebar from "../../components/sidebar/Sidebar"
 import './website.css'
-import { Colorlist,Colors,WebImg,WebsiteImg,CreateTrivia,FetchTrivia,FetchFaqs,CreateFaqs,UpdateFaqs,DeleteFaqs,ListAccess } from '../../api/request'
+import { Colorlist,Colors,WebImg,WebsiteImg,CreateTrivia,FetchTrivia,FetchFaqs,CreateFaqs,UpdateFaqs,DeleteFaqs,ListAccess 
+        ,Weblinks} from '../../api/request'
 import Card from '@mui/material/Card';
 import CardContent from '@mui/material/CardContent';
 import CardMedia from '@mui/material/CardMedia';
@@ -30,6 +31,10 @@ import DialogTitle from '@mui/material/DialogTitle';
 import AddIcon from '@mui/icons-material/Add';
 import { useContext } from "react";
 import { admininfo } from "../../App";
+import FacebookIcon from '@mui/icons-material/Facebook';
+import YouTubeIcon from '@mui/icons-material/YouTube';
+import MailOutlineIcon from '@mui/icons-material/MailOutline';
+import CallIcon from '@mui/icons-material/Call';
 
 const theme = createTheme();
 const StyledBackdrop = styled(Backdrop)`
@@ -65,6 +70,10 @@ const Website = () => {
   const [expanded, setExpanded] = useState(false);
   const [open, setOpen] = useState(false);
   const [open1, setOpen1] = useState(false);
+  const [fb,setFB] = useState('')
+  const [yt,setYT] = useState('')
+  const [gm,setGM] = useState('')
+  const [tele,setTele] = useState('')
 
   const handleClickOpen = (data) => {
     setOldFaqs(data)
@@ -306,6 +315,36 @@ const Website = () => {
     })
     .catch((err)=>console.error(`Error:${err}`)) 
   }
+  const LinksUpdate = async() =>{
+    const isValueIncluded = access[0]?.sectionId.includes('Website Maintenance');
+    if(!isValueIncluded){
+      swal({
+        text: 'UnAuthorized Access',
+        timer: 2000,
+        buttons: false,
+        icon: "error",
+      })
+      return
+    }
+      const formData = new FormData()
+      formData.append('fb',fb || colorList.fblink)
+      formData.append('yt',yt || colorList.ytlink)
+      formData.append('gm',gm || colorList.gmlink)
+      formData.append('tele',tele || colorList.telephone)
+      await Weblinks.UPDATE_LINKS(formData)
+      .then((res) =>{
+        setColorlist(res.data.result[0])
+        setShowBackdrop(false);
+        swal({
+          title: "Success",
+          text: "Being Updated!",
+          icon: "success",
+          button: "OK",
+        });
+  
+      })
+      .catch((err)=>console.error(`Error:${err}`))
+  }
 
   return (
     <>
@@ -381,6 +420,24 @@ const Website = () => {
           Keep your website's content fresh and relevant by regularly updating text, images, videos, and other media. This includes adding new content, removing outdated information, and ensuring all links are working correctly.
           </Typography>
             <div style={{width:'100%',margin: 20,height:'100%'}}>
+                <div style={{width:'90%',height:'100%'}}>
+                    <Card sx={{width:'98.5%',margin:'10px 0px 10px 0px',textAlign:'center',backgroundColor:'blue',padding:'10px'}}>
+                      <Typography sx={{fontSize:'20px',fontWeight:'1000',color:'white'}}>Links</Typography>
+                    </Card> 
+                    <div style={{width:'100%',display:'flex',justifyContent:'space-around',backgroundColor:'white'}}> 
+                    <Card elevation={0} sx={{padding:'10px',display:'flex',flexDirection:'column'}}>
+                      <FacebookIcon sx={{fontSize:'60px',color:'blue'}}/><TextField variant='outlined' value={fb || colorList.fblink} onChange={(e) =>setFB(e.target.value)} label='Facebook Link'/>
+                      <YouTubeIcon sx={{fontSize:'60px',color:'red'}}/><TextField value={yt} onChange={(e) =>setYT(e.target.value)} label='Youtube Link'/>
+                    </Card>
+                    <Card elevation={0} sx={{padding:'10px',display:'flex',flexDirection:'column'}}>
+                      <MailOutlineIcon sx={{fontSize:'60px',color:'red'}}/><TextField value={gm} onChange={(e) =>setGM(e.target.value)} label='Gmail Link'/>
+                      <CallIcon sx={{fontSize:'60px',color:'green'}}/><TextField value={tele} onChange={(e) =>setTele(e.target.value)} label='Contact Number'/>
+                    </Card>
+                    </div>
+                    <div style={{width:'100%',display:'flex',justifyContent:'center',alignItems:'center',margin:'10px'}}>
+                      <Button onClick={LinksUpdate} sx={{color:'white'}} className='myButton1'>Save</Button>
+                    </div>
+                </div>  
                 <div style={{width:'90%',height:'100%'}}>
                 <Card sx={{width:'98.5%',margin:'10px 0px 10px 0px',textAlign:'center',backgroundColor:'blue',padding:'10px'}}>
                   <Typography sx={{fontSize:'20px',fontWeight:'1000',color:'white'}}>Website Themes</Typography>
