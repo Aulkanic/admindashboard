@@ -32,9 +32,10 @@ import { styled, ThemeProvider, createTheme } from '@mui/material';
 import { Backdrop, CircularProgress } from '@mui/material';
 
 const theme = createTheme();
-const StyledBackdrop = styled(Backdrop)`
-  z-index: ${({ theme }) => theme.zIndex.drawer + 1};
-`;
+const StyledBackdrop = styled(Backdrop)(({ theme }) => ({
+  zIndex: theme.zIndex.drawer + 50,
+  color: '#fff',
+}));
 const Transition = React.forwardRef(function Transition(props, ref) {
   return <Slide direction="up" ref={ref} {...props} />;
 });

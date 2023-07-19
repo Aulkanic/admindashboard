@@ -56,9 +56,6 @@ function getStyles(data, sectionId, theme) {
   };
 }
 const theme = createTheme();
-const StyledBackdrop = styled(Backdrop)`
-  z-index: ${({ theme }) => theme.zIndex.drawer + 1};
-`;
 
 const StyledButton = styled(Button)`
   && {
@@ -74,6 +71,10 @@ const StyledButton = styled(Button)`
 const Transition = React.forwardRef(function Transition(props, ref) {
   return <Slide direction="up" ref={ref} {...props} />;
 });
+const StyledBackdrop = styled(Backdrop)(({ theme }) => ({
+  zIndex: theme.zIndex.drawer + 50,
+  color: '#fff',
+}));
 
 
 const Faqs = () => {
@@ -290,6 +291,15 @@ const CustomDataGrid = styled(DataGrid)({
     })
     return
   }
+  if(email === '' || username === '' || jobDes === ''){
+    swal({
+      text: 'Please Provide necessary Information',
+      timer: 2000,
+      buttons: false,
+      icon: "warning",
+    })
+    return
+  }
   event.preventDefault();
   const errors = {};
 
@@ -315,7 +325,6 @@ const CustomDataGrid = styled(DataGrid)({
   setShowBackdrop(true);
   AddBMCC.ADD_BMCC(formData)
   .then(res => {
-    console.log(res)
     setBmcc(res.data.message)
     setShowBackdrop(false);
     swal({

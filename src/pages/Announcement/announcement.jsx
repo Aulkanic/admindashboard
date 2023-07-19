@@ -18,9 +18,10 @@ import { Backdrop, CircularProgress } from '@mui/material';
 import { useContext } from "react";
 import { admininfo } from "../../App";
 
-const StyledBackdrop = styled(Backdrop)`
-  z-index: ${({ theme }) => theme.zIndex.drawer + 1};
-`;
+const StyledBackdrop = styled(Backdrop)(({ theme }) => ({
+  zIndex: theme.zIndex.drawer + 50,
+  color: '#fff',
+}));
 
 const Announcement = () => {
     const { loginUser,user } = useContext(admininfo);

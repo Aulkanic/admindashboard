@@ -594,7 +594,7 @@ export const About = () => {
           <p>Instructions:</p>
           <p>1.Set the Score for each questions where in the score is equivalent to percentage </p>
           <p>2.All the Questions(Q1-8) must the total value is equivalent to 100 when each questions is sum up </p>
-          <p>3.All the CHOICE mut a value is not greater than to 100 or less than 0 </p>
+          <p>3.All the CHOICE must a value is not greater than to 100 or less than 0 </p>
           <p>4.The Choices will be the percentage of a questions</p>
           <p>5.Formula: Percentage of Selected Choice divided by 100 times the Specific Questions</p>
           <div className="sheets">

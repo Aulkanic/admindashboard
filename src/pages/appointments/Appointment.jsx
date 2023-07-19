@@ -51,9 +51,10 @@ import NoAccountsIcon from '@mui/icons-material/NoAccounts';
 
 
 const theme = createTheme();
-const StyledBackdrop = styled(Backdrop)`
-  z-index: ${({ theme }) => theme.zIndex.drawer + 1};
-`;
+const StyledBackdrop = styled(Backdrop)(({ theme }) => ({
+  zIndex: theme.zIndex.drawer + 50,
+  color: '#fff',
+}));
 const localizer = momentLocalizer(moment);
 
 const columns = [

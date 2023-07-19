@@ -37,9 +37,10 @@ import MailOutlineIcon from '@mui/icons-material/MailOutline';
 import CallIcon from '@mui/icons-material/Call';
 
 const theme = createTheme();
-const StyledBackdrop = styled(Backdrop)`
-  z-index: ${({ theme }) => theme.zIndex.drawer + 1};
-`;
+const StyledBackdrop = styled(Backdrop)(({ theme }) => ({
+  zIndex: theme.zIndex.drawer + 50,
+  color: '#fff',
+}));
 
 
 
@@ -47,10 +48,10 @@ const StyledBackdrop = styled(Backdrop)`
 const Website = () => {
   const { loginUser,user } = useContext(admininfo);
   const [access,setAccess] = useState([])
-  const [selectedColor, setSelectedColor] = useState(''); // Initial color
-  const [selectedColor1, setSelectedColor1] = useState(''); // Initial color
-  const [btnColor, setBtnColor] = useState(''); // Initial color
-  const [btnColor1, setBtnColor1] = useState(''); // Initial color
+  const [selectedColor, setSelectedColor] = useState(''); 
+  const [selectedColor1, setSelectedColor1] = useState('');
+  const [btnColor, setBtnColor] = useState('');
+  const [btnColor1, setBtnColor1] = useState('');
   const [colorList,setColorlist] = useState([]);
   const [imgList,setImglist] = useState([])
   const [limg,setLimg] = useState(null);
@@ -426,12 +427,20 @@ const Website = () => {
                     </Card> 
                     <div style={{width:'100%',display:'flex',justifyContent:'space-around',backgroundColor:'white'}}> 
                     <Card elevation={0} sx={{padding:'10px',display:'flex',flexDirection:'column'}}>
-                      <FacebookIcon sx={{fontSize:'60px',color:'blue'}}/><TextField variant='outlined' value={fb || colorList.fblink} onChange={(e) =>setFB(e.target.value)} label='Facebook Link'/>
-                      <YouTubeIcon sx={{fontSize:'60px',color:'red'}}/><TextField value={yt} onChange={(e) =>setYT(e.target.value)} label='Youtube Link'/>
+                      <FacebookIcon sx={{fontSize:'60px',color:'blue'}}/>
+                      <Typography>Facebook Link</Typography>
+                      <TextField variant='outlined' value={fb || colorList.fblink} onChange={(e) =>setFB(e.target.value)}/>
+                      <YouTubeIcon sx={{fontSize:'60px',color:'red'}}/>
+                      <Typography>Youtube Link</Typography>
+                      <TextField value={yt || colorList.ytlink} onChange={(e) =>setYT(e.target.value)}/>
                     </Card>
                     <Card elevation={0} sx={{padding:'10px',display:'flex',flexDirection:'column'}}>
-                      <MailOutlineIcon sx={{fontSize:'60px',color:'red'}}/><TextField value={gm} onChange={(e) =>setGM(e.target.value)} label='Gmail Link'/>
-                      <CallIcon sx={{fontSize:'60px',color:'green'}}/><TextField value={tele} onChange={(e) =>setTele(e.target.value)} label='Contact Number'/>
+                      <MailOutlineIcon sx={{fontSize:'60px',color:'red'}}/>
+                      <Typography>Gmail Account</Typography>
+                      <TextField value={gm || colorList.gmlink} onChange={(e) =>setGM(e.target.value)}/>
+                      <CallIcon sx={{fontSize:'60px',color:'green'}}/>
+                      <Typography>Telephone/Contact Number</Typography>
+                      <TextField value={tele || colorList.telephone} onChange={(e) =>setTele(e.target.value)}/>
                     </Card>
                     </div>
                     <div style={{width:'100%',display:'flex',justifyContent:'center',alignItems:'center',margin:'10px'}}>

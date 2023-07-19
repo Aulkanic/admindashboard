@@ -19,10 +19,10 @@ import { useContext } from "react";
 import { admininfo } from "../../App";
 
 const theme = createTheme();
-const StyledBackdrop = styled(Backdrop)`
-  z-index: ${({ theme }) => theme.zIndex.drawer + 1};
-`;
-
+const StyledBackdrop = styled(Backdrop)(({ theme }) => ({
+  zIndex: theme.zIndex.drawer + 50,
+  color: '#fff',
+}));
 const Rulesect = () => {
   const { loginUser,user } = useContext(admininfo);
   const [access,setAccess] = useState([])
