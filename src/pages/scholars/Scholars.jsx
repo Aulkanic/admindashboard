@@ -313,16 +313,24 @@ const Scholars = () => {
       headerName: 'Actions',
       width: 170,
       renderCell: (params) =>{
+        const currentDate = new Date();
         const renewal = isComplete.results1.filter(docs => docs.schoName === params.row.scholarshipApplied && docs.batch === params.row.Batch)
         const renewal1 = renewal.filter(docs => docs.docsfor === 'Renewal')
-        const renewalSubmitted = isComplete.results2.filter(docs => docs.applicantId === parseFloat(params.row.applicantNum) && docs.docsFor === 'Renewal');
+        const renewalSubmitted = isComplete.results2.filter(docs => 
+          docs.applicantId === parseFloat(params.row.applicantNum) && docs.docsFor === 'Renewal');
+        const isdeadline = renewal1.filter(item =>
+          new Date(item.deadline) > currentDate
+          );
         const Status = renewalSubmitted.length === renewal1.length
+          console.log(Status,isdeadline.length)
         params.row.k = {
           Status: Status,
         };
         return (
           <>
-          {Status ? (<><p>Updated</p></>) : (<>
+          {Status && isdeadline.length === 0 && <><p>Updated</p></>}
+          {!Status && isdeadline.length > 0 &&
+          (<>
           <StyledButton className="myButton2" onClick={() =>RemoveGrant(params.row)}> REMOVE GRANT </StyledButton>
           </>)}
           </>
