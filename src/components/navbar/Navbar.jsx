@@ -23,6 +23,8 @@ import SaveIcon from '@mui/icons-material/Save';
 import TextField from '@mui/material/TextField';
 import { useContext } from "react";
 import { admininfo } from "../../App";
+import { CircularProgress } from '@mui/material';
+import swal from 'sweetalert';
 
 const StyledBadge = styled(Badge)(({ theme }) => ({
   '& .MuiBadge-badge': {
@@ -63,6 +65,10 @@ const style = {
   boxShadow: 24,
   p: 4,
 };
+const StyledBackdrop = styled(Backdrop)(({ theme }) => ({
+  zIndex: theme.zIndex.drawer + 50,
+  color: '#fff',
+}));
 
 
 const Navbar = () => {
@@ -76,7 +82,7 @@ const Navbar = () => {
   const [repass,setRepass] = React.useState('');
   const [adminprof,setProfile] = React.useState('');
   const [preview, setPreview] = React.useState();
-  const [loading, setLoading] = React.useState(true);
+  const [showBackdrop, setShowBackdrop] = React.useState(false);
 
   const handleOpen1 = () => {
     handleClose()
@@ -103,7 +109,6 @@ const Navbar = () => {
     
     return () => URL.revokeObjectURL(objectUrl)
     }, [adminprof])
-  console.log(user)
   const UpdatePasswordUser = (event) =>{
     event.preventDefault();
     if(!password ||!repass){
@@ -114,15 +119,20 @@ const Navbar = () => {
       alert("Please fill all the fields");
       return
     }
-
+    setShowBackdrop(true)
     const formData = new FormData();
     formData.append('currentpassword',oldpass);
     formData.append('password',password);
     formData.append('id',user.id)
     UpdatePassword.UPDATE_PASS(formData)
     .then(res => {
-      console.log(res)
-      alert(res.data.message)
+      setShowBackdrop(false)
+      swal({
+        title: "Success",
+        text: res.data.message,
+        icon: "success",
+        button: "OK",
+      });
     }
      )
     .catch(err => console.log(err));
@@ -130,25 +140,36 @@ const Navbar = () => {
   const UpdateProfileUser = (event) =>{
     event.preventDefault();
     if(!adminprof){
-      alert("Please select a file")
+      swal({
+        title: "Success",
+        text: "Please select a file",
+        icon: "success",
+        button: "OK",
+      });
       return;
     }
-    console.log(adminprof)
     const file = adminprof;
     const id = user.id
     const formData = {file,id}
-    console.log(formData)
+    setShowBackdrop(true)
     UpdateProfile.UPDATE_PROFILE(formData)
     .then(res => {
-      console.log(res)
-      alert(res.data.message)
+      setShowBackdrop(false)
+      swal({
+        title: "Success",
+        text: res.data.message,
+        icon: "success",
+        button: "OK",
+      });
     }
      )
     .catch(err => console.log(err));
     }
-    console.log(user)
   return (
     <>
+                  <StyledBackdrop open={showBackdrop}>
+                <CircularProgress color="inherit" />
+              </StyledBackdrop>
       <Modal
         aria-labelledby="transition-modal-title"
         aria-describedby="transition-modal-description"
@@ -199,18 +220,22 @@ const Navbar = () => {
             <Typography id="transition-modal-title" variant="h6" component="h2">
               Change Password
             </Typography>
+            <div>
             <TextField
               id="outlined-controlled"
               label="Current Password"
               value={oldpass}
+              fullWidth
               onChange={(event) => {
                 setOldpass(event.target.value);
               }}
             />
             <TextField
+            sx={{margin:'10px 0px 10px 0px'}}
               id="outlined-controlled"
               label="New Password"
               value={password}
+              fullWidth
               onChange={(event) => {
                 setPassword(event.target.value);
               }}
@@ -219,10 +244,13 @@ const Navbar = () => {
               id="outlined-controlled"
               label="Re-type Password"
               value={repass}
+              sx={{marginBottom:'10px'}}
+              fullWidth
               onChange={(event) => {
                 setRepass(event.target.value);
               }}
             />
+            </div>
             <Button onClick={UpdatePasswordUser} variant="contained" endIcon={<SaveIcon />}>
         Send
       </Button>

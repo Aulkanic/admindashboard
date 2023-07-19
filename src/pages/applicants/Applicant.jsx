@@ -93,7 +93,7 @@ const StyledRadioGroup = styled(RadioGroup)`
 `;
 const theme = createTheme();
 const StyledBackdrop = styled(Backdrop)(({ theme }) => ({
-  zIndex: theme.zIndex.drawer + 50,
+  zIndex: theme.zIndex.drawer + 100,
   color: '#fff',
 }));
 
@@ -175,14 +175,11 @@ const Applicant = () => {
   };
 
   const handleRowSelectionModelChange = (newRowSelectionModel) => {
-    console.log(newRowSelectionModel)
     setRowSelectionModel(newRowSelectionModel);
 
   };
   const handleFailedSelectionModelChange = (newFailedSelectionModel) => {
-    console.log(newFailedSelectionModel)
     setFailedSelectionModel(newFailedSelectionModel);
-
   };
 
 
@@ -263,11 +260,13 @@ const check = async (data, index) => {
   formData.append('adminName', adminName);
 
   try {
+    setOpen(false)
     setShowBackdrop(true);
     const res = await CheckingSubs.CHECK_SUB(formData);
     if(res.data.success === 1){
       setDocumentaryListed(res.data.Documentary)
       setShowBackdrop(false);
+      setOpen(true)
       swal({
         text: 'Checked',
         timer: 2000,
@@ -353,15 +352,26 @@ const style = {
     formData.append('Reason',reason)
     formData.append('isSend',isSend1)
     formData.append('email',res.data.ScholarInf.results1[0].email)
+    setDialog(false)
     setShowBackdrop(true);
     const response = await FailedUser.FAILED_USER(formData)
     if(response.data.success === 1){
       setShowBackdrop(false);
-      swal('Status Updated')
+      swal({
+        text: 'Status Updated',
+        timer: 2000,
+        buttons: false,
+        icon: 'success',
+      });
       setIsSend1('No')
     }else{
       setShowBackdrop(false);
-      swal('Something Went Wrong')
+      swal({
+        text: 'Something Went Wrong',
+        timer: 2000,
+        buttons: false,
+        icon: 'success',
+      });
     }
   }
   const Access = async() =>{
@@ -413,6 +423,15 @@ const style = {
     const selectedRows = rowSelectionModel.map((selectedRow) =>
       filteredRows.find((row) => row.applicantNum === selectedRow)
     );
+    if(selectedRows.length === 0){
+      swal({
+        text: 'Please Select Users First',
+        timer: 2000,
+        buttons: false,
+        icon: "warning",
+      })
+      return
+    }
     setShowBackdrop(true);
       try {
         for (let i = 0; i < selectedRows.length; i++) {
@@ -450,6 +469,15 @@ const style = {
     }
     const selectedRows = failedSelectionModel.map((selectedRow) =>
       filteredRows.find((row) => row.applicantNum === selectedRow));
+      if(selectedRows.length === 0){
+        swal({
+          text: 'Please Select Users First',
+          timer: 2000,
+          buttons: false,
+          icon: "warning",
+        })
+        return
+      }
       setShowBackdrop(true);
       for (let i=0 ;i<selectedRows.length;i++){
         const row = selectedRows[i];
@@ -981,8 +1009,8 @@ const style = {
                   /><span>Sent Notification</span>
         </div>
         <DialogActions>
-          <Button className='myButton' onClick={handleCloseDialog}>Cancel</Button>
-          <Button className='myButton1' onClick={failed}>Submit</Button>
+          <Button sx={{color:'white'}} className='myButton' onClick={handleCloseDialog}>Cancel</Button>
+          <Button sx={{color:'white'}} className='myButton1' onClick={failed}>Submit</Button>
         </DialogActions>
     </Dialog>
   {/* End of Dialog for Failed User */}
@@ -1053,8 +1081,8 @@ const style = {
           />
         </DialogContent>
         <DialogActions>
-          <Button className='myButton' onClick={handleCloseDialog1}>Cancel</Button>
-          <Button className='myButton1' onClick={Access}>Submit</Button>
+          <Button sx={{color:'white'}} className='myButton' onClick={handleCloseDialog1}>Cancel</Button>
+          <Button sx={{color:'white'}} className='myButton1' onClick={Access}>Submit</Button>
         </DialogActions>
     </Dialog>
   {/* End of Dialog for Access */}

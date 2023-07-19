@@ -808,10 +808,15 @@ const Evaluation = () => {
             </Typography>
           </Toolbar>
         </AppBar>
-      <Box sx={{width:'100%',padding:'10px',height:'100%',display:'flex',backgroundColor:'whitesmoke'}}>
-         <div style={{width:'98%',padding:'10px'}}>
+      <Box sx={{width:'100%',padding:'10px 10px 40px 10px',height:'100%',display:'flex',backgroundColor:'whitesmoke'}}>
+         <div style={{width:'98%',padding:'10px',height:'100%'}}>
           <Card sx={{width:'100%',height:'100%'}}>
-           <Card sx={{display:'flex',justifyContent:'center',alignItems:'center',backgroundColor:'blue',color:'white'}}><h1>APPLICATION FORM </h1></Card>
+           <Card sx={{display:'flex',justifyContent:'space-around',alignItems:'center',backgroundColor:'blue',color:'white',height:'10%'}}>
+            <h1>APPLICATION FORM </h1>
+            <div style={{backgroundColor:'green',padding:'20px',borderRadius:'10px'}}>
+              <p>SCORE: {userscore.appeval}/100</p>
+            </div>
+            </Card>
            <Card>
             <Typography sx={{paddingLeft:'60px',fontSize:'20px',fontWeight:'700'}}>Personal Information</Typography>
             <div style={{display:'flex',width:'95%',padding:'10px'}}>
@@ -837,7 +842,7 @@ const Evaluation = () => {
               </div>
               <div style={{width:'37%'}}>
               <Typography>Contact Number: {applicantsInfo.contactNum}</Typography>
-              <Typography>Email: {applicantsInfo.Email}</Typography>
+              <Typography>Email: {applicantsInfo.email}</Typography>
               <Typography>Permanent Address: {applicantsInfo.caddress}</Typography>
               <Typography>Current Address: {applicantsInfo.paddress}</Typography>
               </div>
@@ -974,7 +979,7 @@ const Evaluation = () => {
                 </div>
               </div>
             </div>
-            <div style={{display:'flex',width:'95%',padding:'10px',justifyContent:'space-between'}}>
+            <div style={{display:'flex',width:'95%',padding:'10px',justifyContent:'space-between',overflow:'visible'}}>
               <div style={{width:'30%'}}>
                 <Typography sx={{paddingLeft:'20px',fontSize:'18px',fontWeight:'500',textDecoration:'underline'}}>Elementary Background</Typography>
                 <Typography>

@@ -1295,10 +1295,10 @@ try {
         return(
           <>
           <div style={{width:"100%",display:'flex',flexDirection:'column',height:'100%',justifyContent:'center',alignItems:'center'}}>
-        <StyledButtonEdit sx={{width:'100%'}} className="myButton1"
-        onClick={() => Reapp(params.row)}>
-          Reappoint
-          </StyledButtonEdit>
+            <StyledButtonEdit sx={{width:'100%'}} className="myButton1"
+              onClick={() => Reapp(params.row)}>
+                  Reappoint
+            </StyledButtonEdit>
         </div>
         </>)
       },
@@ -1364,7 +1364,7 @@ try {
         return(
           <>
           <div style={{display:'flex'}}>
-        {params.row.grantedAccess === '' || !params.row.grantedAccess ? (<StyledButtonAccess className="myButton"
+        {params.row.grantedAccess === '' || params.row.grantedAccess === 'No' ? (<StyledButtonAccess className="myButton"
         onClick={() =>handleOpenDialog1(params.row)}>
           Access</StyledButtonAccess>) : (<StyledButtonEdit className="myButton1"
         onClick={() => Approved(params.row)}>
@@ -1390,12 +1390,12 @@ try {
   ? appointedList.filter(user => user.isPassed === 'False')
   : '';
   const ReappointList = appointedList && appointedList.length > 0
-  ? appointedList.filter(user => user.canGo === 'No')
+  ? appointedList.filter(user => user.canGo === 'No' && user.isInterview !== 'Reappoint')
   : '';
   const Noresponse = appointedList && appointedList.length > 0
   ? appointedList.filter(user => user.canGo === 'Pending')
   : '';
-
+console.log(ReappointList)
   return (
     <>
       <StyledBackdrop open={showBackdrop}>
