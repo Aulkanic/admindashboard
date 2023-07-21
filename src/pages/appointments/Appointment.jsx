@@ -659,6 +659,7 @@ const FailedAll = async() =>{
     let counter = 0;
     for (let i=0 ;i<selectedRows.length;i++){
       const row = selectedRows[i];
+      console.log(row)
       const res = await FetchingBmccSchoinfo.FETCH_SCHOLARSINFO(row.applicantNum);
       const schoapplied = res.data.ScholarInf.results1[0].SchoIarshipApplied;
       const batch = res.data.ScholarInf.results1[0].Batch;

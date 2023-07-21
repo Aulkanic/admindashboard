@@ -227,7 +227,6 @@ const Scholars = () => {
       );
       return { ...requirement, applicantData: matchingApplicantData };
     });
-    console.log('hell')
     setSchodocs(req.data.Requirements.results1);
     setUserlog(userAct.reverse());
     setSchoInf1(response.data.ScholarInf.results1[0]);
@@ -235,11 +234,9 @@ const Scholars = () => {
     setSchoInf3(application);
     setSchoInf4(combinedData);
     setShowBackdrop(false);
-    console.log('hello')
     setOpen(true);
   };
   
-console.log(userLog)
   const columns = [
     { 
       field: 'scholarId', 
@@ -426,7 +423,7 @@ console.log(userLog)
         formData.append('ScholarshipApplied',data.scholarshipApplied)
         formData.append('applicantNum',data.applicantNum)
         formData.append('Name',data.Name)
-        formData.append('Reason',data.reason)
+        formData.append('Reason',reason)
         formData.append('status',status)
         formData.append('email',data.email)
         setShowBackdrop(true);
@@ -471,12 +468,11 @@ console.log(userLog)
         const status = 'Revoke'
         const reason = 'Inactive'
         const formData = new FormData();
-        formData.append('batch',data.Batch)
-        formData.append('ScholarshipApplied',data.scholarshipApplied)
-        formData.append('applicantNum',data.applicantNum)
-        formData.append('Name',data.Name)
-        formData.append('Reason',reason)
+        formData.append('batch',row.Batch)
+        formData.append('ScholarshipApplied',row.scholarshipApplied)
         formData.append('applicantNum',row.applicantNum)
+        formData.append('Name',row.Name)
+        formData.append('Reason',reason)
         formData.append('status',status)
         formData.append('email',row.email)
         ScholarStand.UPDATE_SCHOSTAND(formData)
