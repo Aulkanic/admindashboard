@@ -191,15 +191,16 @@ const Scholars = () => {
   
   const view = async (data) => {
     setShowBackdrop(true);
-    console.log(data)
     const applicantNum = data.applicantNum;
+    const formData = new FormData()
+    formData.append('applicantNum',applicantNum)
     const response = await FetchingBmccSchoinfo.FETCH_SCHOLARSINFO(applicantNum);
     const req = await ListofReq.FETCH_REQUIREMENTS();
-    const log = await UserActivity.USER_LOG(applicantNum);
+    const log = await UserActivity.USER_LOG(formData);
     const userAct = log.data.result;
-    console.log(log)
+
     const [RequireDocs, renewalReq] = req.data.Requirements.results1
-      ?.filter((docs) => docs.schoName === response.data.ScholarInf.results2[0].scholarshipApplied)
+      ?.filter((docs) => docs.schoName === data.scholarshipApplied)
       ?.reduce(
         ([RequireDocs, renewalReq], doc) => {
           if (doc.docsfor === 'Renewal') renewalReq.push(doc);
@@ -208,7 +209,7 @@ const Scholars = () => {
         },
         [[], []]
       );
-  
+      console.log(response.data.ScholarInf)
     const [application, renewal] = response.data.ScholarInf.results3
       ?.reduce(
         ([application, renewal], data) => {
@@ -226,6 +227,7 @@ const Scholars = () => {
       );
       return { ...requirement, applicantData: matchingApplicantData };
     });
+    console.log('hell')
     setSchodocs(req.data.Requirements.results1);
     setUserlog(userAct.reverse());
     setSchoInf1(response.data.ScholarInf.results1[0]);
@@ -233,10 +235,11 @@ const Scholars = () => {
     setSchoInf3(application);
     setSchoInf4(combinedData);
     setShowBackdrop(false);
+    console.log('hello')
     setOpen(true);
   };
   
-
+console.log(userLog)
   const columns = [
     { 
       field: 'scholarId', 
@@ -314,9 +317,11 @@ const Scholars = () => {
       headerName: 'Actions',
       width: 170,
       renderCell: (params) =>{
+     
         const currentDate = new Date();
         const renewal = isComplete.results1.filter(docs => docs.schoName === params.row.scholarshipApplied && docs.batch === params.row.Batch)
         const renewal1 = renewal.filter(docs => docs.docsfor === 'Renewal')
+        console.log(renewal)
         const renewalSubmitted = isComplete.results2.filter(docs => 
           docs.applicantId === parseFloat(params.row.applicantNum) && docs.docsFor === 'Renewal');
         const isdeadline = renewal1.filter(item =>

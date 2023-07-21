@@ -180,7 +180,7 @@ export const SetInterview = {
     SET_INTERVIEW: (data) => axiosInstance.post(Endpoints.SET_INTERVIEW,data)
 }
 export const UserActivity = {
-    USER_LOG: (data) => axiosInstance.get(Endpoints.USER_ACTIVITY+data)
+    USER_LOG: (data) => axiosInstance.post(Endpoints.USER_ACTIVITY,data)
 }
 export const EmpAuthorized = {
     AUTHORIZATION: (data) => axiosInstance.post(Endpoints.EMP_AUTHORIZATION,data)

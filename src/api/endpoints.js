@@ -45,7 +45,7 @@ const Endpoints = {
     ACTIVITY_LOG: 'admin/Activitylog',
     UPDATE_EMP: 'admin/Update',
     UPDATE_PASS: 'admin/Updatepassword',
-    USER_ACTIVITY: 'admin/Userlog/',
+    USER_ACTIVITY: 'admin/Userlog',
     EMP_AUTHORIZATION: 'admin/Authorization',
     ACCESS: 'admin/Access',
     UPDATE_PROFILE: 'admin/Updateprofile',
