@@ -1392,10 +1392,10 @@ try {
   
   ];
   const appointList = appointedList && appointedList.length > 0
-  ? appointedList.filter(user => user.canGo === 'Yes' || user.isPassed === 'Pending' || user.isPassed === '')
+  ? appointedList.filter(user => user.canGo === 'Yes' && user.isPassed === 'Pending' && user.Status === 'Qualified')
   : '';
   const PassedInterview = appointedList && appointedList.length > 0
-  ? appointedList.filter(user => user.isPassed === 'True')
+  ? appointedList.filter(user => user.isPassed === 'True' && user.Status === 'Qualified')
   : '';
   const RejectInterview = appointedList && appointedList.length > 0
   ? appointedList.filter(user => user.isPassed === 'False')
