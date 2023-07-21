@@ -498,7 +498,7 @@ const Appointment = () => {
       formData.append('applicantNum',data.applicantNum)
       formData.append('yearLevel',data.yearLevel)
       formData.append('baranggay',dataappinfo.baranggay)
-      formData.append('scholarshipApplied',dataappinfo.baranggay)
+      formData.append('scholarshipApplied',dataappinfo.SchoIarshipApplied)
       SetApproved.SET_APPROVE(formData)
     .then(res => {
       setQualified(res.data.results.data1);
@@ -737,7 +737,7 @@ const Addall = async () => {
         formData.append('applicantNum',row.applicantNum)
         formData.append('yearLevel',row.yearLevel)
         formData.append('baranggay',dataappinfo.baranggay)
-        formData.append('scholarshipApplied',dataappinfo.baranggay)
+        formData.append('scholarshipApplied',dataappinfo.SchoIarshipApplied)
         SetApproved.SET_APPROVE(formData)
       .then(res => {
         setQualified(res.data.results.data1);
