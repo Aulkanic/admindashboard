@@ -266,27 +266,7 @@ const Navbar = () => {
 
         <div className='items'>
 
-          <div className='item'>
-            <LanguageIcon className='icon'/>
-            English
-          </div>
-          <div className='item'>
-            <DarkModeIcon className='icon'/>
-          </div>
-          <div className='item'>
-            <OpenInFullIcon className='icon'/>
-          </div>
-          <div className='item'>
-            <NotificationsNoneIcon className='icon'/>
-            <div className="counter">1</div>
-          </div>
-          <div className='item'>
-            <ChatBubbleOutlineIcon className='icon'/>
-            <div className="counter">2</div>
-          </div>
-          <div className='item'>
-            <ViewListIcon />
-          </div>
+         <Typography sx={{color:'white',fontSize:'20px'}}>{user.name}</Typography>
 
           <div className="item">
           <Button

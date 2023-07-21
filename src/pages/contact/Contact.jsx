@@ -112,18 +112,15 @@ const Contact = () => {
     return years;
   };
   const handleOpen = () => {
-    if(user.jobDescription !== 'Admin'){
-      if(user.jobDescription !== accessList.reqSec){
-        swal({
-          text: 'UnAuthorized Access',
-          timer: 2000,
-          buttons: false,
-          icon: "error",
-        })
-        return
-      }else{
-        setOpen(true)
-      }
+    const isValueIncluded = access[0]?.sectionId.includes('Requirements');
+    if(!isValueIncluded){
+      swal({
+        text: 'UnAuthorized Access',
+        timer: 2000,
+        buttons: false,
+        icon: "error",
+      })
+      return
     }
     setOpen(true)
   };

@@ -96,6 +96,7 @@ const News = () => {
       return
     }
     event.preventDefault();
+    setOpen(false)
     setShowBackdrop(true);
     const data = {picture,title,description};
     CreateNews.CREATE_NEWS(data)
@@ -109,6 +110,7 @@ const News = () => {
         button: "OK",
       });
       setShowBackdrop(false);
+      setOpen(true)
       setIsOpen(false)
     }
      )
@@ -236,8 +238,12 @@ const News = () => {
     }
     </>
     ) : (
-    <div className='ncard'>
+    <div className='ncard' style={{width:'100%',height:'100vh',display:'flex',justifyContent:'center',alignItems:'center',flexDirection:'column'}}>
       <p className='NoNews'>No News Available</p>
+      <div style={{margin:'10px'}}>
+      <Button onClick={handleClickOpen} sx={{color:'white',float:'right'}} className='myButton1'>Create News</Button>
+      </div>
+    
     </div>)}
     </div>
   </div>

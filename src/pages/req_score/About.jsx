@@ -171,7 +171,7 @@ export const About = () => {
         errors.schoname = 'This Field is required';
       }
       if(wl === '' || wl1 === '' || wl2 === '' || wl3 === ''){
-        errors.wl = 'This Field is required';
+        errors.wl = 'Q1 is required';
       }
       if(wl1 > 100 || wl2 > 100 || wl3 > 100){
         errors.wl1 = 'Rate must not greater than 100 Percent';
@@ -180,7 +180,7 @@ export const About = () => {
         errors.wl2 = 'Rate must not less than 0 Percent';
       }
       if(hl === '' || hl1 === '' || hl2 === '' || hl3 === '' || hl4 === ''){
-        errors.hl = 'This Field is required';
+        errors.hl = 'Q2 is required';
       }
       if(hl1 > 100 || hl2 > 100 || hl3 > 100 || hl4 > 100){
         errors.hl1 = 'Rate must not greater than 100 Percent';
@@ -189,7 +189,7 @@ export const About = () => {
         errors.hl2 = 'Rate must not less than 0 Percent';
       }
       if(os === '' || os1 === '' || os2 === '' || os3 === '' || os4 === ''){
-        errors.os = 'This Field is required';
+        errors.os = 'Q3 is required';
       }
       if(os1 > 100 || os2 > 100 || os3 > 100 || os4 > 100){
         errors.os1 = 'Rate must not greater than 100 Percent';
@@ -198,7 +198,7 @@ export const About = () => {
         errors.os2 = 'Rate must not less than 0 Percent';
       }
       if(mi === '' || mi1 === '' || mi2 === '' || mi3 === '' || mi4 === '' || mi5 === ''){
-        errors.mi = 'This Field is required';
+        errors.mi = 'Q4 is required';
       }
       if(mi1 > 100 || mi2 > 100 || mi3 > 100 || mi4 > 100 || mi5 > 100){
         errors.mi1 = 'Rate must not greater than 100 Percent';
@@ -207,7 +207,7 @@ export const About = () => {
         errors.mi2 = 'Rate must not less than 0 Percent';
       }
       if(fa === '' || fa1 === '' || fa2 === '' || fa3 === '' || fa4 === '' || fa5 === '' || fa6 === ''){
-        errors.fa = 'This Field is required';
+        errors.fa = 'Q6 is required';
       }
       if(fa1 > 100 || fa2 > 100 || fa3 > 100 || fa4 > 100 || fa5 > 100 || fa6 > 100){
         errors.fa1 = 'Rate must not greater than 100 Percent';
@@ -216,7 +216,7 @@ export const About = () => {
         errors.fa2 = 'Rate must not less than 0 Percent';
       }
       if(ts === '' || ts1 === '' || ts2 === '' || ts3 === '' || ts4 === '' || ts5 === '' || ts6 === ''){
-        errors.ts = 'This Field is required';
+        errors.ts = 'Q7 is required';
       }
       if(ts1 > 100 || ts2 > 100 || ts3 > 100 || ts4 > 100 || ts5 > 100 || ts6 > 100){
         errors.ts1 = 'Rate must not greater than 100 Percent';
@@ -225,7 +225,7 @@ export const About = () => {
         errors.ts2 = 'Rate must not less than 0 Percent';
       }
       if(gwa === '' || gwa1 === '' || gwa2 === '' || gwa3 === '' || gwa4 === '' || gwa5 === ''){
-        errors.gwa = 'This Field is required';
+        errors.gwa = 'Q8 is required';
       }
       if(gwa1 > 100 || gwa2 > 100 || gwa3 > 100 || gwa4 > 100 || gwa5 > 100){
         errors.gwa1 = 'Rate must not greater than 100 Percent';
@@ -234,7 +234,7 @@ export const About = () => {
         errors.gwa2 = 'Rate must not less than 0 Percent';
       }
       if(fn === '' || fn1 === '' || fn2 === '' || fn3 === '' || fn4 === ''){
-        errors.fn = 'This Field is required';
+        errors.fn = 'Q5 is required';
       }
       if(fn1 > 100 || fn2 > 100 || fn3 > 100 || fn4 > 100){
         errors.fn1 = 'Rate must not greater than 100 Percent';
@@ -244,13 +244,24 @@ export const About = () => {
       }
       const totalsc = parseFloat(wl) + parseFloat(hl) + parseFloat(os) + parseFloat(mi) + parseFloat(fa)
                       + parseFloat(ts) + parseFloat(gwa) + parseFloat(fn);
-      console.log(totalsc);
       if(totalsc !== 100){
         errors.total = 'Total Rate must be 100 Percent';
       }
-      console.log(Object.keys(errors).length)
     if (Object.keys(errors).length > 0) {
       setErrors(errors);
+      let errorMessages = '';
+      for (const key in errors) {
+        if (errors.hasOwnProperty(key)) {
+          errorMessages += errors[key] + '\n';
+        }
+      }
+      
+      swal({
+        title: "ERRORS",
+        text: errorMessages,
+        icon: "error",
+        button: "OK",
+      });
       console.log(errors)
       return;
     }
@@ -311,90 +322,101 @@ export const About = () => {
         const fn3 = sfn3
         const fn4 = sfn4
         if(schoname === ''){
-          errors.schoname = 'This Field is required';
+          errors.schoname = 'SCHOLARSHIP PROGRAM Selection is required';
         }
         if(wl === '' || wl1 === '' || wl2 === '' || wl3 === ''){
-          errors.wl = 'This Field is required';
+          errors.wl = 'Q1 is required';
         }
         if(wl1 > 100 || wl2 > 100 || wl3 > 100){
-          errors.wl1 = 'Rate must not greater than 100 Percent';
+          errors.wl1 = 'Q1 Rate must not greater than 100 Percent';
         }
         if(wl1 < 0 || wl2 < 0 || wl3 < 0){
-          errors.wl2 = 'Rate must not less than 0 Percent';
+          errors.wl2 = 'Q1 Rate must not less than 0 Percent';
         }
         if(hl === '' || hl1 === '' || hl2 === '' || hl3 === '' || hl4 === ''){
-          errors.hl = 'This Field is required';
+          errors.hl = 'Q2 is required';
         }
         if(hl1 > 100 || hl2 > 100 || hl3 > 100 || hl4 > 100){
-          errors.hl1 = 'Rate must not greater than 100 Percent';
+          errors.hl1 = 'Q2 Rate must not greater than 100 Percent';
         }
         if(hl1 < 0 || hl2 < 0 || hl3 < 0 || hl4 < 0){
-          errors.hl2 = 'Rate must not less than 0 Percent';
+          errors.hl2 = 'Q2 Rate must not less than 0 Percent';
         }
         if(os === '' || os1 === '' || os2 === '' || os3 === '' || os4 === ''){
-          errors.os = 'This Field is required';
+          errors.os = 'Q3 is required';
         }
         if(os1 > 100 || os2 > 100 || os3 > 100 || os4 > 100){
-          errors.os1 = 'Rate must not greater than 100 Percent';
+          errors.os1 = 'Q3 Rate must not greater than 100 Percent';
         }
         if(os1 < 0 || os2 < 0 || os3 < 0 || os4 < 0){
-          errors.os2 = 'Rate must not less than 0 Percent';
+          errors.os2 = 'Q3 Rate must not less than 0 Percent';
         }
         if(mi === '' || mi1 === '' || mi2 === '' || mi3 === '' || mi4 === '' || mi5 === ''){
-          errors.mi = 'This Field is required';
+          errors.mi = 'Q4 is required';
         }
         if(mi1 > 100 || mi2 > 100 || mi3 > 100 || mi4 > 100 || mi5 > 100){
-          errors.mi1 = 'Rate must not greater than 100 Percent';
+          errors.mi1 = 'Q4 Rate must not greater than 100 Percent';
         }
         if(mi1 < 0 || mi2 < 0 || mi3 < 0 || mi4 < 0 || mi5 < 0){
-          errors.mi2 = 'Rate must not less than 0 Percent';
+          errors.mi2 = 'Q4 Rate must not less than 0 Percent';
         }
         if(fa === '' || fa1 === '' || fa2 === '' || fa3 === '' || fa4 === '' || fa5 === '' || fa6 === ''){
-          errors.fa = 'This Field is required';
+          errors.fa = 'Q6 is required';
         }
         if(fa1 > 100 || fa2 > 100 || fa3 > 100 || fa4 > 100 || fa5 > 100 || fa6 > 100){
-          errors.fa1 = 'Rate must not greater than 100 Percent';
+          errors.fa1 = 'Q6 Rate must not greater than 100 Percent';
         }
         if(fa1 < 0 || fa2 < 0 || fa3 < 0 || fa4 < 0 || fa5 < 0 || fa6 < 0){
-          errors.fa2 = 'Rate must not less than 0 Percent';
+          errors.fa2 = 'Q6 Rate must not less than 0 Percent';
         }
         if(ts === '' || ts1 === '' || ts2 === '' || ts3 === '' || ts4 === '' || ts5 === '' || ts6 === ''){
-          errors.ts = 'This Field is required';
+          errors.ts = 'Q7 is required';
         }
+        console.log(ts1,ts2,ts3,ts4,ts5,ts6)
         if(ts1 > 100 || ts2 > 100 || ts3 > 100 || ts4 > 100 || ts5 > 100 || ts6 > 100){
-          errors.ts1 = 'Rate must not greater than 100 Percent';
+          errors.ts1 = 'Q7 Rate must not greater than 100 Percent';
         }
         if(ts1 < 0 || ts2 < 0 || ts3 < 0 || ts4 < 0 || ts5 < 0 || ts6 < 0){
-          errors.ts2 = 'Rate must not less than 0 Percent';
+          errors.ts2 = 'Q7 Rate must not less than 0 Percent';
         }
         if(gwa === '' || gwa1 === '' || gwa2 === '' || gwa3 === '' || gwa4 === '' || gwa5 === ''){
-          errors.gwa = 'This Field is required';
+          errors.gwa = 'Q8 is required';
         }
         if(gwa1 > 100 || gwa2 > 100 || gwa3 > 100 || gwa4 > 100 || gwa5 > 100){
-          errors.gwa1 = 'Rate must not greater than 100 Percent';
+          errors.gwa1 = 'Q8 Rate must not greater than 100 Percent';
         }
         if(gwa1 < 0 || gwa2 < 0 || gwa3 < 0 || gwa4 < 0 || gwa5 < 0){
-          errors.gwa2 = 'Rate must not less than 0 Percent';
+          errors.gwa2 = 'Q8 Rate must not less than 0 Percent';
         }
         if(fn === '' || fn1 === '' || fn2 === '' || fn3 === '' || fn4 === ''){
-          errors.fn = 'This Field is required';
+          errors.fn = 'Q5 is required';
         }
         if(fn1 > 100 || fn2 > 100 || fn3 > 100 || fn4 > 100){
-          errors.fn1 = 'Rate must not greater than 100 Percent';
+          errors.fn1 = 'Q5 Rate must not greater than 100 Percent';
         }
         if(fn1 < 0 || fn2 < 0 || fn3 < 0 || fn4 < 0){
-          errors.fn2 = 'Rate must not less than 0 Percent';
+          errors.fn2 = 'Q5 Rate must not less than 0 Percent';
         }
         const totalsc = parseFloat(wl) + parseFloat(hl) + parseFloat(os) + parseFloat(mi) + parseFloat(fa)
                         + parseFloat(ts) + parseFloat(gwa) + parseFloat(fn);
-        console.log(totalsc);
         if(totalsc !== 100){
           errors.total = 'Total Rate must be 100 Percent';
         }
-        console.log(Object.keys(errors).length)
     if (Object.keys(errors).length > 0) {
       setErrors(errors);
-      console.log(errors)
+      let errorMessages = '';
+      for (const key in errors) {
+        if (errors.hasOwnProperty(key)) {
+          errorMessages += errors[key] + '\n';
+        }
+      }
+      
+      swal({
+        title: "ERRORS",
+        text: errorMessages,
+        icon: "error",
+        button: "OK",
+      });
       return;
     }
     setShowBackdrop(true);
@@ -642,7 +664,7 @@ export const About = () => {
             <div className="quescontainer">
               <div className="quesco">
                <div className="hshe">
-                <input onChange={(e) =>setWl(e.target.value)} type="number"/><p>Q1:Saan ka nakatira</p>             
+                <input onChange={(e) =>setWl(e.target.value)} type="number"/><p>Q1:Where do yu Live?</p>             
               </div>   
 
               <div className="hshe">
@@ -660,7 +682,7 @@ export const About = () => {
 
             <div className="quesco">
               <div className="hshe">
-               <input onChange={(e) =>setHl(e.target.value)} type="number"/><p>Q2:Gaano na Katagal?</p>             
+               <input onChange={(e) =>setHl(e.target.value)} type="number"/><p>Q2:How Long Do you Live in Marilao?</p>             
              </div>   
 
               <div className="hshe">
@@ -682,16 +704,16 @@ export const About = () => {
 
             <div className="quesco">
             <div className="hshe">
-            <input onChange={(e) =>setOs(e.target.value)} type="number"/><p>Q3:Uri ng Pag-aari ng Bahay?</p>             
+            <input onChange={(e) =>setOs(e.target.value)} type="number"/><p>Q3:House Ownership?</p>             
             </div>   
             <div className="hshe">
-            <input onChange={(e) =>setOs1(e.target.value)} type="number"/><p>CHOICE1:Nakikitira</p>
+            <input onChange={(e) =>setOs1(e.target.value)} type="number"/><p>CHOICE1:boarding</p>
             </div>
             <div className="hshe">
-            <input onChange={(e) =>setOs2(e.target.value)} type="number"/><p>CHOICE2:Umuupa</p>
+            <input onChange={(e) =>setOs2(e.target.value)} type="number"/><p>CHOICE2:Renting</p>
             </div>
             <div className="hshe">
-            <input onChange={(e) =>setOs3(e.target.value)} type="number"/><p>CHOICE3:Sariling  Bahay</p>
+            <input onChange={(e) =>setOs3(e.target.value)} type="number"/><p>CHOICE3:Own House</p>
             </div>
             <div className="hshe">
             <input onChange={(e) =>setOs4(e.target.value)} type="number"/><p>CHOICE4:Others</p>
@@ -699,7 +721,7 @@ export const About = () => {
             </div>
             <div className="quesco">
             <div className="hshe">
-            <input onChange={(e) =>setMi(e.target.value)} type="number"/><p>Q4:Buwanang Pangkalahatang kita ng Pamilya?</p>             
+            <input onChange={(e) =>setMi(e.target.value)} type="number"/><p>Q4:Monthly Income of Family?</p>             
             </div>   
             <div className="hshe">
             <input onChange={(e) =>setMi1(e.target.value)} type="number"/><p>CHOICE1:P1,000 - 4,000</p>
@@ -722,10 +744,10 @@ export const About = () => {
             <div className="quescontainer">
             <div className="quesco">
             <div className="hshe">
-            <input onChange={(e) =>setFn(e.target.value)} type="number"/><p>Q5:Ilan ang Miyembro ng Pamilya?</p>             
+            <input onChange={(e) =>setFn(e.target.value)} type="number"/><p>Q5:Number of Family Members?</p>             
             </div>   
             <div className="hshe">
-            <input onChange={(e) =>setFn1(e.target.value)} type="number"/><p>CHOICE1:11- Pataas</p>
+            <input onChange={(e) =>setFn1(e.target.value)} type="number"/><p>CHOICE1:11- Above</p>
             </div>
             <div className="hshe">
             <input onChange={(e) =>setFn2(e.target.value)} type="number"/><p>CHOICE2:7 - 10 Members</p>
@@ -739,10 +761,10 @@ export const About = () => {
             </div>
             <div className="quesco">
             <div className="hshe">
-            <input onChange={(e) =>setFa(e.target.value)} type="number"/><p>Q6:Paano natutustusan ang iyong Pag-aaral</p>             
+            <input onChange={(e) =>setFa(e.target.value)} type="number"/><p>Q6:School Financial Support</p>             
             </div>   
             <div className="hshe">
-            <input onChange={(e) =>setFa1(e.target.value)} type="number"/><p>CHOICE1:Suporta ng Magulang</p>
+            <input onChange={(e) =>setFa1(e.target.value)} type="number"/><p>CHOICE1:Support from Parents</p>
             </div>
             <div className="hshe">
             <input onChange={(e) =>setFa2(e.target.value)} type="number"/><p>CHOICE2:Working Student</p>
@@ -751,7 +773,7 @@ export const About = () => {
             <input onChange={(e) =>setFa3(e.target.value)} type="number"/><p>CHOICE3:Sponsorship</p>
             </div>
             <div className="hshe">
-            <input onChange={(e) =>setFa4(e.target.value)} type="number"/><p>CHOICE4:Suporta ng Kamg-anak o Kapatid</p>
+            <input onChange={(e) =>setFa4(e.target.value)} type="number"/><p>CHOICE4:Support from Relatives or Siblings</p>
             </div>
             <div className="hshe">
             <input onChange={(e) =>setFa5(e.target.value)} type="number"/><p>CHOICE5:Scholarship</p>
@@ -762,7 +784,7 @@ export const About = () => {
             </div>
             <div className="quesco">
             <div className="hshe">
-            <input onChange={(e) =>setTs(e.target.value)} type="number"/><p>Q7:Uri ng Paaralan?</p>             
+            <input onChange={(e) =>setTs(e.target.value)} type="number"/><p>Q7:Type of School?</p>             
             </div>   
             <div className="hshe">
             <input onChange={(e) =>setTs1(e.target.value)} type="number"/><p>CHOICE1:Private</p>

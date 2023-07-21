@@ -575,7 +575,7 @@ const DeleteAuth = (list,data) =>{
         </AppBar>
            <Box sx={{padding:'15px',backgroundColor:'#f1f3fa'}}>
             <Card sx={{padding:'15px'}}>
-              <Typography>Notes:</Typography>
+              <Typography>Notes: Website Section Descriptions</Typography>
               <ul>
                   <li><Typography>Create Accounts - Responsible for Creating an Accounts of Employee and assigning List of Access to the BMCC Website.</Typography></li>
                   <li><Typography>Manage Accounts - The one who responsible for editing the details and status of the Employee.</Typography></li>
