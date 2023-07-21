@@ -191,12 +191,13 @@ const Scholars = () => {
   
   const view = async (data) => {
     setShowBackdrop(true);
+    console.log(data)
     const applicantNum = data.applicantNum;
     const response = await FetchingBmccSchoinfo.FETCH_SCHOLARSINFO(applicantNum);
     const req = await ListofReq.FETCH_REQUIREMENTS();
     const log = await UserActivity.USER_LOG(applicantNum);
     const userAct = log.data.result;
-    
+    console.log(log)
     const [RequireDocs, renewalReq] = req.data.Requirements.results1
       ?.filter((docs) => docs.schoName === response.data.ScholarInf.results2[0].scholarshipApplied)
       ?.reduce(
@@ -322,7 +323,6 @@ const Scholars = () => {
           new Date(item.deadline) > currentDate
           );
         const Status = renewalSubmitted.length === renewal1.length
-          console.log(Status,isdeadline.length)
         params.row.k = {
           Status: Status,
         };

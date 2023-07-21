@@ -208,6 +208,7 @@ const Appointment = () => {
   const handleCloseDialog2 = () => setOpenDialog2(false);
   const handleOpenDialog2 = (data) => setOpenDialog2(true);
   const [activeState,setActiveState] = useState('All');
+  const [userAppsched,setUserAppsched] = useState([])
 
   const handleOpenDialog1 = (data) => {
     setOpenDialog1(true);
@@ -486,17 +487,19 @@ const Appointment = () => {
         FetchingApplicantsInfo.FETCH_INFO(data.applicantNum)
       ]);
       const dataappinfo = response[0].data.results[0];
-      const Name = `${dataappinfo.firstName} ${dataappinfo.middleName} ${dataappinfo.lastName}`;
-      const applicantNum = data.applicantNum;
-      const applicantCode = data.applicantCode;
-      const yearLevel =dataappinfo.currentYear;
-      const baranggay = dataappinfo.baranggay;
-      const contactNum = dataappinfo.contactNum
-      const email = dataappinfo.email;
-      const scholarshipApplied = dataappinfo.SchoIarshipApplied;
       const adminName = user.name;
       setShowBackdrop(true);
-      SetApproved.SET_APPROVE({contactNum,email,applicantCode,adminName,data,Name,applicantNum,yearLevel,baranggay,scholarshipApplied})
+      const formData = new FormData()
+      formData.append('email',data.Email)
+      formData.append('contactNum',dataappinfo.contactNum)
+      formData.append('applicantCode',data.applicantCode)
+      formData.append('adminName',adminName)
+      formData.append('Name',data.Name)
+      formData.append('applicantNum',data.applicantNum)
+      formData.append('yearLevel',data.yearLevel)
+      formData.append('baranggay',dataappinfo.baranggay)
+      formData.append('scholarshipApplied',dataappinfo.baranggay)
+      SetApproved.SET_APPROVE(formData)
     .then(res => {
       setQualified(res.data.results.data1);
       setAppointedList(res.data.results.data2)
@@ -562,9 +565,11 @@ const Failed = async() =>{
           })
           return
         }
+      
       const formData = new FormData()
       formData.append('isPassed',data)
       formData.append('applicantNum',userFulldet.applicantNum)
+      formData.append('schedDate',userAppsched.schedDate)
       setShowBackdrop(true);
       SetInterview.SET_INTERVIEW(formData)
       .then((res) => {
@@ -722,14 +727,18 @@ const Addall = async () => {
           FetchingApplicantsInfo.FETCH_INFO(applicantNum)
         ]);
         const dataappinfo = response[0].data.results[0];
-        const Name = `${dataappinfo.firstName} ${dataappinfo.middleName} ${dataappinfo.lastName}`;
-        const applicantCode = dataappinfo.applicantCode;
-        const yearLevel =dataappinfo.currentYear;
-        const baranggay = dataappinfo.baranggay;
-        const email = dataappinfo.email;
-        const scholarshipApplied = dataappinfo.SchoIarshipApplied;
         const adminName = user.name;
-        SetApproved.SET_APPROVE({email,applicantCode,adminName,Name,applicantNum,yearLevel,baranggay,scholarshipApplied})
+        const formData = new FormData()
+        formData.append('email',row.Email)
+        formData.append('contactNum',dataappinfo.contactNum)
+        formData.append('applicantCode',row.applicantCode)
+        formData.append('adminName',adminName)
+        formData.append('Name',row.Name)
+        formData.append('applicantNum',row.applicantNum)
+        formData.append('yearLevel',row.yearLevel)
+        formData.append('baranggay',dataappinfo.baranggay)
+        formData.append('scholarshipApplied',dataappinfo.baranggay)
+        SetApproved.SET_APPROVE(formData)
       .then(res => {
         setQualified(res.data.results.data1);
         setAppointedList(res.data.results.data2)
@@ -1014,11 +1023,13 @@ try {
   }
   const appointUserInfo = async(data) =>{
       setUserOpen(true);
+      setUserAppsched(data)
       const applicantNum = data.applicantNum
       const res = await FetchingUserAppdetails.FETCH_USERDET(applicantNum);
       const docs = await ListofSub.FETCH_SUB(applicantNum)
       const info = res.data.result[0];
       const sub = docs.data.Document
+      console.log(info) 
       setUserFulldet(info)
       setUserFulldocs(sub)
   }

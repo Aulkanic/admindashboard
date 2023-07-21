@@ -433,6 +433,7 @@ const style = {
       return
     }
     setShowBackdrop(true);
+    let counter = 0;
       try {
         for (let i = 0; i < selectedRows.length; i++) {
           const row = selectedRows[i];
@@ -444,6 +445,17 @@ const style = {
           CheckingApplicants.CHECK_APP({email,adminName,applicantNum,status,applicantCode})
           .then(res => {
             console.log(res)
+            setOpen(false)
+            setShowBackdrop(false);
+            if (counter === selectedRows.length) {
+              setShowBackdrop(false);
+              swal({
+                title: "Success",
+                text: "Added Successfully!",
+                icon: "success",
+                button: "OK",
+              });
+            }
             setPost(res.data.Applicants)
           }
            )
@@ -452,9 +464,6 @@ const style = {
       } catch (error) {
         console.log(error);
       }
-      setOpen(false)
-      setShowBackdrop(false);
-      swal('Added Successfully')
   };
   const FailedAll = async() =>{
     const isValueIncluded = access[0]?.sectionId.includes('Applicants');
@@ -479,6 +488,7 @@ const style = {
         return
       }
       setShowBackdrop(true);
+      let counter = 0;
       for (let i=0 ;i<selectedRows.length;i++){
         const row = selectedRows[i];
         const res = await FetchingBmccSchoinfo.FETCH_SCHOLARSINFO(row.applicantNum);
@@ -494,15 +504,27 @@ const style = {
         formData.append('email',res.data.ScholarInf.results1[0].email)
         const response = await FailedUser.FAILED_USER(formData)
         if(response.data.success === 1){
-          
+          counter++;
+          if (counter === selectedRows.length) {
+            setShowBackdrop(false);
+            swal({
+              title: "Success",
+              text: "Status Updated!",
+              icon: "success",
+              button: "OK",
+            });
+          }
           setIsSend('No')
         }else{
           setShowBackdrop(false);
-          swal('Something Went Wrong')
+          swal({
+            text: 'Something Went Wrong',
+            timer: 2000,
+            buttons: false,
+            icon: 'error',
+          });
         }
       }
-      setShowBackdrop(false);
-      swal('Status Updated')
   }
   const columns = [
     { field: 'applicantNum', headerName: 'Applicant ID', width: 100 },

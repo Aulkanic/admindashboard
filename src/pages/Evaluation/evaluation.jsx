@@ -113,7 +113,7 @@ const Evaluation = () => {
             ListofSub.FETCH_SUB(applicantNum),
             UserScore.USER_SCORE(applicantNum)
           ]);
-          console.log(response[2].data.result[0])
+          console.log(response[0].data.results[0])
           setApplicantInfo(response[0].data.results[0]);
           setUserScore(response[2].data.result[0])
           setShowBackdrop(false);
@@ -809,15 +809,15 @@ const Evaluation = () => {
           </Toolbar>
         </AppBar>
       <Box sx={{width:'100%',padding:'10px 10px 40px 10px',height:'100%',display:'flex',backgroundColor:'whitesmoke'}}>
-         <div style={{width:'98%',padding:'10px',height:'100%'}}>
-          <Card sx={{width:'100%',height:'100%'}}>
+         <div style={{width:'98%',padding:'10px',height:'max-Content'}}>
+          <Card sx={{width:'100%',height:'100%'}} elevation={0}>
            <Card sx={{display:'flex',justifyContent:'space-around',alignItems:'center',backgroundColor:'blue',color:'white',height:'10%'}}>
             <h1>APPLICATION FORM </h1>
-            <div style={{backgroundColor:'green',padding:'20px',borderRadius:'10px'}}>
+            <div style={{backgroundColor:'green',padding:'20px',borderRadius:'10px',margin:'10px'}}>
               <p>SCORE: {userscore.appeval}/100</p>
             </div>
             </Card>
-           <Card>
+           <Card sx={{width:'100%',height:'100%',paddingBottom:'20px'}}>
             <Typography sx={{paddingLeft:'60px',fontSize:'20px',fontWeight:'700'}}>Personal Information</Typography>
             <div style={{display:'flex',width:'95%',padding:'10px'}}>
               <div style={{width:'30%'}}>

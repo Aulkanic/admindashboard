@@ -225,12 +225,14 @@ const Contact = () => {
     formData.append('batch',batch)
     formData.append('deadline',date)
     formData.append('docsfor',docsfor)
+    setOpen(false)
     setShowBackdrop(true);
       Addrequirements.ADD_REQUIREMENTS(formData)
       .then(res => {
         console.log(res)
         setReqlist(res.data.Requirements);
         setShowBackdrop(false);
+        setOpen(true)
         swal({
           title: "Success",
           text: "Created Successfilly!",
