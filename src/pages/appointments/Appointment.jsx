@@ -1030,7 +1030,6 @@ try {
       const docs = await ListofSub.FETCH_SUB(applicantNum)
       const info = res.data.result[0];
       const sub = docs.data.Document
-      console.log(info) 
       setUserFulldet(info)
       setUserFulldocs(sub)
   }
@@ -1393,7 +1392,7 @@ try {
   
   ];
   const appointList = appointedList && appointedList.length > 0
-  ? appointedList.filter(user => user.canGo === 'Yes')
+  ? appointedList.filter(user => user.canGo === 'Yes' || user.isPassed === 'Pending' || user.isPassed === '')
   : '';
   const PassedInterview = appointedList && appointedList.length > 0
   ? appointedList.filter(user => user.isPassed === 'True')
@@ -1407,7 +1406,7 @@ try {
   const Noresponse = appointedList && appointedList.length > 0
   ? appointedList.filter(user => user.canGo === 'Pending')
   : '';
-console.log(ReappointList)
+console.log(appointedList)
   return (
     <>
       <StyledBackdrop open={showBackdrop}>

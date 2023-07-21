@@ -236,7 +236,7 @@ const Evaluation = () => {
           {
             field: 'score',
             headerName: 'Details',
-            width: 250,
+            width: 350,
             renderCell: (params) => {
               let status
               if(params.value >= passSlot.passingscore){
