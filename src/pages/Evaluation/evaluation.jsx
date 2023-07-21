@@ -113,7 +113,6 @@ const Evaluation = () => {
             ListofSub.FETCH_SUB(applicantNum),
             UserScore.USER_SCORE(applicantNum)
           ]);
-          console.log(response[0].data.results[0])
           setApplicantInfo(response[0].data.results[0]);
           setUserScore(response[2].data.result[0])
           setShowBackdrop(false);
@@ -1026,6 +1025,17 @@ const Evaluation = () => {
                 </Typography>
               </div>
             </div>
+            <Typography sx={{paddingLeft:'60px',fontSize:'20px',fontWeight:'700'}}>Other Information</Typography>
+            <div style={{display:'flex',width:'95%',padding:'10px'}}>
+              <div style={{width:'100%'}}>
+                <div style={{display:'flex'}}>
+                <Typography sx={{whiteSpace:'nowrap'}}>
+                 {applicantsInfo.otherInfo} 
+                </Typography>
+                
+                </div>
+              </div>
+              </div>
            </Card>
           </Card>
          </div>
