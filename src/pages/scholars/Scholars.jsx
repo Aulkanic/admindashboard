@@ -209,7 +209,6 @@ const Scholars = () => {
         },
         [[], []]
       );
-      console.log(response.data.ScholarInf)
     const [application, renewal] = response.data.ScholarInf.results3
       ?.reduce(
         ([application, renewal], data) => {
