@@ -277,6 +277,29 @@ const Scholars = () => {
       headerName: 'Status',
       width: 80,
       editable: false,
+      renderCell: (params) =>{
+        const currentDate = new Date();
+        const renewal = isComplete.results1.filter(docs => docs.schoName === params.row.scholarshipApplied && docs.batch === params.row.Batch)
+        const renewal1 = renewal.filter(docs => docs.docsfor === 'Renewal')
+        const renewalSubmitted = isComplete.results2.filter(docs => 
+        docs.applicantId === parseFloat(params.row.applicantNum) && docs.docsFor === 'Renewal');
+        const isdeadline = renewal1.filter(item =>
+          new Date(item.deadline) > currentDate
+          );
+        const Status = renewalSubmitted.length === renewal1.length
+        params.row.k = {
+          Status: Status,
+        };
+        return (
+          <>
+          {Status && <><p>Active</p></>}
+          {!Status &&
+          (<>
+          <p>Hold</p>
+          </>)}
+          </>
+        )  
+      }
     },
     {
       field: 'Batch',
@@ -313,14 +336,12 @@ const Scholars = () => {
       field: 'k',
       headerName: 'Actions',
       width: 170,
-      renderCell: (params) =>{
-     
+      renderCell: (params) =>{ 
         const currentDate = new Date();
         const renewal = isComplete.results1.filter(docs => docs.schoName === params.row.scholarshipApplied && docs.batch === params.row.Batch)
         const renewal1 = renewal.filter(docs => docs.docsfor === 'Renewal')
-        console.log(renewal)
         const renewalSubmitted = isComplete.results2.filter(docs => 
-          docs.applicantId === parseFloat(params.row.applicantNum) && docs.docsFor === 'Renewal');
+        docs.applicantId === parseFloat(params.row.applicantNum) && docs.docsFor === 'Renewal');
         const isdeadline = renewal1.filter(item =>
           new Date(item.deadline) > currentDate
           );
@@ -366,7 +387,6 @@ const Scholars = () => {
   const handleClose1 = () => setOpen1(false);
 
   const handleRowSelectionModelChange = (newRowSelectionModel) => {
-    console.log(newRowSelectionModel)
     setRowSelectionModel(newRowSelectionModel);
 
   };
