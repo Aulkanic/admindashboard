@@ -78,6 +78,14 @@ const Endpoints = {
     UPDATE_FAQS:'Faqs/Update',
     DELETE_FAQS:'Faqs/Delete/',
     FETCH_REVOKE:'userProf/Revoke',
+    APPLICATION_FORM:'ApplicationForm/Form',
+    ADD_QUESTIONS:'ApplicationForm/AddQForm',
+    ADD_CHOICES:'ApplicationForm/AddCQuestions',
+    SCORE_QUESTIONS:'ApplicationForm/ScoreQuestions',
+    SCORE_CHOICES:'ApplicationForm/ScoreChoices',
+    DELETE_QUESTION:'ApplicationForm/DeleteQuestion/',
+    DELETE_CHOICES:'ApplicationForm/DeleteChoice/',
+    EDIT_QUESTIONS:'ApplicationForm/EditQuestions'
 }
 
 export default Endpoints

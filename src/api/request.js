@@ -242,3 +242,27 @@ export const EmployeeAccess = {
 export const Weblinks = {
     UPDATE_LINKS: (data) => axiosInstance.patch(Endpoints.LINKS,data)
 }
+export const ApplicationForm = {
+    FETCH_FORM: () => axiosInstance.get(Endpoints.APPLICATION_FORM)
+}
+export const QuestionForm = {
+    Q_FORM: (data) => axiosInstance.post(Endpoints.ADD_QUESTIONS,data)
+}
+export const ChoiceForm = {
+    C_FORM: (data) => axiosInstance.post(Endpoints.ADD_CHOICES,data)
+}
+export const QuestionScore = {
+    Q_SCORE: (data) => axiosInstance.patch(Endpoints.SCORE_QUESTIONS,data)
+}
+export const ChoiceScore = {
+    C_SCORE: (data) => axiosInstance.patch(Endpoints.SCORE_CHOICES,data)
+}
+export const QuestionDelete = {
+    DELETE_QFORM: (data) => axiosInstance.delete(Endpoints.DELETE_QUESTION+data)
+}
+export const ChoiceDelete = {
+    DELETE_CFORM: (data) => axiosInstance.delete(Endpoints.DELETE_CHOICES+data)
+}
+export const EditFormQuestion = {
+    EDIT_FORMQ: (data) => axiosInstance.patch(Endpoints.EDIT_QUESTIONS,data)
+}

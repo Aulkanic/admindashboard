@@ -1,21 +1,33 @@
-/* .sheets{
-    width: 100%;
-    height: 100vh;
-}
-.quescontainer{
+.questionchoose{
     display: flex;
-    width: 100%;
+    margin: 5px;
+    flex-direction: column;
 }
-.hshe{
-    width: 100%;
+.questionchoose p{
+    font-size: 15px;
+    font-weight: 700;
+}
+
+.choiceli{
+    width: 20%;
     display: flex;
+    margin: 5px;
+    justify-content: space-between;
+    align-items: center;
 }
-.hshe input{
-    width: 40px;
+.addchoice{
+    width: 20%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
 }
-.quesco{
-    margin: 10px;
+.scoreinput{
+    width: 25px;
 }
-.quesco{
-    border: 2px solid black;
-} */
+.questcon{
+    width: max-content;
+    display: flex;
+    margin: 5px;
+    justify-content: space-between;
+    align-items: center; 
+}
