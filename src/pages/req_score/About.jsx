@@ -79,10 +79,8 @@ export const About = () => {
       Fetch();
     }, []);
 
-
-
     const handleScorecardChange = (questionId, newScorecard) => {
-      setFormc((prevQuestions) =>
+      setFormq((prevQuestions) =>
       
         prevQuestions.map((question) =>
           question.id === questionId ? { ...question, scorecard: newScorecard } : question
@@ -90,14 +88,31 @@ export const About = () => {
       );
     };
     const handleScorecardChange1 = (choiceid, newScorecard) => {
-      setFormq((prevQuestions) =>
+      setFormc((prevQuestions) =>
       
         prevQuestions.map((question) =>
           question.id === choiceid ? { ...question, scorecard: newScorecard } : question
         )
       );
     };
-    
+    console.log(formq)
+    const schoForm = formq?.filter(data => data.scholarshipProg === schoname)
+    console.log(schoForm)
+
+    function filterChoicesByQuestionsId(choices, questionsId) {
+      return choices?.filter((choice) => choice.questionsid === questionsId);
+    }
+
+    const allChoicesForQuestions = schoForm?.map((question) => {
+      const choicesForQuestion = filterChoicesByQuestionsId(formc, question.id);
+      return {
+        question: question,
+        choices: choicesForQuestion,
+      };
+    });
+    const questions = allChoicesForQuestions?.map(item => item.question);
+    const chosen = allChoicesForQuestions?.map(item => item.choices).flat();
+
     const AddQuestions = async() =>{
       let optionsHtml = '';
       schoprog?.forEach((option) => {
@@ -280,19 +295,101 @@ export const About = () => {
         })
       }     
     }
+    const SaveScore = async() =>{
+      const istotal = await CheckScore()
+      if(istotal > 100){
+        Swal.fire(
+          'Reminders!',
+          'Total score cannot be greater than or equal to 100',
+          'warning'
+        )
+        return
+      }
+      if(istotal < 100){
+        Swal.fire(
+          'Reminders!',
+          'Total score must equal to 100',
+          'warning'
+        )
+        return
+      }
+      const checkchoice = formc.filter(data => data.scorecard > 100 || data.scorecard < 0)
+      if(checkchoice.length > 0){
+        Swal.fire(
+          'Reminders!',
+          'The percent of individual choices must between 0 to 100 only',
+          'warning'
+        )
+        return
+      } 
+      setShowBackdrop(true);
+      try {
+        const questionScoresPromises = questions.map((data) => {
+          const formData = new FormData();
+          formData.append('score', data.scorecard);
+          formData.append('id', data.id);
+          return QuestionScore.Q_SCORE(formData);
+        }); 
+    
+        const choiceScoresPromises = chosen.map((datac) => {
+          const formData = new FormData();
+          formData.append('score', datac.scorecard);
+          formData.append('id', datac.id);
+          return ChoiceScore.C_SCORE(formData);
+        });
 
-    const schoForm = formq?.filter(data => data.scholarshipProg === schoname)
-    const FormTemplate = schoForm?.map((data,index) =>{
-      const choices = formc?.filter(data1 => data1.questionsid === data.id)
+        const [questionScores, choiceScores] = await Promise.all([
+          Promise.all(questionScoresPromises),
+          Promise.all(choiceScoresPromises),
+        ]);
+
+        if (questionScores.length > 0) {
+          console.log(questionScores)
+          setFormq(questionScores[questionScores.length - 1].data.Questions);
+        } else {
+          console.error('Error: questionScores is empty');
+        }
+    
+        if (choiceScores.length > 0) {
+          setFormc(questionScores[questionScores.length - 1].data.Answers);
+        } else {
+          console.error('Error: choiceScores is empty');
+        }
+    
+        setShowBackdrop(false);
+        Swal.fire('Success!', 'Successfully Set the Score Card.', 'success');
+      } catch (error) {
+        setShowBackdrop(false);
+        Swal.fire('Error!', 'An error occurred while saving the score.', 'error');
+      }
+    }
+    const CheckScore = async() =>{
+      let total = 0;
+      for(let j=0 ;j<schoForm.length;j++){
+        total += parseFloat(schoForm[j].scorecard);
+      }
+      return total
+    }
+
+    const FormTemplate = questions?.map((data,index) =>{
+      const choices = chosen?.filter(data1 => data1.questionsid === data.id)
       return(
         <div key={index} className='questionchoose'>
-          <p>{index + 1}. {data.questions} <button style={{padding:'5px'}} className='myButton1' onClick={() =>EditQForm(data)}><EditIcon sx={{fontSize:'13px'}}/></button>
-          <button style={{padding:'5px',marginLeft:'10px'}} onClick={() =>DeleteQuestion(data)} className='myButton2'><DeleteIcon sx={{fontSize:'13px'}}/></button></p>
+          <div className='questioncon'>
+          <p style={{overflow:'hidden'}}>
+          {index + 1}. {data.questions}
+          </p> 
+          <div>
+          <button style={{padding:'5px'}} className='myButton1' onClick={() =>EditQForm(data)}><EditIcon sx={{fontSize:'13px'}}/></button>
+          <button style={{padding:'5px',marginLeft:'10px'}} onClick={() =>DeleteQuestion(data)} className='myButton2'><DeleteIcon sx={{fontSize:'13px'}}/></button>
+          </div>
+
+          </div>
           <ul>
             {choices?.map((data1,index) =>{
               return(
                 <li className='choiceli' key={index}>
-                  - {data1.value}
+                 <p style={{overflow:'hidden'}}>- {data1.value}</p> 
                 <button onClick={() =>DeleteChoice(data1)} style={{padding:'5px',marginLeft:'10px'}} className='myButton2'>
                   <DeleteIcon sx={{fontSize:'13px'}}/>
                 </button></li>
@@ -303,8 +400,8 @@ export const About = () => {
         </div>
       )
     })
-    const ScoreTemplate = schoForm?.map((data,index) =>{
-      const choices = formc?.filter(data1 => data1.questionsid === data.id)
+    const ScoreTemplate = questions?.map((data,index) =>{
+      const choices = chosen?.filter(data1 => data1.questionsid === data.id)
       return(
         <div key={index} className='questionchoose'>
           <p className='questcon'>{index + 1}. {data.questions}
@@ -378,11 +475,14 @@ export const About = () => {
           {value === '1' && 
          <Card sx={{padding:'10px'}}>
             <button style={{float:'right'}} onClick={AddQuestions} className='myButton1'>Add Questions</button>
-              {FormTemplate}
+            <div className="frmcontainer">
+            {FormTemplate}
+            </div>
+
           </Card> }   
           {value === '2' && 
          <Card sx={{padding:'10px'}}>
-            <button style={{float:'right'}} className='myButton1'>Set Score</button>
+            <button style={{float:'right'}} onClick={SaveScore} className='myButton1'>Set Score</button>
               {ScoreTemplate}
          </Card> }       
         </div>

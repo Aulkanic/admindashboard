@@ -5,10 +5,20 @@ import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useContext } from "react";
 import swal from "sweetalert";
-import { styled, ThemeProvider, createTheme } from '@mui/material';
+import InputAdornment from '@mui/material/InputAdornment';
+import AccountBoxRoundedIcon from '@mui/icons-material/AccountBoxRounded';
+import LockRoundedIcon from '@mui/icons-material/LockRounded';
+import FormControlLabel from '@mui/material/FormControlLabel';
+import Checkbox from '@mui/material/Checkbox';
+import { styled, ThemeProvider, createTheme, Link, TextField } from '@mui/material';
 import { Backdrop, CircularProgress } from '@mui/material';
 
-const theme = createTheme();
+const theme = createTheme({
+  typography: {
+    fontSize: 12, // Adjust the base font size
+  },
+});
+
 const StyledBackdrop = styled(Backdrop)`
   z-index: ${({ theme }) => theme.zIndex.drawer + 1};
 `;
@@ -50,50 +60,86 @@ const Login = () => {
     };
     const handlerEmailInput = (e) => setEmail(e.target.value)
     const handlerPasswordInput = (e) => setPassword(e.target.value)
-
+    const CustomCheckbox = styled(Checkbox)`
+    font-size: 10px;
+  `;
   return (
     <>
+    <ThemeProvider theme={theme}>
               <StyledBackdrop open={showBackdrop}>
                 <CircularProgress color="inherit" />
               </StyledBackdrop>
     <div className="login">
       <div className="container">
-    <h3> BMCC Admin </h3>
-    <img style={{borderRadius:50}} src="https://drive.google.com/uc?id=1Vg5RGP_vmahLzh-ptNacTpgxGyoLbOPl" 
+        <div className="toplogin">
+        <img className="mydo" src="https://drive.google.com/uc?id=1HsYAs1azfEEjkJDjPKQaWjhorcW1W0T6" 
          alt=""/>
+
+         <h1>Administrator</h1>
+        </div>
+
     <form>
       <div className="form-group">
-        <input 
-        type='text' 
+        <TextField 
+        sx={{borderRadius:'10px'}}
+        type='email' 
+        variant="outlined"
+        size="small"
         name="email"
-        className='form-control'
+        fullWidth
         placeholder='Username'
-        style={{fontStyle: 'italic', fontSize: 15, color: '#005427'}} 
         value={email}     
+        InputProps={{
+          endAdornment:(
+            <InputAdornment position="end">
+              <AccountBoxRoundedIcon/>
+            </InputAdornment>   
+          )
+        }}
         onChange={handlerEmailInput}
         />
       </div>
 
       <div className="form-group">
-        <input 
+        <TextField 
         type="password"
         name='password'
-        className='form-control'
+        variant="outlined"
+        size="small"
+        fullWidth
         placeholder='Password'
-        style={{fontStyle: 'italic', fontSize: 15}} 
         value={password}
         onChange={handlerPasswordInput}
+        InputProps={{
+          endAdornment:(
+            <InputAdornment position="end">
+              <LockRoundedIcon/>
+            </InputAdornment>   
+          )
+        }}
         />
+        <div style={{display:'flex',justifyContent:'space-around',alignItems:'center',fontSize:'12px'}}>
+          <div>
+          <FormControlLabel sx={{fontSize:'10px'}} required control={<CustomCheckbox />} label="Remember me" />
+          </div>
+          <div>
+            <Link>
+            Forgot Password?
+            </Link>
+          </div>
+        </div>
       </div>
+      <div className="btnlogin">
       <button className="myButton" 
                 onClick={handleSubmit}
                 >
         Login
       </button>
-
+      </div>
     </form>
     </div>
     </div>
+    </ThemeProvider>
     </>
   )
 }
