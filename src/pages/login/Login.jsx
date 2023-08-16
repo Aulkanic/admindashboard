@@ -15,7 +15,7 @@ import { Backdrop, CircularProgress } from '@mui/material';
 
 const theme = createTheme({
   typography: {
-    fontSize: 12, // Adjust the base font size
+    fontSize: 12,
   },
 });
 
