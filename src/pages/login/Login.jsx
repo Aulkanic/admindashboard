@@ -185,7 +185,7 @@ const Login = () => {
       </div>
 
       <div className="btnlogin">
-        <button className="myButton" onClick={handleSubmit}>LOGIN</button>
+        <button className="myButtond" onClick={handleSubmit}>LOGIN</button>
       </div>
 
     </form>
