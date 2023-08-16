@@ -18,6 +18,10 @@ import { BrowserRouter, Routes, Route,} from "react-router-dom";
 import Single from './pages/single/Single';
 import { createContext } from 'react';
 import { useState } from 'react';
+import { Provider } from 'react-redux';
+import { PersistGate } from 'redux-persist/integration/react';
+import store, { persistor } from './Redux/store';
+import AuthGuard from './Redux/AuthGuard';
 
 
 export const admininfo = createContext();
@@ -33,27 +37,33 @@ function App() {
     <div className="App">
         <BrowserRouter>
         <admininfo.Provider value={{ user, loginUser }}>
+        <Provider store={store}>
+        <PersistGate loadin={null} persistor={persistor}>
       <Routes>
         <Route path="/">
-          <Route index element={<Login/>} />
-          <Route path='home' element={<Home/>} />
-          <Route path='scholarships' element={<Scholarships/>}/>
-          <Route path='about' element={<About />} />
-          <Route path='contact' element={<Contact />} />
-          <Route path='faqs' element={<Faqs />} />
-          <Route path='news' element={<News/>} />
-          <Route path='applicants' element={<Applicant/>} />
-          <Route path='single' element={<Single/>} />
-          <Route path='users' element={<Users/>} />
-          <Route path='appointments' element={<Appointment/>} />
-          <Route path='scholars' element={<Scholars/>} />
-          <Route path='Evaluation' element={<Evaluation/>} />
-          <Route path='Rules' element={<Rule/>} />
-          <Route path='Announcement' element={<Announcement/>} />
-          <Route path='Website-Maintenance' element={<Website/>} />
-          <Route path='Report' element={<Report/>} />
+            <Route index element={<Login/>} />
+            <Route element={<AuthGuard />}>
+                <Route path='home' element={<Home/>} />
+                <Route path='scholarships' element={<Scholarships/>}/>
+                <Route path='about' element={<About />} />
+                <Route path='contact' element={<Contact />} />
+                <Route path='faqs' element={<Faqs />} />
+                <Route path='news' element={<News/>} />
+                <Route path='applicants' element={<Applicant/>} />
+                <Route path='single' element={<Single/>} />
+                <Route path='users' element={<Users/>} />
+                <Route path='appointments' element={<Appointment/>} />
+                <Route path='scholars' element={<Scholars/>} />
+                <Route path='Evaluation' element={<Evaluation/>} />
+                <Route path='Rules' element={<Rule/>} />
+                <Route path='Announcement' element={<Announcement/>} />
+                <Route path='Website-Maintenance' element={<Website/>} />
+                <Route path='Report' element={<Report/>} />
+          </Route>
         </Route>
       </Routes>
+      </PersistGate>
+      </Provider>
       </admininfo.Provider>
     </BrowserRouter>
     </div>
