@@ -260,7 +260,6 @@ const Appointment = () => {
 
 
   const handleRowSelectionModelChange = (newRowSelectionModel) => {
-    console.log(newRowSelectionModel)
     setRowSelectionModel(newRowSelectionModel);
 
   };

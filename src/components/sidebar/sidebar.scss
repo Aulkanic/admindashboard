@@ -6,16 +6,17 @@
     
 
     .top{
-        background-color: blue;
+        background-color: rgb(90, 125, 252);
         height: 60px;
         display: flex;
         align-items: center;
         justify-content: center;
 
-        .logo{
-            font-size: 28px;
-            font-weight: bold;
-            color: yellow;
+        img{
+            width: 150px;
+            height: 100%;
+            object-fit: cover;
+            padding-bottom: 10px;
         }
         
     }

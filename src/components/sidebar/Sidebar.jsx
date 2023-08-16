@@ -55,7 +55,8 @@ const Sidebar = () => {
     <div className='sidebar'>
 
       <div className='top'> 
-          <span className='logo'> BMCC </span>
+                  <img className="mydo" src="https://drive.google.com/uc?id=12yKj9K3Caiaq3hP1JRKRbaLpkIuvapkZ" 
+         alt=""/>
         </div>
 
 
