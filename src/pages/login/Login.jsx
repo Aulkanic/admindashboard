@@ -15,7 +15,7 @@ import { Backdrop, CircularProgress } from '@mui/material';
 
 const theme = createTheme({
   typography: {
-    fontSize: 12,
+    fontSize: 10.5,
   },
 });
 
@@ -46,6 +46,7 @@ const Login = () => {
           icon: "success",
         })
       }
+
      else{
       setShowBackdrop(false);
       swal({
@@ -66,22 +67,48 @@ const Login = () => {
   return (
     <>
     <ThemeProvider theme={theme}>
-              <StyledBackdrop open={showBackdrop}>
-                <CircularProgress color="inherit" />
-              </StyledBackdrop>
+      <StyledBackdrop open={showBackdrop}>
+        <CircularProgress color="inherit" />
+          </StyledBackdrop>
+
     <div className="login">
       <div className="container">
+
         <div className="toplogin">
         <img className="mydo" src="https://drive.google.com/uc?id=1HsYAs1azfEEjkJDjPKQaWjhorcW1W0T6" 
          alt=""/>
-
-         <h1>Administrator</h1>
         </div>
 
+          <hr 
+            style={{
+              background: 'none',
+              borderColor: 'red',
+              height: '400px',
+            }}
+          />
+        
+
     <form>
+      <div className="head">
+        <h1>Welcome Admin!</h1>
+        <i>Sign in to your Account</i>
+      </div>
+
       <div className="form-group">
         <TextField 
-        sx={{borderRadius:'10px'}}
+        sx={{borderRadius:'5px',
+             boxShadow: '0px 1px 1px 0px gray',
+             border: 'none',
+        }}
+
+        style={{
+          fontStyle: 'italic',
+          alignItems: 'center',
+          marginBottom: '10px',
+          width: '350px',
+          
+        }}
+
         type='email' 
         variant="outlined"
         size="small"
@@ -92,7 +119,7 @@ const Login = () => {
         InputProps={{
           endAdornment:(
             <InputAdornment position="end">
-              <AccountBoxRoundedIcon/>
+              <AccountBoxRoundedIcon sx={{color: '#0020CB'}}/>
             </InputAdornment>   
           )
         }}
@@ -102,6 +129,18 @@ const Login = () => {
 
       <div className="form-group">
         <TextField 
+          sx={{borderRadius:'5px',
+          boxShadow: '0px 1px 1px 0px gray',
+          border: 'none',
+        }}
+        
+        style={{
+          fontStyle: 'italic',
+          alignItems: 'center',
+          marginBottom: '10px',
+          width: '350px',
+        }}
+
         type="password"
         name='password'
         variant="outlined"
@@ -113,29 +152,42 @@ const Login = () => {
         InputProps={{
           endAdornment:(
             <InputAdornment position="end">
-              <LockRoundedIcon/>
+              <LockRoundedIcon sx={{color: '#0020CB'}}/>
             </InputAdornment>   
           )
         }}
         />
-        <div style={{display:'flex',justifyContent:'space-around',alignItems:'center',fontSize:'12px'}}>
+        
+        <div style={{
+          display:'flex',
+          justifyContent:'space-around',
+          alignItems:'center', 
+          fontSize:'11px', 
+          marginBottom:'15px'}}>
+
+        <div>
+          <FormControlLabel 
+            sx={{fontSize:'10px', 
+                fontStyle: 'italic',
+                color: 'blue'  
+              }} 
+                required control={<CustomCheckbox />} 
+                label="Remember me" />
+        </div>
+
           <div>
-          <FormControlLabel sx={{fontSize:'10px'}} required control={<CustomCheckbox />} label="Remember me" />
-          </div>
-          <div>
-            <Link>
+            <Link sx={{fontStyle: 'italic', marginLeft: '115px'}}>
             Forgot Password?
             </Link>
           </div>
+
         </div>
       </div>
+
       <div className="btnlogin">
-      <button className="myButton" 
-                onClick={handleSubmit}
-                >
-        Login
-      </button>
+        <button className="myButton" onClick={handleSubmit}>LOGIN</button>
       </div>
+
     </form>
     </div>
     </div>
