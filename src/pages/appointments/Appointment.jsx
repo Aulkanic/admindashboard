@@ -253,11 +253,6 @@ const Appointment = () => {
     setImageModalOpen(false);
   };
 
-  const handleClickOpenDialog = (data) => {
-    console.log(data)
-    setDialog(true);
-    setFailInf(data)
-  };
 
   const handleCloseDialog = () => {
     setDialog(false);
