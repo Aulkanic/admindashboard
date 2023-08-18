@@ -12,6 +12,8 @@ import FormControlLabel from '@mui/material/FormControlLabel';
 import Checkbox from '@mui/material/Checkbox';
 import { styled, ThemeProvider, createTheme, Link, TextField } from '@mui/material';
 import { Backdrop, CircularProgress } from '@mui/material';
+import { setAuthenticated,setAdmin } from "../../Redux/loginSlice";
+import { useDispatch } from 'react-redux';
 
 const theme = createTheme({
   typography: {
@@ -24,6 +26,7 @@ const StyledBackdrop = styled(Backdrop)`
 `;
 
 const Login = () => {
+  const dispatch = useDispatch();
     const { loginUser } = useContext(admininfo);
     const [email, setEmail] = useState('')
     const [password, setPassword] = useState('')
@@ -37,6 +40,7 @@ const Login = () => {
       if(res.data.message === 'Success'){
         loginUser(res.data.userDetails)
         localStorage.setItem('AdminisOnline',true)
+        dispatch(setAuthenticated(true))
         setShowBackdrop(false);
         navigate('/home');
         swal({

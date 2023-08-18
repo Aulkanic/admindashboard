@@ -28,28 +28,22 @@ import GavelIcon from '@mui/icons-material/Gavel';
 import LanguageIcon from '@mui/icons-material/Language';
 import AssessmentIcon from '@mui/icons-material/Assessment';
 import { useState } from 'react';
+import { useDispatch } from 'react-redux';
+import { setAuthenticated,setAdmin } from '../../Redux/loginSlice';
 
 
 const Sidebar = () => {
+  const dispatch = useDispatch();
   const { loginUser,user } = useContext(admininfo);
   const navigate = useNavigate();
   const [activeSection,setActiveSection] = useState(0)
   const Logout = async() =>{
     const formData = new FormData();
     formData.append('id',user.id)
-      const res = await LogoutAdmin.SET_LOGOUT(formData)
-      if(res.data.success === 0){
-        swal(res.data.message)
-      }else{
+       await LogoutAdmin.SET_LOGOUT(formData)
         localStorage.setItem('AdminisLogin',false)
-        swal({
-          text: 'Logging Out....',
-          timer: 2000,
-          buttons: false,
-        })
-        await new Promise((resolve) => setTimeout(resolve, 2000));
-        navigate('/')
-      }
+        dispatch(setAuthenticated(false))
+
   }
   return (
     <div className='sidebar'>
@@ -169,7 +163,7 @@ const Sidebar = () => {
             </li>
             </Link>
 
-<           Link style={{ textDecoration: "none"}}>
+<           Link to='/' style={{ textDecoration: "none"}}>
             <Button onClick={Logout}>
             <li>
               <LogoutIcon className='icon'/>

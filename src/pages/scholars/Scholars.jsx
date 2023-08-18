@@ -195,6 +195,7 @@ const Scholars = () => {
     const formData = new FormData()
     formData.append('applicantNum',applicantNum)
     const response = await FetchingBmccSchoinfo.FETCH_SCHOLARSINFO(applicantNum);
+    console.log(response)
     const req = await ListofReq.FETCH_REQUIREMENTS();
     const log = await UserActivity.USER_LOG(formData);
     const userAct = log.data.result;
@@ -209,6 +210,7 @@ const Scholars = () => {
         },
         [[], []]
       );
+      console.log(response.data.ScholarInf.results3)
     const [application, renewal] = response.data.ScholarInf.results3
       ?.reduce(
         ([application, renewal], data) => {
