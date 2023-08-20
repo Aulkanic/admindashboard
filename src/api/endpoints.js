@@ -85,7 +85,8 @@ const Endpoints = {
     SCORE_CHOICES:'ApplicationForm/ScoreChoices',
     DELETE_QUESTION:'ApplicationForm/DeleteQuestion/',
     DELETE_CHOICES:'ApplicationForm/DeleteChoice/',
-    EDIT_QUESTIONS:'ApplicationForm/EditQuestions'
+    EDIT_QUESTIONS:'ApplicationForm/EditQuestions',
+    USERFRM_ID:'ApplicationForm/',
 }
 
 export default Endpoints

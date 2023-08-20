@@ -266,3 +266,6 @@ export const ChoiceDelete = {
 export const EditFormQuestion = {
     EDIT_FORMQ: (data) => axiosInstance.patch(Endpoints.EDIT_QUESTIONS,data)
 }
+export const USERFRM_ID = {
+    FORMUSR: (data) => axiosInstance.get(Endpoints.USERFRM_ID+data)
+}

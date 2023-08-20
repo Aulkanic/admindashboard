@@ -3,9 +3,9 @@ import './evaluation.css'
 import Sidebar from '../../components/sidebar/Sidebar'
 import Navbar from '../../components/navbar/Navbar'
 import { DataGrid,} from '@mui/x-data-grid';
-import { Tabs, Tab, Box, Modal,Card,Button } from "@mui/material";  
+import { Tabs, Tab, Box, Modal,Card,Button,Chip } from "@mui/material";  
 import { ApplicantsRequest, FetchingApplicantsInfo, ListofSub,
-    CheckingSubs, CheckingApplicants,UserScore,SetApplicant,FailedUser,FetchingBmccSchoinfo,
+   USERFRM_ID,SetApplicant,FailedUser,FetchingBmccSchoinfo,
       UpdatePassSlots,FetchPassSlots,DecrePassSlots,GrantAccess,ListAccess } from "../../api/request";
 import TextField from '@mui/material/TextField';
 import swal from 'sweetalert';
@@ -28,7 +28,7 @@ import Toolbar from '@mui/material/Toolbar';
 import IconButton from '@mui/material/IconButton';
 import Link from '@mui/material/Link';
 import Checkbox from '@mui/material/Checkbox';
-import { styled, ThemeProvider, createTheme } from '@mui/material';
+import { styled, createTheme } from '@mui/material';
 import { Backdrop, CircularProgress } from '@mui/material';
 
 const theme = createTheme();
@@ -47,10 +47,9 @@ const Evaluation = () => {
     const [email,setEmail] = useState('');
     const [password,setPassword] = useState('')
     const [userscore,setUserScore] = useState([]);
-    const [selectedInfo, setSelectedInfo] = useState({});
     const [applicantsInfo, setApplicantInfo] = useState([]);
     const [access,setAccess] = useState([])
-    const [tabValue, setTabValue] = useState(0);
+    const [tabValue, setTabValue] = useState('one');
     const [open, setOpen] = useState(false);
     const handleOpen = () => setOpen(true);
     const handleClose = () => setOpen(false);
@@ -66,6 +65,10 @@ const Evaluation = () => {
     const [who,setWho] = useState('');
     const [isSend,setIsSend] = useState('No')
     const [checked, setChecked] = React.useState(false);
+
+    const handleChange = (event, newValue) => {
+      setTabValue(newValue);
+    };
 
     const handleChangeCheckbox = (event) => {
       const check = event.target.checked
@@ -111,10 +114,11 @@ const Evaluation = () => {
           const response = await Promise.all([
             FetchingApplicantsInfo.FETCH_INFO(applicantNum),
             ListofSub.FETCH_SUB(applicantNum),
-            UserScore.USER_SCORE(applicantNum)
+            USERFRM_ID.FORMUSR(applicantNum)
           ]);
+          console.log(response)
           setApplicantInfo(response[0].data.results[0]);
-          setUserScore(response[2].data.result[0])
+          setUserScore(response[2].data)
           setShowBackdrop(false);
           handleOpen()
         } catch (error) {
@@ -431,15 +435,6 @@ const Evaluation = () => {
           },
     
       ];
-      const handleTabChange = (event, newValue) => {
-        setTabValue(newValue);
-      };
-
-    const TabPanel = ({ children, value, index }) => (
-            <div role="tabpanel" hidden={value !== index}>
-              {value === index && <Box p={3}>{children}</Box>}
-            </div>
-          );
 
     const setFirsttoSecStat = async(data) =>{
       const isValueIncluded = access[0]?.sectionId.includes('Evaluation');
@@ -747,6 +742,16 @@ const Evaluation = () => {
     const Failed = data && data.length > 0
     ? data.filter(user => user.score < passSlot.passingscore)
     : '';
+
+    const userfrmeval = userscore?.map((data,index) =>{
+
+      return(
+      <div style={{display:'flex',alignItems:'center',margin:'10px'}} key={index}>
+      <Chip sx={{width:'50px',marginRight:'5px'}} label={data.score} color="primary" />
+      <p><strong>{index + 1}.</strong> {data.question} {data.answer}</p>
+      </div>
+
+    )})
   return (
     <>
               <StyledBackdrop open={showBackdrop}>
@@ -807,237 +812,66 @@ const Evaluation = () => {
             </Typography>
           </Toolbar>
         </AppBar>
-      <Box sx={{width:'100%',padding:'10px 10px 40px 10px',height:'100%',display:'flex',backgroundColor:'whitesmoke'}}>
-         <div style={{width:'98%',padding:'10px',height:'max-Content'}}>
-          <Card sx={{width:'100%',height:'100%'}} elevation={0}>
-           <Card sx={{display:'flex',justifyContent:'space-around',alignItems:'center',backgroundColor:'blue',color:'white',height:'10%'}}>
-            <h1>APPLICATION FORM </h1>
-            <div style={{backgroundColor:'green',padding:'20px',borderRadius:'10px',margin:'10px'}}>
-              <p>SCORE: {userscore.appeval}/100</p>
+      <Box sx={{width:'100%',height:'100%',display:'flex',backgroundColor:'whitesmoke'}}>
+         <div className='evalusrprof'>
+            <img src={applicantsInfo.profile} alt="" />
+            <div style={{width:'70%'}}>
+              <p className='evalusrid'><strong>Applicant Id:</strong> {applicantsInfo.applicantCode}</p>
+              <p className='evalusrid'><strong>Batch:</strong> {applicantsInfo.Batch}</p>
+              <p className='evalusrid'><strong>Date Applied:</strong> {applicantsInfo.DateApplied}</p>
             </div>
-            </Card>
-           <Card sx={{width:'100%',height:'100%',paddingBottom:'20px'}}>
-            <Typography sx={{paddingLeft:'60px',fontSize:'20px',fontWeight:'700'}}>Personal Information</Typography>
-            <div style={{display:'flex',width:'95%',padding:'10px'}}>
-              <div style={{width:'30%'}}>
-                <Typography>
-                  First Name:{applicantsInfo.firstName}
-                </Typography>
-                <Typography>
-                  Last Name:{applicantsInfo.lastName}
-                </Typography>
-                <Typography>
-                  Middle Name:{applicantsInfo.middleName}
-                </Typography>
-                <Typography>
-                  Gender:{applicantsInfo.gender}
-                </Typography>
-              </div>
-              <div style={{width:'30%'}}>
-              <Typography>Citizenship: {applicantsInfo.citizenship}</Typography>
-              <Typography>Date of Birth: {applicantsInfo.birthday}</Typography>
-              <Typography>Age: {applicantsInfo.age}</Typography>
-              <Typography>Birth Of Place: {applicantsInfo.birthPlace}</Typography>
-              </div>
-              <div style={{width:'37%'}}>
-              <Typography>Contact Number: {applicantsInfo.contactNum}</Typography>
-              <Typography>Email: {applicantsInfo.email}</Typography>
-              <Typography>Permanent Address: {applicantsInfo.caddress}</Typography>
-              <Typography>Current Address: {applicantsInfo.paddress}</Typography>
-              </div>
-            </div>
-            <Typography sx={{paddingLeft:'60px',fontSize:'20px',fontWeight:'700'}}>Economic Background</Typography>
-            <div style={{display:'flex',width:'95%',padding:'10px'}}>
-              <div style={{width:'100%'}}>
-                <div style={{display:'flex'}}>
-                <Typography sx={{whiteSpace:'nowrap'}}>
-                 Where Do you Live: {applicantsInfo.wereLive} -
-                </Typography>
-                <p style={{backgroundColor:'green',textAlign:'center',padding:'5px',color:'white',borderRadius:'3px'}}>{userscore.wltotal}</p>
+         </div>
+         <div className='evalfrmdet'>
+                <Tabs
+                  value={tabValue}
+                  onChange={handleChange}
+                  textColor="secondary"
+                  indicatorColor="secondary"
+                  aria-label="secondary tabs example"
+                >
+                  <Tab value="one" label="Personal Details" />
+                  <Tab value="two" label="Family/Guardian " />
+                  <Tab value="three" label="Form" />
+                </Tabs>
+                {tabValue === 'one' && 
+                <div>
+                <p><strong>Name:</strong> {applicantsInfo.Name}</p>
+                <p><strong>Age:</strong> {applicantsInfo.age}</p>
+                <p><strong>Gender:</strong> {applicantsInfo.gender}</p>
+                <p><strong>Address:</strong> {applicantsInfo.address}</p>
+                <p><strong>Baranggay:</strong> {applicantsInfo.baranggay}</p>
+                <p><strong>Birthday:</strong> {applicantsInfo.birthday}</p>
+                <p><strong>Place of Birth:</strong> {applicantsInfo.birthPlace}</p>
+                <p><strong>Citizenship:</strong> {applicantsInfo.citizenship}</p>
+                <p><strong>Contact Number:</strong> {applicantsInfo.contactNum}</p>
+                <p><strong>Email:</strong> {applicantsInfo.email}</p>
+                <p><strong>Last School Attended:</strong> {applicantsInfo.school}</p>
+                <p><strong>School Address:</strong> {applicantsInfo.schoolAddress}</p>
+                <p><strong>Year Level:</strong> {applicantsInfo.yearLevel}</p>
+                <p><strong>Course:</strong> {applicantsInfo.course}</p>
                 </div>
-                <div style={{display:'flex'}}>
-                <Typography>
-                  How Long you Live in Marilao: {applicantsInfo.howLong} - 
-                </Typography>
-                <p style={{backgroundColor:'green',textAlign:'center',padding:'5px',color:'white',borderRadius:'3px'}}>{userscore.hltotal}</p>
-                </div>
-                <div style={{display:'flex'}}>
-                <Typography>
-                  House Ownership: {applicantsInfo.ownerShip} -
-                </Typography>
-                <p style={{backgroundColor:'green',textAlign:'center',padding:'5px',color:'white',borderRadius:'3px'}}>{userscore.ostotal}</p>
-                </div>
-              </div>
-              <div style={{width:'100%'}}>
-                <div style={{display:'flex'}}>
-                <Typography>
-                  Parent(s)/Guardian Annual Gross Income: {applicantsInfo.monthIncome} -
-                </Typography>
-                <p style={{backgroundColor:'green',textAlign:'center',padding:'5px',color:'white',borderRadius:'3px'}}>{userscore.mitotal}</p>
-                </div>
-                <Typography>
-                  Baranggay:{applicantsInfo.baranggay}
-                </Typography>
-              </div>
-            </div>
-            <Typography sx={{paddingLeft:'60px',fontSize:'20px',fontWeight:'700'}}>Family Information</Typography>
-            <div style={{width:'100%',display:'flex'}}>
-            <div style={{width:'30%',padding:'10px'}}>
-            <Typography sx={{paddingLeft:'20px',fontSize:'18px',fontWeight:'500',textDecoration:'underline'}}>Mother Information</Typography>
-            <div>
-              <div style={{width:'100%'}}>
-                <Typography>
-                  First Name:{applicantsInfo.motherName}
-                </Typography>
-                <Typography>
-                  Last Name:{applicantsInfo.motherlName}
-                </Typography>
-                <Typography>
-                  Middle Name:{applicantsInfo.mothermName}
-                </Typography>
-              </div>
-              <div style={{width:'100%'}}>
-                <Typography>
-                  Occupation:{applicantsInfo.motherOccu}
-                </Typography>
-                <Typography>
-                  Highest Educational Attainment:{applicantsInfo.motherEduc}
-                </Typography>
-              </div>
-            </div>
-            </div>
-            <div style={{width:'30%',padding:'10px'}}>
-            <Typography sx={{paddingLeft:'20px',fontSize:'18px',fontWeight:'500',textDecoration:'underline'}}>Father Information</Typography>
-            <div style={{width:'95%',padding:'10px'}}>
-              <div style={{width:'100%'}}>
-                <Typography>
-                  First Name:{applicantsInfo.fatherName}
-                </Typography>
-                <Typography>
-                  Last Name:{applicantsInfo.fatherlName}
-                </Typography>
-                <Typography>
-                  Middle Name:{applicantsInfo.fathermName}
-                </Typography>
-              </div>
-              <div style={{width:'100%'}}>
-                <Typography>
-                  Occupation:{applicantsInfo.fatherOccu}
-                </Typography>
-                <Typography>
-                  Highest Educational Attainment:{applicantsInfo.fatherEduc}
-                </Typography>
-              </div>
-            </div>
-            </div>
-            <div style={{width:'30%',padding:'10px'}}>
-            <Typography sx={{paddingLeft:'20px',fontSize:'18px',fontWeight:'500',textDecoration:'underline'}}>Other Information</Typography>
-              <div style={{display:'flex'}}>
-              <Typography>Number of Family Members: {applicantsInfo.famNum} -</Typography>
-              <p style={{backgroundColor:'green',textAlign:'center',padding:'5px',color:'white',borderRadius:'3px'}}>{userscore.fntotal}</p>
-              </div>
-              <Typography>Guardian: {applicantsInfo.guardianName}</Typography>
-              <Typography>Contact Number: {applicantsInfo.guardianContact}</Typography>
-              <Typography>Relationship: {applicantsInfo.relationship}</Typography>
-            </div>
-            </div>
-            <Typography sx={{paddingLeft:'60px',fontSize:'20px',fontWeight:'700'}}>Educational Background</Typography>
-            <div style={{display:'flex',width:'95%',padding:'10px'}}>
-              <div style={{width:'100%'}}>
-                <Typography>
-                  Year Level:{applicantsInfo.currentYear}
-                </Typography>
-                <div style={{display:'flex'}}>
-                <Typography>
-                  Type of School: {applicantsInfo.typeSchool} -
-                </Typography>
-                <p style={{backgroundColor:'green',textAlign:'center',padding:'5px',color:'white',borderRadius:'3px'}}>{userscore.tstotal}</p>
-                </div>
-                <Typography>
-                  School Name:{applicantsInfo.currentSchool}
-                </Typography>
-                <Typography>
-                  School Address:{applicantsInfo.address}
-                </Typography>
-              </div>
-              <div style={{width:'100%'}}>
-                <Typography>
-                  Degree Program/Course(Priority Course):{applicantsInfo.course}
-                </Typography>
-                <div style={{display:'flex'}}>
-                <Typography>
-                  General Weighted Average: {applicantsInfo.gwa} - 
-                </Typography>
-                <p style={{backgroundColor:'green',textAlign:'center',padding:'5px',color:'white',borderRadius:'3px'}}>{userscore.gwatotal}</p>
-                </div>
-                <div style={{display:'flex'}}>
-                <Typography>
-                  Financial Support: {applicantsInfo.financialSupport} -
-                </Typography>
-                <p style={{backgroundColor:'green',textAlign:'center',padding:'5px',color:'white',borderRadius:'3px'}}>{userscore.fatotal}</p>
-                </div>
-              </div>
-            </div>
-            <div style={{display:'flex',width:'95%',padding:'10px',justifyContent:'space-between',overflow:'visible'}}>
-              <div style={{width:'30%'}}>
-                <Typography sx={{paddingLeft:'20px',fontSize:'18px',fontWeight:'500',textDecoration:'underline'}}>Elementary Background</Typography>
-                <Typography>
-                  School Name:{applicantsInfo.elemSchool}
-                </Typography>
-                <Typography>
-                  Address:{applicantsInfo.elemAddress}
-                </Typography>
-                <Typography>
-                  School Year:{applicantsInfo.elemYear}
-                </Typography>
-                <Typography>
-                  Award:{applicantsInfo.elemAward}
-                </Typography>
-              </div>
-              <div style={{width:'30%'}}>
-              <Typography sx={{paddingLeft:'20px',fontSize:'18px',fontWeight:'500',textDecoration:'underline'}}>Highschool Background</Typography>
-              <Typography>
-                  School Name:{applicantsInfo.highSchool}
-                </Typography>
-                <Typography>
-                  Address:{applicantsInfo.highAddress}
-                </Typography>
-                <Typography>
-                  School Year:{applicantsInfo.highYear}
-                </Typography>
-                <Typography>
-                  Award:{applicantsInfo.highAward}
-                </Typography>
-              </div>
-              <div style={{width:'30%'}}>
-              <Typography sx={{paddingLeft:'20px',fontSize:'18px',fontWeight:'500',textDecoration:'underline'}}>College Background</Typography>
-              <Typography>
-                  School Name:{applicantsInfo.collegeSchool}
-                </Typography>
-                <Typography>
-                  Address:{applicantsInfo.collegeAddress}
-                </Typography>
-                <Typography>
-                  School Year:{applicantsInfo.collegeYear}
-                </Typography>
-                <Typography>
-                  Award:{applicantsInfo.collegeAward}
-                </Typography>
-              </div>
-            </div>
-            <Typography sx={{paddingLeft:'60px',fontSize:'20px',fontWeight:'700'}}>Other Information</Typography>
-            <div style={{display:'flex',width:'95%',padding:'10px'}}>
-              <div style={{width:'100%'}}>
-                <div style={{display:'flex'}}>
-                <Typography sx={{whiteSpace:'nowrap'}}>
-                 {applicantsInfo.otherInfo} 
-                </Typography>
-                
-                </div>
-              </div>
-              </div>
-           </Card>
-          </Card>
+                }
+                {tabValue === 'two' && 
+                <div>
+                <h2>Father Information</h2>
+                <p><strong>Name:</strong> {applicantsInfo.fatherName}</p>
+                <p><strong>Highest Educational Attaintment:</strong> {applicantsInfo.fatherEducation}</p>
+                <p><strong>Occupation:</strong> {applicantsInfo.fatherOccupation}</p>
+                <h2>Mother Information</h2>
+                <p><strong>Name:</strong> {applicantsInfo.motherName}</p>
+                <p><strong>Highest Educational Attaintment:</strong> {applicantsInfo.motherEducation}</p>
+                <p><strong>Occupation:</strong> {applicantsInfo.motherOccupation}</p>
+                <h2>Guardian Information</h2>
+                <p><strong>Name:</strong> {applicantsInfo.guardianName}</p>
+                <p><strong>Highest Educational Attaintment:</strong> {applicantsInfo.guardianAddress}</p>
+                <p><strong>Occupation:</strong> {applicantsInfo.guardianContact}</p>
+                <p><strong>Relationship:</strong> {applicantsInfo.relationship}</p>
+                </div>}
+                {tabValue === 'three' &&
+                <div className='sheets'>
+                  <h4>Score: {applicantsInfo.score}</h4>
+                {userfrmeval}
+                </div>}
          </div>
       </Box>
     </Dialog>
@@ -1047,7 +881,7 @@ const Evaluation = () => {
         <div className="scholarsContainer" style={{backgroundColor:'#f1f3fa'}}>
             <Navbar/>
             <Card sx={{width:'97%',margin:'10px',padding:'10px',display:'flex',justifyContent:'flex-end',flexDirection:'column',alignItems:'flex-end'}} elevation={0}>
-            <div className='evluationcon'>
+            <div className='evaluationcon'>
               <div style={{width:'100%',height: 100,display:'flex',justifyContent:'space-between',padding:10}}>
                   <div style={{width:'30%',display:'flex',flexDirection:'column',justifyContent:'space-between',height:'100%'}}>
                   <h1 style={{color:'#666'}}>Registered Applicants</h1>
