@@ -4,70 +4,10 @@
     --dark-shadow: #3e2904;
   }
 
-/* .hbtnschocon{
-    width: 100%;
-    height: 50px;
-    display: flex;
-    justify-content: flex-end;
-} */
-
-/* .schoinfocon{
-    width: 100%;
-    height: 100vh;
-    display: flex;
-} */
-
-/* .leftshco{
-    width: 30%;
-    height: 100%;
-} */
-
-/* .profilescho{
-    width: 100%;
-    height: 40%;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-} */
-
-/* .leftshco .profilescho .schopic{
-    width: 50%;
-    height: 60%;
-} */
-
-/* .leftshco .profilescho .schopicdet p{
-    text-align: center;
-    font-size: 20px;
-} */
-
 .scholog{
     width: 100%;
     height: 60%;
 }
-
-/* .rigthscho{
-    width: 70%;
-    height: 100%;
-    overflow: auto;
-} */
-
-/* .peschocoon{
-    display: flex;
-    justify-content: center;
-    align-items: center;
-} */
-/* 
-.doculistscho{
-    margin: 0;
-    padding: 0;
-    width: 100%;
-    display: grid;
-    grid-template-columns: repeat(auto-fit,minmax(200px, 1fr));
-    grid-gap: 10px;
-    height: auto;
-    overflow: hidden;
-} */
 
 .reqlistcontainer{
     width: 100%;
@@ -99,5 +39,15 @@
     margin: 10px;
     align-items: flex-start;
     font-family: "Source Sans Pro",-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif,"Apple Color Emoji","Segoe UI Emoji","Segoe UI Symbol";
+  }
+  .schodivuser{
+    width: 65%;
+    height: 100%;
+  }
+  .schoinfuser{
+    background-color: white;
+    width: 98%;
+    height: 40%;
+    padding: 10px;
   }
 

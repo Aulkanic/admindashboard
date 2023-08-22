@@ -2,20 +2,16 @@ import "./appointment.scss";
 import * as React from 'react';
 import Sidebar from "../../components/sidebar/Sidebar";
 import Navbar from "../../components/navbar/Navbar";    
-import { Tabs, Tab,Table, TableBody, TableCell, TableContainer, TableHead,TableRow, Paper, Box, Button, Typography, Modal,Card} from "@mui/material"; 
+import { Tabs, Tab, Box, Button, Typography, Modal,Card,Chip} from "@mui/material"; 
 import { FetchingQualified, CreateAppointment,FetchingAppointList
-  , Reaapointed, SetApproved,FetchingApplicantsInfo,SetApplicant,Addusertolistapp,UpdateScheduleApp,FetchingBmccSchoinfo,FailedUser,
-    CancelApp,CancelBatch,FetchingApplist,FetchingBatchlist,FetchingUserAppdetails,ListofSub, SetInterview,GrantAccess1,ListAccess } from "../../api/request";
-import FormControlLabel from '@mui/material/FormControlLabel';
+  , Reaapointed, SetApproved,FetchingApplicantsInfo,SetApplicant,Addusertolistapp,FetchingBmccSchoinfo,FailedUser,
+    CancelApp,CancelBatch,FetchingApplist,FetchingUserAppdetails,ListofSub, SetInterview,GrantAccess1,ListAccess,USERFRM_ID } from "../../api/request";
 import dayjs from 'dayjs';
 import CardContent from '@mui/material/CardContent';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
-import { DateField } from '@mui/x-date-pickers/DateField';
 import { DemoContainer, DemoItem } from '@mui/x-date-pickers/internals/demo';
 import { TimeField } from '@mui/x-date-pickers/TimeField';
-import Checkbox from '@mui/material/Checkbox';
-import Avatar from '@mui/material/Avatar';
 import AppBar from '@mui/material/AppBar';
 import Toolbar from '@mui/material/Toolbar';
 import swal from "sweetalert";
@@ -44,8 +40,7 @@ import CancelIcon from '@mui/icons-material/Cancel';
 import './appointment.css'
 import CloseIcon from '@mui/icons-material/Close';
 import Slide from '@mui/material/Slide';
-import { TransitionProps } from '@mui/material/transitions';
-import { styled, ThemeProvider, createTheme } from '@mui/material';
+import { styled, createTheme } from '@mui/material';
 import { Backdrop, CircularProgress } from '@mui/material';
 import NoAccountsIcon from '@mui/icons-material/NoAccounts';
 
@@ -194,6 +189,7 @@ const Appointment = () => {
   const [adduserAppoint,setAdduserApp] = useState('');
   const [Useropen, setUserOpen] = React.useState(false);
   const [userFulldet,setUserFulldet] = useState([]);
+  const [userForm,setUserForm] = useState([]);
   const [userFulldocs,setUserFulldocs] = useState([]);
   const [imageModalOpen, setImageModalOpen] = useState(false);
   const [selectedImage, setSelectedImage] = useState({});
@@ -224,8 +220,6 @@ const Appointment = () => {
   };
   const handleOpen = (day,timeBatch,date) => 
   {
-    console.log(day)
-    console.log(date[0])
     const location = date[0].Location;
     const reason = date[0].Reason;
     const reminders = date[0].reminders;
@@ -264,12 +258,12 @@ const Appointment = () => {
 
   };
   const handleFailedSelectionModelChange = (newFailedSelectionModel) => {
-    console.log(newFailedSelectionModel)
+    
     setFailedSelectionModel(newFailedSelectionModel);
 
   };
   const handleReappSelectionModelChange = (newFailedSelectionModel) => {
-    console.log(newFailedSelectionModel)
+    
     setReappSelectionModel(newFailedSelectionModel);
 
   };
@@ -782,7 +776,6 @@ const Addall = async () => {
 
   const uniqueEvents = Object.keys(events).map((key) => {
     const event = events[key];
-    console.log(event)
     return {
       ...event,
       end: new Date(event.end),
@@ -791,7 +784,6 @@ const Addall = async () => {
   const handleEventSelect = (event) => {
     const date = new Date(event.start).toDateString();
     const list = ongoingEvents.filter(user => user.schedDate === date);
-    console.log(list)
     const Agenda = list[0].Reason;
     const email = list[0].Email;
     const selectedDate = list[0].schedDate; 
@@ -803,9 +795,7 @@ const Addall = async () => {
   
     ongoingEvents.forEach((appointment) => {
       const { schedDate, Name, Reason, Location, applicantCode, timeStart, timeEnd, applicantNum,reminders,Email } = appointment;
-      console.log(schedDate)
       const date = schedDate.split('T')[0];
-      console.log(date)
       const time = `${timeStart} - ${timeEnd}`;
   
       if (!groupedAppointments[schedDate]) {
@@ -1022,8 +1012,10 @@ try {
       const applicantNum = data.applicantNum
       const res = await FetchingUserAppdetails.FETCH_USERDET(applicantNum);
       const docs = await ListofSub.FETCH_SUB(applicantNum)
+      const frm = await USERFRM_ID.FORMUSR(applicantNum)
       const info = res.data.result[0];
       const sub = docs.data.Document
+      setUserForm(frm.data)
       setUserFulldet(info)
       setUserFulldocs(sub)
   }
@@ -1400,7 +1392,16 @@ try {
   const Noresponse = appointedList && appointedList.length > 0
   ? appointedList.filter(user => user.canGo === 'Pending')
   : '';
-console.log(appointedList)
+
+  const userApplicationFrm = userForm?.map((data,index)=>{
+    return(
+      <div style={{display:'flex',alignItems:'center',margin:'10px'}} key={index}>
+      <Chip sx={{width:'50px',marginRight:'5px'}} label={data.score} color="primary" />
+      <p><strong>{index + 1}.</strong> {data.question} {data.answer}</p>
+      </div>
+    )
+  })
+
   return (
     <>
       <StyledBackdrop open={showBackdrop}>
@@ -1554,7 +1555,7 @@ console.log(appointedList)
             </StyledButtonEdit>
           </Toolbar>
         </AppBar>
-      <Box sx={{width:'100%',padding:'10px',height:'100%',display:'flex',backgroundColor:'whitesmoke'}}>
+      <Box sx={{width:'98.5%',padding:'10px',height:'100%',display:'flex',backgroundColor:'whitesmoke'}}>
          <div style={{width:'35%'}}>
             <div style={{width:'95%',padding:'10px',height:'60%'}}>
               <Card elevation={5}>
@@ -1585,199 +1586,52 @@ console.log(appointedList)
             scrollButtons="auto"
             aria-label="scrollable auto tabs example"
           >
+            <Tab label="User Information" />
             <Tab label="Application Form" />
             <Tab label="Documents Submitted" />
           </Tabs>
           {value1 === 0 && <>
-           <Card sx={{display:'flex',justifyContent:'center',alignItems:'center',margin:'5px',backgroundColor:'blue',color:'white'}}><h1>APPLICATION FORM </h1></Card>
-           <Card>
-            <Typography sx={{paddingLeft:'60px',fontSize:'20px',fontWeight:'700'}}>Personal Information</Typography>
-            <div style={{display:'flex',width:'95%',padding:'10px'}}>
-              <div style={{width:'30%'}}>
-                <Typography>
-                  First Name:{userFulldet.firstName}
-                </Typography>
-                <Typography>
-                  Last Name:{userFulldet.lastName}
-                </Typography>
-                <Typography>
-                  Middle Name:{userFulldet.middleName}
-                </Typography>
-                <Typography>
-                  Gender:{userFulldet.gender}
-                </Typography>
+           
+            <div className="appuserfrm">
+              <div>
+                <h2>Personal Information</h2>
+                <p><strong>Name: </strong>{userFulldet.Name}</p>
+                <p><strong>Gender: </strong>{userFulldet.gender}</p>
+                <p><strong>Address: </strong>{userFulldet.address}</p>
+                <p><strong>Baranggay: </strong>{userFulldet.baranggay}</p>
+                <p><strong>Citizenship: </strong>{userFulldet.citizenship}</p>
+                <p><strong>Birthday: </strong>{userFulldet.birthday}</p>
+                <p><strong>Place of Birth: </strong>{userFulldet.birthPlace}</p>
+                <p><strong>Email: </strong>{userFulldet.email}</p>
+                <p><strong>Contact Number: </strong>{userFulldet.contactNum}</p>
+                <p><strong>Year Level: </strong>{userFulldet.yearLevel}</p>
+                <p><strong>School: </strong>{userFulldet.school}</p>
+                <p><strong>School Address: </strong>{userFulldet.schoolAddress}</p>
+                <p><strong>Course: </strong>{userFulldet.course}</p>
               </div>
-              <div style={{width:'30%'}}>
-              <Typography>Citizenship: {userFulldet.citizenship}</Typography>
-              <Typography>Date of Birth: {userFulldet.birthday}</Typography>
-              <Typography>Age: {userFulldet.age}</Typography>
-              <Typography>Birth Of Place: {userFulldet.birthPlace}</Typography>
-              </div>
-              <div style={{width:'37%'}}>
-              <Typography>Contact Number: {userFulldet.contactNum}</Typography>
-              <Typography>Email: {userFulldet.Email}</Typography>
-              <Typography>Permanent Address: {userFulldet.caddress}</Typography>
-              <Typography>Current Address: {userFulldet.paddress}</Typography>
-              </div>
-            </div>
-            <Typography sx={{paddingLeft:'60px',fontSize:'20px',fontWeight:'700'}}>Economic Background</Typography>
-            <div style={{display:'flex',width:'95%',padding:'10px'}}>
-              <div style={{width:'100%'}}>
-                <Typography>
-                  Where Do you Live:{userFulldet.wereLive}
-                </Typography>
-                <Typography>
-                  How Long you Live in Marilao:{userFulldet.howLong}
-                </Typography>
-                <Typography>
-                  House Ownership:{userFulldet.ownerShip}
-                </Typography>
-              </div>
-              <div style={{width:'100%'}}>
-                <Typography>
-                  Parent(s)/Guardian Annual Gross Income:{userFulldet.monthIncome}
-                </Typography>
-                <Typography>
-                  Baranggay:{userFulldet.baranggay}
-                </Typography>
+              <div>
+                <h2>Family Information</h2>
+                <h3>Father</h3>
+                <p><strong>Name: </strong>{userFulldet.fatherName}</p>
+                <p><strong>Highest Educational Attaintment: </strong>{userFulldet.fatherEducation}</p>
+                <p><strong>Occupation: </strong>{userFulldet.fatherOccupation}</p>
+                <h3>Mother</h3>
+                <p><strong>Name: </strong>{userFulldet.motherName}</p>
+                <p><strong>Highest Educational Attaintment: </strong>{userFulldet.motherEducation}</p>
+                <p><strong>Occupation: </strong>{userFulldet.motherOccupation}</p>
+                <h3>Guardian</h3>
+                <p><strong>Name: </strong>{userFulldet.guardianName}</p>
+                <p><strong>Address: </strong>{userFulldet.guardianAddress}</p>
+                <p><strong>Contact Number: </strong>{userFulldet.guardianContact}</p>
               </div>
             </div>
-            <Typography sx={{paddingLeft:'60px',fontSize:'20px',fontWeight:'700'}}>Family Information</Typography>
-            <div style={{width:'100%',display:'flex'}}>
-            <div style={{width:'30%',padding:'10px'}}>
-            <Typography sx={{paddingLeft:'20px',fontSize:'18px',fontWeight:'500',textDecoration:'underline'}}>Mother Information</Typography>
-            <div>
-              <div style={{width:'100%'}}>
-                <Typography>
-                  First Name:{userFulldet.motherName}
-                </Typography>
-                <Typography>
-                  Last Name:{userFulldet.motherlName}
-                </Typography>
-                <Typography>
-                  Middle Name:{userFulldet.mothermName}
-                </Typography>
-              </div>
-              <div style={{width:'100%'}}>
-                <Typography>
-                  Occupation:{userFulldet.motherOccu}
-                </Typography>
-                <Typography>
-                  Highest Educational Attainment:{userFulldet.motherEduc}
-                </Typography>
-              </div>
-            </div>
-            </div>
-            <div style={{width:'30%',padding:'10px'}}>
-            <Typography sx={{paddingLeft:'20px',fontSize:'18px',fontWeight:'500',textDecoration:'underline'}}>Father Information</Typography>
-            <div style={{width:'95%',padding:'10px'}}>
-              <div style={{width:'100%'}}>
-                <Typography>
-                  First Name:{userFulldet.fatherName}
-                </Typography>
-                <Typography>
-                  Last Name:{userFulldet.fatherlName}
-                </Typography>
-                <Typography>
-                  Middle Name:{userFulldet.fathermName}
-                </Typography>
-              </div>
-              <div style={{width:'100%'}}>
-                <Typography>
-                  Occupation:{userFulldet.fatherOccu}
-                </Typography>
-                <Typography>
-                  Highest Educational Attainment:{userFulldet.fatherEduc}
-                </Typography>
-              </div>
-            </div>
-            </div>
-            <div style={{width:'30%',padding:'10px'}}>
-            <Typography sx={{paddingLeft:'20px',fontSize:'18px',fontWeight:'500',textDecoration:'underline'}}>Other Information</Typography>
-              <Typography>Number of Family Members: {userFulldet.famNum}</Typography>
-              <Typography>Guardian: {userFulldet.guardianName}</Typography>
-              <Typography>Contact Number: {userFulldet.guardianContact}</Typography>
-              <Typography>Relationship: {userFulldet.relationship}</Typography>
-            </div>
-            </div>
-            <Typography sx={{paddingLeft:'60px',fontSize:'20px',fontWeight:'700'}}>Educational Background</Typography>
-            <div style={{display:'flex',width:'95%',padding:'10px'}}>
-              <div style={{width:'100%'}}>
-                <Typography>
-                  Year Level:{userFulldet.currentYear}
-                </Typography>
-                <Typography>
-                  Type of School:{userFulldet.typeSchool}
-                </Typography>
-                <Typography>
-                  School Name:{userFulldet.currentSchool}
-                </Typography>
-                <Typography>
-                  School Address:{userFulldet.address}
-                </Typography>
-              </div>
-              <div style={{width:'100%'}}>
-                <Typography>
-                  Degree Program/Course(Priority Course):{userFulldet.course}
-                </Typography>
-                <Typography>
-                  General Weighted Average:{userFulldet.gwa}
-                </Typography>
-                <Typography>
-                  Financial Support:{userFulldet.financialSupport}
-                </Typography>
-              </div>
-            </div>
-            <div style={{display:'flex',width:'95%',padding:'10px',justifyContent:'space-between'}}>
-              <div style={{width:'30%'}}>
-                <Typography sx={{paddingLeft:'20px',fontSize:'18px',fontWeight:'500',textDecoration:'underline'}}>Elementary Background</Typography>
-                <Typography>
-                  School Name:{userFulldet.elemSchool}
-                </Typography>
-                <Typography>
-                  Address:{userFulldet.elemAddress}
-                </Typography>
-                <Typography>
-                  School Year:{userFulldet.elemYear}
-                </Typography>
-                <Typography>
-                  Award:{userFulldet.elemAward}
-                </Typography>
-              </div>
-              <div style={{width:'30%'}}>
-              <Typography sx={{paddingLeft:'20px',fontSize:'18px',fontWeight:'500',textDecoration:'underline'}}>Highschool Background</Typography>
-              <Typography>
-                  School Name:{userFulldet.highSchool}
-                </Typography>
-                <Typography>
-                  Address:{userFulldet.highAddress}
-                </Typography>
-                <Typography>
-                  School Year:{userFulldet.highYear}
-                </Typography>
-                <Typography>
-                  Award:{userFulldet.highAward}
-                </Typography>
-              </div>
-              <div style={{width:'30%'}}>
-              <Typography sx={{paddingLeft:'20px',fontSize:'18px',fontWeight:'500',textDecoration:'underline'}}>College Background</Typography>
-              <Typography>
-                  School Name:{userFulldet.collegeSchool}
-                </Typography>
-                <Typography>
-                  Address:{userFulldet.collegeAddress}
-                </Typography>
-                <Typography>
-                  School Year:{userFulldet.collegeYear}
-                </Typography>
-                <Typography>
-                  Award:{userFulldet.collegeAward}
-                </Typography>
-              </div>
-            </div>
-           </Card>
           </>}
           {value1 === 1 && <>
+          <div>
+            {userApplicationFrm}
+          </div>
+          </>}
+          {value1 === 2 && <>
             <div className="subdocsappdet">
             {userFulldocs?.map((data) =>{
               return (

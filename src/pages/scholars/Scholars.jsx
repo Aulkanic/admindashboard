@@ -9,30 +9,20 @@ import { DataGrid} from '@mui/x-data-grid';
 import React, {useEffect, useState} from 'react'
 import { FetchingBmccScho, FetchingBmccSchoinfo,ScholarStand ,ListofReq,UserActivity,ListAccess} from '../../api/request';
 import './scholar.css'
-import Badge from '@mui/material/Badge';
-import Avatar from '@mui/material/Avatar';
-import { green, red } from '@mui/material/colors';
-import List from '@mui/material/List';
-import ListItem from '@mui/material/ListItem';
-import ListItemText from '@mui/material/ListItemText';
 import Divider from '@mui/material/Divider';
 import swal from 'sweetalert';
-import Radio from '@mui/material/Radio';
-import RadioGroup from '@mui/material/RadioGroup';
-import FormControlLabel from '@mui/material/FormControlLabel';
 import Dialog from '@mui/material/Dialog';
 import DialogActions from '@mui/material/DialogActions';
 import DialogContent from '@mui/material/DialogContent';
 import DialogContentText from '@mui/material/DialogContentText';
 import DialogTitle from '@mui/material/DialogTitle';
-import FormLabel from '@mui/material/FormLabel';
 import TextField from '@mui/material/TextField';
 import CloseIcon from '@mui/icons-material/Close';
 import Slide from '@mui/material/Slide';
 import AppBar from '@mui/material/AppBar';
 import Toolbar from '@mui/material/Toolbar';
 import IconButton from '@mui/material/IconButton';
-import { styled, ThemeProvider, createTheme } from '@mui/material';
+import { styled, createTheme } from '@mui/material';
 import { Backdrop, CircularProgress } from '@mui/material';
 import { useContext } from "react";
 import { admininfo } from "../../App";
@@ -43,27 +33,6 @@ const StyledBackdrop = styled(Backdrop)(({ theme }) => ({
   color: '#fff',
 }));
 
-const OnlineBadge = styled(Badge)(({ theme }) => ({
-  '& .MuiBadge-badge': {
-    backgroundColor: theme.palette.mode === 'light' ? green[500] : green[700], // Green color when online
-    color: theme.palette.mode === 'light' ? green[500] : green[700],
-    boxShadow: `0 0 0 2px ${theme.palette.background.paper}`,
-    width: '30px',
-    height: '30px',
-    borderRadius: '50%'
-  },
-}));
-
-const OfflineBadge = styled(Badge)(({ theme }) => ({
-  '& .MuiBadge-badge': {
-    backgroundColor: theme.palette.mode === 'light' ? red[500] : red[700], // Red color when offline
-    color: theme.palette.mode === 'light' ? red[500] : red[700],
-    boxShadow: `0 0 0 2px ${theme.palette.background.paper}`,
-    width: '30px',
-    height: '30px',
-    borderRadius: '50%'
-  },
-}));
 const Transition = React.forwardRef(function Transition(props, ref) {
   return <Slide direction="up" ref={ref} {...props} />;
 });
@@ -123,15 +92,12 @@ const Scholars = () => {
   const [access,setAccess] = useState([])
   const [open, setOpen] = useState(false);
   const [open1, setOpen1] = useState(false);
-  const [value, setValue] = useState(0);
-  const [value1, setValue1] = useState(0);
   const [schoinf1,setSchoInf1] = useState([]);
   const [schoinf2,setSchoInf2] = useState([]);
   const [schoinf3,setSchoInf3] = useState([]);
   const [schoinf4,setSchoInf4] = useState([]);
   const [schodocs,setSchodocs] = useState([]);
   const [isComplete,setComplete] = useState('');
-  const [questions, setQuestions] = useState([]);
   const [reason,setReason] = useState('');
   const [status,setStatus] = useState('');
   const [openDialog, setOpenDialog] = useState(false);
@@ -168,17 +134,7 @@ const Scholars = () => {
     boxShadow: 24,
     overflow:'auto'
   };
-  const stylediv = {
-    width: '100%',
-    fontSize:'20px',
-    textAlign:'center'
-  };
-  const handleChange = (event, newValue) => {
-    setValue(newValue);
-  };
-  const handleChange1 = (event, newValue) => {
-    setValue1(newValue);
-  };
+
   const openImageModal = (image,name) => {
     setSelectedImage({image,name});
     setImageModalOpen(true);
@@ -195,7 +151,6 @@ const Scholars = () => {
     const formData = new FormData()
     formData.append('applicantNum',applicantNum)
     const response = await FetchingBmccSchoinfo.FETCH_SCHOLARSINFO(applicantNum);
-    console.log(response)
     const req = await ListofReq.FETCH_REQUIREMENTS();
     const log = await UserActivity.USER_LOG(formData);
     const userAct = log.data.result;
@@ -210,7 +165,7 @@ const Scholars = () => {
         },
         [[], []]
       );
-      console.log(response.data.ScholarInf.results3)
+    
     const [application, renewal] = response.data.ScholarInf.results3
       ?.reduce(
         ([application, renewal], data) => {
@@ -242,7 +197,7 @@ const Scholars = () => {
     { 
       field: 'scholarId', 
       headerName: 'ID',
-      width: 79
+      width: 50
      },
      {
        field: 'scholarCode', 
@@ -258,7 +213,7 @@ const Scholars = () => {
     {
       field: 'Name',
       headerName: 'Name',
-      width: 200,
+      width: 120,
       editable: false,
     },
     {
@@ -318,8 +273,8 @@ const Scholars = () => {
     },
     {
       field: 'req',
-      headerName: 'Renewal Documents',
-      width: 170,
+      headerName: 'Renewal',
+      width: 100,
       renderCell: (params) =>{
   
         const renewal = isComplete.results1.filter(docs => docs.schoName === params.row.scholarshipApplied)
@@ -363,28 +318,7 @@ const Scholars = () => {
     },
 
   ];
-  const handleTabClick = (newValue) => {
-    setValue(newValue);
-  };
-  const OnlineAvatar = ({ user}) => {
-
-    return (
-      <>
-        {user.isOnline === 'True' ? (
-          <OnlineBadge overlap="circular" variant="dot" anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}>
-            <Avatar sx={{ width: '150px', height: '150px', borderRadius: '50%' }} alt={user.Name} src={user.profile} />
-          </OnlineBadge>
-        ) : (
-          <OfflineBadge overlap="circular" variant="dot" anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}>
-            <Avatar sx={{ width: '150px', height: '150px', borderRadius: '50%',border:'2px solid black' }} alt={user.Name} src={user.profile} />
-          </OfflineBadge>
-        )}
-      </>
-    );
-  };
-  const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
-  const handleOpen1 = () => setOpen1(true);
   const handleClose1 = () => setOpen1(false);
 
   const handleRowSelectionModelChange = (newRowSelectionModel) => {
@@ -392,13 +326,6 @@ const Scholars = () => {
 
   };
 
-    const handleButtonOpenDialog = async () => {
-      if (status === 'Hold' || status === 'Disqualified') {
-        setOpenDialog(true);
-      } else {
-        await handleButtonClick();
-      }
-    };
     const handleDialogSubmit = async () => {
       await handleButtonClick();
       setOpenDialog(false);
@@ -621,7 +548,7 @@ const Scholars = () => {
         </Card>
       );
     });
-    
+    console.log(schoinf1)
   return (
     <>
               <StyledBackdrop open={showBackdrop}>
@@ -680,14 +607,14 @@ const Scholars = () => {
             </Typography>
           </Toolbar>
         </AppBar>
-      <Box sx={{width:'100%',padding:'10px',height:'100%',display:'flex',backgroundColor:'whitesmoke'}}>
+      <Box sx={{width:'98.5%',padding:'10px',height:'100%',display:'flex',backgroundColor:'whitesmoke'}}>
          <div style={{width:'35%'}}>
             <div style={{width:'95%',padding:'10px',height:'100%'}}>
-              <Card elevation={5}>
+              <Card elevation={1}>
             <img
                 alt="Remy Sharp"
                 src={schoinf2.profile}
-                style={{objectFit:'cover',width:'100%',height:'400px'}}
+                style={{objectFit:'cover',width:'100%',height:'350px'}}
               />
               <Card sx={{height:'30px',position:'relative',width:'100%',display:'flex',justifyContent:'center',alignItems:'center'}}
                className='spancho'>
@@ -695,16 +622,15 @@ const Scholars = () => {
               </Card>
               </Card>
               <Card sx={{margin:'10px',height:'250px',overflow:'auto'}}>
-                <div style={{textAlign:'center'}}>
-                <Typography sx={{fontSize:'18px',fontWeight:'700'}}>
+                <div style={{textAlign:'left'}}>
+                <Typography sx={{fontSize:'18px',fontWeight:'700',textAlign:'center'}}>
                   Activity Log
                 </Typography>
-                <div style={{padding:'10px'}}>
+                <div>
                 {userLog?.map((data) =>{
-                  console.log(data)
                   return (
                     <>
-                    <p>{data.actions} on {data.date}</p>
+                    <p style={{margin:'10px 0px 5px 15px'}}>{data.actions} on {data.date}</p>
                     <Divider />
                     </>
                   )
@@ -714,89 +640,14 @@ const Scholars = () => {
               </Card>
             </div>
          </div>
-         <div style={{width:'65%',padding:'10px'}}>
-            <Card>
-            <Tabs
-              value={value}
-              onChange={handleChange}
-              variant="scrollable"
-              scrollButtons="auto"
-              aria-label="scrollable auto tabs example"
-            >
-              <Tab label="Personal Information" />
-              <Tab label="Scholar Information" />
-              <Tab label="Documents" />
-            </Tabs>             
-            </Card>
-            <Card sx={{margin:'10px'}}>
-              {value === 0 && <>
-                <div>
-                  <Card style={{padding:'15px'}}>
-                    <Typography>Name: {schoinf1.Name}</Typography>
-                    <Typography>Age: {schoinf1.age}</Typography>
-                    <Typography>Gender: {schoinf1.gender}</Typography>
-                    <Typography>Contact Number: {schoinf1.contactNum}</Typography>
-                    <Typography>Email: {schoinf1.email}</Typography>
-                    <Typography>Baranggay: {schoinf1.baranggay}</Typography>
-                    <Typography>Address: {schoinf1.caddress}</Typography>
-                    <Typography>Year Level: {schoinf1.currentYear}</Typography>
-                  </Card>
-                </div>
-              </>}
-              {value === 1 && <>
+         <div className='schodivuser'>
+            <div className='schoinfuser'>
+              <h2 style={{color:'#676',padding:'10px 0px 20px 10px'}}>Scholar Information</h2>
               <div>
-                <Card sx={{padding:'15px'}}>
-                <Typography>Name: {schoinf1.Name}</Typography>
-                <Typography>Applicant Code: {schoinf2.applicantCode}</Typography>
-                <Typography>Scholar Code: {schoinf2.scholarCode}</Typography>
-                <Typography>Scholarship Applied: {schoinf2.scholarshipApplied}</Typography>
-                <Typography>Date Applied: {schoinf1.DateApplied}</Typography>
-                <Typography>Date Approved: {schoinf1.DateApproved}</Typography>
-                </Card>
+              <p>Name: <span>{schoinf1.Name}</span></p>
+              <p>Age: <span>{schoinf1.age}</span></p>
               </div>
-              </>}
-              {value === 2 && <>
-                <Card>
-                <Tabs
-              value={value1}
-              onChange={handleChange1}
-              variant="scrollable"
-              scrollButtons="auto"
-              aria-label="scrollable auto tabs example"
-            >
-              <Tab label="Application Requirements" />
-              <Tab label="Renewal Requirements" />
-            </Tabs>             
-                </Card>
-              {value1 === 0 && <>
-                <div className="subdocsappdet">
-            {schoinf3?.map((data) =>{
-              return (
-                <>
-
-                <div style={{width:'100%',display:'flex',justifyContent:'center',alignItems:'center'}}>
-                  <button onClick={() => openImageModal(data.File,data.requirement_Name)}>
-                    <p>{data.requirement_Name}</p>
-                  <img
-                    style={{ width: '300px', height: '300px' }}
-                    src={data.File}
-                    alt=""
-                  />
-                  </button>
-                </div>
-
-                </>
-              )
-            })}
-        </div>              
-              </>}
-              {value1 === 1 && <>
-                <div className="subdocsappdet">
-                {renewalStatus}
-        </div>              
-              </>}
-              </>}
-            </Card>
+            </div>
          </div>
       </Box>
       </Dialog>
