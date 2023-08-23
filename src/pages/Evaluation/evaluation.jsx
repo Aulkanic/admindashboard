@@ -3,7 +3,7 @@ import './evaluation.css'
 import Sidebar from '../../components/sidebar/Sidebar'
 import Navbar from '../../components/navbar/Navbar'
 import { DataGrid,} from '@mui/x-data-grid';
-import { Tabs, Tab, Box, Modal,Card,Button,Chip } from "@mui/material";  
+import { Tabs, Tab, Box, Modal,Card,Button,Chip, ThemeProvider } from "@mui/material";  
 import { ApplicantsRequest, FetchingApplicantsInfo, ListofSub,
    USERFRM_ID,SetApplicant,FailedUser,FetchingBmccSchoinfo,
       UpdatePassSlots,FetchPassSlots,DecrePassSlots,GrantAccess,ListAccess } from "../../api/request";
@@ -30,8 +30,35 @@ import Link from '@mui/material/Link';
 import Checkbox from '@mui/material/Checkbox';
 import { styled, createTheme } from '@mui/material';
 import { Backdrop, CircularProgress } from '@mui/material';
+import { BorderAllRounded } from '@mui/icons-material';
 
-const theme = createTheme();
+const theme = createTheme({
+  components: {
+    MuiTabs: {
+      styleOverrides: {
+        root: {
+          backgroundColor: 'lightgray',
+        },
+      },
+    }
+  },
+});
+const CustomTabs = styled(Tabs)({
+  '& .MuiTabs-flexContainer': {
+    color: 'white', 
+    backgroundColor:'#252525',
+    margin:'10px 10px 0px 0px',
+    borderRadius: '0px 15px 0 0',
+  },
+});
+const CustomTab = styled(Tab)(({ theme }) => ({
+  textTransform: 'none',
+  minWidth: 100,
+  color:'white',
+  [theme.breakpoints.up('sm')]: {
+    minWidth: 120,
+  },
+}));
 const StyledBackdrop = styled(Backdrop)(({ theme }) => ({
   zIndex: theme.zIndex.drawer + 50,
   color: '#fff',
@@ -54,6 +81,7 @@ const Evaluation = () => {
     const handleOpen = () => setOpen(true);
     const handleClose = () => setOpen(false);
     const [passSlot,setPassSlot] = useState([]);
+    const [siblings,setSiblings] = useState([]);
     const [passscore, setPassscore] = useState('');
     const [slots, setSlots] = useState('');
     const [isButtonVisible, setIsButtonVisible] = useState(false);
@@ -117,6 +145,7 @@ const Evaluation = () => {
             USERFRM_ID.FORMUSR(applicantNum)
           ]);
           console.log(response)
+          setSiblings(response[0].data.siblings)
           setApplicantInfo(response[0].data.results[0]);
           setUserScore(response[2].data)
           setShowBackdrop(false);
@@ -179,11 +208,6 @@ const Evaluation = () => {
 
       };
     const columns = [
-        { 
-          field: 'applicantNum', 
-          headerName: 'Registry ID',
-          width: 100
-         },
          {
            field: 'applicantCode', 
             headerName: 'Applicant Code',
@@ -275,11 +299,6 @@ const Evaluation = () => {
     
       ];
     const passedColumn = [
-        { 
-          field: 'applicantNum', 
-          headerName: 'Registry ID',
-          width: 100
-         },
          {
            field: 'applicantCode', 
             headerName: 'Applicant Code',
@@ -352,11 +371,6 @@ const Evaluation = () => {
     
       ];
     const failedColumn = [
-        { 
-          field: 'applicantNum', 
-          headerName: 'Registry ID',
-          width: 100
-         },
          {
            field: 'applicantCode', 
             headerName: 'Applicant Code',
@@ -744,14 +758,18 @@ const Evaluation = () => {
     : '';
 
     const userfrmeval = userscore?.map((data,index) =>{
-
       return(
-      <div style={{display:'flex',alignItems:'center',margin:'10px'}} key={index}>
+      <div className='frmlistq' key={index}>
       <Chip sx={{width:'50px',marginRight:'5px'}} label={data.score} color="primary" />
       <p><strong>{index + 1}.</strong> {data.question} {data.answer}</p>
       </div>
 
     )})
+    const siblinglist = siblings?.map((data,index) =>{
+      return(
+        <li key={index}>{data.siblingName}</li>
+      )
+    })
   return (
     <>
               <StyledBackdrop open={showBackdrop}>
@@ -814,61 +832,94 @@ const Evaluation = () => {
         </AppBar>
       <Box sx={{width:'100%',height:'100%',display:'flex',backgroundColor:'whitesmoke'}}>
          <div className='evalusrprof'>
-            <img src={applicantsInfo.profile} alt="" />
-            <div style={{width:'70%'}}>
+          <div className="evalusrcontainer">
+          <img src={applicantsInfo.profile} alt="" />
+            <div className='evalusridcontainer'>
               <p className='evalusrid'><strong>Applicant Id:</strong> {applicantsInfo.applicantCode}</p>
-              <p className='evalusrid'><strong>Batch:</strong> {applicantsInfo.Batch}</p>
+              <p className='evalusrid'><strong>Scholarship Applied:</strong> {applicantsInfo.SchoIarshipApplied}</p>
               <p className='evalusrid'><strong>Date Applied:</strong> {applicantsInfo.DateApplied}</p>
+              <p className='evalusrid'><strong>Batch:</strong> {applicantsInfo.Batch}</p>
             </div>
+          </div>
          </div>
          <div className='evalfrmdet'>
-                <Tabs
+                <CustomTabs
                   value={tabValue}
                   onChange={handleChange}
-                  textColor="secondary"
-                  indicatorColor="secondary"
                   aria-label="secondary tabs example"
+                  
                 >
-                  <Tab value="one" label="Personal Details" />
-                  <Tab value="two" label="Family/Guardian " />
-                  <Tab value="three" label="Form" />
-                </Tabs>
+                  <CustomTab value="one" label="Personal Details" />
+                  <CustomTab value="two" label="Family/Guardian " />
+                  <CustomTab value="three" label="Form" />
+                </CustomTabs>
                 {tabValue === 'one' && 
-                <div>
-                <p><strong>Name:</strong> {applicantsInfo.Name}</p>
-                <p><strong>Age:</strong> {applicantsInfo.age}</p>
-                <p><strong>Gender:</strong> {applicantsInfo.gender}</p>
-                <p><strong>Address:</strong> {applicantsInfo.address}</p>
-                <p><strong>Baranggay:</strong> {applicantsInfo.baranggay}</p>
-                <p><strong>Birthday:</strong> {applicantsInfo.birthday}</p>
-                <p><strong>Place of Birth:</strong> {applicantsInfo.birthPlace}</p>
-                <p><strong>Citizenship:</strong> {applicantsInfo.citizenship}</p>
-                <p><strong>Contact Number:</strong> {applicantsInfo.contactNum}</p>
-                <p><strong>Email:</strong> {applicantsInfo.email}</p>
-                <p><strong>Last School Attended:</strong> {applicantsInfo.school}</p>
-                <p><strong>School Address:</strong> {applicantsInfo.schoolAddress}</p>
-                <p><strong>Year Level:</strong> {applicantsInfo.yearLevel}</p>
-                <p><strong>Course:</strong> {applicantsInfo.course}</p>
+                <div className='taboneeval'>
+                  <div className="containertabs">
+                  <div className='tbscon'>
+                    <p><strong>Name:</strong> {applicantsInfo.Name}</p>
+                    <p><strong>Age:</strong> {applicantsInfo.age}</p>
+                    <p><strong>Gender:</strong> {applicantsInfo.gender}</p>
+                    <p><strong>Contact Number:</strong> {applicantsInfo.contactNum}</p>
+                    <p><strong>Email:</strong> {applicantsInfo.email}</p>
+                  </div>
+                  <div className="tbscon">
+                  <p><strong>Address:</strong> {applicantsInfo.address}</p>
+                  <p><strong>Baranggay:</strong> {applicantsInfo.baranggay}</p>
+                  <p><strong>Citizenship:</strong> {applicantsInfo.citizenship}</p>
+                  <p><strong>Birthday:</strong> {applicantsInfo.birthday}</p>
+                  <p><strong>Place of Birth:</strong> {applicantsInfo.birthPlace}</p>
+                  </div>
+                  </div>
+
+                  <div className="containertabs1">
+                    <div className="tbscon">
+                    <p><strong>Last School Attended:</strong> {applicantsInfo.school}</p>
+                    <p><strong>School Address:</strong> {applicantsInfo.schoolAddress}</p>
+                    </div>
+                    <div className="tbscon">
+                    <p><strong>Year Level:</strong> {applicantsInfo.yearLevel}</p>
+                    <p><strong>Grade/Year:</strong> {applicantsInfo.gradeLevel}</p>
+                    <p><strong>Course:</strong> {applicantsInfo.course}</p>
+                    </div>
+
+                  </div>
                 </div>
                 }
                 {tabValue === 'two' && 
-                <div>
-                <h2>Father Information</h2>
-                <p><strong>Name:</strong> {applicantsInfo.fatherName}</p>
-                <p><strong>Highest Educational Attaintment:</strong> {applicantsInfo.fatherEducation}</p>
-                <p><strong>Occupation:</strong> {applicantsInfo.fatherOccupation}</p>
-                <h2>Mother Information</h2>
-                <p><strong>Name:</strong> {applicantsInfo.motherName}</p>
-                <p><strong>Highest Educational Attaintment:</strong> {applicantsInfo.motherEducation}</p>
-                <p><strong>Occupation:</strong> {applicantsInfo.motherOccupation}</p>
-                <h2>Guardian Information</h2>
-                <p><strong>Name:</strong> {applicantsInfo.guardianName}</p>
-                <p><strong>Highest Educational Attaintment:</strong> {applicantsInfo.guardianAddress}</p>
-                <p><strong>Occupation:</strong> {applicantsInfo.guardianContact}</p>
-                <p><strong>Relationship:</strong> {applicantsInfo.relationship}</p>
-                </div>}
+                <>
+                <div className='tabtwoeval'>
+                  
+                  <div className="evalfam">
+                  <h2>Father</h2>
+                  <p><strong>Name:</strong> {applicantsInfo.fatherName}</p>
+                  <p><strong>Highest Educational Attaintment:</strong><br /> {applicantsInfo.fatherEducation}</p>
+                  <p><strong>Occupation:</strong> {applicantsInfo.fatherOccupation}</p>
+                  </div>
+                  <div className="evalfam">
+                  <h2>Mother</h2>
+                  <p><strong>Name:</strong> {applicantsInfo.motherName}</p>
+                  <p><strong>Highest Educational Attaintment:</strong> {applicantsInfo.motherEducation}</p>
+                  <p><strong>Occupation:</strong> {applicantsInfo.motherOccupation}</p>
+                  </div>
+                  <div className="evalfam">
+                  <h2>Guardian </h2>
+                  <p><strong>Name:</strong> {applicantsInfo.guardianName}</p>
+                  <p><strong>Address:</strong> {applicantsInfo.guardianAddress}</p>
+                  <p><strong>Contact Number:</strong> {applicantsInfo.guardianContact}</p>
+                  <p><strong>Relationship:</strong> {applicantsInfo.relationship}</p>
+                  </div>
+                  <div className="siblingcon">
+                  <h2>Siblings </h2>
+                  {siblings.length > 0 ? (<ul>
+                    {siblinglist}
+                  </ul>) : (<p>Only Child</p>)}
+                </div>
+                </div>
+
+                </>}
                 {tabValue === 'three' &&
-                <div className='sheets'>
+                <div className='sheetsfrmeval'>
                   <h4>Score: {applicantsInfo.score}</h4>
                 {userfrmeval}
                 </div>}
@@ -930,9 +981,11 @@ const Evaluation = () => {
                       underline="none"
                       sx={{
                         color: activeState === 'All' ? 'white' : 'black',
+                        display:'flex',
+                        alignItems:'center'
                       }}
                     >
-                      <FormatListBulletedOutlinedIcon fontSize="inherit" />
+                      <FormatListBulletedOutlinedIcon sx={{marginRight:'5px'}} fontSize='inherit' />
                       All({data.length})
                     </Link>
                   </Button>
@@ -941,9 +994,11 @@ const Evaluation = () => {
                       underline="none"
                       sx={{
                         color: activeState === 'Passed' ? 'white' : 'black',
+                        display:'flex',
+                        alignItems:'center'
                       }}
                     >
-                      <CheckCircleIcon sx={{ mr: 0.5 }} fontSize="inherit" />
+                      <CheckCircleIcon sx={{marginRight:'5px'}} fontSize="inherit" />
                       Passed({Passed.length})
                     </Link>
                   </Button>
@@ -952,9 +1007,11 @@ const Evaluation = () => {
                       underline="none"
                       sx={{
                         color: activeState === 'Failed' ? 'white' : 'black',
+                        display:'flex',
+                        alignItems:'center'
                       }}
                     >
-                      <CancelIcon sx={{ mr: 0.5 }} fontSize="inherit" />
+                      <CancelIcon sx={{marginRight:'5px'}} fontSize="inherit" />
                       Failed({Failed.length})
                     </Link>
                   </Button>
@@ -973,7 +1030,6 @@ const Evaluation = () => {
                       },
                     }}
                     pageSizeOptions={[25]}
-                    checkboxSelection
                     disableRowSelectionOnClick
                   />
                 ) : (

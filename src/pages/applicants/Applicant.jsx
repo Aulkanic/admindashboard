@@ -267,6 +267,8 @@ const check = async (data, index) => {
       setDocumentaryListed(res.data.Documentary)
       setShowBackdrop(false);
       setOpen(true)
+      setComments('')
+      setStatusCheck('')
       swal({
         text: 'Checked',
         timer: 2000,
@@ -527,7 +529,6 @@ const style = {
       }
   }
   const columns = [
-    { field: 'applicantNum', headerName: 'Applicant ID', width: 100 },
     {
       field: 'SchoIarshipApplied',
       headerName: 'Scholarship Applied',
@@ -537,7 +538,7 @@ const style = {
     {
       field: 'Name',
       headerName: 'Name',
-      width: 200,
+      width: 150,
       editable: true,
     },
     {
@@ -629,11 +630,7 @@ const style = {
     },
   ];
   const completeColumn = [
-    { 
-      field: 'applicantNum', 
-      headerName: 'Registry ID',
-      width: 100
-     },
+
     {
       field: 'SchoIarshipApplied',
       headerName: 'Scholarship Applied',
@@ -666,7 +663,6 @@ const style = {
       renderCell: (params) => {
         const ForEva = docslisted.filter(user => user.schoName === params.row.SchoIarshipApplied && user.batch === params.row.Batch && user.docsfor === 'Application');
         const Subuser = documentaryListed.filter(user => user.applicantId === params.row.applicantNum && user.docsFor === 'Application');
-        const approve = Subuser.filter(user => user.Status === 'Approved');
         const pval = `${Subuser.length}/${ForEva.length}`
         return(
         <>
@@ -723,11 +719,6 @@ const style = {
 
   ];
   const incompleteColumn = [
-    { 
-      field: 'applicantNum', 
-      headerName: 'Registry ID',
-      width: 100
-     },
     {
       field: 'SchoIarshipApplied',
       headerName: 'Scholarship Applied',
@@ -760,7 +751,6 @@ const style = {
       renderCell: (params) => {
         const ForEva = docslisted.filter(user => user.schoName === params.row.SchoIarshipApplied && user.batch === params.row.Batch && user.docsfor === 'Application');
         const Subuser = documentaryListed.filter(user => user.applicantId === params.row.applicantNum && user.docsFor === 'Application');
-        const approve = Subuser.filter(user => user.Status === 'Approved');
         const pval = `${Subuser.length}/${ForEva.length}`
         return(
         <>
@@ -837,7 +827,7 @@ const style = {
     const { value } = e.target;
     setComments((prevComments) => ({
       ...prevComments,
-      [requirement_Name]: value || prevComments[requirement_Name] || 'No comments'
+      [requirement_Name]: value || prevComments[requirement_Name] || 'Image Accepted'
     }));
   };
   return (
@@ -894,7 +884,7 @@ const style = {
                         row
                         aria-labelledby="demo-row-radio-buttons-group-label"
                         name="row-radio-buttons-group"
-                        value={Comments[requirement_Name] || 'No comments'}
+                        value={Comments[requirement_Name] || 'Image Accepted'}
                         onChange={handleCommentsChange}
                       >
                         <FormControlLabel
@@ -908,9 +898,9 @@ const style = {
                           label="Invalid File Image"
                         />
                         <FormControlLabel
-                          value="No Comments"
-                          control={<Radio checked={Comments[requirement_Name] === 'No Comments'} />}
-                          label="No Comments"
+                          value="Image Accepted"
+                          control={<Radio checked={Comments[requirement_Name] === 'Image Accepted'} />}
+                          label="Image Accepted"
                         />
                       </RadioGroup>
                     </FormControl>
@@ -1115,18 +1105,20 @@ const style = {
       <Navbar/>
 
       <div className="top">
-        <div style={{width:'98.5%',padding:10}}>
-      <Card>
-      <h1> Applicants </h1>
+        <div style={{width:'97.5%',padding:10}}>
+        <h1> Applicants </h1>
+    <Card>
       <Breadcrumbs sx={{backgroundColor:'green'}} aria-label="breadcrumb">
                   <Button onClick={() => setActiveState('All')}>
                     <Link
                       underline="none"
                       sx={{
                         color: activeState === 'All' ? 'white' : 'black',
+                        display:'flex',
+                        alignItems:'center'
                       }}
                     >
-                      <FormatListBulletedOutlinedIcon fontSize="inherit" />
+                      <FormatListBulletedOutlinedIcon sx={{marginRight:'5px'}} fontSize="inherit" />
                       All({filteredRows.length})
                     </Link>
                   </Button>
@@ -1135,9 +1127,11 @@ const style = {
                       underline="none"
                       sx={{
                         color: activeState === 'Complete' ? 'white' : 'black',
+                        display:'flex',
+                        alignItems:'center'
                       }}
                     >
-                      <CheckCircleIcon sx={{ mr: 0.5 }} fontSize="inherit" />
+                      <CheckCircleIcon sx={{marginRight:'5px'}} fontSize="inherit" />
                       Complete and Approved Documents({groupedUsers.completed.length})
                     </Link>
                   </Button>
@@ -1146,14 +1140,16 @@ const style = {
                       underline="none"
                       sx={{
                         color: activeState === 'Incomplete' ? 'white' : 'black',
+                        display:'flex',
+                        alignItems:'center'
                       }}
                     >
-                      <CancelIcon sx={{ mr: 0.5 }} fontSize="inherit" />
+                      <CancelIcon sx={{marginRight:'5px'}} fontSize="inherit" />
                       Incomplete Approved Documents({groupedUsers.incomplete.length})
                     </Link>
                   </Button>
       </Breadcrumbs>      
-      <Box sx={{ height: 400, width: '100%'}}>
+      <Box sx={{ height: 'maxContent', width: '100%'}}>
                 {activeState === 'All' && (filteredRows && filteredRows.length > 0 ? (
                   <DataGrid
                     rows={filteredRows}
@@ -1168,7 +1164,6 @@ const style = {
                       },
                     }}
                     pageSizeOptions={[25]}
-                    checkboxSelection
                     disableRowSelectionOnClick
                   />
                 ) : (
@@ -1224,7 +1219,7 @@ const style = {
                     <p style={{ textAlign: 'center',fontSize:30,fontWeight:700,fontStyle:'italic' }}>No records</p>
                     </div>
                   ))}
-    </Box>
+      </Box>
     </Card>
       </div>
       <div style={{width:'97%',margin:'10px',display:'flex',justifyContent:'flex-end',alignItems:'flex-end'}}>

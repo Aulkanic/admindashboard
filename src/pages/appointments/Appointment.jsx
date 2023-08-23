@@ -97,19 +97,22 @@ const Transition = React.forwardRef(function Transition(props, ref) {
 });
 
 
-const style = {
-  position: 'absolute',
-  top: '50%',
-  left: '50%',
-  transform: 'translate(-50%, -50%)',
-  width: '90%',
-  height:'90%',
-  bgcolor: 'background.paper',
-  border: '2px solid #000',
-  boxShadow: 24,
-  p: 4,
-  overflow: 'auto',
-};
+const CustomTabs = styled(Tabs)({
+  '& .MuiTabs-flexContainer': {
+    color: 'white', 
+    backgroundColor:'#252525',
+    margin:'10px 10px 0px 0px',
+    borderRadius: '0px 15px 0 0',
+  },
+});
+const CustomTab = styled(Tab)(({ theme }) => ({
+  textTransform: 'none',
+  minWidth: 100,
+  color:'white',
+  [theme.breakpoints.up('sm')]: {
+    minWidth: 120,
+  },
+}));
 const StyledButton = styled(Button)`
   && {
     float: right;
@@ -201,19 +204,15 @@ const Appointment = () => {
   const [openDialog1, setOpenDialog1] = useState(false);
   const handleCloseDialog1 = () => setOpenDialog1(false);
   const [openDialog2, setOpenDialog2] = useState(false);
-  const handleCloseDialog2 = () => setOpenDialog2(false);
   const handleOpenDialog2 = (data) => setOpenDialog2(true);
   const [activeState,setActiveState] = useState('All');
-  const [userAppsched,setUserAppsched] = useState([])
+  const [userAppsched,setUserAppsched] = useState([]);
+  const [siblings,setSiblings] = useState([]);
 
   const handleOpenDialog1 = (data) => {
     setOpenDialog1(true);
     setWho(data.applicantNum)
   }
-
-  const handleClickOpenUserDetails = () => {
-    setUserOpen(true);
-  };
 
   const handleCloseUserDetails = () => {
     setUserOpen(false);
@@ -1014,7 +1013,9 @@ try {
       const docs = await ListofSub.FETCH_SUB(applicantNum)
       const frm = await USERFRM_ID.FORMUSR(applicantNum)
       const info = res.data.result[0];
+      const sib = res.data.siblings
       const sub = docs.data.Document
+      setSiblings(sib)
       setUserForm(frm.data)
       setUserFulldet(info)
       setUserFulldocs(sub)
@@ -1556,45 +1557,43 @@ try {
           </Toolbar>
         </AppBar>
       <Box sx={{width:'98.5%',padding:'10px',height:'100%',display:'flex',backgroundColor:'whitesmoke'}}>
-         <div style={{width:'35%'}}>
-            <div style={{width:'95%',padding:'10px',height:'60%'}}>
-              <Card elevation={5}>
+         <div style={{width:'35%',marginLeft:'20px'}}>
+            <div className="imgprofatp">
             <img
                 alt="Remy Sharp"
                 src={userFulldet.profile}
-                style={{objectFit:'cover',width:'100%',height:'400px'}}
               />
-              </Card>
             </div>
-            <div style={{width:'95%',padding:'10px',height:'35%'}}>
-              <Card sx={{width:'96%',height:'95%',padding:'10px'}}>
-                <Typography>Name:{userFulldet.Name}</Typography>
-                <Typography>Age:{userFulldet.age}</Typography>
-                <Typography>Applicant Code: {userFulldet.applicantCode}</Typography>
-                <Typography>Status: {userFulldet.status}</Typography>
-                <Typography>Date Applied: {userFulldet.DateApplied}</Typography>
-                <Typography>Scholarship Applied: {userFulldet.SchoIarshipApplied}</Typography>
-              </Card>
+            <div style={{width:'100%',height:'30%'}}>
+              <div className="aptuserdetails">
+                <p>Name:{userFulldet.Name}</p>
+                <p>Age:{userFulldet.age}</p>
+                <p>Applicant Code: {userFulldet.applicantCode}</p>
+                <p>Status: {userFulldet.status}</p>
+                <p>Date Applied: {userFulldet.DateApplied}</p>
+                <p>Scholarship Applied: {userFulldet.SchoIarshipApplied}</p>
+              </div>
             </div>
          </div>
-         <div style={{width:'65%',padding:'10px'}}>
-          <Card sx={{width:'100%',height:'100%',overflow:'auto'}}>
-            <Tabs
+         <div style={{width:'65%'}}>
+
+            <CustomTabs
             value={value1}
             onChange={handleChange1}
             variant="scrollable"
             scrollButtons="auto"
             aria-label="scrollable auto tabs example"
           >
-            <Tab label="User Information" />
-            <Tab label="Application Form" />
-            <Tab label="Documents Submitted" />
-          </Tabs>
+            <CustomTab label="User Information" />
+            <CustomTab label="Application Form" />
+            <CustomTab label="Documents Submitted" />
+          </CustomTabs>
           {value1 === 0 && <>
            
             <div className="appuserfrm">
               <div>
                 <h2>Personal Information</h2>
+                <div className="aptuser">
                 <p><strong>Name: </strong>{userFulldet.Name}</p>
                 <p><strong>Gender: </strong>{userFulldet.gender}</p>
                 <p><strong>Address: </strong>{userFulldet.address}</p>
@@ -1602,32 +1601,48 @@ try {
                 <p><strong>Citizenship: </strong>{userFulldet.citizenship}</p>
                 <p><strong>Birthday: </strong>{userFulldet.birthday}</p>
                 <p><strong>Place of Birth: </strong>{userFulldet.birthPlace}</p>
+                </div>
+
+              </div>
+              <div className="aptuser">
                 <p><strong>Email: </strong>{userFulldet.email}</p>
                 <p><strong>Contact Number: </strong>{userFulldet.contactNum}</p>
-                <p><strong>Year Level: </strong>{userFulldet.yearLevel}</p>
                 <p><strong>School: </strong>{userFulldet.school}</p>
                 <p><strong>School Address: </strong>{userFulldet.schoolAddress}</p>
+                <p><strong>Year Level: </strong>{userFulldet.yearLevel}</p>
+                <p><strong>Grade/Year: </strong>{userFulldet.yearLevel}</p>
                 <p><strong>Course: </strong>{userFulldet.course}</p>
-              </div>
-              <div>
+                </div>
+              <div className="aptuser">
                 <h2>Family Information</h2>
-                <h3>Father</h3>
+                <h3 className="aptheader">Father</h3>
                 <p><strong>Name: </strong>{userFulldet.fatherName}</p>
                 <p><strong>Highest Educational Attaintment: </strong>{userFulldet.fatherEducation}</p>
                 <p><strong>Occupation: </strong>{userFulldet.fatherOccupation}</p>
-                <h3>Mother</h3>
+                <h3 className="aptheader">Mother</h3>
                 <p><strong>Name: </strong>{userFulldet.motherName}</p>
                 <p><strong>Highest Educational Attaintment: </strong>{userFulldet.motherEducation}</p>
                 <p><strong>Occupation: </strong>{userFulldet.motherOccupation}</p>
-                <h3>Guardian</h3>
+
+              </div>
+              <div className="aptuser">
+                <h3 className="aptheader">Guardian</h3>
                 <p><strong>Name: </strong>{userFulldet.guardianName}</p>
                 <p><strong>Address: </strong>{userFulldet.guardianAddress}</p>
                 <p><strong>Contact Number: </strong>{userFulldet.guardianContact}</p>
+                <h3 className="aptheader">Siblings</h3>
+                {siblings.length > 0 ? (<ul>
+                  {siblings?.map((data,index) =>{
+                    return(
+                      <li key={index}>{data.siblingName}</li>
+                    )
+                  })}
+                </ul>) : (<p>Only Child</p>)}
               </div>
             </div>
           </>}
           {value1 === 1 && <>
-          <div>
+          <div className="aptfrmuserscore">
             {userApplicationFrm}
           </div>
           </>}
@@ -1635,25 +1650,20 @@ try {
             <div className="subdocsappdet">
             {userFulldocs?.map((data) =>{
               return (
-                <>
-
-                <div style={{width:'100%',display:'flex',justifyContent:'center',alignItems:'center'}}>
+                <div className="imgdocuapt">
                   <button onClick={() => openImageModal(data.File,data.requirement_Name)}>
                     <p>{data.requirement_Name}</p>
                   <img
-                    style={{ width: '300px', height: '300px' }}
                     src={data.File}
                     alt=""
                   />
                   </button>
                 </div>
-
-                </>
               )
             })}
         </div>
           </>}
-          </Card>
+
          </div>
       </Box>
       </Dialog>
@@ -1947,6 +1957,8 @@ try {
                       underline="none"
                       sx={{
                         color: activeState === 'All' ? 'white' : 'black',
+                        display:'flex',
+                        alignItems:'center'
                       }}
                     >
                       <FormatListBulletedOutlinedIcon fontSize="inherit" />
@@ -1958,6 +1970,8 @@ try {
                       underline="none"
                       sx={{
                         color: activeState === 'Passed' ? 'white' : 'black',
+                        display:'flex',
+                        alignItems:'center'
                       }}
                     >
                       <CheckCircleIcon sx={{ mr: 0.5 }} fontSize="inherit" />
@@ -1969,6 +1983,8 @@ try {
                       underline="none"
                       sx={{
                         color: activeState === 'Reject' ? 'white' : 'black',
+                        display:'flex',
+                        alignItems:'center'
                       }}
                     >
                       <CancelIcon sx={{ mr: 0.5 }} fontSize="inherit" />
@@ -1980,6 +1996,8 @@ try {
                       underline="none"
                       sx={{
                         color: activeState === 'Reapp' ? 'white' : 'black',
+                        display:'flex',
+                        alignItems:'center'
                       }}
                     >
                       <CancelIcon sx={{ mr: 0.5 }} fontSize="inherit" />
@@ -1991,13 +2009,15 @@ try {
                       underline="none"
                       sx={{
                         color: activeState === 'Nores' ? 'white' : 'black',
+                        display:'flex',
+                        alignItems:'center'
                       }}
                     >
                       <CancelIcon sx={{ mr: 0.5 }} fontSize="inherit" />
                       No Response({Noresponse.length})
                     </Link>
                   </Button>
-      </Breadcrumbs>  
+         </Breadcrumbs>  
             <Card sx={{width:'100%'}}>
                   {activeState === 'All' && (appointList && appointList.length > 0 ? (
               <DataGrid
