@@ -486,6 +486,9 @@ const Appointment = () => {
       formData.append('yearLevel',data.yearLevel)
       formData.append('baranggay',dataappinfo.baranggay)
       formData.append('scholarshipApplied',dataappinfo.SchoIarshipApplied)
+      formData.append('gradeLevel',dataappinfo.gradelevel)
+      formData.append('school',dataappinfo.school)
+      formData.append('schoolAddress',dataappinfo.schoolAddress)
       SetApproved.SET_APPROVE(formData)
     .then(res => {
       setQualified(res.data.results.data1);

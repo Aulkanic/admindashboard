@@ -12,7 +12,7 @@ import FormControlLabel from '@mui/material/FormControlLabel';
 import Checkbox from '@mui/material/Checkbox';
 import { styled, ThemeProvider, createTheme, Link, TextField } from '@mui/material';
 import { Backdrop, CircularProgress } from '@mui/material';
-import { setAuthenticated,setAdmin } from "../../Redux/loginSlice";
+import { setAuthenticated } from "../../Redux/loginSlice";
 import { useDispatch } from 'react-redux';
 
 const theme = createTheme({
