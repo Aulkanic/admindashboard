@@ -2,7 +2,7 @@ import './scholars.scss';
 import Sidebar from '../../components/sidebar/Sidebar'
 import Navbar from '../../components/navbar/Navbar'
 import { Tabs, Tab, Box, Modal, Card } from "@mui/material"; 
-import CardContent from '@mui/material/CardContent';
+import { Container, Row, Col, Form } from 'react-bootstrap';
 import Button from '@mui/material/Button';
 import Typography from '@mui/material/Typography';
 import { DataGrid} from '@mui/x-data-grid';
@@ -94,9 +94,6 @@ const Scholars = () => {
   const [open1, setOpen1] = useState(false);
   const [schoinf1,setSchoInf1] = useState([]);
   const [schoinf2,setSchoInf2] = useState([]);
-  const [schoinf3,setSchoInf3] = useState([]);
-  const [schoinf4,setSchoInf4] = useState([]);
-  const [schodocs,setSchodocs] = useState([]);
   const [isComplete,setComplete] = useState('');
   const [reason,setReason] = useState('');
   const [status,setStatus] = useState('');
@@ -151,69 +148,32 @@ const Scholars = () => {
     const formData = new FormData()
     formData.append('applicantNum',applicantNum)
     const response = await FetchingBmccSchoinfo.FETCH_SCHOLARSINFO(applicantNum);
-    const req = await ListofReq.FETCH_REQUIREMENTS();
     const log = await UserActivity.USER_LOG(formData);
     const userAct = log.data.result;
-
-    const [RequireDocs, renewalReq] = req.data.Requirements.results1
-      ?.filter((docs) => docs.schoName === data.scholarshipApplied)
-      ?.reduce(
-        ([RequireDocs, renewalReq], doc) => {
-          if (doc.docsfor === 'Renewal') renewalReq.push(doc);
-          RequireDocs.push(doc);
-          return [RequireDocs, renewalReq];
-        },
-        [[], []]
-      );
-    
-    const [application, renewal] = response.data.ScholarInf.results3
-      ?.reduce(
-        ([application, renewal], data) => {
-          if (data.docsFor === 'Application') application.push(data);
-          if (data.docsFor === 'Renewal') renewal.push(data);
-          return [application, renewal];
-        },
-        [[], []]
-      );
-  
-    const combinedData = renewalReq.map((requirement) => {
-      const requirementName = requirement.requirementName;
-      const matchingApplicantData = renewal.filter(
-        (applicant) => applicant.requirement_Name === requirementName
-      );
-      return { ...requirement, applicantData: matchingApplicantData };
-    });
-    setSchodocs(req.data.Requirements.results1);
+    console.log(response)
     setUserlog(userAct.reverse());
     setSchoInf1(response.data.ScholarInf.results1[0]);
     setSchoInf2(response.data.ScholarInf.results2[0]);
-    setSchoInf3(application);
-    setSchoInf4(combinedData);
     setShowBackdrop(false);
     setOpen(true);
   };
   
   const columns = [
-    { 
-      field: 'scholarId', 
-      headerName: 'ID',
-      width: 50
-     },
      {
        field: 'scholarCode', 
         headerName: 'Scholar Code',
-      width: 100
+      width: 150
       },
     {
       field: 'scholarshipApplied',
       headerName: 'Scholarship Applied',
-      width: 150,
+      width: 200,
       editable: false,
     },
     {
       field: 'Name',
       headerName: 'Name',
-      width: 120,
+      width: 200,
       editable: false,
     },
     {
@@ -225,37 +185,15 @@ const Scholars = () => {
     {
       field: 'Baranggay',
       headerName: 'Baranggay',
-      width: 120,
+      width: 200,
       editable: false,
     },
     {
-      field: 'status',
+      field: 'remarks',
       headerName: 'Status',
-      width: 80,
+      width: 130,
       editable: false,
-      renderCell: (params) =>{
-        const currentDate = new Date();
-        const renewal = isComplete.results1.filter(docs => docs.schoName === params.row.scholarshipApplied && docs.batch === params.row.Batch)
-        const renewal1 = renewal.filter(docs => docs.docsfor === 'Renewal')
-        const renewalSubmitted = isComplete.results2.filter(docs => 
-        docs.applicantId === parseFloat(params.row.applicantNum) && docs.docsFor === 'Renewal');
-        const isdeadline = renewal1.filter(item =>
-          new Date(item.deadline) > currentDate
-          );
-        const Status = renewalSubmitted.length === renewal1.length
-        params.row.k = {
-          Status: Status,
-        };
-        return (
-          <>
-          {Status && <><p>Active</p></>}
-          {!Status &&
-          (<>
-          <p>Hold</p>
-          </>)}
-          </>
-        )  
-      }
+
     },
     {
       field: 'Batch',
@@ -265,57 +203,40 @@ const Scholars = () => {
     },
     {
       field: 'insert',
-      headerName: 'Actions',
+      headerName: 'Details',
       width: 90,
       renderCell: (params) => (
         <ViewButton className="myButton" onClick={() => view(params.row)}>View</ViewButton>
       ),
     },
-    {
-      field: 'req',
-      headerName: 'Renewal',
-      width: 100,
-      renderCell: (params) =>{
-  
-        const renewal = isComplete.results1.filter(docs => docs.schoName === params.row.scholarshipApplied)
-        const renewal1 = renewal.filter(docs => docs.docsfor === 'Renewal')
-        const renewalSubmitted = isComplete.results2.filter(docs => docs.applicantId === parseFloat(params.row.applicantNum) && docs.docsFor === 'Renewal');
-        const Status = `${renewalSubmitted.length}/ ${renewal1.length}`
-        return (
-          <>
-          {Status}
-          </>
-        )   
-      }
-    },
-    {
-      field: 'k',
-      headerName: 'Actions',
-      width: 170,
-      renderCell: (params) =>{ 
-        const currentDate = new Date();
-        const renewal = isComplete.results1.filter(docs => docs.schoName === params.row.scholarshipApplied && docs.batch === params.row.Batch)
-        const renewal1 = renewal.filter(docs => docs.docsfor === 'Renewal')
-        const renewalSubmitted = isComplete.results2.filter(docs => 
-        docs.applicantId === parseFloat(params.row.applicantNum) && docs.docsFor === 'Renewal');
-        const isdeadline = renewal1.filter(item =>
-          new Date(item.deadline) > currentDate
-          );
-        const Status = renewalSubmitted.length === renewal1.length
-        params.row.k = {
-          Status: Status,
-        };
-        return (
-          <>
-          {Status && isdeadline.length === 0 && <><p>Updated</p></>}
-          {!Status && isdeadline.length > 0 &&
-          (<>
-          <StyledButton className="myButton2" onClick={() =>RemoveGrant(params.row)}> REMOVE GRANT </StyledButton>
-          </>)}
-          </>
-        )   
-      }
-    },
+    // {
+    //   field: 'k',
+    //   headerName: 'Actions',
+    //   width: 170,
+    //   renderCell: (params) =>{ 
+    //     const currentDate = new Date();
+    //     const renewal = isComplete.results1.filter(docs => docs.schoName === params.row.scholarshipApplied && docs.batch === params.row.Batch)
+    //     const renewal1 = renewal.filter(docs => docs.docsfor === 'Renewal')
+    //     const renewalSubmitted = isComplete.results2.filter(docs => 
+    //     docs.applicantId === parseFloat(params.row.applicantNum) && docs.docsFor === 'Renewal');
+    //     const isdeadline = renewal1.filter(item =>
+    //       new Date(item.deadline) > currentDate
+    //       );
+    //     const Status = renewalSubmitted.length === renewal1.length
+    //     params.row.k = {
+    //       Status: Status,
+    //     };
+    //     return (
+    //       <>
+    //       {Status && isdeadline.length === 0 && <><p>Updated</p></>}
+    //       {!Status && isdeadline.length > 0 &&
+    //       (<>
+    //       <StyledButton className="myButton2" onClick={() =>RemoveGrant(params.row)}> REMOVE GRANT </StyledButton>
+    //       </>)}
+    //       </>
+    //     )   
+    //   }
+    // },
 
   ];
   const handleClose = () => setOpen(false);
@@ -354,7 +275,8 @@ const Scholars = () => {
         }
     }
     const RemoveGrant = (data) =>{
-      const isValueIncluded = access[0]?.sectionId.includes('Scholars');
+      const sections = access[0].sectionId.split(', '); 
+      const isValueIncluded = sections.includes('Scholars');
       if(!isValueIncluded){
         swal({
           text: 'UnAuthorized Access',
@@ -387,7 +309,8 @@ const Scholars = () => {
 
     }
     const RemoveGrantAll = () =>{
-      const isValueIncluded = access[0]?.sectionId.includes('Scholars');
+      const sections = access[0].sectionId.split(', '); 
+      const isValueIncluded = sections.includes('Scholars');
       if(!isValueIncluded){
         swal({
           text: 'UnAuthorized Access',
@@ -444,7 +367,8 @@ const Scholars = () => {
 
     }
     const NotifyAll = () =>{
-      const isValueIncluded = access[0]?.sectionId.includes('Scholars');
+      const sections = access[0].sectionId.split(', '); 
+      const isValueIncluded = sections.includes('Scholars');
       if(!isValueIncluded){
         swal({
           text: 'UnAuthorized Access',
@@ -495,60 +419,7 @@ const Scholars = () => {
       }
 
     }
-    const renewalStatus = schoinf4.map((data) => {
-      const imageFile = data.applicantData.length > 0 ? data.applicantData[0].File : 'https://drive.google.com/uc?id=1EXWK8SeamLARC7wnCTj4YXQhT74Z-zIn';
-      const deadline = new Date(data.deadline);
-      const currentDate = new Date();
-    
-      function getStatus() {
-        if (currentDate > deadline && data.applicantData.length === 0) {
-          return 'No response';
-        } else if (data.applicantData.length > 0) {
-          const submissionDate = new Date(data.deadline);
-          const userSudDate = new Date(data.applicantData[0].Date);
-          if (userSudDate > submissionDate) {
-            return 'Submitted Late';
-          } else {
-            return 'Passed on Time';
-          }
-        } else {
-          return 'Pending Submission';
-        }
-      }
-    
-      const status =  getStatus();
-    
-      return (
-        <Card>
-          <div style={{ display: 'flex' }}>
-            <div style={{ width: '100%', display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
-              <button onClick={() => openImageModal(imageFile, data.requirementName)}>
-                <p>{data.requirementName}</p>
-                <img
-                  style={{ width: '200px', height: '200px' }}
-                  src={imageFile}
-                  alt="No Submitted"
-                />
-              </button>
-            </div>
-            <div>
-              <Typography>Requirement: {data.requirementName}</Typography>
-              <Typography>Deadline: {data.deadline}</Typography>
-              <Typography   sx={{
-                  color:
-                    status === 'Submitted Late' || status === 'Pending Submission'
-                      ? 'yellow'
-                      : status === 'Passed on Time'
-                      ? 'green'
-                      : 'red',
-                }}
-              >Status: {status}</Typography>
-            </div>
-          </div>
-        </Card>
-      );
-    });
-    console.log(schoinf1)
+
   return (
     <>
               <StyledBackdrop open={showBackdrop}>
@@ -616,7 +487,7 @@ const Scholars = () => {
                 src={schoinf2.profile}
                 style={{objectFit:'cover',width:'100%',height:'350px'}}
               />
-              <Card sx={{height:'30px',position:'relative',width:'100%',display:'flex',justifyContent:'center',alignItems:'center'}}
+              <Card sx={{height:'30px',position:'relative',width:'100%',display:'flex',justifyContent:'center',alignItems:'center',backgroundColor:'black',color:'white'}}
                className='spancho'>
                 <Typography>Scholar Code: {schoinf2.scholarCode}</Typography>
               </Card>
@@ -643,9 +514,103 @@ const Scholars = () => {
          <div className='schodivuser'>
             <div className='schoinfuser'>
               <h2 style={{color:'#676',padding:'10px 0px 20px 10px'}}>Scholar Information</h2>
-              <div>
-              <p>Name: <span>{schoinf1.Name}</span></p>
-              <p>Age: <span>{schoinf1.age}</span></p>
+              <div className='Schorenewfrm'>
+              <Form.Group as={Col}>
+                  <Form.Label > Name</Form.Label>
+                  <Form.Control
+                  type="text"  
+                  value={schoinf2.Name}
+                  disabled
+                  />
+              </Form.Group>
+              <Form.Group as={Col}>
+                  <Form.Label >Age</Form.Label>
+                  <Form.Control
+                  type="text"  
+                  value={schoinf1.age}
+                  disabled
+                  />
+              </Form.Group>
+              <Form.Group as={Col}>
+                  <Form.Label >Gender</Form.Label>
+                  <Form.Control
+                  type="text"  
+                  value={schoinf2.gender}
+                  disabled
+                  />
+              </Form.Group>
+              <Form.Group as={Col}>
+                  <Form.Label >Baranggay</Form.Label>
+                  <Form.Control
+                  type="text"  
+                  value={schoinf2.Baranggay}
+                  disabled
+                  />
+              </Form.Group>
+              <Form.Group as={Col}>
+                  <Form.Label >School Name</Form.Label>
+                  <Form.Control
+                  type="text"  
+                  value={schoinf2.school}
+                  disabled
+                  />
+              </Form.Group>
+              <Form.Group as={Col}>
+                  <Form.Label >YearLevel</Form.Label>
+                  <Form.Control
+                  type="text"  
+                  value={schoinf2.yearLevel}
+                  disabled
+                  />
+              </Form.Group>
+              <Form.Group as={Col}>
+                  <Form.Label >Grade/Year</Form.Label>
+                  <Form.Control
+                  type="text"  
+                  value={schoinf2.gradeLevel}
+                  disabled
+                  />
+              </Form.Group>
+              <Form.Group as={Col}>
+                  <Form.Label >Status</Form.Label>
+                  <Form.Control
+                  type="text"  
+                  value={schoinf2.remarks}
+                  disabled
+                  />
+              </Form.Group>
+              <Form.Group as={Col}>
+                  <Form.Label >Scholarship Applied</Form.Label>
+                  <Form.Control
+                  type="text"  
+                  value={schoinf2.ScholarshipApplied}
+                  disabled
+                  />
+              </Form.Group>
+              <Form.Group as={Col}>
+                  <Form.Label >Batch</Form.Label>
+                  <Form.Control
+                  type="text"  
+                  value={schoinf2.Batch}
+                  disabled
+                  />
+              </Form.Group>
+              <Form.Group as={Col}>
+                  <Form.Label >Date Applied</Form.Label>
+                  <Form.Control
+                  type="text"  
+                  value={schoinf1.DateApplied}
+                  disabled
+                  />
+              </Form.Group>
+              <Form.Group as={Col}>
+                  <Form.Label >Date Approved</Form.Label>
+                  <Form.Control
+                  type="text"  
+                  value={schoinf1.DateApproved}
+                  disabled
+                  />
+              </Form.Group>
               </div>
             </div>
          </div>
@@ -672,7 +637,8 @@ const Scholars = () => {
             
     <h1>Scholars</h1>
     <Box sx={{ height: 400, width: '100%' }}>
-      <Card><DataGrid
+      <Card>
+        <DataGrid
         rows={data}
         columns={columns}
         getRowId={(row) => row.applicantNum}
@@ -692,10 +658,10 @@ const Scholars = () => {
         isRowSelectable={(params) => !params.row.k || !params.row.k.Status}
       /></Card>
               </Box>
-            <div style={{width:'100%',display:'flex',justifyContent:'space-around',margin:'15px'}}>
+            {/* <div style={{width:'100%',display:'flex',justifyContent:'space-around',margin:'15px'}}>
           <StyledButtonEdit className="myButton1" onClick={NotifyAll}>Notify All Selected Scholars</StyledButtonEdit>
           <StyledButton className="myButton2" onClick={RemoveGrantAll}>Revoke Grant To All Selected Scholars</StyledButton>
-          </div>
+          </div> */}
             </div>
         </div>
     </div>

@@ -73,7 +73,7 @@ const Login = () => {
     <ThemeProvider theme={theme}>
       <StyledBackdrop open={showBackdrop}>
         <CircularProgress color="inherit" />
-          </StyledBackdrop>
+      </StyledBackdrop>
 
     <div className="login">
       <div className="container">
@@ -82,117 +82,108 @@ const Login = () => {
         <img className="mydo" src="https://drive.google.com/uc?id=1HsYAs1azfEEjkJDjPKQaWjhorcW1W0T6" 
          alt=""/>
         </div>
-
-          <hr 
-            style={{
-              background: 'none',
-              borderColor: 'red',
-              height: '400px',
-            }}
-          />
         
-
-    <form>
-      <div className="head">
-        <h1>Welcome Admin!</h1>
-        <i>Sign in to your Account</i>
-      </div>
-
-      <div className="form-group">
-        <TextField 
-        sx={{borderRadius:'5px',
-             boxShadow: '0px 1px 1px 0px gray',
-             border: 'none',
-        }}
-
-        style={{
-          fontStyle: 'italic',
-          alignItems: 'center',
-          marginBottom: '10px',
-          width: '350px',
-          
-        }}
-
-        type='email' 
-        variant="outlined"
-        size="small"
-        name="email"
-        fullWidth
-        placeholder='Username'
-        value={email}     
-        InputProps={{
-          endAdornment:(
-            <InputAdornment position="end">
-              <AccountBoxRoundedIcon sx={{color: '#0020CB'}}/>
-            </InputAdornment>   
-          )
-        }}
-        onChange={handlerEmailInput}
-        />
-      </div>
-
-      <div className="form-group">
-        <TextField 
-          sx={{borderRadius:'5px',
-          boxShadow: '0px 1px 1px 0px gray',
-          border: 'none',
-        }}
-        
-        style={{
-          fontStyle: 'italic',
-          alignItems: 'center',
-          marginBottom: '10px',
-          width: '350px',
-        }}
-
-        type="password"
-        name='password'
-        variant="outlined"
-        size="small"
-        fullWidth
-        placeholder='Password'
-        value={password}
-        onChange={handlerPasswordInput}
-        InputProps={{
-          endAdornment:(
-            <InputAdornment position="end">
-              <LockRoundedIcon sx={{color: '#0020CB'}}/>
-            </InputAdornment>   
-          )
-        }}
-        />
-        
-        <div style={{
-          display:'flex',
-          justifyContent:'space-around',
-          alignItems:'center', 
-          fontSize:'11px', 
-          marginBottom:'15px'}}>
-
-        <div>
-          <FormControlLabel 
-            sx={{fontSize:'10px', 
-                fontStyle: 'italic',
-                color: 'blue'  
-              }} 
-                required control={<CustomCheckbox />} 
-                label="Remember me" />
-        </div>
-
-          <div>
-            <Link sx={{fontStyle: 'italic', marginLeft: '115px'}}>
-            Forgot Password?
-            </Link>
+        <form>
+          <div className="headlogin">
+            <h1>Welcome Admin!</h1>
+            <i>Sign in to your Account</i>
           </div>
 
-        </div>
-      </div>
+          <div className="form-group">
+            <TextField 
+            sx={{borderRadius:'5px',
+                boxShadow: '0px 1px 1px 0px gray',
+                border: 'none',
+            }}
 
-      <div className="btnlogin">
-        <button className="myButtond" onClick={handleSubmit}>LOGIN</button>
-      </div>
+            style={{
+              fontStyle: 'italic',
+              alignItems: 'center',
+              marginBottom: '10px',
+              width: '350px',
+              
+            }}
 
-    </form>
+            type='email' 
+            variant="outlined"
+            size="small"
+            name="email"
+            fullWidth
+            placeholder='Username'
+            value={email}     
+            InputProps={{
+              endAdornment:(
+                <InputAdornment position="end">
+                  <AccountBoxRoundedIcon sx={{color: '#0020CB'}}/>
+                </InputAdornment>   
+              )
+            }}
+            onChange={handlerEmailInput}
+            />
+          </div>
+
+          <div className="form-group">
+            <TextField 
+              sx={{borderRadius:'5px',
+              boxShadow: '0px 1px 1px 0px gray',
+              border: 'none',
+            }}
+            
+            style={{
+              fontStyle: 'italic',
+              alignItems: 'center',
+              marginBottom: '10px',
+              width: '350px',
+            }}
+
+            type="password"
+            name='password'
+            variant="outlined"
+            size="small"
+            fullWidth
+            placeholder='Password'
+            value={password}
+            onChange={handlerPasswordInput}
+            InputProps={{
+              endAdornment:(
+                <InputAdornment position="end">
+                  <LockRoundedIcon sx={{color: '#0020CB'}}/>
+                </InputAdornment>   
+              )
+            }}
+            />
+            
+            <div style={{
+              display:'flex',
+              justifyContent:'space-around',
+              alignItems:'center', 
+              fontSize:'11px', 
+              marginBottom:'15px'}}>
+
+            <div>
+              <FormControlLabel 
+                sx={{fontSize:'10px', 
+                    fontStyle: 'italic',
+                    color: 'blue'  
+                  }} 
+                    required control={<CustomCheckbox />} 
+                    label="Remember me" />
+            </div>
+
+              <div>
+                <Link sx={{fontStyle: 'italic', marginLeft: '115px'}}>
+                Forgot Password?
+                </Link>
+              </div>
+
+            </div>
+          </div>
+
+          <div className="btnlogin">
+            <button className="myButtond" onClick={handleSubmit}>LOGIN</button>
+          </div>
+
+        </form>
     </div>
     </div>
     </ThemeProvider>

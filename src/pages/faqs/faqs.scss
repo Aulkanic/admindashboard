@@ -1,6 +1,8 @@
 .faqs{
     display: flex;
     background-color: #f1f3fa;  
+    height: 100vh;
+    overflow: auto;
     .faqsContainer{
         flex: 7;
         background-color: #f1f3fa;  

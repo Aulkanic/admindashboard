@@ -77,7 +77,8 @@ const Rulesect = () => {
     }, [mayorlogo])
 
   const uploadLogo = async() =>{
-    const isValueIncluded = access[0]?.sectionId.includes('Rules');
+    const sections = access[0].sectionId.split(', '); 
+    const isValueIncluded = sections.includes('Rules');
     if(!isValueIncluded){
       swal({
         text: 'UnAuthorized Access',
@@ -91,6 +92,30 @@ const Rulesect = () => {
       {official: 'BMCC',Logo: bmcclogo || (logolist[0] && logolist[0].logo)},
       {official: 'Mayor',Logo: mayorlogo || (logolist[1] && logolist[1].logo)},
     ]
+    const isValid = LogoOF.every((list) => {
+      if (list.Logo instanceof File) {
+        const allowedExtensions = ['jpg', 'jpeg', 'png'];
+        const fileExtension = list.Logo.name.split('.').pop().toLowerCase();
+        if (allowedExtensions.includes(fileExtension)) {
+          return true;
+        } else {
+          swal({
+            text: 'Please upload a PNG or JPG image for all logos.',
+            timer: 2000,
+            buttons: false,
+            icon: "error",
+          });
+          return false;
+        }
+      }
+      return true;
+    });
+  
+    if (!isValid) {
+      return; 
+    }
+    setShowBackdrop(true);
+    let counter = 0;
     for(let i=0;i<LogoOF.length;i++){
       const list = LogoOF[i];
       const formData = new FormData()
@@ -98,16 +123,23 @@ const Rulesect = () => {
       formData.append('official',list.official)
       await Logos.LOGOS(formData)
       .then((res) =>{
-        swal('Uploaded Successfully')
-        setLogo(res.data.result)
+        counter += 1;
+        if(counter === LogoOF?.length ){
+          swal('Uploaded Successfully')
+          setLogo(res.data.result)
+          setShowBackdrop(false)
+        }
+
       })
       .catch((err)=>{
+        setShowBackdrop(false)
         console.log(err)
       })
     }
   }
   const setUpRule = async() =>{
-    const isValueIncluded = access[0]?.sectionId.includes('Rules');
+    const sections = access[0].sectionId.split(', '); 
+    const isValueIncluded = sections.includes('Rules');
     if(!isValueIncluded){
       swal({
         text: 'UnAuthorized Access',

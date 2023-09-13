@@ -1,6 +1,10 @@
+@import '~bootstrap/scss/bootstrap';
+
 .scholars{
     display: flex;
-    background-color: #f1f3fa;  
+    background-color: #f1f3fa;   
+    height: 100vh;
+    overflow: auto;
     .scholarsContainer{
         flex: 7;
         background-color: #f1f3fa;  

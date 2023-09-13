@@ -257,8 +257,8 @@ const Navbar = () => {
           </Box>
         </Fade>
       </Modal>
-    <div className='navbar'>
-      <div className='wrapper'>
+    <div className='navbar1'>
+      <div className='wrapper1'>
         <div className='search'>
           <input type='text' placeholder='Search' />
           <SearchIcon/>

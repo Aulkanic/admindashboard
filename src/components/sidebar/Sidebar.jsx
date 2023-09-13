@@ -49,11 +49,9 @@ const Sidebar = () => {
     <div className='sidebar'>
 
       <div className='top'> 
-                  <img className="mydo" src="https://drive.google.com/uc?id=12yKj9K3Caiaq3hP1JRKRbaLpkIuvapkZ" 
+          <img className="mydo" src="https://drive.google.com/uc?id=12yKj9K3Caiaq3hP1JRKRbaLpkIuvapkZ" 
          alt=""/>
-        </div>
-
-
+      </div>
       <div className='center'> 
           <ul>
           <Link to="/home" onClick={() =>setActiveSection(0)} style={{backgroundColor: activeSection === 0 ? 'lightgreen' : 'none',textDecoration: "none"}}>
@@ -173,9 +171,7 @@ const Sidebar = () => {
             </Link>
 
           </ul>
-        </div>
-
-      
+      </div>
     </div>
   )
 }

@@ -125,10 +125,9 @@ const CustomDataGrid = styled(DataGrid)({
   };
 
   const handleClick = () => {
-
-    if (user.jobDescription === 'Admin' || user.jobDescription === accessEmp.empSec1) {
-        setActiveState(activeState === 'log' ? 'admin' : 'log');
-    } else {
+    const sections = access[0].sectionId.split(', '); 
+    const isValueIncluded = sections.includes('Create Accounts') || user.jobDescription === 'Admin';
+    if(!isValueIncluded){
       swal({
         text: 'UnAuthorized Access',
         timer: 2000,
@@ -137,7 +136,7 @@ const CustomDataGrid = styled(DataGrid)({
       })
       return
     }
-
+    setActiveState(activeState === 'log' ? 'admin' : 'log');
   };
 
   const columns = [
@@ -338,7 +337,8 @@ const CustomDataGrid = styled(DataGrid)({
   .catch(err => console.log(err));
 }
 const UpdateBMCC = (event) =>{
-  const isValueIncluded = access[0]?.sectionId.includes('Manage Accounts');
+  const sections = access[0].sectionId.split(', '); 
+  const isValueIncluded = sections.includes('Manage Accounts') || user.jobDescription === 'Admin';
   if(!isValueIncluded){
     swal({
       text: 'UnAuthorized Access',
@@ -374,7 +374,8 @@ const UpdateBMCC = (event) =>{
   .catch(err => console.log(err));
 }
 const Authorization = (e) =>{
-  const isValueIncluded = access[0]?.sectionId.includes('Manage Accounts');
+  const sections = access[0].sectionId.split(', '); 
+  const isValueIncluded = sections.includes('Manage Accounts') || user.jobDescription === 'Admin';
   if(!isValueIncluded){
     swal({
       text: 'UnAuthorized Access',
@@ -411,7 +412,8 @@ const Authorization = (e) =>{
 
 }
 const DeleteAuth = (list,data) =>{
-  const isValueIncluded = access[0]?.sectionId.includes('Manage Accounts');
+  const sections = access[0].sectionId.split(', '); 
+  const isValueIncluded = sections.includes('Manage Accounts') || user.jobDescription === 'Admin';
   if(!isValueIncluded){
     swal({
       text: 'UnAuthorized Access',

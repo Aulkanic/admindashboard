@@ -238,7 +238,8 @@ const Applicant = () => {
 
   }
 const check = async (data, index) => { 
-  const isValueIncluded = access[0]?.sectionId.includes('Documents Checking');
+  const sections = access[0].sectionId.split(', '); 
+  const isValueIncluded = sections.includes('Documents Checking');
   if(!isValueIncluded){
     swal({
       text: 'UnAuthorized Access',
@@ -303,7 +304,8 @@ const style = {
   borderRadius:'10px'
 };
   const ApplicantCheck = async (data) =>{
-    const isValueIncluded = access[0]?.sectionId.includes('Applicants');
+    const sections = access[0].sectionId.split(', '); 
+    const isValueIncluded = sections.includes('Applicants ');
     if(!isValueIncluded){
       swal({
         text: 'UnAuthorized Access',
@@ -313,6 +315,7 @@ const style = {
       })
       return
     }
+    
     const applicantNum = data.applicantNum;
     const applicantCode = data.applicantCode;
     const status = 'Qualified';
@@ -333,7 +336,8 @@ const style = {
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
   const failed = async(data) =>{
-    const isValueIncluded = access[0]?.sectionId.includes('Applicants');
+    const sections = access[0].sectionId.split(', '); 
+    const isValueIncluded = sections.includes('Applicants ');
     if(!isValueIncluded){
       swal({
         text: 'UnAuthorized Access',
@@ -412,7 +416,8 @@ const style = {
     
   }
   const Addall = async () => {
-    const isValueIncluded = access[0]?.sectionId.includes('Applicants');
+    const sections = access[0].sectionId.split(', '); 
+    const isValueIncluded = sections.includes('Applicants ');
     if(!isValueIncluded){
       swal({
         text: 'UnAuthorized Access',
@@ -468,7 +473,8 @@ const style = {
       }
   };
   const FailedAll = async() =>{
-    const isValueIncluded = access[0]?.sectionId.includes('Applicants');
+    const sections = access[0].sectionId.split(', '); 
+    const isValueIncluded = sections.includes('Applicants ');
     if(!isValueIncluded){
       swal({
         text: 'UnAuthorized Access',
@@ -852,8 +858,8 @@ const style = {
                             ? 'Approved'
                             : status[Status] === 'Reject'
                             ? 'Reject'
-                            : status[Status] === 'For Further Evaluation'
-                            ? 'For Further Evaluation'
+                            : status[Status] === 'For_Review'
+                            ? 'For_Review'
                             : 'Unchecked'
                         }
                         onChange={handleStatusChange}
@@ -869,8 +875,8 @@ const style = {
                           label="Reject"
                         />
                         <FormControlLabel
-                          value="For Further Evaluation"
-                          control={<Radio checked={status[requirement_Name] === 'For Further Evaluation'} />}
+                          value="For_Review"
+                          control={<Radio checked={status[requirement_Name] === 'For_Review'} />}
                           label="For Further Evaluation"
                         />
                       </RadioGroup>
@@ -1106,7 +1112,7 @@ const style = {
 
       <div className="top">
         <div style={{width:'97.5%',padding:10}}>
-        <h1> Applicants </h1>
+        <h1 style={{color:'#666',whiteSpace:"nowrap",fontWeight:"700"}}> Applicants </h1>
     <Card>
       <Breadcrumbs sx={{backgroundColor:'green'}} aria-label="breadcrumb">
                   <Button onClick={() => setActiveState('All')}>

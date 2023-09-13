@@ -132,7 +132,8 @@ const Website = () => {
 
 
   const setColor = async() =>{
-    const isValueIncluded = access[0]?.sectionId.includes('Website Maintenance');
+    const sections = access[0].sectionId.split(', '); 
+    const isValueIncluded = sections.includes('Website Maintenance');
     if(!isValueIncluded){
       swal({
         text: 'UnAuthorized Access',
@@ -163,7 +164,8 @@ const Website = () => {
     .catch((err)=>console.error(`Error:${err}`))
   }
   const upload = async() =>{
-    const isValueIncluded = access[0]?.sectionId.includes('Website Maintenance');
+    const sections = access[0].sectionId.split(', '); 
+    const isValueIncluded = sections.includes('Website Maintenance');
     if(!isValueIncluded){
       swal({
         text: 'UnAuthorized Access',
@@ -179,6 +181,28 @@ const Website = () => {
         { ImgFor: 'Carousel2', File: carouimg1 || (imgList[2] && imgList[2].File) },
         { ImgFor: 'Carousel3', File: carouimg2 || (imgList[3] && imgList[3].File) },
       ];
+      const isValid = Images.every((list) => {
+        if (list.File instanceof File) {
+          const allowedExtensions = ['jpg', 'jpeg', 'png'];
+          const fileExtension = list.File.name.split('.').pop().toLowerCase();
+          if (allowedExtensions.includes(fileExtension)) {
+            return true;
+          } else {
+            swal({
+              text: 'Please upload a PNG or JPG image for all Pictures.',
+              timer: 2000,
+              buttons: false,
+              icon: "error",
+            });
+            return false;
+          }
+        }
+        return true;
+      });
+    
+      if (!isValid) {
+        return; 
+      }
       setShowBackdrop(true);
       for(let i=0;i<Images.length;i++){
         const list = Images[i];
@@ -197,7 +221,8 @@ const Website = () => {
       swal('Uploaded Successfully')
   }
   const trivCreate = async() =>{
-    const isValueIncluded = access[0]?.sectionId.includes('Website Maintenance');
+    const sections = access[0].sectionId.split(', '); 
+    const isValueIncluded = sections.includes('Website Maintenance');
     if(!isValueIncluded){
       swal({
         text: 'UnAuthorized Access',
@@ -227,7 +252,8 @@ const Website = () => {
     .catch((err)=>console.error(`Error:${err}`))    
   }
   const createFaqs = async() =>{
-    const isValueIncluded = access[0]?.sectionId.includes('Website Maintenance');
+    const sections = access[0].sectionId.split(', '); 
+    const isValueIncluded = sections.includes('Website Maintenance');
     if(!isValueIncluded){
       swal({
         text: 'UnAuthorized Access',
@@ -257,7 +283,8 @@ const Website = () => {
     .catch((err)=>console.error(`Error:${err}`)) 
   }
   const editFaqs = async() =>{
-    const isValueIncluded = access[0]?.sectionId.includes('Website Maintenance');
+    const sections = access[0].sectionId.split(', '); 
+    const isValueIncluded = sections.includes('Website Maintenance');
     if(!isValueIncluded){
       swal({
         text: 'UnAuthorized Access',
@@ -288,7 +315,8 @@ const Website = () => {
     .catch((err)=>console.error(`Error:${err}`)) 
   }
   const deleteFaqs = async(data) =>{
-    const isValueIncluded = access[0]?.sectionId.includes('Website Maintenance');
+    const sections = access[0].sectionId.split(', '); 
+    const isValueIncluded = sections.includes('Website Maintenance');
     if(!isValueIncluded){
       swal({
         text: 'UnAuthorized Access',
@@ -317,7 +345,8 @@ const Website = () => {
     .catch((err)=>console.error(`Error:${err}`)) 
   }
   const LinksUpdate = async() =>{
-    const isValueIncluded = access[0]?.sectionId.includes('Website Maintenance');
+    const sections = access[0].sectionId.split(', '); 
+    const isValueIncluded = sections.includes('Website Maintenance');
     if(!isValueIncluded){
       swal({
         text: 'UnAuthorized Access',

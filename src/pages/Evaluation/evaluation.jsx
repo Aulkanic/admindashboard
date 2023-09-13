@@ -156,7 +156,8 @@ const Evaluation = () => {
     
       }
       const failed = async(data) =>{
-        const isValueIncluded = access[0]?.sectionId.includes('Evaluation');
+        const sections = access[0].sectionId.split(', '); 
+        const isValueIncluded = sections.includes('Evaluation');
         if(!isValueIncluded){
           swal({
             text: 'UnAuthorized Access',
@@ -244,7 +245,7 @@ const Evaluation = () => {
           editable: false,
           renderCell: (params) =>(
             <>
-            <p>{params.row.score}</p>
+            <p style={{margin:'0px'}}>{params.row.score}</p>
             </>
           ),
         },
@@ -451,7 +452,8 @@ const Evaluation = () => {
       ];
 
     const setFirsttoSecStat = async(data) =>{
-      const isValueIncluded = access[0]?.sectionId.includes('Evaluation');
+      const sections = access[0].sectionId.split(', '); 
+      const isValueIncluded = sections.includes('Evaluation');
       if(!isValueIncluded){
         swal({
           text: 'UnAuthorized Access',
@@ -505,7 +507,8 @@ const Evaluation = () => {
           .catch(err => console.log(err));
     }
     const ScoreSlot = () =>{
-      const isValueIncluded = access[0]?.sectionId.includes('Passing Score and Slots');
+      const sections = access[0].sectionId.split(', '); 
+      const isValueIncluded = sections.includes('Evaluation');
       if(!isValueIncluded){
         swal({
           text: 'UnAuthorized Access',
@@ -549,7 +552,8 @@ const Evaluation = () => {
         .catch(err => console.log(err));
     }
     const Addall = async () => {
-      const isValueIncluded = access[0]?.sectionId.includes('Evaluation');
+      const sections = access[0].sectionId.split(', '); 
+      const isValueIncluded = sections.includes('Evaluation');
       if(!isValueIncluded){
         swal({
           text: 'UnAuthorized Access',
@@ -652,7 +656,8 @@ const Evaluation = () => {
       }
     };
     const FailedAll = async() =>{
-      const isValueIncluded = access[0]?.sectionId.includes('Evaluation');
+      const sections = access[0].sectionId.split(', '); 
+      const isValueIncluded = sections.includes('Evaluation');
       if(!isValueIncluded){
         swal({
           text: 'UnAuthorized Access',
@@ -833,7 +838,7 @@ const Evaluation = () => {
       <Box sx={{width:'100%',height:'100%',display:'flex',backgroundColor:'whitesmoke'}}>
          <div className='evalusrprof'>
           <div className="evalusrcontainer">
-          <img src={applicantsInfo.profile} alt="" />
+          <img style={{objectFit:'fill'}} src={applicantsInfo.profile} alt="" />
             <div className='evalusridcontainer'>
               <p className='evalusrid'><strong>Applicant Id:</strong> {applicantsInfo.applicantCode}</p>
               <p className='evalusrid'><strong>Scholarship Applied:</strong> {applicantsInfo.SchoIarshipApplied}</p>
@@ -935,7 +940,7 @@ const Evaluation = () => {
             <div className='evaluationcon'>
               <div style={{width:'100%',height: 100,display:'flex',justifyContent:'space-between',padding:10}}>
                   <div style={{width:'30%',display:'flex',flexDirection:'column',justifyContent:'space-between',height:'100%'}}>
-                  <h1 style={{color:'#666'}}>Registered Applicants</h1>
+                  <h1 style={{color:'#666',whiteSpace:"nowrap",fontWeight:"700"}}>Registered Applicants</h1>
                   </div>
                   <div style={{marginRight:5,height:'100%'}}>
                     <div style={{display:'flex',flexDirection:'column',height:'100%',width:'100%',alignItems:'center'}}>
@@ -973,7 +978,7 @@ const Evaluation = () => {
                     </div>
                   </div>
               </div>
-              <Box sx={{ height: 400, width: '100%' }}>
+              <Box sx={{ height: 'maxContent', width: '100%' }}>
                 <Card sx={{height:'100%'}}>
                 <Breadcrumbs sx={{backgroundColor:'green'}} aria-label="breadcrumb">
                   <Button onClick={() => setActiveState('All')}>

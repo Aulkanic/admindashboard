@@ -68,7 +68,8 @@ const Announcement = () => {
       )
     })
     const Create = async() =>{
-      const isValueIncluded = access[0]?.sectionId.includes('News and Announcement');
+      const sections = access[0].sectionId.split(', '); 
+      const isValueIncluded = sections.includes('News and Announcement');
       if(!isValueIncluded){
         swal({
           text: 'UnAuthorized Access',

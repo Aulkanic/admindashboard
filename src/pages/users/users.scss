@@ -1,6 +1,8 @@
 .users{
     display: flex;
-    background-color: #f1f3fa;  
+    background-color: #f1f3fa;   
+    height: 100vh;
+    overflow: auto;
     .usersContainer{
         flex: 7;
         background-color: #f1f3fa;  

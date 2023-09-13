@@ -2,9 +2,11 @@
     width: 100%;
     display: flex;
     background-color: #f1f3fa;  
+    height: 100vh;
+    overflow: auto;
 
     .appointmentContainer{
-        width: 90%;
+        width: 100%;
         .top{
             width: 100%;
             display: flex;

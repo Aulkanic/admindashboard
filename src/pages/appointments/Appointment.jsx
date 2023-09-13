@@ -170,8 +170,10 @@ const Appointment = () => {
   const [appointmentDate, setAppointmentDate] = useState(null);
   const [Agenda, setAgenda] = useState('');
   const [Location, setLocation] = useState('');
-  const [startTime, setStartTime] = useState(dayjs(null));
-  const [endTime, setEndTime] = useState(dayjs(null));
+  const initialStartTime = dayjs().set('hour', 9).set('minute', 0);
+  const initialEndTime = dayjs().set('hour', 17).set('minute', 0);
+  const [startTime, setStartTime] = useState(initialStartTime);
+  const [endTime, setEndTime] = useState(initialEndTime);
   const [appDetails,setAppDetails] = useState({})
   const [selectedUsers, setSelectedUsers] = useState([]);
   const [errors, setErrors] = useState({});
@@ -299,7 +301,6 @@ const Appointment = () => {
     const officeHourStart = moment('08:59 AM', 'hh:mm A');
     const officeHourEnd = moment('05:00 PM', 'hh:mm A');
     const date = new Date(appointmentDate).toDateString();
-    const targetDate = moment(date);
     const value = { $d: new Date(startTime) };
     const start = value.$d.toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit', hour12: true });
     const value1 = { $d: new Date(endTime) };
@@ -322,6 +323,9 @@ const Appointment = () => {
    if (!startcheck.isBetween(officeHourStart, officeHourEnd, undefined, "(]")) {
       errors.start = 'Please select a time within office hours!(9AM-5PM)';
     }
+    if(start === end){
+      errors.end ='The End Time and Start Time should not match!';
+    }
     console.log(errors)
     if (Object.keys(errors).length > 0) {
       setErrors(errors);
@@ -335,7 +339,8 @@ const Appointment = () => {
 
   const handleSave = (e) => {
     e.preventDefault()
-    const isValueIncluded = access[0]?.sectionId.includes('Create Appointment');
+    const sections = access[0].sectionId.split(', '); 
+    const isValueIncluded = sections.includes('Create Appointment');
     if(!isValueIncluded){
       swal({
         text: 'UnAuthorized Access',
@@ -422,7 +427,8 @@ const Appointment = () => {
   };
 
   const Reapp = async(data) => {
-    const isValueIncluded = access[0]?.sectionId.includes('Appointment');
+    const sections = access[0].sectionId.split(', '); 
+    const isValueIncluded = sections.includes('Create Appointment');
     if(!isValueIncluded){
       swal({
         text: 'UnAuthorized Access',
@@ -459,7 +465,8 @@ const Appointment = () => {
   };
 
   const Approved = async (data) => {
-    const isValueIncluded = access[0]?.sectionId.includes('Appointment');
+    const sections = access[0].sectionId.split(', '); 
+    const isValueIncluded = sections.includes('Appointment');
     if(!isValueIncluded){
       swal({
         text: 'UnAuthorized Access',
@@ -486,8 +493,9 @@ const Appointment = () => {
       formData.append('yearLevel',data.yearLevel)
       formData.append('baranggay',dataappinfo.baranggay)
       formData.append('scholarshipApplied',dataappinfo.SchoIarshipApplied)
-      formData.append('gradeLevel',dataappinfo.gradelevel)
+      formData.append('gradeLevel',dataappinfo.gradeLevel)
       formData.append('school',dataappinfo.school)
+      formData.append('gender',dataappinfo.gender)
       formData.append('schoolAddress',dataappinfo.schoolAddress)
       SetApproved.SET_APPROVE(formData)
     .then(res => {
@@ -510,7 +518,8 @@ const Appointment = () => {
 };
 
 const Failed = async() =>{
-  const isValueIncluded = access[0]?.sectionId.includes('Appointment');
+  const sections = access[0].sectionId.split(', '); 
+  const isValueIncluded = sections.includes('Appointment');
   if(!isValueIncluded){
     swal({
       text: 'UnAuthorized Access',
@@ -545,16 +554,17 @@ const Failed = async() =>{
 
 }
  const InterviewResult = (data) =>{
-        const isValueIncluded = access[0]?.sectionId.includes('Create Appointment');
-        if(!isValueIncluded){
-          swal({
-            text: 'UnAuthorized Access',
-            timer: 2000,
-            buttons: false,
-            icon: "error",
-          })
-          return
-        }
+  const sections = access[0].sectionId.split(', '); 
+  const isValueIncluded = sections.includes('Create Appointment');
+  if(!isValueIncluded){
+    swal({
+      text: 'UnAuthorized Access',
+      timer: 2000,
+      buttons: false,
+      icon: "error",
+    })
+    return
+  }
       
       const formData = new FormData()
       formData.append('isPassed',data)
@@ -624,7 +634,8 @@ const Failed = async() =>{
   
 }
 const FailedAll = async() =>{
-  const isValueIncluded = access[0]?.sectionId.includes('Appointment');
+  const sections = access[0].sectionId.split(', '); 
+  const isValueIncluded = sections.includes('Appointment');
   if(!isValueIncluded){
     swal({
       text: 'UnAuthorized Access',
@@ -686,7 +697,8 @@ const FailedAll = async() =>{
     }
 }
 const Addall = async () => {
-  const isValueIncluded = access[0]?.sectionId.includes('Appointment');
+  const sections = access[0].sectionId.split(', '); 
+  const isValueIncluded = sections.includes('Create Appointment');
   if(!isValueIncluded){
     swal({
       text: 'UnAuthorized Access',
@@ -729,6 +741,10 @@ const Addall = async () => {
         formData.append('yearLevel',row.yearLevel)
         formData.append('baranggay',dataappinfo.baranggay)
         formData.append('scholarshipApplied',dataappinfo.SchoIarshipApplied)
+        formData.append('gradeLevel',dataappinfo.gradelevel)
+        formData.append('school',dataappinfo.school)
+        formData.append('gender',dataappinfo.gender)
+        formData.append('schoolAddress',dataappinfo.schoolAddress)
         SetApproved.SET_APPROVE(formData)
       .then(res => {
         setQualified(res.data.results.data1);
@@ -817,7 +833,8 @@ const Addall = async () => {
 
   const cancelAppointment = async(e) => {
       e.preventDefault()
-      const isValueIncluded = access[0]?.sectionId.includes('Create Appointment');
+      const sections = access[0].sectionId.split(', '); 
+      const isValueIncluded = sections.includes('Create Appointment');
       if(!isValueIncluded){
         swal({
           text: 'UnAuthorized Access',
@@ -872,7 +889,8 @@ try {
 
   const addOtherUser = (e) => {
     e.preventDefault()
-    const isValueIncluded = access[0]?.sectionId.includes('Create Appointment');
+    const sections = access[0].sectionId.split(', '); 
+    const isValueIncluded = sections.includes('Create Appointment');
     if(!isValueIncluded){
       swal({
         text: 'UnAuthorized Access',
@@ -959,7 +977,8 @@ try {
     })
   };
   const cancelBatch = async(date,time,data3) =>{
-    const isValueIncluded = access[0]?.sectionId.includes('Create Appointment');
+    const sections = access[0].sectionId.split(', '); 
+    const isValueIncluded = sections.includes('Create Appointment');
     if(!isValueIncluded){
       swal({
         text: 'UnAuthorized Access',
@@ -1057,7 +1076,7 @@ try {
         const time = `${params.row.timeStart} - ${params.row.timeEnd}`
         return(
         <>
-        <p>{time}</p>
+        <p style={{margin:'0px'}}>{time}</p>
         </>
       )},
     },
@@ -1123,7 +1142,7 @@ try {
         const time = `${params.row.timeStart} - ${params.row.timeEnd}`
         return(
         <>
-        <p>{time}</p>
+        <p style={{margin:'0px'}}>{time}</p>
         </>
       )},
     },
@@ -1191,7 +1210,7 @@ try {
         const time = `${params.row.timeStart} - ${params.row.timeEnd}`
         return(
         <>
-        <p>{time}</p>
+        <p style={{margin:'0px'}}>{time}</p>
         </>
       )},
     },
@@ -1266,7 +1285,7 @@ try {
         const time = `${params.row.timeStart} - ${params.row.timeEnd}`
         return(
         <>
-        <p>{time}</p>
+        <p style={{margin:'0px'}}>{time}</p>
         </>
       )},
     },
@@ -1340,7 +1359,7 @@ try {
         const time = `${params.row.timeStart} - ${params.row.timeEnd}`
         return(
         <>
-        <p>{time}</p>
+        <p style={{margin:'0px'}}>{time}</p>
         </>
       )},
     },
@@ -1399,8 +1418,8 @@ try {
 
   const userApplicationFrm = userForm?.map((data,index)=>{
     return(
-      <div style={{display:'flex',alignItems:'center',margin:'10px'}} key={index}>
-      <Chip sx={{width:'50px',marginRight:'5px'}} label={data.score} color="primary" />
+      <div style={{display:'flex',alignItems:'center',margin:'10px',height:"maxContent",justifyContent:'left'}} key={index}>
+      <Chip sx={{width:'50px',marginRight:'5px',marginTop:'-15px'}} label={data.score} color="primary" />
       <p><strong>{index + 1}.</strong> {data.question} {data.answer}</p>
       </div>
     )
@@ -1560,14 +1579,14 @@ try {
           </Toolbar>
         </AppBar>
       <Box sx={{width:'98.5%',padding:'10px',height:'100%',display:'flex',backgroundColor:'whitesmoke'}}>
-         <div style={{width:'35%',marginLeft:'20px'}}>
+         <div style={{width:'35%',marginLeft:'20px',minHeight:'100vh',maxHeight:'maxContent'}}>
             <div className="imgprofatp">
             <img
                 alt="Remy Sharp"
                 src={userFulldet.profile}
               />
             </div>
-            <div style={{width:'100%',height:'30%'}}>
+            <div style={{width:'100%',height:'41%'}}>
               <div className="aptuserdetails">
                 <p>Name:{userFulldet.Name}</p>
                 <p>Age:{userFulldet.age}</p>
@@ -1902,8 +1921,8 @@ try {
                                   if (timeRange) {
                                     return (
                                       <>
-                                      <div style={{width:'100%',display:'flex',justifyContent:'center',alignItems:'center',margin:'10px'}}>
-                                      <Card elevation={2} sx={{width:'100%',display:'flex',justifyContent:'space-around',alignItems:'center',padding:'10px',height:'100px'}}>
+                                      <div style={{width:'100%',display:'flex',justifyContent:'center',alignItems:'center',margin:'10px',height:"maxContent"}}>
+                                      <Card elevation={2} sx={{width:'100%',display:'flex',justifyContent:'space-around',alignItems:'center',padding:'10px',height:'maxContent'}}>
                                       <div key={timeRange}>
                                         <h3>{data[0].Reason}</h3>
                                         <h4>{timeRange}</h4>
@@ -1919,7 +1938,7 @@ try {
                                         
                                       </div>
                                       <div style={{display:'flex',flexDirection:'column',justifyContent:'space-around',height:'100%'}}>
-                                      <StyledButton className="myButton" variant="contained" size="small" onClick={() => cancelBatch(selectedAppointment.selectedDate,timeRange, data)}>Cancel Batch</StyledButton>
+                                      <StyledButton sx={{marginBottom:'5px'}} className="myButton" variant="contained" size="small" onClick={() => cancelBatch(selectedAppointment.selectedDate,timeRange, data)}>Cancel Batch</StyledButton>
                                       <Button className="myButton1" variant="contained" size="small" onClick={() => handleOpen(selectedAppointment.selectedDate,timeBatch, data)}>Add User</Button>
                                       </div>
                                       </Card>

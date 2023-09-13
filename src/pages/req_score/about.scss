@@ -1,8 +1,11 @@
 .about{
     display: flex;
     background-color: #f1f3fa;
+    height: 100vh;
+    overflow: auto;
     .aboutContainer{
         flex: 7;
+
         background-color: #f1f3fa;
         .top{
         margin: 20px;

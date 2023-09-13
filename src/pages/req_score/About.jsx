@@ -78,7 +78,7 @@ export const About = () => {
       }
       Fetch();
     }, []);
-
+console.log(access)
     const handleScorecardChange = (questionId, newScorecard) => {
       setFormq((prevQuestions) =>
       
@@ -95,9 +95,7 @@ export const About = () => {
         )
       );
     };
-    console.log(formq)
     const schoForm = formq?.filter(data => data.scholarshipProg === schoname)
-    console.log(schoForm)
 
     function filterChoicesByQuestionsId(choices, questionsId) {
       return choices?.filter((choice) => choice.questionsid === questionsId);
@@ -114,6 +112,17 @@ export const About = () => {
     const chosen = allChoicesForQuestions?.map(item => item.choices).flat();
 
     const AddQuestions = async() =>{
+      const sections = access[0].sectionId.split(', '); 
+      const isValueIncluded = sections.includes('Score Card');
+      if(!isValueIncluded){
+        Swal.fire({
+          text: 'UnAuthorized Access',
+          timer: 2000,
+          buttons: false,
+          icon: "error",
+        })
+        return
+      }
       let optionsHtml = '';
       schoprog?.forEach((option) => {
         optionsHtml += `<option value="${option.name}">${option.name}</option>`;
@@ -136,7 +145,6 @@ export const About = () => {
             Swal.showValidationMessage('Both fields are required. Please enter data for both questions.');
             return false; // Prevent the dialog from closing
           }
-    
           return [selectedValue, question2];
         },
       })
@@ -177,7 +185,6 @@ export const About = () => {
       })
       
       if (choice) {
-        console.log(data)
         const formData = new FormData()
         formData.append('questionsid',data.id)
         formData.append('choice',choice)
@@ -344,7 +351,6 @@ export const About = () => {
         ]);
 
         if (questionScores.length > 0) {
-          console.log(questionScores)
           setFormq(questionScores[questionScores.length - 1].data.Questions);
         } else {
           console.error('Error: questionScores is empty');
@@ -379,9 +385,9 @@ export const About = () => {
           <p style={{overflow:'hidden'}}>
           {index + 1}. {data.questions}
           </p> 
-          <div>
-          <button style={{padding:'5px'}} className='myButton1' onClick={() =>EditQForm(data)}><EditIcon sx={{fontSize:'13px'}}/></button>
-          <button style={{padding:'5px',marginLeft:'10px'}} onClick={() =>DeleteQuestion(data)} className='myButton2'><DeleteIcon sx={{fontSize:'13px'}}/></button>
+          <div style={{display:'flex',whiteSpace:'nowrap'}}>
+          <button style={{padding:'5px',height:'32px'}} className='myButton1' onClick={() =>EditQForm(data)}><EditIcon sx={{fontSize:'13px'}}/></button>
+          <button style={{padding:'5px',marginLeft:'10px',height:'32px'}} onClick={() =>DeleteQuestion(data)} className='myButton2'><DeleteIcon sx={{fontSize:'13px'}}/></button>
           </div>
 
           </div>
@@ -390,7 +396,7 @@ export const About = () => {
               return(
                 <li className='choiceli' key={index}>
                  <p style={{overflow:'hidden'}}>- {data1.value}</p> 
-                <button onClick={() =>DeleteChoice(data1)} style={{padding:'5px',marginLeft:'10px'}} className='myButton2'>
+                <button onClick={() =>DeleteChoice(data1)} style={{padding:'5px',marginLeft:'10px',height:'32px'}} className='myButton2'>
                   <DeleteIcon sx={{fontSize:'13px'}}/>
                 </button></li>
               )
@@ -473,7 +479,7 @@ export const About = () => {
             <Tab value="2" label="Score Card" />
           </Tabs>
           {value === '1' && 
-         <Card sx={{padding:'10px'}}>
+         <Card sx={{padding:'10px',backgroundColor:'transparent'}} elevation={0}>
             <button style={{float:'right'}} onClick={AddQuestions} className='myButton1'>Add Questions</button>
             <div className="frmcontainer">
             {FormTemplate}
@@ -481,8 +487,15 @@ export const About = () => {
 
           </Card> }   
           {value === '2' && 
-         <Card sx={{padding:'10px'}}>
-            <button style={{float:'right'}} onClick={SaveScore} className='myButton1'>Set Score</button>
+         <Card sx={{padding:'10px',backgroundColor:'transparent'}} elevation={0}>
+                    This Score Card will apply to the Scholarship Application Form
+          <p>Instructions:</p>
+          <p>1.Set the Score for each questions where in the score is equivalent to percentage </p>
+          <p>2.All the Questions must the total value is equivalent to 100 when each questions is sum up </p>
+          <p>3.All the CHOICE must a value is not greater than to 100 or less than 0 </p>
+          <p>4.The Choices will be the percentage of a questions</p>
+          <p>5.Formula: Percentage of Selected Choice divided by 100 times the Specific Questions</p>
+            <button style={{float:'right',marginBottom:'10px'}} onClick={SaveScore} className='myButton1'>Set Score</button>
               {ScoreTemplate}
          </Card> }       
         </div>

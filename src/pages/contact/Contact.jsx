@@ -11,11 +11,10 @@ import InputLabel from '@mui/material/InputLabel';
 import MenuItem from '@mui/material/MenuItem';
 import FormControl from '@mui/material/FormControl';
 import TextField from '@mui/material/TextField';
-import dayjs from 'dayjs';
+import { DemoContainer } from '@mui/x-date-pickers/internals/demo';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { DateField } from '@mui/x-date-pickers/DateField';
-import { DemoContainer, DemoItem } from '@mui/x-date-pickers/internals/demo';
 import MuiAlert from '@mui/material/Alert';
 import swal from 'sweetalert';
 import moment from "moment";
@@ -25,17 +24,26 @@ import DialogActions from '@mui/material/DialogActions';
 import DialogContent from '@mui/material/DialogContent';
 import { useContext } from "react";
 import { admininfo } from "../../App";
-import DialogContentText from '@mui/material/DialogContentText';
+import './requirement.css'
 import DialogTitle from '@mui/material/DialogTitle';
 import { styled, ThemeProvider, createTheme } from '@mui/material';
 import { Backdrop, CircularProgress } from '@mui/material';
 
-const theme = createTheme();
 const StyledBackdrop = styled(Backdrop)(({ theme }) => ({
   zIndex: theme.zIndex.drawer + 50,
   color: '#fff',
 }));
-
+const theme = createTheme({
+  components: {
+    MuiDateField: {
+      styleOverrides: {
+        error: {
+          borderColor: 'black', // Change to the desired border color
+        },
+      },
+    },
+  },
+});
 const StyledButton = styled(Button)`
   && {
     float: right;
@@ -61,6 +69,12 @@ const StyledButtonEdit = styled(Button)`
     }
   }
 `;
+const CustomDateField = styled(DateField)`
+  /* Override the red border color */
+  &.Mui-error {
+    border-color: black !important; /* Change to a different color */
+  }
+`;
 
 const Contact = () => {
   const { loginUser,user } = useContext(admininfo);
@@ -72,29 +86,32 @@ const Contact = () => {
   const[requirementName,setReqname] = useState('');
   const [showBackdrop, setShowBackdrop] = useState(false);
   const[batch,setBatch] = useState('');
-  const [deadline,setDeadline] = useState('');
-  const [newDeadline,setNewDeadline] = useState('');
+  const initialDeadline = new Date().toDateString();
+  const deadlineDate = moment(initialDeadline);
+  const [deadline,setDeadline] = useState(deadlineDate);
+  const [newDeadline,setNewDeadline] = useState(deadlineDate);
   const [errors, setErrors] = useState({});
-  const [docsfor,setDocsfor] = useState('');
+  const [docsfor,setDocsfor] = useState('Application');
   const [openDialog, setOpenDialog] = useState(false);
   const [selected,setSelected] = useState([])
   const [access,setAccess] = useState([])
   const handleCloseDialog = () => setOpenDialog(false);
   const [accessList,setAccesslist] = useState([]);
   const handleOpenDialog = (data) => {
-    if (user.jobDescription === 'Admin' || user.jobDescription === accessList.reqSec) {
-      setOpenDialog(true);
-      setSelected(data)
-    } 
-    else{
+    const sections = access[0].sectionId.split(', '); 
+    const isValueIncluded = sections.includes("Requirements");
+    if(!isValueIncluded){
       swal({
         text: 'UnAuthorized Access',
         timer: 2000,
         buttons: false,
         icon: "error",
-      });
-      return;
+      })
+      return
     }
+      setOpenDialog(true);
+      setSelected(data)
+
   }
 
   const handleYearChange = (event) => {
@@ -112,7 +129,8 @@ const Contact = () => {
     return years;
   };
   const handleOpen = () => {
-    const isValueIncluded = access[0]?.sectionId.includes('Requirements');
+    const sections = access[0].sectionId.split(', '); 
+    const isValueIncluded = sections.includes("Requirements");
     if(!isValueIncluded){
       swal({
         text: 'UnAuthorized Access',
@@ -124,6 +142,7 @@ const Contact = () => {
     }
     setOpen(true)
   };
+
   const handleClose = () => setOpen(false);
   
   const style = {
@@ -180,7 +199,8 @@ const Contact = () => {
 
   };
   const AddReq = (e) =>{
-    const isValueIncluded = access[0]?.sectionId.includes('Requirements');
+    const sections = access[0].sectionId.split(', '); 
+    const isValueIncluded = sections.includes("Requirements");
     if(!isValueIncluded){
       swal({
         text: 'UnAuthorized Access',
@@ -242,7 +262,8 @@ const Contact = () => {
   }
   const Edit = () =>{
     let errors = {};
-    const isValueIncluded = access[0]?.sectionId.includes('Requirements');
+    const sections = access[0].sectionId.split(', '); 
+    const isValueIncluded = sections.includes("Requirements");
     if(!isValueIncluded){
       swal({
         text: 'UnAuthorized Access',
@@ -299,7 +320,8 @@ const Contact = () => {
   }
   }
   const Delete = (data) =>{
-    const isValueIncluded = access[0]?.sectionId.includes('Requirements');
+    const sections = access[0].sectionId.split(', '); 
+    const isValueIncluded = sections.includes("Requirements");
     if(!isValueIncluded){
       swal({
         text: 'UnAuthorized Access',
@@ -386,6 +408,7 @@ const Contact = () => {
   ];
   return (
     <>
+    <ThemeProvider theme={theme}>
     <StyledBackdrop open={showBackdrop}>
     <CircularProgress color="inherit" />
   </StyledBackdrop>
@@ -445,24 +468,9 @@ const Contact = () => {
                       
                         </FormControl> 
                     </div>
-                    <div style={{width:'100%',}}>
-                    <FormControl sx={{width:'100%',marginTop:'10px'}}>
-                    <InputLabel id="demo-simple-select-autowidth-label">Requirements For:</InputLabel>
-                    <Select
-                      labelId="demo-simple-select-autowidth-label"
-                      id="demo-simple-select-autowidth"
-                      value={docsfor}
-                      onChange={(e) => setDocsfor(e.target.value)}
-                      fullWidth
-                      label="Requirements For"
-                    >
-                      <MenuItem value={'Renewal'}>Renewal</MenuItem>
-                      <MenuItem value={'Application'}>Application</MenuItem>
-                    </Select>
-                  </FormControl>
-                    </div>
                     <div>
                             <TextField 
+            
                                 label='Requirement Name' 
                                 margin='normal' 
                                 variant='outlined'
@@ -471,20 +479,23 @@ const Contact = () => {
                                 onChange={(e) =>setReqname(e.target.value)}  
                                 color='secondary'/>
                       <LocalizationProvider dateAdapter={AdapterDayjs}>
-                    <DateField 
-                    sx={{marginBottom:'10px'}}
+                      <DemoContainer components={['DateField']}>
+                    <CustomDateField 
+                    sx={{marginBottom:'10px',marginTop:'10px'}}
                       className="dataField"
                       label="Deadline"
                       value={deadline}
                       fullWidth
+                      defaultValue={deadlineDate}
+                      color='primary'
                       onChange={(newValue) => setDeadline(newValue)}
-                      format="MMM DD, YYYY"
+                      format="LL"
                     />
-
-                    {errors.date && <MuiAlert 
-                    elevation={0} severity="error">
+                    </DemoContainer>
+                    {/* {errors.date && <p 
+                    style={{color:'red'}}>
                     {errors.date}
-                    </MuiAlert>}
+                    </p>} */}
                     </LocalizationProvider>
                     <div style={{marginTop:'10px'}}>
                             <TextField
@@ -539,11 +550,12 @@ const Contact = () => {
           <Button sx={{color:'white'}} className='myButton1' onClick={Edit}>Save</Button>
         </DialogActions>
       </Dialog>
-          <Card style={{padding:5,display:'flex',justifyContent:'space-between',margin:10}}>
-        <h1>Requirements</h1>
-          <button className="myButton1" onClick={handleOpen}> Add </button>
-          </Card>
-          <Card>
+
+    <div style={{display:'flex',justifyContent:'space-between',marginBottom:10}}>
+      <h1>Requirements</h1>
+      <button className="myButton1" onClick={handleOpen}> Add Requirements</button>
+    </div>
+      <Card>
          <DataGrid style={{width: "100%", padding: 0.5,fontSize:12}}
             rows={mergedData}
             columns={columns}
@@ -557,10 +569,11 @@ const Contact = () => {
                   pageSizeOptions={[25]}
                 checkboxSelection
               disableRowSelectionOnClick/>
-              </Card>
+        </Card>
          </div>
       </div>
     </div>
+    </ThemeProvider>
     </>
   )
 }

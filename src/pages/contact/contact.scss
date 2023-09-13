@@ -1,6 +1,9 @@
+
 .contact{
     display: flex;
-    background-color: #f1f3fa; 
+    background-color: #f1f3fa;  
+    height: 100vh;
+    overflow: auto;
     .contactContainer{
         flex: 7;
         background-color: #f1f3fa; 
@@ -101,7 +104,6 @@
     background-color: #ace7b6;
     font-size: 14px;
     font-weight: 600;
-
     cursor: pointer;
 }
 

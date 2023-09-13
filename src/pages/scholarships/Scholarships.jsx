@@ -68,24 +68,23 @@ const Scholarships = () => {
     const [accessList,setAccesslist] = useState([]);
 
   const handleOpen = () => {
-    if(user.jobDescription !== 'Admin'){
-      if(user.jobDescription !== accessList.schoSec){
-        swal({
-          text: 'UnAuthorized Access',
-          timer: 2000,
-          buttons: false,
-          icon: "error",
-        })
-        return
-      }else{
-        setOpen(true)
-      }
+    const sections = access[0].sectionId.split(', '); 
+    const isValueIncluded = sections.includes('Scholarship Program');
+    if(!isValueIncluded){
+      swal({
+        text: 'UnAuthorized Access',
+        timer: 2000,
+        buttons: false,
+        icon: "error",
+      })
+      return
     }
     setOpen(true)
   };
   const handleClose = () => setOpen(false);
   const handleOpen1 = (data) => {
-    const isValueIncluded = access[0]?.sectionId.includes('Scholarship Program');
+    const sections = access[0].sectionId.split(', '); 
+    const isValueIncluded = sections.includes('Scholarship Program');
     if(!isValueIncluded){
       swal({
         text: 'UnAuthorized Access',
@@ -159,7 +158,8 @@ const Scholarships = () => {
 
   function Create(event){
     event.preventDefault();
-    const isValueIncluded = access[0]?.sectionId.includes('Scholarship Program');
+    const sections = access[0].sectionId.split(', '); 
+    const isValueIncluded = sections.includes('Scholarship Program');
     if(!isValueIncluded){
       swal({
         text: 'UnAuthorized Access',
@@ -202,7 +202,8 @@ const Scholarships = () => {
 
 function Edit(event){
   event.preventDefault();
-  const isValueIncluded = access[0]?.sectionId.includes('Scholarship Program');
+  const sections = access[0].sectionId.split(', '); 
+  const isValueIncluded = sections.includes('Scholarship Program');
   if(!isValueIncluded){
     swal({
       text: 'UnAuthorized Access',
