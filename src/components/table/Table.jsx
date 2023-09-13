@@ -14,7 +14,7 @@ import { Link } from 'react-router-dom';
 const List = () => {
   
   const [post, setPost] = useState ([]);
-  console.log(post)
+
 
   useEffect(() => {
     async function Fetch(){
