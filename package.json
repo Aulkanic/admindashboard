@@ -38,7 +38,7 @@
     "react-medium-image-zoom": "^5.1.6",
     "react-redux": "^8.1.2",
     "react-router-dom": "^6.10.0",
-    "react-scripts": "5.0.1",
+    "react-scripts": "^2.1.3",
     "react-select": "^5.7.3",
     "recharts": "^2.5.0",
     "redux": "^4.2.1",
@@ -46,7 +46,7 @@
     "sass": "^1.60.0",
     "socket.io-client": "^4.6.2",
     "sweetalert": "^2.1.2",
-    "sweetalert2": "^11.7.20",
+    "sweetalert2": "^11.6.13",
     "web-vitals": "^2.1.4"
   },
   "scripts": {
