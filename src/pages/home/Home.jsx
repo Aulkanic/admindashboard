@@ -97,7 +97,7 @@ const Home = () => {
         },
       }}>
 
-    <Card elevation={0} sx={{ minWidth: 275}}>
+    <Card elevation={0} sx={{ minWidth: 250}}>
       <CardContent>
         <Typography sx={{ fontSize: 20 }} color="text.secondary" gutterBottom>
           Total Scholars
@@ -111,7 +111,7 @@ const Home = () => {
       </CardActions>
     </Card>
 
-    <Card elevation={0} sx={{ minWidth: 275}}>
+    <Card elevation={0} sx={{ minWidth: 250}}>
       <CardContent>
         <Typography sx={{ fontSize: 20 }} color="text.secondary" gutterBottom>
           Total Applicants
@@ -125,7 +125,7 @@ const Home = () => {
       </CardActions>
     </Card>
 
-    <Card elevation={0} sx={{ minWidth: 275}}>
+    <Card elevation={0} sx={{ minWidth: 250}}>
       <CardContent>
         <Typography sx={{ fontSize: 20 }} color="text.secondary" gutterBottom>
           Appointed Today
@@ -143,11 +143,14 @@ const Home = () => {
 
       <div className="listContainer">
       <Box 
-            sx={{
-              margin:'15px',
-              color:'#666',
-              fontFamily:'font-family: "Open Sans",sans-serif;'
-            }}>
+        sx={{
+          margin:'5px',
+          height: '200px',
+          width: 'max-content',
+          color:'#666',
+          fontFamily:'font-family: "Open Sans",sans-serif;'
+        }}>
+
       <h1>Recent Applicants</h1>
       <CustomDataGrid className="dataGrid"
         rows={post}

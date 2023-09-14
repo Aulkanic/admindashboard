@@ -88,8 +88,6 @@ const Sidebar = () => {
               <span> Requirements </span>
             </li>
             </Link>
-          
-
 
             <p className="title"> Informations </p>
 
@@ -161,17 +159,21 @@ const Sidebar = () => {
             </li>
             </Link>
 
-<           Link to='/' style={{ textDecoration: "none"}}>
-            <Button onClick={Logout}>
+            <Link to='/' style={{ textDecoration: "none"}}>
             <li>
-              <LogoutIcon className='icon'/>
-              <span> Logout </span>
-            </li>
+            <LogoutIcon className='icon'/>
+            <span> Logout </span>
+            <Button onClick={Logout}
+            sx={{ textTransform: "none"}}>
             </Button>
-            </Link>
+            </li>
+         
+      </Link>
 
           </ul>
       </div>
+
+     
     </div>
   )
 }
