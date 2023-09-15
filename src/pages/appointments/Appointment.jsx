@@ -308,8 +308,6 @@ const Appointment = () => {
     const end = value1.$d.toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit', hour12: true })
     const startcheck = moment(start, 'hh:mm A'); 
     const endcheck = moment(end, 'hh:mm A');
-
-    console.log(start,end)
     if(Agenda === ''){
       errors.agenda = 'This Field is Required'
     }
