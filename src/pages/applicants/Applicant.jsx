@@ -798,7 +798,7 @@ const style = {
         headerName: 'Details',
         width: 250,
         renderCell: (params) => {
-          console.log(params.row)
+     
           return(
             <>
             <div style={{display:'flex'}}>
