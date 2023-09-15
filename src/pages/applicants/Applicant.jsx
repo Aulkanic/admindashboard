@@ -685,7 +685,7 @@ const style = {
         const ForEva = docslisted.filter(user => user.schoName === params.row.SchoIarshipApplied && user.batch === params.row.Batch && user.docsfor === 'Application');
         const Subuser = documentaryListed.filter(user => user.applicantId === params.row.applicantNum && user.docsFor === 'Application');
         const approve = Subuser.filter(user => user.Status === 'Approved');
-        console.log(documentaryListed)
+   
         const pval = `${approve.length}/${ForEva.length}`
         return(
         <>
