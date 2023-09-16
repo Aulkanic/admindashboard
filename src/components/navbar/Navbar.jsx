@@ -185,9 +185,9 @@ const Navbar = () => {
       >
         <Fade in={openprof}>
           <Box sx={style}>
-            <Typography id="transition-modal-title" variant="h6" component="h2">
+            <h1 id="transition-modal-title" variant="h6" component="h2">
               Change Profile
-            </Typography>
+            </h1>
             <Typography>
               Upload your profile picture here.
             </Typography>

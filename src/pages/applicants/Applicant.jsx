@@ -566,7 +566,7 @@ const style = {
 
         return(
         <>
-        <p>{pval}</p>
+        <p style={{margin:'0px'}}>{pval}</p>
         </>
       )},
     },
@@ -582,7 +582,7 @@ const style = {
         const pval = `${approve.length}/${ForEva.length}`
         return(
         <>
-        <p>{pval}</p>
+        <p style={{margin:'0px'}}>{pval}</p>
         </>
       )},
     },
@@ -672,7 +672,7 @@ const style = {
         const pval = `${Subuser.length}/${ForEva.length}`
         return(
         <>
-        <p>{pval}</p>
+        <p style={{margin:'0px'}}>{pval}</p>
         </>
       )},
     },
@@ -689,7 +689,7 @@ const style = {
         const pval = `${approve.length}/${ForEva.length}`
         return(
         <>
-        <p>{pval}</p>
+        <p style={{margin:'0px'}}>{pval}</p>
         </>
       )},
     },
@@ -760,7 +760,7 @@ const style = {
         const pval = `${Subuser.length}/${ForEva.length}`
         return(
         <>
-        <p>{pval}</p>
+        <p style={{margin:'0px'}}>{pval}</p>
         </>
       )},
     },
@@ -776,7 +776,7 @@ const style = {
         const pval = `${approve.length}/${ForEva.length}`
         return(
         <>
-        <p>{pval}</p>
+        <p style={{margin:'0px'}}>{pval}</p>
         </>
       )},
     },

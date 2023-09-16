@@ -92,7 +92,6 @@ const Faqs = () => {
   const [websection,setWebsection] = useState([])
   const [employeeAccess, setEmployeeAccess] = useState([]);
   const [employeeId, setEmployeeId] = useState('');
-  const [defaultval,setDefault] = useState([])
   const [sectionId, setSectionId] = useState([]);
   const [access,setAccess] = useState([])
   const animatedComponents = makeAnimated();
@@ -109,13 +108,11 @@ const CustomDataGrid = styled(DataGrid)({
     top: '50%',
     left: '50%',
     transform: 'translate(-50%, -50%)',
-    width: '800',
-    height: '400',
+    width: 'maxContent',
+    height: 'maxContent',
     bgcolor: 'background.paper',
-
-    overflow: 'auto',
     padding:'10px',
-    borderRadius:'10px'
+    borderRadius:'5px'
   };
 
   const handleClick = () => {
@@ -296,16 +293,10 @@ const CustomDataGrid = styled(DataGrid)({
   event.preventDefault();
   const errors = {};
 
-  if (!email) {
-    errors.email = "Email is required";
-  } else if (!/^[A-Za-z0-9._%+-]+@gmail\.com$/.test(email)) {
+if (!/^[A-Za-z0-9._%+-]+@gmail\.com$/.test(email)) {
      errors.email = "Email is invalid";
   }
-  if (!username) {
-    errors.username = "Username is required";
-  } else if (!/^[A-Za-z0-9._%+-]+@gmail\.com$/.test(email)) {
-     errors.username = "Username is invalid";
-  }
+
   if (Object.keys(errors).length > 0) {
     setErrors(errors);
     console.log(errors)
@@ -315,17 +306,28 @@ const CustomDataGrid = styled(DataGrid)({
   formData.append('email', email);
   formData.append('name', username);
   formData.append('jobdes', jobDes);
+  setOpen(false);
   setShowBackdrop(true);
+  setErrors('')
   AddBMCC.ADD_BMCC(formData)
   .then(res => {
-    setBmcc(res.data.message)
-    setShowBackdrop(false);
-    swal({
-      title: "Success",
-      text: "Created Successfully!",
-      icon: "success",
-      button: "OK",
-    });
+    if(res.data.success === 0){
+      setShowBackdrop(false);
+      swal("Error!", res?.data?.message , "error");
+    }else{
+      setBmcc(res.data.message)
+      setShowBackdrop(false);
+      setEmail('')
+      setUsername('')
+      setJobdes('')
+      swal({
+        title: "Success",
+        text: "Created Successfully!",
+        icon: "success",
+        button: "OK",
+      });
+    }
+
   }
    )
   .catch(err => console.log(err));
@@ -388,17 +390,26 @@ const Authorization = (e) =>{
     setShowBackdrop(true);
     EmployeeAccess.EMP_ACCESS(formData)
     .then(res => {
-      console.log(res)
-      setAccessEmp(res.data.result)
-      setShowBackdrop(false);
-      swal({
-        title: "Success",
-        text: "Done Successfully!",
-        icon: "success",
-        button: "OK",
-      });
-     setEmployeeId('')
-     setSectionId([])
+      if(res.data.success === 0){
+        swal({
+          title: "Warning",
+          text: res.data.message,
+          icon: "warning",
+          button: "OK",
+        });
+      }else{
+        setAccessEmp(res.data.result)
+        setShowBackdrop(false);
+        swal({
+          title: "Success",
+          text: "Done Successfully!",
+          icon: "success",
+          button: "OK",
+        });
+       setEmployeeId('')
+       setSectionId([])
+      }
+
     }
      )
     .catch(err => console.log(err));
@@ -434,7 +445,6 @@ const DeleteAuth = (list,data) =>{
     });
    setEmployeeId('')
    setSectionId([])
-
   }
    )
   .catch(err => console.log(err));
@@ -474,6 +484,7 @@ const DeleteAuth = (list,data) =>{
                     onChange={(e) =>setUsername(e.target.value)}  
                     color='secondary'
                     />
+  
                 <TextField
                    label='Email' 
                     margin='normal' 
@@ -483,7 +494,7 @@ const DeleteAuth = (list,data) =>{
                     onChange={(e) =>setEmail(e.target.value)}  
                     color='secondary'
                     />
-
+                  {errors.email && <p style={{color:'red',margin:'2px'}}>{errors.email}</p>}
                 <TextField
                    label='Job Description' 
                     margin='normal' 
@@ -508,14 +519,14 @@ const DeleteAuth = (list,data) =>{
                 aria-describedby="modal-modal-description">
                 <Box sx={style}>
                 <div style={{margin:10,width:'100%',height:'30px',display:'flex',alignItems:'center',justifyContent:'space-between'}}>
-                <Typography sx={{fontSize:35,fontWeight:700,color:'#666'}}>Edit Employee Details</Typography>
+                <Typography sx={{fontSize:25,fontWeight:700,color:'#666'}}>Edit Employee Details</Typography>
                 <StyledButton variant='contained' style={{padding:10,height:'100%',float:'right',marginRight:20}} onClick={handleClose1}>
                   X</StyledButton>
                 </div>
 
                 <div style={{margin: 20}} className="form">
-                {olddata ? (<h1 style={{fontWeight:'lighter'}}>Name: {olddata.name}</h1>) : (null)}
-                {olddata ? (<h1 style={{fontWeight:'lighter'}}>Email: {olddata.email}</h1>) : (null)}
+                {olddata ? (<h1 style={{fontWeight:'lighter',fontSize:'20px'}}>Name: {olddata.name}</h1>) : (null)}
+                {olddata ? (<h1 style={{fontWeight:'lighter',fontSize:'20px'}}>Email: {olddata.email}</h1>) : (null)}
                 <TextField
                    label='Job Description' 
                     margin='normal' 

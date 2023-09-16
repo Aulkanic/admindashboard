@@ -336,7 +336,7 @@ const Evaluation = () => {
           editable: false,
           renderCell: (params) =>(
             <>
-            <p>{params.row.score}</p>
+            <p style={{margin:'0px'}}>{params.row.score}</p>
             </>
           ),
         },
@@ -408,7 +408,7 @@ const Evaluation = () => {
           editable: false,
           renderCell: (params) =>(
             <>
-            <p>{params.row.score}</p>
+            <p style={{margin:'0px'}}>{params.row.score}</p>
             </>
           ),
         },
