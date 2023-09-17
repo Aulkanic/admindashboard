@@ -385,13 +385,14 @@ const style = {
     formData.append('email',email);
     formData.append('password',password);
     formData.append('applicantNum',who)
+    setOpenDialog1(false)
     setShowBackdrop(true);
     await GrantAccess.GRANT_ACCESS(formData)
     .then(res => {
       if(res.data.success === 1){
         setPost(res.data.result);
         setEmail('')
-        setOpenDialog1(false)
+       
         setPassword('')
         setShowBackdrop(false);
         swal({

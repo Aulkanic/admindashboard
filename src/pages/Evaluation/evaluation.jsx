@@ -723,6 +723,7 @@ const Evaluation = () => {
       formData.append('email',email);
       formData.append('password',password);
       formData.append('applicantNum',who)
+      setOpenDialog(false)
       setShowBackdrop(true);
       await GrantAccess.GRANT_ACCESS(formData)
       .then(res => {
@@ -730,7 +731,6 @@ const Evaluation = () => {
           const ForEva = res.data.result?.filter(user => user.status === 'For Evaluation')
           setData(ForEva);
           setEmail('')
-          setOpenDialog(false)
           setPassword('')
           setShowBackdrop(false);
           swal({
@@ -978,7 +978,7 @@ const Evaluation = () => {
                     </div>
                   </div>
               </div>
-              <Box sx={{ height: 'maxContent', width: '100%' }}>
+              <Box sx={{ height: 'maxContent', width: '100%',marginTop:"10px" }}>
                 <Card sx={{height:'100%'}}>
                 <Breadcrumbs sx={{backgroundColor:'green'}} aria-label="breadcrumb">
                   <Button onClick={() => setActiveState('All')}>
