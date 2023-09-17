@@ -293,7 +293,7 @@ const CustomDataGrid = styled(DataGrid)({
   event.preventDefault();
   const errors = {};
 
-if (!/^[A-Za-z0-9._%+-]+@gmail\.com$/.test(email)) {
+if (!/^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$/.test(email)) {
      errors.email = "Email is invalid";
   }
 
