@@ -43,7 +43,7 @@ import Slide from '@mui/material/Slide';
 import { styled, createTheme } from '@mui/material';
 import { Backdrop, CircularProgress } from '@mui/material';
 import NoAccountsIcon from '@mui/icons-material/NoAccounts';
-
+import { useSelector } from "react-redux";
 
 
 const theme = createTheme();
@@ -165,7 +165,7 @@ const ViewButton = styled(Button)`
 
 
 const Appointment = () => {
-  const { loginUser,user } = useContext(admininfo);
+  const { admin  } = useSelector((state) => state.login)
   const [Qualified, setQualified] = useState([]);
   const [appointedList, setAppointedList] = useState([]);
   const [appointmentDate, setAppointmentDate] = useState(null);
@@ -277,7 +277,7 @@ const Appointment = () => {
       const listing  = await FetchingAppointList.FETCH_LISTAPPOINT();
       const list = response.data.List.filter(user => user.isAppointed === 'No');
       let acc = await ListAccess.ACCESS()
-      const empacc = acc.data.result?.filter(data => data.employeeName === user.name)
+      const empacc = acc.data.result?.filter(data => data.employeeName === admin[0].name)
       setAccess(empacc)
       setQualified(list);
       setAppointedList(listing.data.AppointmentList)
@@ -338,17 +338,6 @@ const Appointment = () => {
 
   const handleSave = (e) => {
     e.preventDefault()
-    const sections = access[0].sectionId.split(', '); 
-    const isValueIncluded = sections.includes('Create Appointment');
-    if(!isValueIncluded){
-      swal({
-        text: 'UnAuthorized Access',
-        timer: 2000,
-        buttons: false,
-        icon: "error",
-      })
-      return
-    }
     const selectedRows = rowSelectionModel.map((selectedRow) =>
     Qualified.find((row) => row.applicantNum === selectedRow)
   );
@@ -373,7 +362,7 @@ const Appointment = () => {
       const start = appDetails.start;
       const end = appDetails.end;
       const date = appDetails.date
-      const adminName = user.name;
+      const adminName = admin[0].name;
       const formData = new FormData();
       formData.append('applicantCode',applicantCode);
       formData.append('adminName',adminName)
@@ -426,23 +415,12 @@ const Appointment = () => {
   };
 
   const Reapp = async(data) => {
-    const sections = access[0].sectionId.split(', '); 
-    const isValueIncluded = sections.includes('Create Appointment');
-    if(!isValueIncluded){
-      swal({
-        text: 'UnAuthorized Access',
-        timer: 2000,
-        buttons: false,
-        icon: "error",
-      })
-      return
-    }
     const applicantNum = data.applicantNum;
     setShowBackdrop(true);
     const res = await FetchingUserAppdetails.FETCH_USERDET(applicantNum);
     const info = res.data.result[0];
     const email = data.Email
-    const adminName = user.name;
+    const adminName = admin[0].name;
     const applicantCode = data.applicantCode;
     const schedDate = data.schedDate
     const formData = new FormData();
@@ -464,23 +442,12 @@ const Appointment = () => {
   };
 
   const Approved = async (data) => {
-    const sections = access[0].sectionId.split(', '); 
-    const isValueIncluded = sections.includes('Appointment');
-    if(!isValueIncluded){
-      swal({
-        text: 'UnAuthorized Access',
-        timer: 2000,
-        buttons: false,
-        icon: "error",
-      })
-      return
-    }
     try {
       const response = await Promise.all([
         FetchingApplicantsInfo.FETCH_INFO(data.applicantNum)
       ]);
       const dataappinfo = response[0].data.results[0];
-      const adminName = user.name;
+      const adminName = admin[0].name;
       setShowBackdrop(true);
       const formData = new FormData()
       formData.append('email',data.Email)
@@ -496,6 +463,7 @@ const Appointment = () => {
       formData.append('school',dataappinfo.school)
       formData.append('gender',dataappinfo.gender)
       formData.append('schoolAddress',dataappinfo.schoolAddress)
+      formData.append('guardian',dataappinfo.guardianName)
       SetApproved.SET_APPROVE(formData)
     .then(res => {
       setQualified(res.data.results.data1);
@@ -517,17 +485,6 @@ const Appointment = () => {
 };
 
 const Failed = async() =>{
-  const sections = access[0].sectionId.split(', '); 
-  const isValueIncluded = sections.includes('Appointment');
-  if(!isValueIncluded){
-    swal({
-      text: 'UnAuthorized Access',
-      timer: 2000,
-      buttons: false,
-      icon: "error",
-    })
-    return
-  }
   const res = await FetchingBmccSchoinfo.FETCH_SCHOLARSINFO(failinf.applicantNum);
   const schoapplied = res.data.ScholarInf.results1[0].SchoIarshipApplied;
   const batch = res.data.ScholarInf.results1[0].Batch;
@@ -553,18 +510,6 @@ const Failed = async() =>{
 
 }
  const InterviewResult = (data) =>{
-  const sections = access[0].sectionId.split(', '); 
-  const isValueIncluded = sections.includes('Create Appointment');
-  if(!isValueIncluded){
-    swal({
-      text: 'UnAuthorized Access',
-      timer: 2000,
-      buttons: false,
-      icon: "error",
-    })
-    return
-  }
-      
       const formData = new FormData()
       formData.append('isPassed',data)
       formData.append('applicantNum',userFulldet.applicantNum)
@@ -602,12 +547,12 @@ const Failed = async() =>{
   formData.append('email',email);
   formData.append('password',password);
   formData.append('applicantNum',who)
+  setOpenDialog1(false)
   setShowBackdrop(true);
   await GrantAccess1.GRANT_ACCESS1(formData)
   .then(res => {
     if(res.data.success === 1){
       setEmail('')
-      setOpenDialog1(false)
       setAppointedList(res.data.result)
       setPassword('')
       setShowBackdrop(false);
@@ -633,17 +578,6 @@ const Failed = async() =>{
   
 }
 const FailedAll = async() =>{
-  const sections = access[0].sectionId.split(', '); 
-  const isValueIncluded = sections.includes('Appointment');
-  if(!isValueIncluded){
-    swal({
-      text: 'UnAuthorized Access',
-      timer: 2000,
-      buttons: false,
-      icon: "error",
-    })
-    return
-  }
   const selectedRows = failedSelectionModel.map((selectedRow) =>
     appointedList.find((row) => row.applicantNum === selectedRow));
     if(selectedRows.length === 0){
@@ -659,7 +593,6 @@ const FailedAll = async() =>{
     let counter = 0;
     for (let i=0 ;i<selectedRows.length;i++){
       const row = selectedRows[i];
-      console.log(row)
       const res = await FetchingBmccSchoinfo.FETCH_SCHOLARSINFO(row.applicantNum);
       const schoapplied = res.data.ScholarInf.results1[0].SchoIarshipApplied;
       const batch = res.data.ScholarInf.results1[0].Batch;
@@ -696,17 +629,6 @@ const FailedAll = async() =>{
     }
 }
 const Addall = async () => {
-  const sections = access[0].sectionId.split(', '); 
-  const isValueIncluded = sections.includes('Create Appointment');
-  if(!isValueIncluded){
-    swal({
-      text: 'UnAuthorized Access',
-      timer: 2000,
-      buttons: false,
-      icon: "error",
-    })
-    return
-  }
   const selectedRows = rowSelectionModel.map((selectedRow) =>
     appointedList.find((row) => row.applicantNum === selectedRow)
   );
@@ -729,7 +651,7 @@ const Addall = async () => {
           FetchingApplicantsInfo.FETCH_INFO(applicantNum)
         ]);
         const dataappinfo = response[0].data.results[0];
-        const adminName = user.name;
+        const adminName = admin[0].name;
         const formData = new FormData()
         formData.append('email',row.Email)
         formData.append('contactNum',dataappinfo.contactNum)
@@ -744,6 +666,7 @@ const Addall = async () => {
         formData.append('school',dataappinfo.school)
         formData.append('gender',dataappinfo.gender)
         formData.append('schoolAddress',dataappinfo.schoolAddress)
+        formData.append('guardian',dataappinfo.guardianName)
         SetApproved.SET_APPROVE(formData)
       .then(res => {
         setQualified(res.data.results.data1);
@@ -832,17 +755,6 @@ const Addall = async () => {
 
   const cancelAppointment = async(e) => {
       e.preventDefault()
-      const sections = access[0].sectionId.split(', '); 
-      const isValueIncluded = sections.includes('Create Appointment');
-      if(!isValueIncluded){
-        swal({
-          text: 'UnAuthorized Access',
-          timer: 2000,
-          buttons: false,
-          icon: "error",
-        })
-        return
-      }
       const formData = new FormData();
       formData.append('schedDate', selectedAppointment.selectedDate);
       const res = await FetchingApplist.FETCH_APP(formData);
@@ -888,17 +800,6 @@ try {
 
   const addOtherUser = (e) => {
     e.preventDefault()
-    const sections = access[0].sectionId.split(', '); 
-    const isValueIncluded = sections.includes('Create Appointment');
-    if(!isValueIncluded){
-      swal({
-        text: 'UnAuthorized Access',
-        timer: 2000,
-        buttons: false,
-        icon: "error",
-      })
-      return
-    }
     const selectedRows = rowSelectionModel.map((selectedRow) =>
     Qualified.find((row) => row.applicantNum === selectedRow)
   );
@@ -923,7 +824,7 @@ try {
       const end = adduserAppoint.timeEnd;
       const date = adduserAppoint.day;
       const reminders = adduserAppoint.reminders;
-      const adminName = user.name;
+      const adminName = admin[0].name;
       const Agenda = adduserAppoint.reason;
       const Location = adduserAppoint.location;
       const formData = new FormData();
@@ -976,17 +877,6 @@ try {
     })
   };
   const cancelBatch = async(date,time,data3) =>{
-    const sections = access[0].sectionId.split(', '); 
-    const isValueIncluded = sections.includes('Create Appointment');
-    if(!isValueIncluded){
-      swal({
-        text: 'UnAuthorized Access',
-        timer: 2000,
-        buttons: false,
-        icon: "error",
-      })
-      return
-    }
     try {
       setShowBackdrop(true);
       let counter = 0;
@@ -1798,6 +1688,12 @@ try {
             <LocalizationProvider dateAdapter={AdapterDayjs}>
             <DemoContainer components={['TimeField', 'TimeField', 'TimeField']}>
               <TimeField 
+                          slotProps={{
+                            textField: {
+                              size: "small",
+                              error: false,
+                            },
+                          }}
                 label="Time Start"
                 value={startTime}
                 onChange={(newValue) => setStartTime(newValue)}
@@ -1819,7 +1715,13 @@ try {
             <div>
             <LocalizationProvider dateAdapter={AdapterDayjs}>
             <DemoContainer components={['TimeField', 'TimeField', 'TimeField']}>
-              <TimeField 
+              <TimeField
+            slotProps={{
+              textField: {
+                size: "small",
+                error: false,
+              },
+            }} 
                 label="Time End"
                 value={endTime}
                 onChange={(newValue) => setEndTime(newValue)}

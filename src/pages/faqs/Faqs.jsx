@@ -3,7 +3,8 @@ import Sidebar from '../../components/sidebar/Sidebar';
 import './faqs.scss';
 import './employeeaccs.css'
 import React, {useEffect, useState} from 'react'
-import { AddBMCC,FetchingBMCC,Activitylog,UpdateEmp,ListAccess,EmployeeAccess,WebSection } from '../../api/request';
+import { AddBMCC,FetchingBMCC,Activitylog,UpdateEmp,ListAccess,EmployeeAccess,WebSection,UpdateEmployeeAccess,
+BmccAddroles,BmccRoles,BmccRemroles } from '../../api/request';
 import { Box, Modal,Card,Button, Typography} from "@mui/material"; 
 import TextField from '@mui/material/TextField';
 import { useContext } from "react";
@@ -26,9 +27,10 @@ import Dialog from '@mui/material/Dialog';
 import { styled, ThemeProvider, createTheme } from '@mui/material';
 import { Backdrop, CircularProgress } from '@mui/material';
 import OutlinedInput from '@mui/material/OutlinedInput';
-import { useTheme } from '@mui/material/styles';
+import Swal from 'sweetalert2';
 import Select from 'react-select';
 import makeAnimated from 'react-select/animated';
+import { useSelector } from 'react-redux';
 
 
 const ITEM_HEIGHT = 48;
@@ -72,8 +74,7 @@ const StyledBackdrop = styled(Backdrop)(({ theme }) => ({
 
 
 const Faqs = () => {
-  const theme = useTheme();
-  const { loginUser,user } = useContext(admininfo);
+  const { admin  } = useSelector((state) => state.login)
   const [showBackdrop, setShowBackdrop] = useState(false);
   const [username,setUsername] = useState('');
   const [email,setEmail] = useState('');
@@ -84,6 +85,7 @@ const Faqs = () => {
   const [bmcc,setBmcc] = useState([]);
   const [actlog,setActlog] = useState([]);
   const [open, setOpen] = useState(false);
+  const [roles, setRoles] = useState([]);
   const [open1, setOpen1] = useState(false);
   const [open2, setOpen2] = useState(false);
   const [errors, setErrors] = useState({});
@@ -116,17 +118,6 @@ const CustomDataGrid = styled(DataGrid)({
   };
 
   const handleClick = () => {
-    const sections = access[0].sectionId.split(', '); 
-    const isValueIncluded = sections.includes('Create Accounts') || user.jobDescription === 'Admin';
-    if(!isValueIncluded){
-      swal({
-        text: 'UnAuthorized Access',
-        timer: 2000,
-        buttons: false,
-        icon: "error",
-      })
-      return
-    }
     setActiveState(activeState === 'log' ? 'admin' : 'log');
   };
 
@@ -158,13 +149,10 @@ const CustomDataGrid = styled(DataGrid)({
     }
   ];
   const columns1 = [
-    { field: 'id', headerName: 'Employee ID', width: 100 },
     {
       field: 'profile',
       headerName: 'Profile',
       width: 120,
-      headerAlign: 'center',
-
       renderCell: (params) => {
         const isOnline = params.row.isOnline;
         
@@ -201,7 +189,7 @@ const CustomDataGrid = styled(DataGrid)({
     },
     {
       field: 'jobDescription',
-      headerName: 'Job Description',
+      headerName: 'Role',
       width: 170,
       editable: false,
     },
@@ -216,7 +204,7 @@ const CustomDataGrid = styled(DataGrid)({
       headerName: 'Actions',
       width: 150,
       renderCell: (params) => (
-        <Button className='myButton1' variant='contained' onClick={() => handleOpen1(params.row)}>Edit Details</Button>
+        <Button sx={{textTransform:'none'}} className='myButton1' variant='contained' onClick={() => handleOpen1(params.row)}>Edit Details</Button>
       ),
     },
   ];
@@ -229,11 +217,18 @@ const CustomDataGrid = styled(DataGrid)({
     setOpen1(true);
   } 
   const handleChange = (selected) => {
-    setEmployeeId(selected);
+    setJobdes(selected);
   };
   const handleChange1 = (selected) => {
     setSectionId(selected);
   };
+  const handleChange2 = (selected) => {
+    setJobdes(selected);
+  };
+  const handleChange3 = (selected) => {
+    setUpJobdes(selected);
+  };
+
   const handleSelectAll = () => {
     const allOptions = websection.map((option) => ({
       value: option.id,
@@ -256,9 +251,11 @@ const CustomDataGrid = styled(DataGrid)({
         const actlog = await Activitylog.ACTIVITY_LOG()
         const access = await ListAccess.ACCESS()
         const web = await WebSection.WEB_SEC()
+        const rls = await BmccRoles.BMCC_ROLE()
         let acc = await ListAccess.ACCESS()
-        const empacc = acc.data.result?.filter(data => data.employeeName === user.name)
+        const empacc = acc.data.result?.filter(data => data.employeeName === admin[0].name)
           setAccess(empacc)
+          setRoles(rls.data.roles)
           setWebsection(web.data.result)
           setBmcc(list.data.message)
           setAccessEmp(access.data.result)
@@ -271,16 +268,6 @@ const CustomDataGrid = styled(DataGrid)({
   },[])
 
  const AddbMCC = (event) =>{
-  const isValueIncluded = access[0]?.sectionId.includes('Create Accounts');
-  if(!isValueIncluded){
-    swal({
-      text: 'UnAuthorized Access',
-      timer: 2000,
-      buttons: false,
-      icon: "error",
-    })
-    return
-  }
   if(email === '' || username === '' || jobDes === ''){
     swal({
       text: 'Please Provide necessary Information',
@@ -305,7 +292,7 @@ if (!/^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$/.test(email)) {
   const formData = new FormData();
   formData.append('email', email);
   formData.append('name', username);
-  formData.append('jobdes', jobDes);
+  formData.append('jobdes', jobDes.value);
   setOpen(false);
   setShowBackdrop(true);
   setErrors('')
@@ -320,6 +307,7 @@ if (!/^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$/.test(email)) {
       setEmail('')
       setUsername('')
       setJobdes('')
+      setSectionId([])
       swal({
         title: "Success",
         text: "Created Successfully!",
@@ -333,24 +321,13 @@ if (!/^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$/.test(email)) {
   .catch(err => console.log(err));
 }
 const UpdateBMCC = (event) =>{
-  const sections = access[0].sectionId.split(', '); 
-  const isValueIncluded = sections.includes('Manage Accounts') || user.jobDescription === 'Admin';
-  if(!isValueIncluded){
-    swal({
-      text: 'UnAuthorized Access',
-      timer: 2000,
-      buttons: false,
-      icon: "error",
-    })
-    return
-  }
   event.preventDefault()
   let updatedstatus = status || olddata.status;
   let updatedjob = upjobDes || olddata.jobDescription;
   let id = olddata.id;
   const formData = new FormData();
   formData.append('updatedstatus',updatedstatus)
-  formData.append('updatedjob',updatedjob)
+  formData.append('updatedjob',updatedjob.value)
   formData.append('id',id)
   setShowBackdrop(true);
   UpdateEmp.UPDATE_EMP(formData)
@@ -370,23 +347,20 @@ const UpdateBMCC = (event) =>{
   .catch(err => console.log(err));
 }
 const Authorization = (e) =>{
-  const sections = access[0].sectionId.split(', '); 
-  const isValueIncluded = sections.includes('Manage Accounts') || user.jobDescription === 'Admin';
-  if(!isValueIncluded){
+  e.preventDefault()
+  if(!jobDes || !sectionId || sectionId.length === 0){
     swal({
-      text: 'UnAuthorized Access',
-      timer: 2000,
-      buttons: false,
-      icon: "error",
-    })
+      title: "Warning",
+      text: "Please select necessary Details!",
+      icon: "warning",
+      button: "OK",
+    });
     return
   }
-  e.preventDefault()
     const labels = sectionId.map((option) => option.label).join(', ');
     const formData = new FormData();
-    formData.append('accesslist',labels)
-    formData.append('employee',employeeId.value)
-    formData.append('employeeName',employeeId.label)
+    formData.append('accessList',labels)
+    formData.append('role',jobDes.value)
     setShowBackdrop(true);
     EmployeeAccess.EMP_ACCESS(formData)
     .then(res => {
@@ -417,23 +391,15 @@ const Authorization = (e) =>{
 
 }
 const DeleteAuth = (list,data) =>{
-  const sections = access[0].sectionId.split(', '); 
-  const isValueIncluded = sections.includes('Manage Accounts') || user.jobDescription === 'Admin';
-  if(!isValueIncluded){
-    swal({
-      text: 'UnAuthorized Access',
-      timer: 2000,
-      buttons: false,
-      icon: "error",
-    })
-    return
-  }
-  const updatedSectionId = data.sectionId.replace(list, '').trim();
+  const updatedSectionId = data.accessList.replace(list, '').trim();
+  const filteredArray = updatedSectionId.split(',').filter((str) => str.trim() !== "");
+  const resultObject = filteredArray.join(',')
+
   const formData = new FormData();
-  formData.append('accesslist',updatedSectionId)
-  formData.append('employee',data.employeeId)
+  formData.append('accessList',resultObject)
+  formData.append('role',data.role)
   setShowBackdrop(true);
-  EmployeeAccess.EMP_ACCESS(formData)
+  UpdateEmployeeAccess.EMP_UPTDACCESS(formData)
   .then(res => {
     setAccessEmp(res.data.result)
     setShowBackdrop(false);
@@ -443,11 +409,46 @@ const DeleteAuth = (list,data) =>{
       icon: "success",
       button: "OK",
     });
-   setEmployeeId('')
-   setSectionId([])
   }
    )
   .catch(err => console.log(err));
+}
+const AddRoles = async() =>{
+  setOpen(false)
+  const { value: roles } = await Swal.fire({
+    title: 'Enter Roles you want to Add',
+    input: 'text',
+    confirmButtonText: 'Add',
+    showCancelButton: true,
+    inputValidator: (value) => {
+      if (!value) {
+        return 'You need to write something!'
+      }
+      if(value.length > 100){
+        return "The Role field can contain up to a maximum of 100 characters."
+        
+      }
+    }
+  })
+  
+  if (roles) {
+    const formData = new FormData();
+    formData.append('role',roles)
+    setShowBackdrop(true);
+    BmccAddroles.ADD_ROLE(formData)
+    .then((res) =>{
+      if(res.data.success === 0){
+        setShowBackdrop(false);
+        setOpen(true)
+        Swal.fire("Error","Role Already Exist!","error");
+      }else{
+        setShowBackdrop(false);
+        setOpen(true)
+        setRoles(res.data.roles)
+        Swal.fire("Success","Role Added!","success")
+      }
+    })
+  }
 }
 
   return (
@@ -472,14 +473,18 @@ const DeleteAuth = (list,data) =>{
                 <Typography sx={{fontSize:35,color:'#666'}}>
                   Create Employee Accounts.
                 </Typography>
+                <div style={{display:'flex',justifyContent:'space-between',alignItems:"center"}}>
                 <Typography>
                   Please input necessary Details
                 </Typography>
+                <Button sx={{textTransform:'none'}} className="myButton1" variant='contained' onClick={AddRoles}>Add Role</Button>
+                </div>
+
                 <TextField
                    label='Username' 
                     margin='normal' 
                     variant='outlined'
-                    size='large'
+                    size='small'
                     fullWidth
                     onChange={(e) =>setUsername(e.target.value)}  
                     color='secondary'
@@ -489,28 +494,32 @@ const DeleteAuth = (list,data) =>{
                    label='Email' 
                     margin='normal' 
                     variant='outlined'
-                    size='large'
+                    size='small'
                     fullWidth
                     onChange={(e) =>setEmail(e.target.value)}  
                     color='secondary'
                     />
                   {errors.email && <p style={{color:'red',margin:'2px'}}>{errors.email}</p>}
-                <TextField
-                   label='Job Description' 
-                    margin='normal' 
-                    variant='outlined'
-                    size='large'
-                    fullWidth
-                    onChange={(e) =>setJobdes(e.target.value)}  
-                    color='secondary'
+                  <div> 
+                    <label htmlFor="employee">Role:</label>
+                    <Select
+                      value={jobDes}
+                      fullWidth
+                      onChange={handleChange}
+                      options={roles.map((option) => ({
+                        value: option.role,
+                        label: `${option.role}(${option.total})`,
+                      }))}
                     />
-                <div style={{margin:10,width:'100%',height:'30px',display:'flex',alignItems:'center',justifyContent:'space-between'}}>
-                <Button className="myButton" variant='contained' onClick={handleClose}>Cancel</Button>
-                <Button className="myButton1" variant='contained' onClick={AddbMCC}>Add Employee</Button>
-                </div>
-                </div>
+                  </div>
+              <div>
 
-               
+            </div>
+                <div style={{margin:10,width:'100%',height:'30px',display:'flex',alignItems:'flex-end',justifyContent:'flex-end',marginTop:'25px'}}>
+                <Button sx={{textTransform:'none'}} className="myButton" variant='contained' onClick={handleClose}>Cancel</Button>
+                <Button sx={{marginLeft:'10px',textTransform:'none'}} className="myButton1" variant='contained' onClick={AddbMCC}>Add Employee</Button>
+                </div>
+                </div>
                 </Box>
             </Modal>
             <Modal
@@ -527,15 +536,18 @@ const DeleteAuth = (list,data) =>{
                 <div style={{margin: 20}} className="form">
                 {olddata ? (<h1 style={{fontWeight:'lighter',fontSize:'20px'}}>Name: {olddata.name}</h1>) : (null)}
                 {olddata ? (<h1 style={{fontWeight:'lighter',fontSize:'20px'}}>Email: {olddata.email}</h1>) : (null)}
-                <TextField
-                   label='Job Description' 
-                    margin='normal' 
-                    variant='outlined'
-                    size='large'
-                    fullWidth
-                    onChange={(e) =>setUpJobdes(e.target.value)}  
-                    color='primary'
+                <div style={{margin:'15px'}}> 
+                    <label htmlFor="employee">Role:</label>
+                    <Select
+                      value={upjobDes}
+                      fullWidth
+                      onChange={handleChange3}
+                      options={roles.map((option) => ({
+                        value: option.role,
+                        label: `${option.role}(${option.total})`,
+                      }))}
                     />
+                      </div>
                 <FormLabel id="demo-row-radio-buttons-group-label">Account Status</FormLabel>
                 <RadioGroup
                     row
@@ -575,9 +587,6 @@ const DeleteAuth = (list,data) =>{
             <Typography sx={{ ml: 2, flex: 1 }} variant="h6" component="div">
               Manage Employee Access
             </Typography>
-            <Button variant='none' onClick={Authorization}>
-              Save
-            </Button>
           </Toolbar>
         </AppBar>
            <Box sx={{padding:'15px',backgroundColor:'#f1f3fa'}}>
@@ -604,20 +613,20 @@ const DeleteAuth = (list,data) =>{
               </ul>
             </Card>
            <div style={{margin:'15px'}}> 
-        <label htmlFor="employee">Employee:</label>
+        <label htmlFor="employee">Role:</label>
         <Select
-          value={employeeId}
+          value={jobDes}
           fullWidth
           onChange={handleChange}
-          options={bmcc.map((option) => ({
-            value: option.id,
-            label: option.name,
+          options={roles.map((option) => ({
+            value: option.role,
+            label: `${option.role}(${option.total})`,
           }))}
         />
            </div>
             <div style={{margin:'15px'}}>
               <div style={{display:'flex',width:'100%',justifyContent:'space-between',alignItems:'center',margin:'5px'}}>
-              <label htmlFor="section">Website Section can Employee Accessed:</label>
+              <label htmlFor="section">Website Section Role Accessed:</label>
               <div>
               <Button sx={{fontSize:'9px',marginRight:'10px'}} className='myButton1' variant="contained" onClick={handleSelectAll}>
               Select All
@@ -650,16 +659,23 @@ const DeleteAuth = (list,data) =>{
                   label: option.name,
                 }))}
               />
+              <div style={{display:'flex',justifyContent:'flex-end',alignItems:'flex-end',margin:'10px'}}>
+              <Button sx={{textTransform:'none'}} variant='contained' onClick={Authorization}>
+              Save Role Access
+            </Button>
+              </div>
+
             </div>
+
             <div className='authlist'>
             {accessEmp?.map((data) => {
-              const lists = data.sectionId.split(',').map(list => list.trim());
+              const lists = data.accessList?.split(', ').map(list => list.trim());
               return (
-                <Card sx={{width:'max-Content',height:'max-Content',padding:'10px'}} key={data.id}>
-                  <p>{data.employeeName} Access list</p>
+                <Card sx={{width:'100%',height:'100%',padding:'10px'}} key={data.id}>
+                  <p>{data.role} Access list</p>
                   <ul>
                     {lists?.map((list, index) => {
-                      if (list === '') return null; // Skip rendering empty list values
+                      if (list === '') return null; 
                       return (
                         <li style={{ backgroundColor: '#77a809', margin: '2px', width: 'max-Content', padding: '5px', borderRadius: '5px', color: 'white' }} key={index}>
                           {list} <button style={{ backgroundColor: 'red', color: 'white', border: 'none', cursor: 'pointer' }} onClick={() => DeleteAuth(list, data)}>X</button>
@@ -673,7 +689,6 @@ const DeleteAuth = (list,data) =>{
             </div>
            </Box>
         </Dialog>
-
             <div className="top">
               <Card elevation={0} style={{width:'100%',display:'flex',justifyContent:'space-around',height:100,alignItems:'center',border:'none'}}>
               <h1 style={{color:'#666'}}>Employee Accounts</h1>
@@ -691,10 +706,10 @@ const DeleteAuth = (list,data) =>{
                       <div style={{width:'90%',display:'flex',justifyContent:'space-between',padding:10,alignItems:'center'}}>
                       <h1 style={{color:'#666'}}>Employee List</h1>
                       <div>
-                      <Button sx={{backgroundColor:'green',height:'50%',marginRight:'10px'}}
-                       className="myButton1" variant='contained' onClick={handleOpen2}> MANAGE ACCESS </Button>
-                      <Button sx={{backgroundColor:'green',height:'50%'}}
-                       className="myButton1" variant='contained' onClick={handleOpen}> ADD EMPLOYEE </Button>
+                      <Button sx={{backgroundColor:'green',height:'50%',marginRight:'10px',textTransform:'none'}}
+                       className="myButton1" variant='contained' onClick={handleOpen2}> Manage Access </Button>
+                      <Button sx={{backgroundColor:'green',height:'50%',textTransform:'none'}}
+                       className="myButton1" variant='contained' onClick={handleOpen}> Add Employee </Button>
                        </div>
                       </div>
                       <div className='bmccEmp'>

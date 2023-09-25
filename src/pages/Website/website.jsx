@@ -35,6 +35,7 @@ import FacebookIcon from '@mui/icons-material/Facebook';
 import YouTubeIcon from '@mui/icons-material/YouTube';
 import MailOutlineIcon from '@mui/icons-material/MailOutline';
 import CallIcon from '@mui/icons-material/Call';
+import { useSelector } from 'react-redux'
 
 const theme = createTheme();
 const StyledBackdrop = styled(Backdrop)(({ theme }) => ({
@@ -46,7 +47,7 @@ const StyledBackdrop = styled(Backdrop)(({ theme }) => ({
 
 
 const Website = () => {
-  const { loginUser,user } = useContext(admininfo);
+  const { admin  } = useSelector((state) => state.login)
   const [access,setAccess] = useState([])
   const [selectedColor, setSelectedColor] = useState(''); 
   const [selectedColor1, setSelectedColor1] = useState('');
@@ -59,7 +60,7 @@ const Website = () => {
   const [carouimg1,setCarou1] = useState(null)
   const [carouimg2,setCarou2] = useState(null)
   const [trivia,setTrivia] = useState([])
-  const [trivimg,setTrivimg] = useState('');
+  const [trivimg,setTrivimg] = useState(null);
   const [trivimgprev,setTrivimgprev] = useState('');
   const [trivtitle,setTrivtitle] = useState('')
   const [trivcon,setTrivcon] = useState('')
@@ -108,7 +109,7 @@ const Website = () => {
       const triv = await FetchTrivia.ETCH_TRIVIA()
       const fqs = await FetchFaqs.FETCH_FAQS()
       let acc = await ListAccess.ACCESS()
-      const empacc = acc.data.result?.filter(data => data.employeeName === user.name)
+      const empacc = acc.data.result?.filter(data => data.employeeName === admin[0].name)
       setAccess(empacc)
       setImglist(req.data.result)
       setColorlist(res.data.result[0])
@@ -132,17 +133,7 @@ const Website = () => {
 
 
   const setColor = async() =>{
-    const sections = access[0].sectionId.split(', '); 
-    const isValueIncluded = sections.includes('Website Maintenance');
-    if(!isValueIncluded){
-      swal({
-        text: 'UnAuthorized Access',
-        timer: 2000,
-        buttons: false,
-        icon: "error",
-      })
-      return
-    }
+
     const formData = new FormData();
     formData.append('color1',selectedColor || colorList.bgColor)
     formData.append('color2',selectedColor1 || colorList.bgColor1)
@@ -164,17 +155,6 @@ const Website = () => {
     .catch((err)=>console.error(`Error:${err}`))
   }
   const upload = async() =>{
-    const sections = access[0].sectionId.split(', '); 
-    const isValueIncluded = sections.includes('Website Maintenance');
-    if(!isValueIncluded){
-      swal({
-        text: 'UnAuthorized Access',
-        timer: 2000,
-        buttons: false,
-        icon: "error",
-      })
-      return
-    }
       const Images = [
         { ImgFor: 'LandingPage', File: limg || (imgList[0] && imgList[0].File) },
         { ImgFor: 'Carousel1', File: carouimg || (imgList[1] && imgList[1].File) },
@@ -221,16 +201,20 @@ const Website = () => {
       swal('Uploaded Successfully')
   }
   const trivCreate = async() =>{
-    const sections = access[0].sectionId.split(', '); 
-    const isValueIncluded = sections.includes('Website Maintenance');
-    if(!isValueIncluded){
+    if(trivimg === null){
+      swal("Error","Image Required",'warning')
+      return
+    }
+    const fileExtension = trivimg?.name.split('.').pop().toLowerCase();
+    if (fileExtension !== 'png' && fileExtension !== 'jpg' && fileExtension !== 'jpeg')  {
       swal({
-        text: 'UnAuthorized Access',
+        text: 'Please upload a PNG or JPG image only.',
         timer: 2000,
         buttons: false,
         icon: "error",
-      })
-      return
+      });
+    
+      return false;
     }
     const formData = new FormData();
     formData.append('title',trivtitle || trivia.title)
@@ -252,17 +236,6 @@ const Website = () => {
     .catch((err)=>console.error(`Error:${err}`))    
   }
   const createFaqs = async() =>{
-    const sections = access[0].sectionId.split(', '); 
-    const isValueIncluded = sections.includes('Website Maintenance');
-    if(!isValueIncluded){
-      swal({
-        text: 'UnAuthorized Access',
-        timer: 2000,
-        buttons: false,
-        icon: "error",
-      })
-      return
-    }
     const formData = new FormData()
     formData.append('answer',answer)
     formData.append('questions',questions)
@@ -283,17 +256,6 @@ const Website = () => {
     .catch((err)=>console.error(`Error:${err}`)) 
   }
   const editFaqs = async() =>{
-    const sections = access[0].sectionId.split(', '); 
-    const isValueIncluded = sections.includes('Website Maintenance');
-    if(!isValueIncluded){
-      swal({
-        text: 'UnAuthorized Access',
-        timer: 2000,
-        buttons: false,
-        icon: "error",
-      })
-      return
-    }
     const formData = new FormData()
     formData.append('answer',answer || oldfaqs.faqsAnswers)
     formData.append('id',oldfaqs.faqsId)
@@ -315,17 +277,6 @@ const Website = () => {
     .catch((err)=>console.error(`Error:${err}`)) 
   }
   const deleteFaqs = async(data) =>{
-    const sections = access[0].sectionId.split(', '); 
-    const isValueIncluded = sections.includes('Website Maintenance');
-    if(!isValueIncluded){
-      swal({
-        text: 'UnAuthorized Access',
-        timer: 2000,
-        buttons: false,
-        icon: "error",
-      })
-      return
-    }
     const id = data.faqsId
     await DeleteFaqs.DELETE_FAQS(id)
     .then((res) =>{
@@ -345,17 +296,6 @@ const Website = () => {
     .catch((err)=>console.error(`Error:${err}`)) 
   }
   const LinksUpdate = async() =>{
-    const sections = access[0].sectionId.split(', '); 
-    const isValueIncluded = sections.includes('Website Maintenance');
-    if(!isValueIncluded){
-      swal({
-        text: 'UnAuthorized Access',
-        timer: 2000,
-        buttons: false,
-        icon: "error",
-      })
-      return
-    }
       const formData = new FormData()
       formData.append('fb',fb || colorList.fblink)
       formData.append('yt',yt || colorList.ytlink)

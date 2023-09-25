@@ -54,11 +54,11 @@ const Scholarships = () => {
     const [showBackdrop, setShowBackdrop] = useState(false);
     const [open, setOpen] = useState(false);
     const [open1, setOpen1] = useState(false);
-    const [icon, setSchoimg] = useState('');
+    const [icon, setSchoimg] = useState(null);
     const [title, setSchotitle] = useState('');
     const [description, setSchodesc] = useState('');
     const [status, setStatusCheck] = useState('');
-    const [icon1, setSchoimg1] = useState('');
+    const [icon1, setSchoimg1] = useState(null);
     const [titleu, setSchotitle1] = useState('');
     const [descriptionu, setSchodesc1] = useState('');
     const [statusu, setStatusCheck1] = useState('');
@@ -68,32 +68,10 @@ const Scholarships = () => {
     const [accessList,setAccesslist] = useState([]);
 
   const handleOpen = () => {
-    const sections = access[0].sectionId.split(', '); 
-    const isValueIncluded = sections.includes('Scholarship Program');
-    if(!isValueIncluded){
-      swal({
-        text: 'UnAuthorized Access',
-        timer: 2000,
-        buttons: false,
-        icon: "error",
-      })
-      return
-    }
     setOpen(true)
   };
   const handleClose = () => setOpen(false);
   const handleOpen1 = (data) => {
-    const sections = access[0].sectionId.split(', '); 
-    const isValueIncluded = sections.includes('Scholarship Program');
-    if(!isValueIncluded){
-      swal({
-        text: 'UnAuthorized Access',
-        timer: 2000,
-        buttons: false,
-        icon: "error",
-      })
-      return
-    }
     setOlddata(data)
     setOpen1(true);
   }
@@ -158,18 +136,7 @@ const Scholarships = () => {
 
   function Create(event){
     event.preventDefault();
-    const sections = access[0].sectionId.split(', '); 
-    const isValueIncluded = sections.includes('Scholarship Program');
-    if(!isValueIncluded){
-      swal({
-        text: 'UnAuthorized Access',
-        timer: 2000,
-        buttons: false,
-        icon: "error",
-      })
-      return
-    }
-    if(icon === '' || title === '' || description === '' || status === ''){
+    if(title === '' || description === '' || status === ''){
       swal({
         text: 'Please Provide necessary Information',
         timer: 2000,
@@ -178,16 +145,31 @@ const Scholarships = () => {
       })
       return
     }
+    if(icon === null){
+      swal("Error!", "Image must be selected and have a valid file format(PNG or JPEG only).", "error");
+      return
+    }
+    const fileExtension = icon.name.split('.').pop().toLowerCase();
+    if (fileExtension !== 'png' && fileExtension !== 'jpg' && fileExtension !== 'jpeg')  {
+      swal({
+        text: 'Please upload a PNG or JPG image only.',
+        timer: 2000,
+        buttons: false,
+        icon: "error",
+      });
+      setSchoimg(null)
+      return false;
+    }
     const data = {icon,title,description,status};
+    setOpen(false)
     setShowBackdrop(true);
     CreateSchoProg.CREATE_SCHOPROG(data)
     .then(res => {
-      setSchocat(res.data.Scholarship)
+      setSchocat(res.data.SchoCat)
       setSchodesc('')
       setSchoimg('')
       setStatusCheck('');
       setSchotitle('')
-      setOpen(false)
       setShowBackdrop(false);
       swal({
         title: "Success",
@@ -202,16 +184,22 @@ const Scholarships = () => {
 
 function Edit(event){
   event.preventDefault();
-  const sections = access[0].sectionId.split(', '); 
-  const isValueIncluded = sections.includes('Scholarship Program');
-  if(!isValueIncluded){
+
+  if(icon1 === null){
+    swal("Error!", "Image must be selected and have a valid file format(PNG or JPEG only).", "error");
+    return
+  }
+
+  const fileExtension = icon1.name.split('.').pop().toLowerCase();
+  if (fileExtension !== 'png' && fileExtension !== 'jpg' && fileExtension !== 'jpeg')  {
     swal({
-      text: 'UnAuthorized Access',
+      text: 'Please upload a PNG or JPG image only.',
       timer: 2000,
       buttons: false,
       icon: "error",
-    })
-    return
+    });
+  
+    return false;
   }
   const schoid =  olddata.schoProgId;
   const icon = icon1 || olddata.icon;
@@ -224,10 +212,11 @@ function Edit(event){
   formData.append('status',status1);
   formData.append('icon',icon);
   formData.append('schoid',schoid);
+  setOpen1(false)
+  setShowBackdrop(true);
   UpdateSchoProg.UPDATE_SCHOPROG(formData)
   .then(res => {
-    setSchocat(res.data.Scholarship)
-    setOpen(false)
+    setSchocat(res.data.SchoCat)
     setShowBackdrop(false);
     swal({
       title: "Success",
@@ -241,8 +230,46 @@ function Edit(event){
   .catch(err => console.log(err));
 }
 
+const handleFileChange = (e) => {
+  const file = e.target.files[0]; 
+  if (file) {
+    const fileExtension = file.name.split('.').pop().toLowerCase();
+    if (fileExtension === 'png' || fileExtension === 'jpg' || fileExtension === 'jpeg')  {
+      setSchoimg(file)
+    } else {
+      swal({
+        text: 'Please upload a PNG or JPG image only.',
+        timer: 2000,
+        buttons: false,
+        icon: "warning",
+      });
+      setSchoimg(null)
+      return false;
+    }
+  }
+};
+const handleEditFileChange = (e) => {
+  const file = e.target.files[0]; 
+
+  if (file) {
+    const fileExtension = file.name.split('.').pop().toLowerCase();
+
+    if (fileExtension === 'png' || fileExtension === 'jpg' || fileExtension === 'jpeg') {
+      setSchoimg1(file)
+    } else {
+      swal({
+        text: 'Please upload a PNG or JPG image only.',
+        timer: 2000,
+        buttons: false,
+        icon: "warning",
+      });
+      setSchoimg1(null)
+      return false;
+    }
+  }
+};
+
     const columns = [
-      { field: 'schoProgId', headerName: 'Scholarship ID', width: 150 },
       {
         field: 'icon',
         headerName: 'Scholarship Logo',
@@ -264,13 +291,13 @@ function Edit(event){
       {
         field: 'description',
         headerName: 'Description',
-        width: 300,
+        width: 500,
         editable: false,
       },
       {
         field: 'status',
         headerName: 'Status',
-        width: 170,
+        width: 150,
         editable: false,
       },
       {
@@ -278,7 +305,7 @@ function Edit(event){
         headerName: 'Actions',
         width: 150,
         renderCell: (params) => (
-          <Button className="myButton1" variant='contained' onClick={() => handleOpen1(params.row)}>
+          <Button sx={{textTransform:'none'}} className="myButton1" variant='contained' onClick={() => handleOpen1(params.row)}>
             Edit Details</Button>
         ),
       },
@@ -316,7 +343,7 @@ function Edit(event){
                   <Button>
                   <TextField sx={{backgroundColor:'whitesmoke',border:'none',marginLeft:'10px'}}
                   type='file' id="input-with-sx" label="" variant="outlined" 
-                  onChange={(e) =>setSchoimg(e.target.files[0])}/>
+                  onChange={handleFileChange}/>
                   </Button><br />
                   <CardContent>
                   <Typography variant="h5" component="div">
@@ -398,7 +425,7 @@ function Edit(event){
                   <Button>
                   <TextField sx={{backgroundColor:'whitesmoke',border:'none',marginLeft:'10px'}}
                   type='file' id="input-with-sx" label="" variant="outlined" 
-                  onChange={(e) =>setSchoimg1(e.target.files[0])}/>
+                  onChange={handleEditFileChange}/>
                   </Button><br />
                   <CardContent>
                   <Typography variant="h5" component="div">
@@ -460,7 +487,7 @@ function Edit(event){
           <div style={{width:'95%',display:'flex',justifyContent:'space-between',alignItems:'center'}}>
           <h1 style={{color:'#666'}}>Scholarships Program 
           </h1>
-          <button className="myButton" onClick={handleOpen}>ADD</button>
+          <button className="myButton" onClick={handleOpen}>Add</button>
           </div>
           {schocat.length > 0 ? (
     <CustomDataGrid

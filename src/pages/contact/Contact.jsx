@@ -28,6 +28,7 @@ import './requirement.css'
 import DialogTitle from '@mui/material/DialogTitle';
 import { styled, ThemeProvider, createTheme } from '@mui/material';
 import { Backdrop, CircularProgress } from '@mui/material';
+import { useSelector } from 'react-redux';
 
 const StyledBackdrop = styled(Backdrop)(({ theme }) => ({
   zIndex: theme.zIndex.drawer + 50,
@@ -77,7 +78,7 @@ const CustomDateField = styled(DateField)`
 `;
 
 const Contact = () => {
-  const { loginUser,user } = useContext(admininfo);
+  const { admin  } = useSelector((state) => state.login)
   const [reqlist, setReqlist] = useState([]);
   const [submitted, setSublist] = useState([]);
   const [open, setOpen] = useState(false);
@@ -98,20 +99,8 @@ const Contact = () => {
   const handleCloseDialog = () => setOpenDialog(false);
   const [accessList,setAccesslist] = useState([]);
   const handleOpenDialog = (data) => {
-    const sections = access[0].sectionId.split(', '); 
-    const isValueIncluded = sections.includes("Requirements");
-    if(!isValueIncluded){
-      swal({
-        text: 'UnAuthorized Access',
-        timer: 2000,
-        buttons: false,
-        icon: "error",
-      })
-      return
-    }
       setOpenDialog(true);
       setSelected(data)
-
   }
 
   const handleYearChange = (event) => {
@@ -129,17 +118,6 @@ const Contact = () => {
     return years;
   };
   const handleOpen = () => {
-    const sections = access[0].sectionId.split(', '); 
-    const isValueIncluded = sections.includes("Requirements");
-    if(!isValueIncluded){
-      swal({
-        text: 'UnAuthorized Access',
-        timer: 2000,
-        buttons: false,
-        icon: "error",
-      })
-      return
-    }
     setOpen(true)
   };
 
@@ -166,7 +144,7 @@ const Contact = () => {
       const scho = await FetchingSchoProg.FETCH_SCHOPROG()
       const res = await ListAccess.ACCESS()
       let acc = await ListAccess.ACCESS()
-      const empacc = acc.data.result?.filter(data => data.employeeName === user.name)
+      const empacc = acc.data.result?.filter(data => data.employeeName === admin[0].name)
       setAccess(empacc)
       setAccesslist(res.data.result[0])
       setReqlist(req.data.Requirements.results1);
@@ -199,17 +177,6 @@ const Contact = () => {
 
   };
   const AddReq = (e) =>{
-    const sections = access[0].sectionId.split(', '); 
-    const isValueIncluded = sections.includes("Requirements");
-    if(!isValueIncluded){
-      swal({
-        text: 'UnAuthorized Access',
-        timer: 2000,
-        buttons: false,
-        icon: "error",
-      })
-      return
-    }
     if(schoName === '' || requirementName === '' || batch === '' || deadline === '' || docsfor === ''){
       swal({
         text: 'Please Provide necessary Information',
@@ -262,17 +229,6 @@ const Contact = () => {
   }
   const Edit = () =>{
     let errors = {};
-    const sections = access[0].sectionId.split(', '); 
-    const isValueIncluded = sections.includes("Requirements");
-    if(!isValueIncluded){
-      swal({
-        text: 'UnAuthorized Access',
-        timer: 2000,
-        buttons: false,
-        icon: "error",
-      })
-      return
-    }
     const currentDate = moment();
     if(!newDeadline || newDeadline === ''){
       errors.newdate = 'Select A Deadline Date First'
@@ -320,17 +276,6 @@ const Contact = () => {
   }
   }
   const Delete = (data) =>{
-    const sections = access[0].sectionId.split(', '); 
-    const isValueIncluded = sections.includes("Requirements");
-    if(!isValueIncluded){
-      swal({
-        text: 'UnAuthorized Access',
-        timer: 2000,
-        buttons: false,
-        icon: "error",
-      })
-      return
-    }
     const formData = new FormData();
     formData.append('reqID',data.requirementID)
     setShowBackdrop(true);
@@ -352,11 +297,6 @@ const Contact = () => {
     .catch(err => console.log(err));
   }
   const columns = [
-    { 
-      field: 'requirementID', 
-      headerName: 'ID',
-      width: 50
-     },
      {
       field: 'schoName', 
        headerName: 'Scholraship Category',
@@ -466,21 +406,40 @@ const Contact = () => {
                             ))}
                         </Select>
                       
-                        </FormControl> 
+                    </FormControl> 
                     </div>
                     <div>
-                            <TextField 
-            
+                    <TextField 
                                 label='Requirement Name' 
                                 margin='normal' 
                                 variant='outlined'
                                 size='large'
                                 fullWidth
                                 onChange={(e) =>setReqname(e.target.value)}  
-                                color='secondary'/>
-                      <LocalizationProvider dateAdapter={AdapterDayjs}>
+                                color='secondary'
+                      />
+                    <FormControl fullWidth>
+                      <InputLabel id="demo-simple-select-label">Requirements For:</InputLabel>
+                      <Select
+                        labelId="demo-simple-select-label"
+                        id="demo-simple-select"
+                        value={docsfor}
+                        label="Requirements For:"
+                        onChange={(e) =>setDocsfor(e.target.value)}
+                      >
+                        <MenuItem value={'Application'}>Application</MenuItem>
+                        <MenuItem value={'Renewal'}>Renewal</MenuItem>
+                      </Select>
+                    </FormControl>
+                    <LocalizationProvider dateAdapter={AdapterDayjs}>
                       <DemoContainer components={['DateField']}>
                     <CustomDateField 
+                                slotProps={{
+                                  textField: {
+                                    size: "large",
+                                    error: false,
+                                  },
+                                }}
                     sx={{marginBottom:'10px',marginTop:'10px'}}
                       className="dataField"
                       label="Deadline"
@@ -529,6 +488,12 @@ const Contact = () => {
           <div style={{margin:10}}>
           <LocalizationProvider dateAdapter={AdapterDayjs}>
                     <DateField 
+              slotProps={{
+                textField: {
+                  size: "small",
+                  error: false,
+                },
+              }}
                     sx={{marginBottom:'10px'}}
                       className="dataField"
                       label="Set New Deadline"
@@ -567,7 +532,6 @@ const Contact = () => {
                   pageSize: 10,
                 },},}}
                   pageSizeOptions={[25]}
-                checkboxSelection
               disableRowSelectionOnClick/>
         </Card>
          </div>

@@ -30,20 +30,22 @@ import AssessmentIcon from '@mui/icons-material/Assessment';
 import { useState } from 'react';
 import { useDispatch } from 'react-redux';
 import { setAuthenticated,setAdmin } from '../../Redux/loginSlice';
-
+import { useSelector } from "react-redux";
 
 const Sidebar = () => {
   const dispatch = useDispatch();
+  const { admin  } = useSelector((state) => state.login)
   const { loginUser,user } = useContext(admininfo);
   const navigate = useNavigate();
-  const [activeSection,setActiveSection] = useState(0)
+  const [activeSection,setActiveSection] = useState(0);
+  const sections = admin[1].split(', '); 
   const Logout = async() =>{
     const formData = new FormData();
-    formData.append('id',user.id)
+    formData.append('id',admin[0].id)
        await LogoutAdmin.SET_LOGOUT(formData)
-        localStorage.setItem('AdminisLogin',false)
-        dispatch(setAuthenticated(false))
-
+       dispatch(setAuthenticated(false))
+       dispatch(setAdmin([]))
+       navigate('/')
   }
   return (
     <div className='sidebar'>
@@ -59,111 +61,108 @@ const Sidebar = () => {
               <DashboardIcon className='icon' />
               <span> Dashboard </span>
             </li>
-            </Link>
+          </Link>
             <p className="title"> Web </p>
-            <Link to='/faqs' style={{ textDecoration: "none" }}>
+          {sections.includes('Create Accounts') || sections.includes('Manage Accounts') || sections.includes('Admin') ? (<Link to='/faqs' style={{ textDecoration: "none" }}>
             <li>
               <GroupsIcon className='icon'/>
               <span> Employees </span>
             </li>
-            </Link>
-
-            <Link to="/scholarships" style={{ textDecoration: "none" }}>
+          </Link>) : (null)}
+          {sections.includes('Scholarship Program') || sections.includes('Admin') ? (<Link to="/scholarships" style={{ textDecoration: "none" }}>
             <li>
               <SchoolIcon className='icon'/>
               <span> Scholarships </span>
             </li>
-            </Link>
-
-            <Link to='/about' style={{ textDecoration: "none" }}>
+          </Link>) : (null)}
+          {sections.includes('Score Card') || sections.includes('Admin') ? (<Link to='/about' style={{ textDecoration: "none" }}>
             <li>
               <MoneyIcon className='icon'/>
               <span> Score Card </span>
             </li>
-            </Link>
-
-            <Link to="/contact" style={{ textDecoration: "none" }}>
+          </Link>) : (null)}
+          {sections.includes('Requirements') || sections.includes('Admin') ? (<Link to="/contact" style={{ textDecoration: "none" }}>
             <li>
               <NoteAddIcon className='icon'/>
               <span> Requirements </span>
             </li>
-            </Link>
+          </Link>) : (null)}
 
             <p className="title"> Informations </p>
 
-            <Link to="/users" style={{ textDecoration: "none" }}>
+            {sections.includes('Reports') || sections.includes('Admin') ? (<Link to="/users" style={{ textDecoration: "none" }}>
             <li>
               <AccountBoxIcon className='icon'/>
               <span> User Accounts</span>
             </li>
-            </Link>
+            </Link>) : (null)}
 
-            <Link to="/Evaluation" style={{ textDecoration: "none" }}>
+            {sections.includes('Evaluation') || sections.includes('Admin') ? (<Link to="/Evaluation" style={{ textDecoration: "none" }}>
             <li>
               <VerifiedIcon className='icon'/>
               <span> Evaluation </span>
             </li>
-            </Link>
-            <Link to="/applicants" style={{ textDecoration: "none" }}>
+            </Link>) : (null)}
+            {sections.includes('Applicants') || sections.includes('Documents Checking') || sections.includes('Admin') ? (<Link to="/applicants" style={{ textDecoration: "none" }}>
             <li>
               <PeopleAltIcon className='icon'/>
               <span> Applicants </span>
             </li>
-            </Link>
+            </Link>) : (null)}
 
-            <Link to="/appointments" style={{ textDecoration: "none" }}>
+            {sections.includes('Appointment') || sections.includes('Create Appointment') || sections.includes('Admin') ? (<Link to="/appointments" style={{ textDecoration: "none" }}>
             <li>
               <CalendarMonthIcon className='icon'/>
               <span> Appointments </span>
             </li>
-            </Link>
+            </Link>) : (null)}
 
-            <Link to="/scholars" style={{ textDecoration: "none" }}>
+            {sections.includes('Scholars') || sections.includes('Admin') ? (<Link to="/scholars" style={{ textDecoration: "none" }}>
             <li>
               <HistoryEduIcon className='icon'/>
               <span> Scholars </span>
             </li>
-            </Link>
+            </Link>) : (null)}
 
             <p className="title"> Maintenance </p>
-            <Link to='/Website-Maintenance' style={{ textDecoration: 'none'}}>
+            {sections.includes('Website Maintenance') || sections.includes('Admin') ? (<Link to='/Website-Maintenance' style={{ textDecoration: 'none'}}>
             <li>
               <LanguageIcon className='icon'/>
               <span> BMCC Website </span>
             </li>
-            </Link>
-            <Link to='/Announcement' style={{ textDecoration: 'none'}}>
+            </Link>) : (null)}
+            {sections.includes('News and Announcement') || sections.includes('Admin') ? (<Link to='/Announcement' style={{ textDecoration: 'none'}}>
             <li>
               <CampaignIcon className='icon'/>
               <span> Announcement </span>
             </li>
-            </Link>
-            <Link to='/Rules' style={{ textDecoration: 'none'}}>
+            </Link>) : (null)}
+            {sections.includes('Rules') || sections.includes('Admin') ? (<Link to='/Rules' style={{ textDecoration: 'none'}}>
             <li>
               <GavelIcon className='icon'/>
               <span> Rules </span>
             </li>
-            </Link>
+            </Link>) : (null)}
 
-            <Link to='/news' style={{ textDecoration: 'none'}}>
+            {sections.includes('News and Announcement') || sections.includes('Admin') ? (<Link to='/news' style={{ textDecoration: 'none'}}>
             <li>
               <FeedIcon className='icon'/>
               <span> News </span>
             </li> 
-            </Link>
+            </Link>) : (null)}
             
-            <Link to='/Report' style={{ textDecoration: 'none'}}>
+            {sections.includes('Reports') || sections.includes('Admin') ? (<Link to='/Report' style={{ textDecoration: 'none'}}>
             <li>
               <AssessmentIcon className='icon'/>
               <span> Reports </span>
             </li>
-            </Link>
+            </Link>) : (null)}
 
-            <Link to='/' style={{ textDecoration: "none"}}>
+            <Link onClick={Logout} style={{ textDecoration: "none"}}>
             <li>
             <LogoutIcon className='icon'/>
             <span> Logout </span>
-            <Button onClick={Logout}
+            <Button 
             sx={{ textTransform: "none"}}>
             </Button>
             </li>

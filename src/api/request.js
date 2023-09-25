@@ -239,6 +239,9 @@ export const RevokeUserList = {
 export const EmployeeAccess = {
     EMP_ACCESS: (data) => axiosInstance.post(Endpoints.EMP_ACCESS,data)
 }
+export const UpdateEmployeeAccess = {
+    EMP_UPTDACCESS: (data) => axiosInstance.post(Endpoints.UPDATE_EMPACCESS,data)
+}
 export const Weblinks = {
     UPDATE_LINKS: (data) => axiosInstance.patch(Endpoints.LINKS,data)
 }
@@ -268,4 +271,37 @@ export const EditFormQuestion = {
 }
 export const USERFRM_ID = {
     FORMUSR: (data) => axiosInstance.get(Endpoints.USERFRM_ID+data)
+}
+export const BmccRoles = {
+    BMCC_ROLE: () => axiosInstance.get(Endpoints.FETCH_ROLE)
+}
+export const BmccAddroles = {
+    ADD_ROLE: (data) => axiosInstance.post(Endpoints.ADD_ROLE,data)
+}
+export const BmccRemroles = {
+    REMOVE_RULE: (data) => axiosInstance.post(Endpoints.REMOVE_ROLE,data)
+}
+export const ForgotPasswordofEmp = {
+    FORGOT_PASS: (data) => axiosInstance.post(Endpoints.FORGOT_ADMIN,data)
+}
+export const GenerateRenewal = {
+    GENERATE_RENEW: (data) => axiosInstance.post(Endpoints.GENERATE_RENEW,data)
+}
+export const FetchRenewal = {
+    FETCH_RENEW: () => axiosInstance.get(Endpoints.FETCH_RENEW)
+}
+export const FetchRenewalCode = {
+    FETCH_RENEWCODE: (data) => axiosInstance.get(Endpoints.FETCH_RENEWCODE+data)
+}
+export const FetchRenewalDet = {
+    FETCH_RENEWINF: (data) => axiosInstance.post(Endpoints.FETCH_RENEWINF,data)
+}
+export const SetRenewalDetails = {
+    SET_RENEWINF: (data) => axiosInstance.post(Endpoints.SET_RENEWINF,data)
+}
+export const SetSchoRenewDetails = {
+    FETCH_SCHORE: (data) => axiosInstance.post(Endpoints.FETCH_RENEWSCHO,data)
+}
+export const RenewedScho = {
+    RENEWED: (data) => axiosInstance.post(Endpoints.RENEWED,data)
 }

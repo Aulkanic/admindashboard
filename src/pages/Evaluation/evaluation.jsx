@@ -156,17 +156,6 @@ const Evaluation = () => {
     
       }
       const failed = async(data) =>{
-        const sections = access[0].sectionId.split(', '); 
-        const isValueIncluded = sections.includes('Evaluation');
-        if(!isValueIncluded){
-          swal({
-            text: 'UnAuthorized Access',
-            timer: 2000,
-            buttons: false,
-            icon: "error",
-          })
-          return
-        }
         const res = await FetchingBmccSchoinfo.FETCH_SCHOLARSINFO(data.applicantNum);
         const schoapplied = res.data.ScholarInf.results1[0].SchoIarshipApplied;
         const batch = res.data.ScholarInf.results1[0].Batch;
@@ -452,17 +441,6 @@ const Evaluation = () => {
       ];
 
     const setFirsttoSecStat = async(data) =>{
-      const sections = access[0].sectionId.split(', '); 
-      const isValueIncluded = sections.includes('Evaluation');
-      if(!isValueIncluded){
-        swal({
-          text: 'UnAuthorized Access',
-          timer: 2000,
-          buttons: false,
-          icon: "error",
-        })
-        return
-      }
         if (passSlot.slots === 0) {
           swal({
             text: 'No Slots Available',
@@ -507,19 +485,6 @@ const Evaluation = () => {
           .catch(err => console.log(err));
     }
     const ScoreSlot = () =>{
-      const sections = access[0].sectionId.split(', '); 
-      const isValueIncluded = sections.includes('Evaluation');
-      if(!isValueIncluded){
-        swal({
-          text: 'UnAuthorized Access',
-          timer: 2000,
-          buttons: false,
-          icon: "error",
-        })
-        setPassscore(passSlot.passingscore)
-        setSlots(passSlot.slots)
-        return
-      }
       const data1 = passscore || passSlot.passingscore;
       const data2 = slots || passSlot.slots
       const formData = new FormData();
@@ -552,17 +517,6 @@ const Evaluation = () => {
         .catch(err => console.log(err));
     }
     const Addall = async () => {
-      const sections = access[0].sectionId.split(', '); 
-      const isValueIncluded = sections.includes('Evaluation');
-      if(!isValueIncluded){
-        swal({
-          text: 'UnAuthorized Access',
-          timer: 2000,
-          buttons: false,
-          icon: "error",
-        })
-        return
-      }
       const selectedRows = rowSelectionModel.map((selectedRow) =>
         data.find((row) => row.applicantNum === selectedRow)
       );
@@ -656,17 +610,6 @@ const Evaluation = () => {
       }
     };
     const FailedAll = async() =>{
-      const sections = access[0].sectionId.split(', '); 
-      const isValueIncluded = sections.includes('Evaluation');
-      if(!isValueIncluded){
-        swal({
-          text: 'UnAuthorized Access',
-          timer: 2000,
-          buttons: false,
-          icon: "error",
-        })
-        return
-      }
       const selectedRows = failedSelectionModel.map((selectedRow) =>
         data.find((row) => row.applicantNum === selectedRow));
         if(selectedRows.length === 0){

@@ -13,7 +13,15 @@
     margin: 0;
     width: 100%;
     display: grid;
-    grid-template-columns: repeat(auto-fit,minmax(100px, 1fr));
+    grid-template-columns: repeat(auto-fit,minmax(200px, 1fr));
     grid-gap: 10px;
-    height: 100%;
+    height: max-content;
 }
+.custom-select {
+    width: 100%; /* Set the width as desired */
+    padding: 10px; /* Add padding for better appearance */
+    border: 1px solid #ccc; /* Add a border */
+    border-radius: 5px; /* Add rounded corners */
+    background-color: #fff; /* Set the background color */
+    /* Add any other styles you need */
+  }

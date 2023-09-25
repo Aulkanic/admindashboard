@@ -9,7 +9,10 @@
 }
 .questionchoose .questioncon p{
     font-size: 15px;
+    width: 70%;
     font-weight: 700;
+    height: max-content;
+    margin: 0px;
 }
 .questioncon{
     width: 100%;
@@ -25,8 +28,12 @@
     margin: 5px;
     justify-content: space-between;
     align-items: center;
-    white-space: nowrap;
     border: 1px solid black;
+}
+.choiceli p{
+    width: 88%;
+    margin: 0px;
+    height: max-content;
 }
 .addchoice{
     width: 60%;
@@ -35,10 +42,11 @@
     align-items: center;
 }
 .scoreinput{
-    width: 25px;
+    width: 40px;
 }
 .questcon{
-    width: max-content;
+    width: 90%;
+    height: max-content;
     display: flex;
     margin: 5px;
     justify-content: space-between;
@@ -53,4 +61,10 @@
     grid-gap: 10px;
     height: max-content;
     margin-bottom: 10px;
+}
+.questionscore{
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
 }

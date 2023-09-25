@@ -6,23 +6,23 @@ import { useSelector } from "react-redux";
 const AuthGuard = () => {
     const location = useLocation();
     const navigate = useNavigate()
-    const { isAuthenticated } = useSelector((state) => state.login)
+    const { isAuthenticated,admin  } = useSelector((state) => state.login)
     const Auth = isAuthenticated;
 
+
     if (!Auth) {
-        // Display the swal alert
-        swal({
-          title: 'UnAuthorized Access!!',
-          text: 'Please Login first to Continue',
-          icon: 'error',
-        }).then(() => {
-          // After swal alert is closed, navigate to the login page
-          navigate('/', { state: { from: location }, replace: true });
-        });
-    
-        // Return null to prevent rendering while swal is open
-        return null;
-      }
+      swal({
+        title: 'Unauthorized Access!!',
+        text: 'Please login first to continue.',
+        icon: 'error',
+      }).then(() => {
+        navigate('/', { state: { from: location }, replace: true });
+      });
+  
+      // Return a placeholder while redirecting
+      return null;
+    }
+  
     
       return <Outlet />;
     

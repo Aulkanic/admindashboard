@@ -28,6 +28,7 @@ import CheckCircleIcon from '@mui/icons-material/CheckCircle';
 import CancelIcon from '@mui/icons-material/Cancel';
 import Link from '@mui/material/Link';
 import './applicant.css'
+import { useSelector } from "react-redux";
 import Checkbox from '@mui/material/Checkbox';
 import CheckCircleOutlineRoundedIcon from '@mui/icons-material/CheckCircleOutlineRounded';
 import FormatListBulletedOutlinedIcon from '@mui/icons-material/FormatListBulletedOutlined';
@@ -98,7 +99,7 @@ const StyledBackdrop = styled(Backdrop)(({ theme }) => ({
 }));
 
 const Applicant = () => {
-  const { loginUser,user } = useContext(admininfo);
+  const { admin  } = useSelector((state) => state.login)
   const [open, setOpen] = useState(false);
   const [post , setPost] = useState([]);
   const [reqlist,setReqlist] = useState([]);
@@ -183,14 +184,6 @@ const Applicant = () => {
   };
 
 
-  const CustomDataGrid = styled(DataGrid)({
-    '& .MuiDataGrid-columnHeaders': {
-      backgroundColor: 'green', 
-      color: 'white', 
-    },
-  });
-
-
   useEffect(() => {
 
     async function Fetch(){
@@ -199,7 +192,7 @@ const Applicant = () => {
       const docreq = await ListofReq.FETCH_REQUIREMENTS();
       const subdoc = await Documentary.FETCH_DOCUMENTARY()
       let acc = await ListAccess.ACCESS()
-      const empacc = acc.data.result?.filter(data => data.employeeName === user.name)
+      const empacc = acc.data.result?.filter(data => data.employeeName === admin[0].name)
       setAccess(empacc)
       setDocumentaryListed(subdoc.data.Documentary)
       setPost(response.data.results);
@@ -238,20 +231,10 @@ const Applicant = () => {
 
   }
 const check = async (data, index) => { 
-  const sections = access[0].sectionId.split(', '); 
-  const isValueIncluded = sections.includes('Documents Checking');
-  if(!isValueIncluded){
-    swal({
-      text: 'UnAuthorized Access',
-      timer: 2000,
-      buttons: false,
-      icon: "error",
-    })
-    return
-  }
+
   const requirement_Name = data.requirement_Name;
   const applicantNum = applicantsInfo[0].applicantCode;
-  const adminName = user.name;
+  const adminName = admin[0].name;
   const formData = new FormData();
   formData.append('Comments', Comments[requirement_Name]);
   formData.append('requirement_Name', requirement_Name);
@@ -303,23 +286,11 @@ const style = {
   padding:'10px',
   borderRadius:'10px'
 };
-  const ApplicantCheck = async (data) =>{
-    const sections = access[0].sectionId.split(', '); 
-    const isValueIncluded = sections.includes('Applicants ');
-    if(!isValueIncluded){
-      swal({
-        text: 'UnAuthorized Access',
-        timer: 2000,
-        buttons: false,
-        icon: "error",
-      })
-      return
-    }
-    
+  const ApplicantCheck = async (data) =>{  
     const applicantNum = data.applicantNum;
     const applicantCode = data.applicantCode;
     const status = 'Qualified';
-    const adminName = user.name;
+    const adminName = admin[0].name;
     const email = data.email
     setShowBackdrop(true);
     CheckingApplicants.CHECK_APP({email,adminName,applicantNum,status,applicantCode})
@@ -336,17 +307,6 @@ const style = {
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
   const failed = async(data) =>{
-    const sections = access[0].sectionId.split(', '); 
-    const isValueIncluded = sections.includes('Applicants ');
-    if(!isValueIncluded){
-      swal({
-        text: 'UnAuthorized Access',
-        timer: 2000,
-        buttons: false,
-        icon: "error",
-      })
-      return
-    }
     const res = await FetchingBmccSchoinfo.FETCH_SCHOLARSINFO(data.applicantNum);
     const schoapplied = res.data.ScholarInf.results1[0].SchoIarshipApplied;
     const batch = res.data.ScholarInf.results1[0].Batch;
@@ -417,17 +377,6 @@ const style = {
     
   }
   const Addall = async () => {
-    const sections = access[0].sectionId.split(', '); 
-    const isValueIncluded = sections.includes('Applicants ');
-    if(!isValueIncluded){
-      swal({
-        text: 'UnAuthorized Access',
-        timer: 2000,
-        buttons: false,
-        icon: "error",
-      })
-      return
-    }
     const selectedRows = rowSelectionModel.map((selectedRow) =>
       filteredRows.find((row) => row.applicantNum === selectedRow)
     );
@@ -448,7 +397,7 @@ const style = {
           const applicantNum = row.applicantNum;
           const applicantCode = row.applicantCode;
           const status = 'Qualified';
-          const adminName = user.name;
+          const adminName = admin[0].name;
           const email = row.email
           CheckingApplicants.CHECK_APP({email,adminName,applicantNum,status,applicantCode})
           .then(res => {
@@ -474,17 +423,6 @@ const style = {
       }
   };
   const FailedAll = async() =>{
-    const sections = access[0].sectionId.split(', '); 
-    const isValueIncluded = sections.includes('Applicants ');
-    if(!isValueIncluded){
-      swal({
-        text: 'UnAuthorized Access',
-        timer: 2000,
-        buttons: false,
-        icon: "error",
-      })
-      return
-    }
     const selectedRows = failedSelectionModel.map((selectedRow) =>
       filteredRows.find((row) => row.applicantNum === selectedRow));
       if(selectedRows.length === 0){

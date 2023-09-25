@@ -38,7 +38,7 @@ const News = () => {
   const { loginUser,user } = useContext(admininfo);
   const [access,setAccess] = useState([])
   const [isOpen, setIsOpen] = useState(false);
-  const [picture, setNewsimg] = useState('');
+  const [picture, setNewsimg] = useState(null);
   const [title, setNewstitle] = useState('');
   const [description, setNewsdesc] = useState('');
   const [newsprev, setNewsprev] = useState();
@@ -85,18 +85,22 @@ const News = () => {
     return () => URL.revokeObjectURL(objectUrl)
   }, [picture])
   function Create(event){
-    const sections = access[0].sectionId.split(', '); 
-    const isValueIncluded = sections.includes('News and Announcement');
-    if(!isValueIncluded){
+    event.preventDefault();
+    if(picture === null){
+      swal("Error","Image Required",'warning')
+      return
+    }
+    const fileExtension = picture?.name.split('.').pop().toLowerCase();
+    if (fileExtension !== 'png' && fileExtension !== 'jpg' && fileExtension !== 'jpeg')  {
       swal({
-        text: 'UnAuthorized Access',
+        text: 'Please upload a PNG or JPG image only.',
         timer: 2000,
         buttons: false,
         icon: "error",
-      })
-      return
+      });
+    
+      return false;
     }
-    event.preventDefault();
     setOpen(false)
     setShowBackdrop(true);
     const data = {picture,title,description};
@@ -110,8 +114,10 @@ const News = () => {
         icon: "success",
         button: "OK",
       });
+      setNewDetails('')
+      setNewsdesc('')
+      setNewsimg(null)
       setShowBackdrop(false);
-      setOpen(true)
       setIsOpen(false)
     }
      )

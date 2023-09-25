@@ -1,18 +1,12 @@
 import './navbar.scss';
 import * as React from 'react';
 import SearchIcon from '@mui/icons-material/Search';
-import LanguageIcon from '@mui/icons-material/Language';
-import DarkModeIcon from '@mui/icons-material/DarkMode';
-import OpenInFullIcon from '@mui/icons-material/OpenInFull';
-import NotificationsNoneIcon from '@mui/icons-material/NotificationsNone';
-import ChatBubbleOutlineIcon from '@mui/icons-material/ChatBubbleOutline';
-import ViewListIcon from '@mui/icons-material/ViewList';
 import Menu from '@mui/material/Menu';
 import MenuItem from '@mui/material/MenuItem';
 import Fade from '@mui/material/Fade';
 import Button from '@mui/material/Button';
 import { styled } from '@mui/material/styles';
-import { UpdatePassword, UpdateProfile } from '../../api/request';
+import { UpdatePassword, UpdateProfile,LogoutAdmin } from '../../api/request';
 import Badge from '@mui/material/Badge';
 import Avatar from '@mui/material/Avatar';
 import Backdrop from '@mui/material/Backdrop';
@@ -21,10 +15,12 @@ import Modal from '@mui/material/Modal';
 import Typography from '@mui/material/Typography';
 import SaveIcon from '@mui/icons-material/Save';
 import TextField from '@mui/material/TextField';
-import { useContext } from "react";
-import { admininfo } from "../../App";
+import { useSelector } from "react-redux";
 import { CircularProgress } from '@mui/material';
+import { useDispatch } from 'react-redux';
+import { setAdmin, setAuthenticated } from "../../Redux/loginSlice";
 import swal from 'sweetalert';
+import { useNavigate } from 'react-router-dom';
 
 const StyledBadge = styled(Badge)(({ theme }) => ({
   '& .MuiBadge-badge': {
@@ -72,7 +68,9 @@ const StyledBackdrop = styled(Backdrop)(({ theme }) => ({
 
 
 const Navbar = () => {
-  const { loginUser,user } = useContext(admininfo);
+  const { admin  } = useSelector((state) => state.login)
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
   const [anchorEl, setAnchorEl] = React.useState(null);
   const open = Boolean(anchorEl);
   const [openprof, setOpenProf] = React.useState(false);
@@ -95,8 +93,16 @@ const Navbar = () => {
   const handleClick = (event) => {
     setAnchorEl(event.currentTarget);
   };
-  const handleClose = () => {
+  const handleClose = async() => {
     setAnchorEl(null);
+  };
+  const handleCloselogout = async() => {
+    const formData = new FormData();
+    formData.append('id',admin[0].id)
+       await LogoutAdmin.SET_LOGOUT(formData)
+       dispatch(setAuthenticated(false))
+       dispatch(setAdmin([]))
+       navigate('/')
   };
   React.useEffect(() => {
     if (!adminprof) {
@@ -123,7 +129,7 @@ const Navbar = () => {
     const formData = new FormData();
     formData.append('currentpassword',oldpass);
     formData.append('password',password);
-    formData.append('id',user.id)
+    formData.append('id',admin[0].id)
     UpdatePassword.UPDATE_PASS(formData)
     .then(res => {
       setShowBackdrop(false)
@@ -139,22 +145,32 @@ const Navbar = () => {
   }
   const UpdateProfileUser = (event) =>{
     event.preventDefault();
-    if(!adminprof){
-      swal({
-        title: "Success",
-        text: "Please select a file",
-        icon: "success",
-        button: "OK",
-      });
-      return;
-    }
     const file = adminprof;
-    const id = user.id
+    if(file === ''){
+      swal("Error","Image Required",'warning')
+      return
+    }
+    const fileExtension = file?.name.split('.').pop().toLowerCase();
+    if (fileExtension !== 'png' && fileExtension !== 'jpg' && fileExtension !== 'jpeg')  {
+      swal({
+        text: 'Please upload a PNG or JPG image only.',
+        timer: 2000,
+        buttons: false,
+        icon: "error",
+      });
+    
+      return
+    }
+    const id = admin[0].id
     const formData = {file,id}
+    setOpenProf(false)
     setShowBackdrop(true)
     UpdateProfile.UPDATE_PROFILE(formData)
     .then(res => {
+      console.log(res)
       setShowBackdrop(false)
+      const inf = [res.data.Result,res.data.sectionId]
+      dispatch(setAdmin(inf))
       swal({
         title: "Success",
         text: res.data.message,
@@ -185,19 +201,19 @@ const Navbar = () => {
       >
         <Fade in={openprof}>
           <Box sx={style}>
-            <h1 id="transition-modal-title" variant="h6" component="h2">
-              Change Profile
-            </h1>
             <Typography>
               Upload your profile picture here.
             </Typography>
             <Typography>
               Preview
             </Typography>
-            <Avatar alt="Remy Sharp" src={preview} />
-            <input type="file" onChange={(e) => setProfile(e.target.files[0])}/>
-            <Button onClick={UpdateProfileUser} variant="contained" endIcon={<SaveIcon />}>
-        Send
+            <div style={{display:'flex',justifyContent:'center',alignItems:'center'}}>
+            <Avatar alt="Remy Sharp" src={preview} sx={{width: '105px', height: '105px'}}/>
+            </div>
+            
+            <input style={{margin:'10px'}} type="file" onChange={(e) => setProfile(e.target.files[0])}/>
+      <Button onClick={UpdateProfileUser} variant="contained">
+        Change Profile
       </Button>
           </Box>
         </Fade>
@@ -226,6 +242,7 @@ const Navbar = () => {
               label="Current Password"
               value={oldpass}
               fullWidth
+              type='password'
               onChange={(event) => {
                 setOldpass(event.target.value);
               }}
@@ -235,6 +252,7 @@ const Navbar = () => {
               id="outlined-controlled"
               label="New Password"
               value={password}
+              type='password'
               fullWidth
               onChange={(event) => {
                 setPassword(event.target.value);
@@ -244,6 +262,7 @@ const Navbar = () => {
               id="outlined-controlled"
               label="Re-type Password"
               value={repass}
+              type='password'
               sx={{marginBottom:'10px'}}
               fullWidth
               onChange={(event) => {
@@ -265,9 +284,9 @@ const Navbar = () => {
          </div>
 
         <div className='items'>
-
-         <Typography sx={{color:'white',fontSize:'20px'}}>{user.name}</Typography>
-
+            <div>
+            <Typography sx={{color:'white',fontSize:'20px'}}>{admin[0].name}({admin[0].jobDescription})</Typography>
+            </div>
           <div className="item">
           <Button
         id="fade-button"
@@ -281,7 +300,7 @@ const Navbar = () => {
         anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
         variant="dot"
       >
-        <Avatar alt="Remy Sharp" src={user.profile} />
+        <Avatar alt="Remy Sharp" src={admin[0].profile} />
       </StyledBadge>
       </Button>
           </div>
@@ -297,13 +316,13 @@ const Navbar = () => {
       >
         <MenuItem onClick={handleOpen1}>Profile</MenuItem>
         <MenuItem onClick={handleOpen2}>Password</MenuItem>
-        <MenuItem onClick={handleClose}>Logout</MenuItem>
+        <MenuItem onClick={handleCloselogout}>Logout</MenuItem>
       </Menu>
 
         </div>
 
         </div>
-      </div>
+    </div>
       </>
   );
 };

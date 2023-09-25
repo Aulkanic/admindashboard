@@ -21,6 +21,7 @@ import { Card } from '@mui/material';
 import { styled, ThemeProvider, createTheme } from '@mui/material';
 import { Backdrop, CircularProgress } from '@mui/material';
 import React from 'react';
+import { useSelector } from 'react-redux';
 
 const theme = createTheme();
 const StyledBackdrop = styled(Backdrop)`
@@ -28,7 +29,7 @@ const StyledBackdrop = styled(Backdrop)`
 `;
 
 export const About = () => {
-  const { loginUser,user } = useContext(admininfo);
+  const { admin  } = useSelector((state) => state.login)
     const [schoprog, setSchoProg] = useState([]);
     const [showBackdrop, setShowBackdrop] = useState(false);
     const[formq,setFormq] = useState([]);
@@ -68,7 +69,7 @@ export const About = () => {
         const response = await FetchingSchoProg.FETCH_SCHOPROG()
         const res = await ListAccess.ACCESS()
         let acc = await ListAccess.ACCESS()
-        const empacc = acc.data.result?.filter(data => data.employeeName === user.name)
+        const empacc = acc.data.result?.filter(data => data.employeeName === admin[0].name)
         setAccess(empacc)
         setAccesslist(res.data.result[0])
         setFormq(frm.data.Questions)
@@ -78,7 +79,7 @@ export const About = () => {
       }
       Fetch();
     }, []);
-console.log(access)
+
     const handleScorecardChange = (questionId, newScorecard) => {
       setFormq((prevQuestions) =>
       
@@ -112,17 +113,6 @@ console.log(access)
     const chosen = allChoicesForQuestions?.map(item => item.choices).flat();
 
     const AddQuestions = async() =>{
-      const sections = access[0].sectionId.split(', '); 
-      const isValueIncluded = sections.includes('Score Card');
-      if(!isValueIncluded){
-        Swal.fire({
-          text: 'UnAuthorized Access',
-          timer: 2000,
-          buttons: false,
-          icon: "error",
-        })
-        return
-      }
       let optionsHtml = '';
       schoprog?.forEach((option) => {
         optionsHtml += `<option value="${option.name}">${option.name}</option>`;
@@ -130,31 +120,36 @@ console.log(access)
       const { value: formValues } = await Swal.fire({
         title: 'Add Questions',
         html:
-        '<select id="swal-select" class="swal2-input">' +
-        optionsHtml +
-        '</select><br/>' +
           '<input id="swal-input2" class="swal2-input" placeholder="Question">',
         focusConfirm: false,
         confirmButtonText: 'Submit',
         showCancelButton:true,
         preConfirm: () => {
-          const selectedValue = document.getElementById('swal-select').value;
+          const selectedValue = schoname;
           const question2 = document.getElementById('swal-input2').value;
     
-          if (!selectedValue || !question2) {
-            Swal.showValidationMessage('Both fields are required. Please enter data for both questions.');
+          if (!selectedValue || selectedValue === '') {
+            Swal.showValidationMessage('Please select Scholarship Program first');
             return false; // Prevent the dialog from closing
+          }
+          if (!question2) {
+            Swal.showValidationMessage('Please input a Question First!!');
+            return false; // Prevent the dialog from closing
+          }
+          if(question2.length > 255){
+            Swal.showValidationMessage("The Question field can contain up to a maximum of 255 characters.")
+            return false;
           }
           return [selectedValue, question2];
         },
       })
       if (formValues) {
         
-        const selectedValue = formValues[0];
         const question2 = formValues[1];
+
         try {
           const formData = new FormData()
-          formData.append('schoProg',selectedValue)
+          formData.append('schoProg',schoname)
           formData.append('questions',question2)
           setShowBackdrop(true);
           await QuestionForm.Q_FORM(formData)
@@ -169,7 +164,6 @@ console.log(access)
       } else {
         console.log('User did not confirm or did not input data for both questions.');
       }
-
     }
     const AddChoices = async(data) =>{
       const { value: choice } = await Swal.fire({
@@ -181,10 +175,15 @@ console.log(access)
           if (!value) {
             return 'You need to write something!'
           }
+          if(value.length > 255){
+            return "The Question field can contain up to a maximum of 255 characters."
+            
+          }
         }
       })
       
       if (choice) {
+
         const formData = new FormData()
         formData.append('questionsid',data.id)
         formData.append('choice',choice)
@@ -198,7 +197,6 @@ console.log(access)
       }
     }
     const DeleteQuestion = async(data) =>{
-      
       Swal.fire({
         title: 'Are you sure?',
         text: "You won't be able to revert this!",
@@ -237,7 +235,6 @@ console.log(access)
       })      
     }
     const DeleteChoice = async(data) =>{
-      
       Swal.fire({
         title: 'Are you sure?',
         text: "You won't be able to revert this!",
@@ -303,6 +300,15 @@ console.log(access)
       }     
     }
     const SaveScore = async() =>{
+      if(!schoname || schoname === ''){
+        Swal.fire({
+          text: 'Please select Scholarship Program First',
+          timer: 2000,
+          buttons: false,
+          icon: "warning",
+        })
+        return
+      }
       const istotal = await CheckScore()
       if(istotal > 100){
         Swal.fire(
@@ -395,7 +401,7 @@ console.log(access)
             {choices?.map((data1,index) =>{
               return(
                 <li className='choiceli' key={index}>
-                 <p style={{overflow:'hidden'}}>- {data1.value}</p> 
+                 <p>- {data1.value}</p> 
                 <button onClick={() =>DeleteChoice(data1)} style={{padding:'5px',marginLeft:'10px',height:'32px'}} className='myButton2'>
                   <DeleteIcon sx={{fontSize:'13px'}}/>
                 </button></li>
@@ -410,25 +416,27 @@ console.log(access)
       const choices = chosen?.filter(data1 => data1.questionsid === data.id)
       return(
         <div key={index} className='questionchoose'>
-          <p className='questcon'>{index + 1}. {data.questions}
-          <span style={{marginLeft:'15px'}}>
+          <div className='questionscore'>
+          <p className='questcon'>{index + 1}. {data.questions}</p>
+          <span style={{marginLeft:'15px',width:'maxContent'}}>
             <input
             className='scoreinput'
-            type="text"
+            type="number"
             value={data.scorecard}
             onChange={(e) => handleScorecardChange(data.id, e.target.value)}
             />
           </span>
-          </p>
+          </div>
+
           <ul>
             {choices?.map((data1,index) =>{
               return(
                 <li className='choiceli' key={index}>
-                  - {data1.value}
+                  <p>- {data1.value}</p>
                   <span>
                     <input
                     className='scoreinput'
-                    type="text"
+                    type="number"
                     value={data1.scorecard}
                     onChange={(e) => handleScorecardChange1(data1.id, e.target.value)}
                     />

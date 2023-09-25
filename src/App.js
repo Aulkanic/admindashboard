@@ -32,7 +32,6 @@ function App() {
     setUser(userData);
     localStorage.setItem('user', JSON.stringify(userData));
   };
-  console.log(user)
   return (
     <div className="App">
         <BrowserRouter>

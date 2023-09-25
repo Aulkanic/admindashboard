@@ -13,6 +13,7 @@ import { styled, ThemeProvider } from '@mui/material';
 import { Backdrop, CircularProgress } from '@mui/material';
 import { useContext } from "react";
 import { admininfo } from "../../App";
+import { useSelector } from 'react-redux';
 
 const StyledBackdrop = styled(Backdrop)(({ theme }) => ({
   zIndex: theme.zIndex.drawer + 50,
@@ -20,7 +21,7 @@ const StyledBackdrop = styled(Backdrop)(({ theme }) => ({
 }));
 
 const Announcement = () => {
-    const { loginUser,user } = useContext(admininfo);
+  const { admin  } = useSelector((state) => state.login)
     const [access,setAccess] = useState([])
     const [announced,setAnnounced] = useState([]);
     const [title,setTitle] = useState('');
@@ -32,7 +33,7 @@ const Announcement = () => {
           setShowBackdrop(true);
           let response = await FetchingAnnounce.FETCH_ANNOUNCE();
           let acc = await ListAccess.ACCESS()
-          const empacc = acc.data.result?.filter(data => data.employeeName === user.name)
+          const empacc = acc.data.result?.filter(data => data.employeeName === admin[0].name)
           setAccess(empacc)
           const dat = response.data.Announce
           setAnnounced(dat.reverse())
@@ -64,17 +65,7 @@ const Announcement = () => {
       )
     })
     const Create = async() =>{
-      const sections = access[0].sectionId.split(', '); 
-      const isValueIncluded = sections.includes('News and Announcement');
-      if(!isValueIncluded){
-        swal({
-          text: 'UnAuthorized Access',
-          timer: 2000,
-          buttons: false,
-          icon: "error",
-        })
-        return
-      }
+
       if(title === '' || content === ''){
         swal({
           text: 'Please Provide necessary Information',

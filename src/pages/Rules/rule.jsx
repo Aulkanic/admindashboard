@@ -77,17 +77,6 @@ const Rulesect = () => {
     }, [mayorlogo])
 
   const uploadLogo = async() =>{
-    const sections = access[0].sectionId.split(', '); 
-    const isValueIncluded = sections.includes('Rules');
-    if(!isValueIncluded){
-      swal({
-        text: 'UnAuthorized Access',
-        timer: 2000,
-        buttons: false,
-        icon: "error",
-      })
-      return
-    }
     const LogoOF = [
       {official: 'BMCC',Logo: bmcclogo || (logolist[0] && logolist[0].logo)},
       {official: 'Mayor',Logo: mayorlogo || (logolist[1] && logolist[1].logo)},
@@ -138,17 +127,6 @@ const Rulesect = () => {
     }
   }
   const setUpRule = async() =>{
-    const sections = access[0].sectionId.split(', '); 
-    const isValueIncluded = sections.includes('Rules');
-    if(!isValueIncluded){
-      swal({
-        text: 'UnAuthorized Access',
-        timer: 2000,
-        buttons: false,
-        icon: "error",
-      })
-      return
-    }
     const formData = new FormData()
     formData.append('rule1',famRule || (rulelist && rulelist.famNum))
     formData.append('rule2',schoRule || (rulelist && rulelist.schoNum))
