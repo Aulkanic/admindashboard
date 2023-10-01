@@ -36,7 +36,6 @@ export const About = () => {
     const[formc,setFormc] = useState([]);
     const[schoname,setSchoname] = useState('');
     const [access,setAccess] = useState([])
-    const [errors, setErrors] = useState({}); 
     const [scorelist, setScorelist] = useState([])
     const [accessList,setAccesslist] = useState([]);
     const [value, setValue] = useState('1');
@@ -113,44 +112,42 @@ export const About = () => {
     const chosen = allChoicesForQuestions?.map(item => item.choices).flat();
 
     const AddQuestions = async() =>{
-      let optionsHtml = '';
-      schoprog?.forEach((option) => {
-        optionsHtml += `<option value="${option.name}">${option.name}</option>`;
-      });
       const { value: formValues } = await Swal.fire({
-        title: 'Add Questions',
-        html:
-          '<input id="swal-input2" class="swal2-input" placeholder="Question">',
+        input: 'textarea',
+        inputLabel: 'Enter Questions you want to Add',
+        inputPlaceholder: 'Type your questions here...',
+        inputAttributes: {
+          'aria-label': 'Type your questions here',
+          maxlength: 255, // Set the maximum length of input
+          rows: 4, 
+        },
         focusConfirm: false,
         confirmButtonText: 'Submit',
         showCancelButton:true,
-        preConfirm: () => {
+        preConfirm: (value) => {
           const selectedValue = schoname;
-          const question2 = document.getElementById('swal-input2').value;
-    
+          console.log(selectedValue)
+          console.log(value)
           if (!selectedValue || selectedValue === '') {
             Swal.showValidationMessage('Please select Scholarship Program first');
-            return false; // Prevent the dialog from closing
-          }
-          if (!question2) {
+            return false;
+          }          
+          if (!value) {
             Swal.showValidationMessage('Please input a Question First!!');
             return false; // Prevent the dialog from closing
           }
-          if(question2.length > 255){
+          if(value.length > 255){
             Swal.showValidationMessage("The Question field can contain up to a maximum of 255 characters.")
             return false;
           }
-          return [selectedValue, question2];
-        },
-      })
+          return value; 
+        }
+      });
       if (formValues) {
-        
-        const question2 = formValues[1];
-
         try {
           const formData = new FormData()
           formData.append('schoProg',schoname)
-          formData.append('questions',question2)
+          formData.append('questions',formValues)
           setShowBackdrop(true);
           await QuestionForm.Q_FORM(formData)
           .then((res) =>{
@@ -162,14 +159,18 @@ export const About = () => {
           console.error(error);
         }
       } else {
-        console.log('User did not confirm or did not input data for both questions.');
+        Swal.showValidationMessage('User did not confirm or did not input data for both questions.');
+        return false;
       }
     }
     const AddChoices = async(data) =>{
       const { value: choice } = await Swal.fire({
-        title: 'Enter Choices you want to Add',
-        input: 'text',
-        confirmButtonText: 'Add',
+        input: 'textarea',
+        inputLabel: 'Enter Choices you want to Add',
+        inputPlaceholder: 'Type your message here...',
+        inputAttributes: {
+          'aria-label': 'Type your message here'
+        },
         showCancelButton: true,
         inputValidator: (value) => {
           if (!value) {
@@ -397,7 +398,7 @@ export const About = () => {
           </div>
 
           </div>
-          <ul>
+          <ul style={{padding:'0px'}}>
             {choices?.map((data1,index) =>{
               return(
                 <li className='choiceli' key={index}>
@@ -488,23 +489,23 @@ export const About = () => {
           </Tabs>
           {value === '1' && 
          <Card sx={{padding:'10px',backgroundColor:'transparent'}} elevation={0}>
-            <button style={{float:'right'}} onClick={AddQuestions} className='myButton1'>Add Questions</button>
+            <p>Instructions:</p>
             <div className="frmcontainer">
             {FormTemplate}
             </div>
-
+            <button style={{float:'right'}} onClick={AddQuestions} className='myButton1'>Add Questions</button>
           </Card> }   
           {value === '2' && 
-         <Card sx={{padding:'10px',backgroundColor:'transparent'}} elevation={0}>
-                    This Score Card will apply to the Scholarship Application Form
-          <p>Instructions:</p>
-          <p>1.Set the Score for each questions where in the score is equivalent to percentage </p>
-          <p>2.All the Questions must the total value is equivalent to 100 when each questions is sum up </p>
-          <p>3.All the CHOICE must a value is not greater than to 100 or less than 0 </p>
-          <p>4.The Choices will be the percentage of a questions</p>
-          <p>5.Formula: Percentage of Selected Choice divided by 100 times the Specific Questions</p>
-            <button style={{float:'right',marginBottom:'10px'}} onClick={SaveScore} className='myButton1'>Set Score</button>
+         <Card sx={{padding:'10px',backgroundColor:'transparent',fontSize:'14px'}} elevation={0}>
+          <p className='pscorehead'>These instructions pertain to the Score Card designed for the Scholarship Application Form.</p>
+          <p className='pscoreinst'>1.Assign a score to each question, where the score is represented as a percentage. </p>
+          <p className='pscoreinst'>2.Ensure that the total value for all questions equals 100% when the scores for each question are added together.</p>
+          <p className='pscoreinst'>3.Each choice within a question must have a value between 0 and 100%. </p>
+          <p className='pscoreinst'>4.The choices should be represented as a percentage of the total question score.</p>
+          <p className='pscoreinst'>5.Use the following formula to calculate the score for a selected choice: (Percentage of Selected Choice / 100) * Specific Question's Value.</p>
+           
               {ScoreTemplate}
+               <button style={{float:'right',marginBottom:'10px'}} onClick={SaveScore} className='myButton1'>Set Score</button>
          </Card> }       
         </div>
         </div>

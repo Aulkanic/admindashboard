@@ -305,7 +305,7 @@ const Contact = () => {
      {
        field: 'requirementName', 
         headerName: 'Requirements',
-      width: 200
+      width: 250
       },
     {
       field: 'batch',
@@ -339,8 +339,8 @@ const Contact = () => {
 
       return(
         <>
-      <StyledButtonEdit className='myButton1' onClick={() => handleOpenDialog(params.row)}>Edit Deadline</StyledButtonEdit>
-      <StyledButton className='myButton2' onClick={() => Delete(params.row)}>Delete</StyledButton>
+      <StyledButtonEdit sx={{textTransform:'none'}} className='myButton1' onClick={() => handleOpenDialog(params.row)}>Edit Deadline</StyledButtonEdit>
+      <StyledButton sx={{textTransform:'none'}} className='myButton2' onClick={() => Delete(params.row)}>Delete</StyledButton>
       </>
     )},
     },

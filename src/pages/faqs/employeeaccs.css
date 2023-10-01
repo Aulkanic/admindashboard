@@ -9,14 +9,7 @@
     grid-gap: 10px;
     height: 100%;
 }
-.authlist{
-    margin: 0;
-    width: 100%;
-    display: grid;
-    grid-template-columns: repeat(auto-fit,minmax(200px, 1fr));
-    grid-gap: 10px;
-    height: max-content;
-}
+
 .custom-select {
     width: 100%; /* Set the width as desired */
     padding: 10px; /* Add padding for better appearance */
@@ -24,4 +17,91 @@
     border-radius: 5px; /* Add rounded corners */
     background-color: #fff; /* Set the background color */
     /* Add any other styles you need */
+  }
+  .websacc{
+    display: grid;
+    grid-template-columns: repeat(auto-fit,minmax(200px,1fr));
+    gap: 5px;
+  }
+  .checkaccess{
+    margin-right: 2px;
+  }
+  .descript li{
+    font-size: 14px;
+  }
+  .descript li p{
+    margin: 0px;
+  }
+  .listofrole{
+    display: flex;
+    justify-content: space-between;
+    align-items: top;
+    flex-direction: column;
+    font-size: 14px;
+  }
+  .rolesect{
+    display: flex;
+    justify-content: space-between;
+    flex-direction: column;
+    align-items: top;
+  }
+  .rolesect div{
+    width: 300px;
+    height: max-content;
+  }
+  .authlist{
+    margin: 0;
+    width: 100%;
+    display: grid;
+    height: max-content;
+    padding: 10px;
+}
+  .roleacclist{
+    width: 100%;
+    margin: 5px;
+    border-bottom: 2px solid rgb(112, 111, 111);
+    margin-bottom: 15px;
+    height: max-content;
+    padding: 0px;
+
+  }
+  .roleacclist p{
+    color: blue;
+    font-weight: bold;
+    text-transform: capitalize;
+  }
+  .staffacclist{
+    width: 100%;
+    list-style: none;
+
+  }
+  .staffacclist ul{
+    display: grid;
+    grid-template-columns: repeat(auto-fit,minmax(250px,1fr));
+    margin: 0px;
+  }
+  .staffacclist li{
+    width: 250px;
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 5px;
+    padding: 5px;
+    border-radius: 5px;
+    font-weight: 600;
+    font-size: 14px;
+    font-style: italic;
+    background-color: blue;
+    color: white;
+  }
+  .roleaddbtn{
+    display: grid;
+    grid-template-columns: repeat(auto-fit,minmax(100px,1fr));
+  }
+  .bmccEmp{
+    background-color: white;
+    width: max-content;
+  }
+  .emacsslist{
+    background-color: white;
+    padding: 10px;
   }
