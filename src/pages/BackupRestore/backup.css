@@ -1,0 +1,12 @@
+.backup{
+    display: flex;
+    background-color: #f1f3fa;  
+    height: 100vh;
+    overflow: auto;
+}
+.backupactions{
+    display: flex;
+    width: 100%;
+    margin-top: 20px;
+}
+  

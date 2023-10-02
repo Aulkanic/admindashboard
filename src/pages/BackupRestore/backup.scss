@@ -1,0 +1,24 @@
+
+.backup{
+    display: flex;
+    background-color: #f1f3fa;  
+    height: 100vh;
+    overflow: auto;
+    .backupcontainer{
+        flex: 7;
+        background-color: #f1f3fa; 
+        .top{
+            margin: 10px;
+            padding: 15px;
+            border-radius: 10px;
+        }
+    }
+}
+
+
+
+
+
+
+
+

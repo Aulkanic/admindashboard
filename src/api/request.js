@@ -305,3 +305,6 @@ export const SetSchoRenewDetails = {
 export const RenewedScho = {
     RENEWED: (data) => axiosInstance.post(Endpoints.RENEWED,data)
 }
+export const BackupLists = {
+    BACKUP: () => axiosInstance.get(Endpoints.BACKUP)
+}

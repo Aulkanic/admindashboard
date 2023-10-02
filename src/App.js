@@ -13,6 +13,7 @@ import Rule from './pages/Rules/rule';
 import Website from './pages/Website/website';
 import News from './pages/new/New';
 import Announcement from './pages/Announcement/announcement';
+import Backup from './pages/BackupRestore/backup';
 import Report from './pages/Reports/report';
 import { BrowserRouter, Routes, Route,} from "react-router-dom";
 import Single from './pages/single/Single';
@@ -58,6 +59,7 @@ function App() {
                 <Route path='Announcement' element={<Announcement/>} />
                 <Route path='Website-Maintenance' element={<Website/>} />
                 <Route path='Report' element={<Report/>} />
+                <Route path='Backups' element={<Backup/>} />
           </Route>
         </Route>
       </Routes>

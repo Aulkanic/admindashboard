@@ -27,6 +27,7 @@ import CampaignIcon from '@mui/icons-material/Campaign';
 import GavelIcon from '@mui/icons-material/Gavel';
 import LanguageIcon from '@mui/icons-material/Language';
 import AssessmentIcon from '@mui/icons-material/Assessment';
+import SettingsBackupRestoreIcon from '@mui/icons-material/SettingsBackupRestore';
 import { useState } from 'react';
 import { useDispatch } from 'react-redux';
 import { setAuthenticated,setAdmin } from '../../Redux/loginSlice';
@@ -154,6 +155,12 @@ const Sidebar = () => {
             <li>
               <AssessmentIcon className='icon'/>
               <span> Reports </span>
+            </li>
+            </Link>) : (null)}
+            {sections.includes('Administrator') ? (<Link to='/Backups' style={{ textDecoration: 'none'}}>
+            <li>
+              <SettingsBackupRestoreIcon className='icon'/>
+              <span> Backups </span>
             </li>
             </Link>) : (null)}
 
