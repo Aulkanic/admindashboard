@@ -99,7 +99,9 @@ const Endpoints = {
     FETCH_RENEWCODE:'RenewalForm/RenewCode/',
     FETCH_RENEWSCHO:'RenewalForm/Scho',
     RENEWED:'RenewalForm/Renewed',
-    BACKUP:'admin/Backuplists'
+    BACKUP:'admin/Backuplists',
+    BACKUPNOW:'admin/Backup',
+    RESTORE:'admin/Restore',
 }
 
 export default Endpoints

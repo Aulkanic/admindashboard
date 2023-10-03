@@ -228,7 +228,6 @@ const Scholars = () => {
     setOpen(true);
   };
   const view1 = async (data) => {
-    console.log(data)
     setInf(data)
     setShowBackdrop(true);
     const renewTitle = renewDet[0].renewTitle;
@@ -358,7 +357,6 @@ const Scholars = () => {
     setRowSelectionModel(newRowSelectionModel);
 
   };
-console.log(inf)
     const handleDialogSubmit = async () => {
       await handleButtonClick();
       setOpenDialog(false);
@@ -633,7 +631,6 @@ console.log(inf)
       );
     };
     const SetSchoRenewed = async(data) =>{
-      console.log(data)
       const formData = new FormData()
       formData.append('yearLevel',data.yearLevel)
       formData.append('Baranggay',data.Baranggay)

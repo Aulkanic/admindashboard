@@ -34,17 +34,7 @@ const StyledBackdrop = styled(Backdrop)(({ theme }) => ({
   zIndex: theme.zIndex.drawer + 50,
   color: '#fff',
 }));
-const theme = createTheme({
-  components: {
-    MuiDateField: {
-      styleOverrides: {
-        error: {
-          borderColor: 'black', // Change to the desired border color
-        },
-      },
-    },
-  },
-});
+
 const StyledButton = styled(Button)`
   && {
     float: right;
@@ -70,12 +60,7 @@ const StyledButtonEdit = styled(Button)`
     }
   }
 `;
-const CustomDateField = styled(DateField)`
-  /* Override the red border color */
-  &.Mui-error {
-    border-color: black !important; /* Change to a different color */
-  }
-`;
+
 
 const Contact = () => {
   const { admin  } = useSelector((state) => state.login)
@@ -348,7 +333,6 @@ const Contact = () => {
   ];
   return (
     <>
-    <ThemeProvider theme={theme}>
     <StyledBackdrop open={showBackdrop}>
     <CircularProgress color="inherit" />
   </StyledBackdrop>
@@ -433,7 +417,7 @@ const Contact = () => {
                     </FormControl>
                     <LocalizationProvider dateAdapter={AdapterDayjs}>
                       <DemoContainer components={['DateField']}>
-                    <CustomDateField 
+                    <DateField 
                                 slotProps={{
                                   textField: {
                                     size: "large",
@@ -488,12 +472,12 @@ const Contact = () => {
           <div style={{margin:10}}>
           <LocalizationProvider dateAdapter={AdapterDayjs}>
                     <DateField 
-              slotProps={{
-                textField: {
-                  size: "small",
-                  error: false,
-                },
-              }}
+                    slotProps={{
+                      textField: {
+                        size: "small",
+                        error: false,
+                      },
+                    }}
                     sx={{marginBottom:'10px'}}
                       className="dataField"
                       label="Set New Deadline"
@@ -537,7 +521,6 @@ const Contact = () => {
          </div>
       </div>
     </div>
-    </ThemeProvider>
     </>
   )
 }

@@ -308,3 +308,12 @@ export const RenewedScho = {
 export const BackupLists = {
     BACKUP: () => axiosInstance.get(Endpoints.BACKUP)
 }
+export const DownloadBackup = {
+    DOWNLOAD: (data) => axiosInstance.get(Endpoints.DOWNLOAD+data)
+}
+export const BackupNow = {
+    BACKUPNOW: () => axiosInstance.get(Endpoints.BACKUPNOW)
+}
+export const RestoreDb = {
+    RESTORE: (data) => axiosInstance.post(Endpoints.RESTORE,data)
+}
