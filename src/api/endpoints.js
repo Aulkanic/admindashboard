@@ -104,6 +104,7 @@ const Endpoints = {
     BACKUP:'admin/Backuplists',
     BACKUPNOW:'admin/Backup',
     RESTORE:'admin/Restore',
+    ADMIN_NOTIF:'admin/Notification',
 }
 
 export default Endpoints

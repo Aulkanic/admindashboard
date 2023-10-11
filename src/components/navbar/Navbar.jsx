@@ -6,7 +6,7 @@ import MenuItem from '@mui/material/MenuItem';
 import Fade from '@mui/material/Fade';
 import Button from '@mui/material/Button';
 import { styled } from '@mui/material/styles';
-import { UpdatePassword, UpdateProfile,LogoutAdmin } from '../../api/request';
+import { UpdatePassword, UpdateProfile,LogoutAdmin,AdminNotify } from '../../api/request';
 import Badge from '@mui/material/Badge';
 import Avatar from '@mui/material/Avatar';
 import Backdrop from '@mui/material/Backdrop';
@@ -85,6 +85,7 @@ const Navbar = () => {
   const [preview, setPreview] = React.useState();
   const [showBackdrop, setShowBackdrop] = React.useState(false);
   const [anchorEl1, setAnchorEl1] = React.useState(null);
+  const [notif,setNotif] = React.useState([])
 
   const handleClick1 = (event) => {
     console.log(event)
@@ -133,6 +134,15 @@ const Navbar = () => {
     
     return () => URL.revokeObjectURL(objectUrl)
     }, [adminprof])
+
+    React.useEffect(() =>{
+      async function Fetch(){
+        const res = await AdminNotify.ADMIN_NOTIF();
+        console.log(res)
+        setNotif(res.data.reverse())
+      }
+      Fetch()
+    },[])
   const UpdatePasswordUser = (event) =>{
     event.preventDefault();
     if(!password ||!repass){
@@ -199,6 +209,40 @@ const Navbar = () => {
      )
     .catch(err => console.log(err));
     }
+
+    function timeAgo(timestamp) {
+      const now = new Date();
+      const target = new Date(timestamp);
+      const timeDiff = now - target;
+      
+      const seconds = Math.floor(timeDiff / 1000);
+      const minutes = Math.floor(seconds / 60);
+      const hours = Math.floor(minutes / 60);
+      
+      if (seconds < 60) {
+          return "just now";
+      } else if (minutes === 1) {
+          return "a minute ago";
+      } else if (minutes < 60) {
+          return minutes + " minutes ago";
+      } else if (hours === 1) {
+          return "1 hour ago";
+      } else {
+          return hours + " hours ago";
+      }
+  }
+  const notification = notif?.map((data,index) =>{
+    return(
+      <li key={index} className="notification-item">
+      <div className="notification-text">
+        {data.actions}
+      </div>
+      <div className="timestamp">
+        {timeAgo(data.timestamp)}
+      </div>
+    </li>
+    )
+  })
   return (
     <>
       <StyledBackdrop open={showBackdrop}>
@@ -333,7 +377,23 @@ const Navbar = () => {
     
           anchorPosition={{ top: 60, left: 1100 }}
         >
-          <Typography sx={{ p: 2,height:'400px',width:'350px' }}>The content of the Popover.</Typography>
+          <Box sx={{ p: 2,height:'400px',width:'350px' }}>
+            {notif ? (<>
+              <div>
+                <div style={{display:'flex',justifyContent:'space-between',alignItems:'center',borderBottom:'2px solid black'}}>
+                  <p style={{margin:'0px'}}>Notifications</p>
+                  <Button sx={{fontSize:'12px',textTransform:'none'}}>Clear All</Button>
+                </div>
+                <ul className="notification-list">
+                {notification}
+                </ul>
+              </div>
+            </>) : (<>
+             <div>
+              No Notification
+            </div>             
+            </>)}
+          </Box>
         </Popover>
         </div>
         <div className='items'>

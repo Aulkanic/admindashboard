@@ -321,3 +321,6 @@ export const Payrollreports = {
 export const Userlistsreports = {
     USERLISTED: (data) => axiosInstance.get(Endpoints.REPORTUSER+data)
 }
+export const AdminNotify = {
+    ADMIN_NOTIF: () => axiosInstance.get(Endpoints.ADMIN_NOTIF)
+}
