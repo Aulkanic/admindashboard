@@ -2,9 +2,7 @@ import axiosInstance from "./axios";
 import Endpoints from "./endpoints";
 
 export const ApplicantsRequest = {
-
     ALL_APPLICANTS: () => axiosInstance.get(Endpoints.FETCH_APPLICANTS)
-
 }
 
 export const UsersRequest = {
@@ -316,4 +314,10 @@ export const BackupNow = {
 }
 export const RestoreDb = {
     RESTORE: (data) => axiosInstance.post(Endpoints.RESTORE,data)
+}
+export const Payrollreports = {
+    PAYROLL: () => axiosInstance.get(Endpoints.PAYROLL)
+}
+export const Userlistsreports = {
+    USERLISTED: (data) => axiosInstance.get(Endpoints.REPORTUSER+data)
 }

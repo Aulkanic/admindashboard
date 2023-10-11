@@ -1,0 +1,18 @@
+.payrollContent{
+    padding: 5px;
+    overflow: auto;
+}
+.payrollContainer1{
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 15px;
+}
+.payrollContainer2{
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 15px;
+}
+.payrollTable{
+    height: max-content;
+    border-radius: 10px;
+}

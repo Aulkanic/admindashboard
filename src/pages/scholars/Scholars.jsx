@@ -34,12 +34,24 @@ import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { MultiInputDateTimeRangeField } from '@mui/x-date-pickers-pro/MultiInputDateTimeRangeField';
 import { useSelector } from 'react-redux';
 import Figure from 'react-bootstrap/Figure';
-const localizedFormat = require('dayjs/plugin/localizedFormat'); // Import the localizedFormat plugin
-
-// Register the localizedFormat plugin
+import CustomNoRowsOverlay from '../Design/Norows';
+const localizedFormat = require('dayjs/plugin/localizedFormat');
 dayjs.extend(localizedFormat);
 
-const theme = createTheme();
+
+const CustomDataGrid = styled(DataGrid)({
+  '& .MuiDataGrid-columnHeaders': {
+    color: 'white', 
+    fontWeight:'bold',
+    backgroundColor:'#0047a4',
+    fontWeight:'bold',
+    margin:"0px",
+    borderTopLeftRadius:'0px',
+    borderTopRightRadius:'0px'
+  },
+
+});
+
 const StyledBackdrop = styled(Backdrop)(({ theme }) => ({
   zIndex: theme.zIndex.drawer + 50,
   color: '#fff',
@@ -181,7 +193,7 @@ const Scholars = () => {
       const empacc = acc.data.result?.filter(data => data.employeeName === admin[0].name)
       setAccess(empacc)
       setRenew(re.data)
-      const data = scholars.data.Scholars.filter(data => data.status === 'Active' || data.status === 'Hold')
+      const data = scholars.data.Scholars
       setData(data)
       setComplete(req.data.Requirements)
       setShowBackdrop(false);
@@ -201,11 +213,6 @@ const Scholars = () => {
     padding:'10px',
     borderRadius:'10px'
 
-  };
-
-  const openImageModal = (image,name) => {
-    setSelectedImage({image,name});
-    setImageModalOpen(true);
   };
   
   const closeImageModal = () => {
@@ -250,7 +257,7 @@ const Scholars = () => {
       width: 150
       },
     {
-      field: 'scholarshipApplied',
+      field: 'ScholarshipApplied',
       headerName: 'Scholarship Applied',
       width: 200,
       editable: false,
@@ -268,7 +275,7 @@ const Scholars = () => {
       editable: false,
     },
     {
-      field: 'Baranggay',
+      field: 'baranggay',
       headerName: 'Baranggay',
       width: 200,
       editable: false,
@@ -281,7 +288,7 @@ const Scholars = () => {
 
     },
     {
-      field: 'Batch',
+      field: 'batch',
       headerName: 'Batch',
       width: 80,
       editable: false,
@@ -566,7 +573,7 @@ const Scholars = () => {
           Swal.fire("Error!", res.data.message,"warning");
           return
         }else{
-          Swal.fire("",`Successfully Generated`,"info")
+          Swal.fire("",`Successfully Generated`,"success")
           console.log(res)
           setRenew(res.data.list)
         }
@@ -598,7 +605,7 @@ const Scholars = () => {
             </div>
           </div>
           <Box sx={{ width: '100%', height: 400,backgroundColor:'white' }}>
-          <DataGrid
+          <CustomDataGrid
         rows={schore}
         columns={columns1}
         getRowId={(row) => row.renewId}
@@ -631,6 +638,7 @@ const Scholars = () => {
       );
     };
     const SetSchoRenewed = async(data) =>{
+
       const formData = new FormData()
       formData.append('yearLevel',data.yearLevel)
       formData.append('Baranggay',data.Baranggay)
@@ -640,6 +648,7 @@ const Scholars = () => {
       formData.append('guardian',data.guardian)
       formData.append('scholarCode',data.scholarCode)
       formData.append('renewTitle',renewDet[0].renewTitle)
+      formData.append('Name',data.Name)
       setOpen2(false)
       setShowBackdrop(true)
       await RenewedScho.RENEWED(formData)
@@ -878,7 +887,7 @@ const Scholars = () => {
       <Box sx={{width:'98.5%',padding:'10px',height:'100%',display:'flex',backgroundColor:'whitesmoke',flexDirection:'column'}}>
       <div className='renewscho'>
           {renewScho.details?.map((data) =>{
-            console.log(data)
+           
             return(
               <>
                 <Form.Group as={Col}>
@@ -1095,7 +1104,7 @@ const Scholars = () => {
 
     <Box sx={{ height: 400, width: '100%' }}>
       <Card>
-        <DataGrid
+        <CustomDataGrid
         rows={data}
         columns={columns}
         getRowId={(row) => row.applicantNum}
@@ -1107,6 +1116,7 @@ const Scholars = () => {
             },
           },
         }}
+x
         pageSizeOptions={[25]}
         checkboxSelection
         onRowSelectionModelChange={handleRowSelectionModelChange}

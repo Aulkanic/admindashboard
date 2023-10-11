@@ -33,6 +33,20 @@ import Checkbox from '@mui/material/Checkbox';
 import CheckCircleOutlineRoundedIcon from '@mui/icons-material/CheckCircleOutlineRounded';
 import FormatListBulletedOutlinedIcon from '@mui/icons-material/FormatListBulletedOutlined';
 import AssignmentLateRoundedIcon from '@mui/icons-material/AssignmentLateRounded';
+import CustomNoRowsOverlay from '../Design/Norows';
+
+const CustomDataGrid = styled(DataGrid)({
+  '& .MuiDataGrid-columnHeaders': {
+    color: 'white', 
+    fontWeight:'bold',
+    backgroundColor:'#0047a4',
+    fontWeight:'bold',
+    margin:"0px",
+    borderTopLeftRadius:'0px',
+    borderTopRightRadius:'0px'
+  },
+
+});
 
 const StyledButton = styled(Button)`
   && {
@@ -262,9 +276,7 @@ const check = async (data, index) => {
     }else{
       setShowBackdrop(false);
       swal({
-        text: 'Failed To Check',
-        timer: 2000,
-        buttons: false,
+        text: res.data.message,
         icon: "error",
       })
     }
@@ -289,11 +301,12 @@ const style = {
   const ApplicantCheck = async (data) =>{  
     const applicantNum = data.applicantNum;
     const applicantCode = data.applicantCode;
+    const name = data.Name
     const status = 'Qualified';
     const adminName = admin[0].name;
     const email = data.email
     setShowBackdrop(true);
-    CheckingApplicants.CHECK_APP({email,adminName,applicantNum,status,applicantCode})
+    CheckingApplicants.CHECK_APP({email,adminName,applicantNum,status,applicantCode,name})
     .then(res => {
 
       setPost(res.data.Applicants)
@@ -396,10 +409,11 @@ const style = {
           const row = selectedRows[i];
           const applicantNum = row.applicantNum;
           const applicantCode = row.applicantCode;
+          const name =row.Name
           const status = 'Qualified';
           const adminName = admin[0].name;
           const email = row.email
-          CheckingApplicants.CHECK_APP({email,adminName,applicantNum,status,applicantCode})
+          CheckingApplicants.CHECK_APP({email,adminName,applicantNum,status,applicantCode,name})
           .then(res => {
             console.log(res)
             setOpen(false)
@@ -478,13 +492,13 @@ const style = {
       field: 'SchoIarshipApplied',
       headerName: 'Scholarship Applied',
       width: 200,
-      editable: true,
+      editable: false,
     },
     {
       field: 'Name',
       headerName: 'Name',
       width: 150,
-      editable: true,
+      editable: false,
     },
     {
       field: 'yearLevel',
@@ -1052,8 +1066,7 @@ const style = {
       <div className="top">
         <div style={{width:'97.5%',padding:10}}>
         <h1 style={{color:'#666',whiteSpace:"nowrap",fontWeight:"700"}}> Applicants </h1>
-    <Card>
-      <Breadcrumbs sx={{backgroundColor:'green'}} aria-label="breadcrumb">
+      <Breadcrumbs sx={{backgroundColor:'#0047a4',marginBottom:'0px'}} aria-label="breadcrumb">
                   <Button onClick={() => setActiveState('All')}>
                     <Link
                       underline="none"
@@ -1094,9 +1107,9 @@ const style = {
                     </Link>
                   </Button>
       </Breadcrumbs>      
-      <Box sx={{ height: 'maxContent', width: '100%'}}>
-                {activeState === 'All' && (filteredRows && filteredRows.length > 0 ? (
-                  <DataGrid
+      <Box sx={{ height: '500px', width: '100%',backgroundColor:'white',margin:"0px",minHeight:'300px'}}>
+                {activeState === 'All' && (
+                  <CustomDataGrid
                     rows={filteredRows}
                     columns={columns}
                     getRowId={(row) => row.applicantNum}
@@ -1108,26 +1121,30 @@ const style = {
                         },
                       },
                     }}
+                    sx={{minHeight:'300px',border:'none',borderRadius:'0px'}}
+                    slots={{
+                      noRowsOverlay: CustomNoRowsOverlay,
+                    }}
                     pageSizeOptions={[25]}
                     disableRowSelectionOnClick
                   />
-                ) : (
-                  <div style={{width:'100%',height:'100%',display:'flex',justifyContent:'center',alignItems:'center',backgroundColor:'whitesmoke'}}>
-                  <p style={{ textAlign: 'center',fontSize:30,fontWeight:700,fontStyle:'italic' }}>No records</p>
-                  </div>
-                ))}
-                  {activeState === 'Complete' && (groupedUsers.completed && groupedUsers.completed.length > 0 ? (
-                    <DataGrid
+                )}
+                  {activeState === 'Complete' && (
+                    <CustomDataGrid
                       rows={groupedUsers.completed}
                       columns={completeColumn}
                       getRowId={(row) => row.applicantNum}
                       scrollbarSize={10}
+                      sx={{minHeight:'300px',border:'none',borderRadius:'0px'}}
                       initialState={{
                         pagination: {
                           paginationModel: {
                             pageSize: 5,
                           },
                         },
+                      }}
+                      slots={{
+                        noRowsOverlay: CustomNoRowsOverlay,
                       }}
                       pageSizeOptions={[25]}
                       checkboxSelection
@@ -1135,15 +1152,12 @@ const style = {
                       rowSelectionModel={rowSelectionModel}
                       disableRowSelectionOnClick
                     />
-                  ) : (
-                    <div style={{width:'100%',height:'100%',display:'flex',justifyContent:'center',alignItems:'center',backgroundColor:'whitesmoke'}}>
-                    <p style={{ textAlign: 'center',fontSize:30,fontWeight:700,fontStyle:'italic' }}>No records</p>
-                    </div>
-                  ))}
-                  {activeState === 'Incomplete' && (groupedUsers.incomplete && groupedUsers.incomplete.length > 0 ? (
-                    <DataGrid
+                  )}
+                  {activeState === 'Incomplete' && (
+                    <CustomDataGrid
                       rows={groupedUsers.incomplete}
                       columns={incompleteColumn}
+                      sx={{minHeight:'300px',border:'none',borderRadius:'0px'}}
                       getRowId={(row) => row.applicantNum}
                       scrollbarSize={10}
                       initialState={{
@@ -1153,19 +1167,18 @@ const style = {
                           },
                         },
                       }}
+                      slots={{
+                        noRowsOverlay: CustomNoRowsOverlay,
+                      }}
                       pageSizeOptions={[25]}
                       checkboxSelection
                       onRowSelectionModelChange={handleFailedSelectionModelChange}
                       rowSelectionModel={failedSelectionModel}
                       disableRowSelectionOnClick
                     />
-                  ) : (
-                    <div style={{width:'100%',height:'100%',display:'flex',justifyContent:'center',alignItems:'center',backgroundColor:'whitesmoke'}}>
-                    <p style={{ textAlign: 'center',fontSize:30,fontWeight:700,fontStyle:'italic' }}>No records</p>
-                    </div>
-                  ))}
+                  )}
       </Box>
-    </Card>
+
       </div>
       <div style={{width:'97%',margin:'10px',display:'flex',justifyContent:'flex-end',alignItems:'flex-end'}}>
       {activeState === 'Complete' && 

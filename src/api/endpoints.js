@@ -53,6 +53,8 @@ const Endpoints = {
     FETCH_REPORTAPP:'Reports/Applicants',
     FETCH_REPORTSCHO:'Reports/Scholars',
     FETCH_REPORTUSER:'Reports/UserAccounts',
+    PAYROLL:'Reports/Payroll',
+    REPORTUSER:'Reports/Userlists?',
     SET_OFFLINE:"admin/Logout",
     FORGOT_ADMIN:"admin/ForgotPassword",
     GRANT_ACCESS:"admin/GrantAccess",

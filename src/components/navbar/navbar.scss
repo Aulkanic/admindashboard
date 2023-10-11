@@ -16,7 +16,7 @@
     padding: 22px;
     display: flex;
     align-items: center;
-    justify-content: space-between;
+    justify-content: flex-end;
     background-color: rgb(47, 150, 219);
     margin: 0;
 
@@ -24,9 +24,11 @@
         display: flex;
         align-items: center;
         border: 0.5px solid rgb(47, 150, 219);
-        padding: 2px;
+        padding: 5px;
         border-radius: 10px;
+        justify-content: space-between;
         background-color: white;
+        width: 20%;
 
         input{
             border: none;
@@ -46,7 +48,6 @@
         .item{
              display: flex;
              align-items: center;
-             margin-right: 20px;
              position: relative;
              color: white;
              .icon{

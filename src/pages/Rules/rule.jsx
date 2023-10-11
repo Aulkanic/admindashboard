@@ -222,9 +222,9 @@ const Rulesect = () => {
                  <Typography> Age limit for Applicants </Typography>
                  <TextField value={ageRule} placeholder={rulelist && rulelist.ageNum} onChange={(e) => setAgeRule(e.target.value)}/>
                  <Typography>Scholarship Privilege</Typography>
-                 <TextField value={priv1} placeholder={rulelist && rulelist.priv1} onChange={(e) => setPriv1(e.target.value)} label='ELementary'/>
-                 <TextField value={priv2} placeholder={rulelist && rulelist.priv2} onChange={(e) => setPriv2(e.target.value)} sx={{margin:'0px 10px 0px 10px'}} label='High School' />
-                 <TextField value={priv3} placeholder={rulelist && rulelist.priv3} onChange={(e) => setPriv3(e.target.value)} label='College'/>
+                 <TextField type='number' value={priv1} placeholder={rulelist && rulelist.priv1} onChange={(e) => setPriv1(e.target.value)} label='ELementary'/>
+                 <TextField type='number' value={priv2} placeholder={rulelist && rulelist.priv2} onChange={(e) => setPriv2(e.target.value)} sx={{margin:'0px 10px 0px 10px'}} label='High School' />
+                 <TextField type='number' value={priv3} placeholder={rulelist && rulelist.priv3} onChange={(e) => setPriv3(e.target.value)} label='College'/>
               </Card>
             </Box>
             <div style={{width:'100%',display:'flex',alignItems:'center',justifyContent:'center'}}>

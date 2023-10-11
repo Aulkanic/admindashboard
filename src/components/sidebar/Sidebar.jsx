@@ -39,6 +39,12 @@ const Sidebar = () => {
   const navigate = useNavigate();
   const [activeSection,setActiveSection] = useState(0);
   const sections = admin[1].split(', '); 
+  const [isReportsSubMenuOpen, setIsReportsSubMenuOpen] = useState(false);
+
+  const toggleReportsSubMenu = () => {
+    setIsReportsSubMenuOpen(!isReportsSubMenuOpen);
+  };
+  
   const Logout = async() =>{
     const formData = new FormData();
     formData.append('id',admin[0].id)
@@ -151,7 +157,8 @@ const Sidebar = () => {
             </li> 
             </Link>) : (null)}
             
-            {sections.includes('Reporting') || sections.includes('Administrator') ? (<Link to='/Report' style={{ textDecoration: 'none'}}>
+            {sections.includes('Reporting') || sections.includes('Administrator') ? (
+            <Link to='/Report' style={{ textDecoration: 'none'}}>
             <li>
               <AssessmentIcon className='icon'/>
               <span> Reports </span>

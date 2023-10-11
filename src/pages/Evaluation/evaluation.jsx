@@ -30,19 +30,21 @@ import Link from '@mui/material/Link';
 import Checkbox from '@mui/material/Checkbox';
 import { styled, createTheme } from '@mui/material';
 import { Backdrop, CircularProgress } from '@mui/material';
-import { BorderAllRounded } from '@mui/icons-material';
+import CustomNoRowsOverlay from '../Design/Norows';
 
-const theme = createTheme({
-  components: {
-    MuiTabs: {
-      styleOverrides: {
-        root: {
-          backgroundColor: 'lightgray',
-        },
-      },
-    }
+const CustomDataGrid = styled(DataGrid)({
+  '& .MuiDataGrid-columnHeaders': {
+    color: 'white', 
+    fontWeight:'bold',
+    backgroundColor:'#0047a4',
+    fontWeight:'bold',
+    margin:"0px",
+    borderTopLeftRadius:'0px',
+    borderTopRightRadius:'0px'
   },
+
 });
+
 const CustomTabs = styled(Tabs)({
   '& .MuiTabs-flexContainer': {
     color: 'white', 
@@ -198,11 +200,6 @@ const Evaluation = () => {
 
       };
     const columns = [
-         {
-           field: 'applicantCode', 
-            headerName: 'Applicant Code',
-          width: 150
-          },
         {
           field: 'SchoIarshipApplied',
           headerName: 'Scholarship Applied',
@@ -289,11 +286,6 @@ const Evaluation = () => {
     
       ];
     const passedColumn = [
-         {
-           field: 'applicantCode', 
-            headerName: 'Applicant Code',
-          width: 150
-          },
         {
           field: 'SchoIarshipApplied',
           headerName: 'Scholarship Applied',
@@ -361,11 +353,6 @@ const Evaluation = () => {
     
       ];
     const failedColumn = [
-         {
-           field: 'applicantCode', 
-            headerName: 'Applicant Code',
-          width: 150
-          },
         {
           field: 'SchoIarshipApplied',
           headerName: 'Scholarship Applied',
@@ -454,6 +441,7 @@ const Evaluation = () => {
         const formData = new FormData();
         formData.append('email',data.email);
         formData.append('applicantNum',data.applicantNum)
+        formData.append('Name',data.Name)
         setShowBackdrop(true);
         SetApplicant.SET_APPLICANT(formData)
         .then(res => {
@@ -922,8 +910,7 @@ const Evaluation = () => {
                   </div>
               </div>
               <Box sx={{ height: 'maxContent', width: '100%',marginTop:"10px" }}>
-                <Card sx={{height:'100%'}}>
-                <Breadcrumbs sx={{backgroundColor:'green'}} aria-label="breadcrumb">
+              <Breadcrumbs sx={{backgroundColor:'#0047a4',marginBottom:'0px'}} aria-label="breadcrumb">
                   <Button onClick={() => setActiveState('All')}>
                     <Link
                       underline="none"
@@ -963,9 +950,10 @@ const Evaluation = () => {
                       Failed({Failed.length})
                     </Link>
                   </Button>
-                  </Breadcrumbs>
-                    {activeState === 'All' && (data && data.length > 0 ? (
-                  <DataGrid
+                </Breadcrumbs>
+                <Card sx={{height:'500px',borderRadius:'0px'}}>
+                    {activeState === 'All' && (
+                  <CustomDataGrid
                     rows={data}
                     columns={columns}
                     getRowId={(row) => row.applicantNum}
@@ -977,16 +965,16 @@ const Evaluation = () => {
                         },
                       },
                     }}
+                    sx={{minHeight:'300px',border:'none',borderRadius:'0px'}}
+                    slots={{
+                      noRowsOverlay: CustomNoRowsOverlay,
+                    }}
                     pageSizeOptions={[25]}
                     disableRowSelectionOnClick
                   />
-                ) : (
-                  <div style={{width:'100%',height:'100%',display:'flex',justifyContent:'center',alignItems:'center',backgroundColor:'whitesmoke'}}>
-                  <p style={{ textAlign: 'center',fontSize:30,fontWeight:700,fontStyle:'italic' }}>No records</p>
-                  </div>
-                ))}
-                  {activeState === 'Passed' && (Passed && Passed.length > 0 ? (
-                    <DataGrid
+                )}
+                  {activeState === 'Passed' && (
+                    <CustomDataGrid
                       rows={Passed}
                       columns={passedColumn}
                       getRowId={(row) => row.applicantNum}
@@ -998,19 +986,19 @@ const Evaluation = () => {
                           },
                         },
                       }}
+                      sx={{minHeight:'300px',border:'none',borderRadius:'0px'}}
+                      slots={{
+                        noRowsOverlay: CustomNoRowsOverlay,
+                      }}
                       pageSizeOptions={[25]}
                       checkboxSelection
                       onRowSelectionModelChange={handleRowSelectionModelChange}
                       rowSelectionModel={rowSelectionModel}
                       disableRowSelectionOnClick
                     />
-                  ) : (
-                    <div style={{width:'100%',height:'100%',display:'flex',justifyContent:'center',alignItems:'center',backgroundColor:'whitesmoke'}}>
-                    <p style={{ textAlign: 'center',fontSize:30,fontWeight:700,fontStyle:'italic' }}>No records</p>
-                    </div>
-                  ))}
-                  {activeState === 'Failed' && (Failed && Failed.length > 0 ? (
-                    <DataGrid
+                  )}
+                  {activeState === 'Failed' && (
+                    <CustomDataGrid
                       rows={Failed}
                       columns={failedColumn}
                       getRowId={(row) => row.applicantNum}
@@ -1022,17 +1010,17 @@ const Evaluation = () => {
                           },
                         },
                       }}
+                      sx={{minHeight:'300px',border:'none',borderRadius:'0px'}}
+                      slots={{
+                        noRowsOverlay: CustomNoRowsOverlay,
+                      }}
                       pageSizeOptions={[25]}
                       checkboxSelection
                       onRowSelectionModelChange={handleFailedSelectionModelChange}
                       rowSelectionModel={failedSelectionModel}
                       disableRowSelectionOnClick
                     />
-                  ) : (
-                    <div style={{width:'100%',height:'100%',display:'flex',justifyContent:'center',alignItems:'center',backgroundColor:'whitesmoke'}}>
-                    <p style={{ textAlign: 'center',fontSize:30,fontWeight:700,fontStyle:'italic' }}>No records</p>
-                    </div>
-                  ))}
+                  )}
                 </Card>
               </Box>
               

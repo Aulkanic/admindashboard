@@ -21,6 +21,9 @@ import { useDispatch } from 'react-redux';
 import { setAdmin, setAuthenticated } from "../../Redux/loginSlice";
 import swal from 'sweetalert';
 import { useNavigate } from 'react-router-dom';
+import Popover from '@mui/material/Popover';
+import NotificationsRoundedIcon from '@mui/icons-material/NotificationsRounded';
+
 
 const StyledBadge = styled(Badge)(({ theme }) => ({
   '& .MuiBadge-badge': {
@@ -81,14 +84,29 @@ const Navbar = () => {
   const [adminprof,setProfile] = React.useState('');
   const [preview, setPreview] = React.useState();
   const [showBackdrop, setShowBackdrop] = React.useState(false);
+  const [anchorEl1, setAnchorEl1] = React.useState(null);
+
+  const handleClick1 = (event) => {
+    console.log(event)
+    setAnchorEl1(event.currentTarget);
+  };
+
+  const handleClose3 = () => {
+    setAnchorEl1(null);
+  };
+
+  const open1 = Boolean(anchorEl1);
+  const id = open1 ? 'simple-popover' : undefined;
 
   const handleOpen1 = () => {
     handleClose()
-    setOpenProf(true)};
+    setOpenProf(true)
+  };
   const handleClose1 = () => setOpenProf(false);
   const handleOpen2 = () => {
     handleClose()
-    setOpenAccs(true)};
+    setOpenAccs(true)
+  };
   const handleClose2 = () => setOpenAccs(false);
   const handleClick = (event) => {
     setAnchorEl(event.currentTarget);
@@ -183,9 +201,9 @@ const Navbar = () => {
     }
   return (
     <>
-                  <StyledBackdrop open={showBackdrop}>
-                <CircularProgress color="inherit" />
-              </StyledBackdrop>
+      <StyledBackdrop open={showBackdrop}>
+        <CircularProgress color="inherit" />
+      </StyledBackdrop>
       <Modal
         aria-labelledby="transition-modal-title"
         aria-describedby="transition-modal-description"
@@ -281,11 +299,46 @@ const Navbar = () => {
         <div className='search'>
           <input type='text' placeholder='Search' />
           <SearchIcon/>
-         </div>
-
+        </div>
+        <div style={{margin:'0px 45px 0px 15px'}}>
+        <Badge 
+        badgeContent='1' 
+        color="error"
+        sx={{
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            borderRadius: '50%',
+            width: '25px',
+            height: '20px',
+            cursor:'pointer'
+          }}
+        onClick={handleClick1}
+          >
+          <NotificationsRoundedIcon 
+                sx={{color:'white',fontSize:'35px'}}
+                onClick={handleClick1}
+          />
+        </Badge>
+        <Popover
+          id={id}
+          open={open1}
+          anchorReference="anchorPosition"
+          anchorEl={anchorEl1}
+          onClose={handleClose3}
+          anchorOrigin={{
+            vertical: 'bottom',
+            horizontal: 'left',
+          }}
+    
+          anchorPosition={{ top: 60, left: 1100 }}
+        >
+          <Typography sx={{ p: 2,height:'400px',width:'350px' }}>The content of the Popover.</Typography>
+        </Popover>
+        </div>
         <div className='items'>
             <div>
-            <Typography sx={{color:'white',fontSize:'20px'}}>{admin[0].name}({admin[0].jobDescription})</Typography>
+            <Typography sx={{color:'white',fontSize:'15px'}}>{admin[0].name}({admin[0].jobDescription})</Typography>
             </div>
           <div className="item">
           <Button
@@ -303,25 +356,24 @@ const Navbar = () => {
         <Avatar alt="Remy Sharp" src={admin[0].profile} />
       </StyledBadge>
       </Button>
-          </div>
+        </div>
           <Menu
-        id="fade-menu"
-        MenuListProps={{
-          'aria-labelledby': 'fade-button',
-        }}
-        anchorEl={anchorEl}
-        open={open}
-        onClose={handleClose}
-        TransitionComponent={Fade}
-      >
-        <MenuItem onClick={handleOpen1}>Profile</MenuItem>
-        <MenuItem onClick={handleOpen2}>Password</MenuItem>
-        <MenuItem onClick={handleCloselogout}>Logout</MenuItem>
-      </Menu>
-
+            id="fade-menu"
+            MenuListProps={{
+              'aria-labelledby': 'fade-button',
+            }}
+            anchorEl={anchorEl}
+            open={open}
+            onClose={handleClose}
+            TransitionComponent={Fade}
+          >
+            <MenuItem onClick={handleOpen1}>Profile</MenuItem>
+            <MenuItem onClick={handleOpen2}>Password</MenuItem>
+            <MenuItem onClick={handleCloselogout}>Logout</MenuItem>
+          </Menu>
         </div>
 
-        </div>
+      </div>
     </div>
       </>
   );

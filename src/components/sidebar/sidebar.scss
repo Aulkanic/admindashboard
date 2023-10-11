@@ -95,3 +95,22 @@
     }
 
 }
+
+/* ... Other styles ... */
+
+.has-submenu {
+    position: relative;
+  }
+  
+  .has-submenu .submenu {
+    display: none;
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 0.3s ease-in-out;
+  }
+  
+  .has-submenu.open .submenu {
+    display: block;
+    max-height: 200px; /* Adjust as needed */
+  }
+  

@@ -44,7 +44,20 @@ import { styled, createTheme } from '@mui/material';
 import { Backdrop, CircularProgress } from '@mui/material';
 import NoAccountsIcon from '@mui/icons-material/NoAccounts';
 import { useSelector } from "react-redux";
+import CustomNoRowsOverlay from "../Design/Norows";
 
+const CustomDataGrid = styled(DataGrid)({
+  '& .MuiDataGrid-columnHeaders': {
+    color: 'white', 
+    fontWeight:'bold',
+    backgroundColor:'#0047a4',
+    fontWeight:'bold',
+    margin:"0px",
+    borderTopLeftRadius:'0px',
+    borderTopRightRadius:'0px'
+  },
+
+});
 
 const theme = createTheme();
 const StyledBackdrop = styled(Backdrop)(({ theme }) => ({
@@ -769,6 +782,7 @@ try {
           cancelFormData.append('schedDate', selectedAppointment.selectedDate);
           cancelFormData.append('Email', data.Email);
           cancelFormData.append('applicantNum', data.applicantNum);
+          cancelFormData.append('Name', data.Name);
           const response = await CancelApp.CANCEL_APP(cancelFormData)
           if(response.data.success === 1){
             setAppointedList(response.data.AppointmentList)
@@ -888,6 +902,7 @@ try {
               cancelFormData.append('timeEnd', data.timeEnd);
               cancelFormData.append('Email', data.Email);
               cancelFormData.append('applicantNum', data.applicantNum);
+              cancelFormData.append('Name', data.Name);
               const response = await CancelBatch.CANCEL_BATCH(cancelFormData)
               if(response.data.success === 1){
                 setAppointedList(response.data.AppointmentList)
@@ -932,7 +947,6 @@ try {
       setUserFulldocs(sub)
   }
   const Appointedcolumns = [
-    { field: 'applicantNum', headerName: 'ID', width: 70 },
     {
       field: 'Name',
       headerName: 'Name',
@@ -998,7 +1012,6 @@ try {
   
   ];
   const Passedcolumns = [
-    { field: 'applicantNum', headerName: 'ID', width: 70 },
     {
       field: 'Name',
       headerName: 'Name',
@@ -1066,7 +1079,6 @@ try {
   
   ];
   const Rejectcolumns = [
-    { field: 'applicantNum', headerName: 'ID', width: 70 },
     {
       field: 'Name',
       headerName: 'Name',
@@ -1141,7 +1153,6 @@ try {
   
   ];
   const ReAppcolumns = [
-    { field: 'applicantNum', headerName: 'ID', width: 70 },
     {
       field: 'Name',
       headerName: 'Name',
@@ -1215,7 +1226,6 @@ try {
   
   ];
   const Norescolumns = [
-    { field: 'applicantNum', headerName: 'ID', width: 70 },
     {
       field: 'Name',
       headerName: 'Name',
@@ -1870,11 +1880,12 @@ try {
                 onSelectEvent={handleEventSelect} />
                 </Card>
             </div>
-        </Box>}
+        </Box>
+        }
         {value === 2 &&
         <Box sx={{display:'flex',height:'100%',padding:'10px',width:'auto'}}>
-        <Card style={{height:'100%',width:'100%'}}>
-        <Breadcrumbs sx={{backgroundColor:'green'}} aria-label="breadcrumb">
+        <Card style={{height:'100%',width:'100%',borderRadius:'0px'}}>
+        <Breadcrumbs sx={{backgroundColor:'#0047a4',marginBottom:'0px'}} aria-label="breadcrumb">
                   <Button onClick={() => setActiveState('All')}>
                     <Link
                       underline="none"
@@ -1941,10 +1952,13 @@ try {
                     </Link>
                   </Button>
          </Breadcrumbs>  
-            <Card sx={{width:'100%'}}>
-                  {activeState === 'All' && (appointList && appointList.length > 0 ? (
-              <DataGrid
-                sx={{width:'100%'}}
+            <Card sx={{width:'100%',height:'500px',borderRadius:'0px'}}>
+                  {activeState === 'All' && (
+              <CustomDataGrid
+              sx={{minHeight:'300px',border:'none',borderRadius:'0px'}}
+              slots={{
+                noRowsOverlay: CustomNoRowsOverlay,
+              }}
                 rows={appointList}
                 columns={Appointedcolumns}
                 getRowId={(row) => row.applicantNum}
@@ -1959,14 +1973,9 @@ try {
                 pageSizeOptions={[25]}
                 disableRowSelectionOnClick
                 />
-                ) : (
-                  <div style={{width:'100%',height:'400px',display:'flex',justifyContent:'center',alignItems:'center',backgroundColor:'whitesmoke',flexDirection:'column'}}>
-                  <NoAccountsIcon sx={{width:'200px',height:'200px'}}/>
-                <p style={{ textAlign: 'center',fontSize:30,fontWeight:700,fontStyle:'italic' }}>No records</p>
-                </div>
-                  ))}
-                  {activeState === 'Passed' && (PassedInterview && PassedInterview.length > 0 ? (
-                    <DataGrid
+                )}
+                  {activeState === 'Passed' && (
+                    <CustomDataGrid
                       rows={PassedInterview}
                       columns={Passedcolumns}
                       getRowId={(row) => row.applicantNum}
@@ -1978,20 +1987,19 @@ try {
                           },
                         },
                       }}
+                      sx={{minHeight:'300px',border:'none',borderRadius:'0px'}}
+                      slots={{
+                        noRowsOverlay: CustomNoRowsOverlay,
+                      }}
                       pageSizeOptions={[25]}
                       checkboxSelection
                       onRowSelectionModelChange={handleRowSelectionModelChange}
                       rowSelectionModel={rowSelectionModel}
                       disableRowSelectionOnClick
                     />
-                  ) : (
-                    <div style={{width:'100%',height:'400px',display:'flex',justifyContent:'center',alignItems:'center',backgroundColor:'whitesmoke',flexDirection:'column'}}>
-                      <NoAccountsIcon sx={{width:'200px',height:'200px'}}/>
-                    <p style={{ textAlign: 'center',fontSize:30,fontWeight:700,fontStyle:'italic' }}>No records</p>
-                    </div>
-                  ))}
-                  {activeState === 'Reject' && (RejectInterview && RejectInterview.length > 0 ? (
-                    <DataGrid
+                  )}
+                  {activeState === 'Reject' && (
+                    <CustomDataGrid
                       rows={RejectInterview}
                       columns={Rejectcolumns}
                       getRowId={(row) => row.applicantNum}
@@ -2003,20 +2011,19 @@ try {
                           },
                         },
                       }}
+                      sx={{minHeight:'300px',border:'none',borderRadius:'0px'}}
+                      slots={{
+                        noRowsOverlay: CustomNoRowsOverlay,
+                      }}
                       pageSizeOptions={[25]}
                       checkboxSelection
                       onRowSelectionModelChange={handleFailedSelectionModelChange}
                       rowSelectionModel={failedSelectionModel}
                       disableRowSelectionOnClick
                     />
-                  ) : (
-                    <div style={{width:'100%',height:'400px',display:'flex',justifyContent:'center',alignItems:'center',backgroundColor:'whitesmoke',flexDirection:'column'}}>
-                      <NoAccountsIcon sx={{width:'200px',height:'200px'}}/>
-                    <p style={{ textAlign: 'center',fontSize:30,fontWeight:700,fontStyle:'italic' }}>No records</p>
-                    </div>
-                  ))}
-                  {activeState === 'Reapp' && (ReappointList && ReappointList.length > 0 ? (
-                    <DataGrid
+                  )}
+                  {activeState === 'Reapp' && (
+                    <CustomDataGrid
                       rows={ReappointList}
                       columns={ReAppcolumns}
                       getRowId={(row) => row.applicantNum}
@@ -2028,20 +2035,19 @@ try {
                           },
                         },
                       }}
+                      sx={{minHeight:'300px',border:'none',borderRadius:'0px'}}
+                      slots={{
+                        noRowsOverlay: CustomNoRowsOverlay,
+                      }}
                       pageSizeOptions={[25]}
                       checkboxSelection
                       onRowSelectionModelChange={handleReappSelectionModelChange}
                       rowSelectionModel={reappSelectionModel}
                       disableRowSelectionOnClick
                     />
-                  ) : (
-                    <div style={{width:'100%',height:'400px',display:'flex',justifyContent:'center',alignItems:'center',backgroundColor:'whitesmoke',flexDirection:'column'}}>
-                      <NoAccountsIcon sx={{width:'200px',height:'200px'}}/>
-                    <p style={{ textAlign: 'center',fontSize:30,fontWeight:700,fontStyle:'italic' }}>No records</p>
-                    </div>
-                  ))}
-                  {activeState === 'Nores' && (Noresponse && Noresponse.length > 0 ? (
-                    <DataGrid
+                  )}
+                  {activeState === 'Nores' && (
+                    <CustomDataGrid
                       rows={Noresponse}
                       columns={Norescolumns}
                       getRowId={(row) => row.applicantNum}
@@ -2055,16 +2061,15 @@ try {
                       }}
                       pageSizeOptions={[25]}
                       checkboxSelection
+                      sx={{minHeight:'300px',border:'none',borderRadius:'0px'}}
+                      slots={{
+                        noRowsOverlay: CustomNoRowsOverlay,
+                      }}
                       onRowSelectionModelChange={handleReappSelectionModelChange}
                       rowSelectionModel={reappSelectionModel}
                       disableRowSelectionOnClick
                     />
-                  ) : (
-                    <div style={{width:'100%',height:'400px',display:'flex',justifyContent:'center',alignItems:'center',backgroundColor:'whitesmoke',flexDirection:'column'}}>
-                      <NoAccountsIcon sx={{width:'200px',height:'200px'}}/>
-                    <p style={{ textAlign: 'center',fontSize:30,fontWeight:700,fontStyle:'italic' }}>No records</p>
-                    </div>
-                  ))}
+                  )}
             </Card>
             <div style={{width:'97%',margin:'10px',display:'flex',justifyContent:'flex-end',alignItems:'flex-end'}}>
             {activeState === 'Passed' && <div sx={{width:'90%',margin:'10px',display:'flex',justifyContent:'flex-end',flexDirection:'column',alignItems:'flex-end'}}>
