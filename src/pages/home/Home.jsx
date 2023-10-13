@@ -1,6 +1,7 @@
 import Navbar from "../../components/navbar/Navbar";
 import Sidebar from "../../components/sidebar/Sidebar";
 import "./home.scss"
+import "./home.css"
 import Box from '@mui/material/Box';
 import Card from '@mui/material/Card';
 import CardActions from '@mui/material/CardActions';
@@ -12,12 +13,20 @@ import { useState } from "react";
 import { useEffect } from "react";
 import { DataGrid} from '@mui/x-data-grid';
 import { styled } from '@mui/material/styles';
+import { FaGraduationCap } from "react-icons/fa";
+import { FaUser } from "react-icons/fa";
+import { BsFillCalendarDateFill } from "react-icons/bs";
 
 
 const CustomDataGrid = styled(DataGrid)({
   '& .MuiDataGrid-columnHeaders': {
     backgroundColor: 'white', 
     color: 'black', 
+    fontFamily:'Roboto Serif',
+    fontWeight:'700',
+    lineHeight:'17.57px',
+    fontSize:'17px',
+    borderBottom:'2px solid black'
   },
 });
 const Home = () => {
@@ -28,7 +37,7 @@ const Home = () => {
 
     async function Fetch(){
       const scholars = await FetchingBmccScho.FETCH_SCHOLARS()
-      const scho = scholars.data.Scholars?.filter(data => data.status === 'Active' || data.status === 'Hold')
+      const scho = scholars.data.Scholars?.filter(data => data.status === 'Approved' && data.remarks === 'Existing Scholar' || data.remarks === 'New Scholar')
       setTotalscho(scho)
       const response = await ApplicantsRequest.ALL_APPLICANTS()
       const appdatali = response.data.results;
@@ -38,19 +47,13 @@ const Home = () => {
     Fetch();
   }, []);
   const columns = [
-    { field: 'applicantNum', headerName: 'Applicant ID', width: 100 },
-    {
-      field: 'SchoIarshipApplied',
-      headerName: 'Scholarship Applied',
-      width: 150,
-      editable: true,
-    },
     {
       field: 'Name',
       headerName: 'Name',
       width: 250,
       editable: true,
     },
+    
     {
       field: 'email',
       headerName: 'Email',
@@ -58,23 +61,30 @@ const Home = () => {
       editable: false,
     },
     {
-      field: 'status',
-      headerName: 'Status',
-      width: 150,
-      editable: false,
-    },
-    {
-      field: 'score',
-      headerName: 'Score',
-      width: 110,
+      field: 'SchoIarshipApplied',
+      headerName: 'Scholarship Applied',
+      width: 250,
       editable: true,
     },
     {
       field: 'DateApplied',
       headerName: 'Date Applied',
-      width: 190,
+      width: 200,
       editable: false,
     },
+    {
+      field: 'score',
+      headerName: 'Score',
+      width: 150,
+      editable: false,
+    },
+    {
+      field: 'status',
+      headerName: 'Status',
+      width: 110,
+      editable: true,
+    },
+
 
   ];
   const filteredRows = post.filter((row) => row.status === 'For Evaluation');
@@ -93,65 +103,72 @@ const Home = () => {
         '& > :not(style)': {
           m: 1,
           width: '30%',
-          height: 158,
+          height: 70,
+          backgroundColor:"#FFFFFF",
+          borderRadius:'10px'
         },
       }}>
 
-    <Card elevation={0} sx={{ minWidth: 250}}>
-      <CardContent>
-        <Typography sx={{ fontSize: 20 }} color="text.secondary" gutterBottom>
-          Total Scholars
-        </Typography>
-        <Typography variant="h5" component="div">
+    <Card elevation={0} sx={{ minWidth: 200,display:'flex',justifyContent:'space-between',alignItems:'center',padding:'10px 15px 10px 10px'}}>
+      <Typography sx={{ fontSize: 20,fontWeight:'900',color:'black',lineHeight:'17.57px',fontFamily:'Roboto Serif',textAlign:'center' }} gutterBottom>
+          Total <br/>
+          Scholars
+      </Typography>
+      <div className="totalicon">
+      <Typography variant="h5" component="div" sx={{borderRight:'2px solid black',width:'80%',color:'#043F97',fontFamily:'Roboto Serif',fontWeight:'700',lineHeight:'23.42px'}}>
           {totalscho.length}
-        </Typography>
-      </CardContent>
-      <CardActions>
-        <Button size="small" href="/scholars" sx={{color:'#666'}}>See More</Button>
-      </CardActions>
+      </Typography>
+      <FaGraduationCap style={{width:'20px',color:'blue'}} />
+      </div>
+      <Button size="small" href="/scholars" sx={{color:'#666',fontFamily:'Roboto Serif',fontWeight:'400',lineHeight:'11.42px',fontStyle:'italic',textTransform:'none'}}>
+        View <br /> all
+      </Button>
     </Card>
 
-    <Card elevation={0} sx={{ minWidth: 250}}>
-      <CardContent>
-        <Typography sx={{ fontSize: 20 }} color="text.secondary" gutterBottom>
-          Total Applicants
+    <Card elevation={0} sx={{ minWidth: 200,display:'flex',justifyContent:'space-between',alignItems:'center',padding:'10px 15px 10px 30px'}}>
+        <Typography sx={{ fontSize: 20,fontWeight:'900',color:'black',lineHeight:'17.57px',fontFamily:'Roboto Serif' ,textAlign:'center'}} gutterBottom>
+          Total <br/> Applicants
         </Typography>
-        <Typography variant="h5" component="div">
+        <div className="totalicon">
+        <Typography variant="h5" component="div" sx={{borderRight:'2px solid black',width:'80%',color:'#043F97',fontFamily:'Roboto Serif',fontWeight:'700',lineHeight:'23.42px'}}>
           {filteredRows.length}
         </Typography>
-      </CardContent>
-      <CardActions>
-        <Button size="small" href="/applicants" sx={{color:'#666'}}>See More</Button>
-      </CardActions>
+        <FaUser style={{width:'20px',color:'blue'}} />
+        </div>
+        <Button size="small" href="/applicants" sx={{color:'#666',fontFamily:'Roboto Serif',fontWeight:'400',lineHeight:'11.42px',fontStyle:'italic',textTransform:'none'}}>
+        View <br /> all
+        </Button>
     </Card>
 
-    <Card elevation={0} sx={{ minWidth: 250}}>
-      <CardContent>
-        <Typography sx={{ fontSize: 20 }} color="text.secondary" gutterBottom>
-          Appointed Today
+    <Card elevation={0} sx={{ minWidth: 200,display:'flex',justifyContent:'space-between',alignItems:'center',padding:'10px 15px 10px 30px'}}>
+    <Typography sx={{ fontSize: 20,fontWeight:'900',color:'black',lineHeight:'17.57px',fontFamily:'Roboto Serif',textAlign:'center' }} gutterBottom>
+          Appointed <br/> Today
         </Typography>
-        <Typography variant="h5" component="div">
-          0
+        <div className="totalicon">
+        <Typography variant="h5" component="div" sx={{borderRight:'2px solid black',width:'80%',color:'#043F97',fontFamily:'Roboto Serif',fontWeight:'700',lineHeight:'23.42px'}}>
+          {filteredRows.length}
         </Typography>
-      </CardContent>
-      <CardActions>
-        <Button href="/appointments" size="small" sx={{color:'#666'}}>See More</Button>
-      </CardActions>
+        <BsFillCalendarDateFill style={{width:'20px',color:'blue'}} />
+        </div>
+        <Button size="small" href="/appointments" sx={{color:'#666',fontFamily:'Roboto Serif',fontWeight:'400',lineHeight:'11.42px',fontStyle:'italic',textTransform:'none'}}>
+        View <br /> all
+        </Button>
     </Card>
 
     </Box>
 
       <div className="listContainer">
+      <h1 className="recentapph">Recent Applicants</h1>
       <Box 
         sx={{
           margin:'5px',
-          height: '200px',
+          height: '500px',
           width: 'max-content',
           color:'#666',
-          fontFamily:'font-family: "Open Sans",sans-serif;'
+          fontFamily:'font-family: "Open Sans",sans-serif',
+          border:'2px solid black',
+          borderRadius:'5px'
         }}>
-
-      <h1>Recent Applicants</h1>
       <CustomDataGrid className="dataGrid"
         rows={post}
         columns={columns}

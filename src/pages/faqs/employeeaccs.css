@@ -100,8 +100,35 @@
   .bmccEmp{
     background-color: white;
     width: max-content;
+    height: 500px;
+    border:'2px solid black'
   }
   .emacsslist{
     background-color: white;
     padding: 10px;
+  }
+  .stafflish{
+    font-family: Roboto Serif;
+    font-size: 25px;
+    font-weight: 700;
+    line-height: 29px;
+    letter-spacing: 0em;
+    text-align: center;    
+    color: #043F97;
+    margin: 0px;
+    margin-left: 15px;      
+  }
+  .modalbottombtn{
+    position: absolute;
+    bottom: 0;
+    right: 0;
+    padding: 10px;
+    padding-right: 30px;
+  }
+  .dataGridCon{
+    border: 2px solid black;
+    border-radius: 5px;
+    background-color: white;
+    width: max-content;
+    height: 500px;
   }

@@ -82,4 +82,13 @@
 .swal2-container {
     z-index: 9999; /* Set a high z-index value */
   }
+  .scorecardh{
+    font-family: Roboto Serif;
+    font-size: 32px;
+    font-weight: 900;
+    line-height: 37px;
+    letter-spacing: 0.05em;
+    text-align: left;
+    color:#043F97 ; 
+  }
   

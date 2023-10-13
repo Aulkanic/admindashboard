@@ -99,6 +99,7 @@ const Scholarships = () => {
           ListAccess.ACCESS()
         ]);
         let acc = await ListAccess.ACCESS()
+        console.log(response)
         const empacc = acc.data.result?.filter(data => data.employeeName === user.name)
         setAccess(empacc)
         setSchocat(response[0].data.SchoCat);

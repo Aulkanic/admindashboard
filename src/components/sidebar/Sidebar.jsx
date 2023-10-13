@@ -39,11 +39,6 @@ const Sidebar = () => {
   const navigate = useNavigate();
   const [activeSection,setActiveSection] = useState(0);
   const sections = admin[1].split(', '); 
-  const [isReportsSubMenuOpen, setIsReportsSubMenuOpen] = useState(false);
-
-  const toggleReportsSubMenu = () => {
-    setIsReportsSubMenuOpen(!isReportsSubMenuOpen);
-  };
   
   const Logout = async() =>{
     const formData = new FormData();
@@ -53,6 +48,40 @@ const Sidebar = () => {
        dispatch(setAdmin([]))
        navigate('/')
   }
+  const sidebarData = [
+    {
+      sectionName: 'Web',
+      items: [
+        { label: 'Employees', icon: 'GroupsIcon', link: '/faqs' },
+        { label: 'Scholarships', icon: 'SchoolIcon', link: '/scholarships' },
+        { label: 'Score Card', icon: 'MoneyIcon', link: '/about' },
+        { label: 'Requirements', icon: 'NoteAddIcon', link: '/contact' },
+      ],
+    },
+    {
+      sectionName: 'Informations',
+      items: [
+        { label: 'User Accounts', icon: 'AccountBoxIcon', link: '/users' },
+        { label: 'Evaluation', icon: 'VerifiedIcon', link: '/Evaluation' },
+        { label: 'Applicants', icon: 'PeopleAltIcon', link: '/applicants' },
+        { label: 'Appointments', icon: 'CalendarMonthIcon', link: '/appointments' },
+        { label: 'Scholars', icon: 'HistoryEduIcon', link: '/scholars' },
+      ],
+    },
+    {
+      sectionName: 'Maintenance',
+      items: [
+        { label: 'BMCC Website', icon: 'LanguageIcon', link: '/Website-Maintenance' },
+        { label: 'Announcement', icon: 'CampaignIcon', link: '/Announcement' },
+        { label: 'Rules', icon: 'GavelIcon', link: '/Rules' },
+        { label: 'News', icon: 'FeedIcon', link: '/news' },
+        { label: 'Reports', icon: 'AssessmentIcon', link: '/Report' },
+        { label: 'Backups', icon: 'SettingsBackupRestoreIcon', link: '/Backups' },
+      ],
+    },
+  ];
+
+
   return (
     <div className='sidebar'>
 
@@ -63,31 +92,35 @@ const Sidebar = () => {
       <div className='center'> 
           <ul>
           <Link to="/home" onClick={() =>setActiveSection(0)} style={{backgroundColor: activeSection === 0 ? 'lightgreen' : 'none',textDecoration: "none"}}>
-            <li >
+            <li className='liactive'>
               <DashboardIcon className='icon' />
               <span> Dashboard </span>
             </li>
           </Link>
             <p className="title"> Web </p>
-          {sections.includes('Account Creation') || sections.includes('Account Management') || sections.includes('Administrator') ? (<Link to='/faqs' style={{ textDecoration: "none" }}>
+          {sections.includes('Account Creation') || sections.includes('Account Management') || sections.includes('Administrator') ? (
+          <Link to='/faqs' style={{ textDecoration: "none" }}>
             <li>
               <GroupsIcon className='icon'/>
               <span> Employees </span>
             </li>
           </Link>) : (null)}
-          {sections.includes('Scholarship Programs') || sections.includes('Administrator') ? (<Link to="/scholarships" style={{ textDecoration: "none" }}>
+          {sections.includes('Scholarship Programs') || sections.includes('Administrator') ? (
+          <Link to="/scholarships" style={{ textDecoration: "none" }}>
             <li>
               <SchoolIcon className='icon'/>
               <span> Scholarships </span>
             </li>
           </Link>) : (null)}
-          {sections.includes('Score Card') || sections.includes('Administrator') ? (<Link to='/about' style={{ textDecoration: "none" }}>
+          {sections.includes('Score Card') || sections.includes('Administrator') ? (
+          <Link to='/about' style={{ textDecoration: "none" }}>
             <li>
               <MoneyIcon className='icon'/>
               <span> Score Card </span>
             </li>
           </Link>) : (null)}
-          {sections.includes('Requirements Management') || sections.includes('Administrator') ? (<Link to="/contact" style={{ textDecoration: "none" }}>
+          {sections.includes('Requirements Management') || sections.includes('Administrator') ? (
+          <Link to="/contact" style={{ textDecoration: "none" }}>
             <li>
               <NoteAddIcon className='icon'/>
               <span> Requirements </span>
@@ -96,27 +129,31 @@ const Sidebar = () => {
 
             <p className="title"> Informations </p>
 
-            {sections.includes('Reports') || sections.includes('Administrator') ? (<Link to="/users" style={{ textDecoration: "none" }}>
+            {sections.includes('Reports') || sections.includes('Administrator') ? (
+            <Link to="/users" style={{ textDecoration: "none" }}>
             <li>
               <AccountBoxIcon className='icon'/>
               <span> User Accounts</span>
             </li>
             </Link>) : (null)}
 
-            {sections.includes('Evaluation') || sections.includes('Passing Score and Slots') || sections.includes('Administrator') ? (<Link to="/Evaluation" style={{ textDecoration: "none" }}>
+            {sections.includes('Evaluation') || sections.includes('Passing Score and Slots') || sections.includes('Administrator') ? (
+            <Link to="/Evaluation" style={{ textDecoration: "none" }}>
             <li>
               <VerifiedIcon className='icon'/>
               <span> Evaluation </span>
             </li>
             </Link>) : (null)}
-            {sections.includes('Applicant Management') || sections.includes('Requirements Verification') || sections.includes('Administrator') ? (<Link to="/applicants" style={{ textDecoration: "none" }}>
+            {sections.includes('Applicant Management') || sections.includes('Requirements Verification') || sections.includes('Administrator') ? (
+            <Link to="/applicants" style={{ textDecoration: "none" }}>
             <li>
               <PeopleAltIcon className='icon'/>
               <span> Applicants </span>
             </li>
             </Link>) : (null)}
 
-            {sections.includes('Appointment Management') || sections.includes('Appointment Scheduling') || sections.includes('Administrator') ? (<Link to="/appointments" style={{ textDecoration: "none" }}>
+            {sections.includes('Appointment Management') || sections.includes('Appointment Scheduling') || sections.includes('Administrator') ? (
+            <Link to="/appointments" style={{ textDecoration: "none" }}>
             <li>
               <CalendarMonthIcon className='icon'/>
               <span> Appointments </span>
@@ -131,26 +168,30 @@ const Sidebar = () => {
             </Link>) : (null)}
 
             <p className="title"> Maintenance </p>
-            {sections.includes('Website Maintenance') || sections.includes('Administrator') ? (<Link to='/Website-Maintenance' style={{ textDecoration: 'none'}}>
+            {sections.includes('Website Maintenance') || sections.includes('Administrator') ? (
+            <Link to='/Website-Maintenance' style={{ textDecoration: 'none'}}>
             <li>
               <LanguageIcon className='icon'/>
               <span> BMCC Website </span>
             </li>
             </Link>) : (null)}
-            {sections.includes('News and Announcements') || sections.includes('Administrator') ? (<Link to='/Announcement' style={{ textDecoration: 'none'}}>
+            {sections.includes('News and Announcements') || sections.includes('Administrator') ? (
+            <Link to='/Announcement' style={{ textDecoration: 'none'}}>
             <li>
               <CampaignIcon className='icon'/>
               <span> Announcement </span>
             </li>
             </Link>) : (null)}
-            {sections.includes('Rule Implementation') || sections.includes('Administrator') ? (<Link to='/Rules' style={{ textDecoration: 'none'}}>
+            {sections.includes('Rule Implementation') || sections.includes('Administrator') ? (
+            <Link to='/Rules' style={{ textDecoration: 'none'}}>
             <li>
               <GavelIcon className='icon'/>
               <span> Rules </span>
             </li>
             </Link>) : (null)}
 
-            {sections.includes('News and Announcements') || sections.includes('Administrator') ? (<Link to='/news' style={{ textDecoration: 'none'}}>
+            {sections.includes('News and Announcements') || sections.includes('Administrator') ? (
+            <Link to='/news' style={{ textDecoration: 'none'}}>
             <li>
               <FeedIcon className='icon'/>
               <span> News </span>
@@ -164,7 +205,8 @@ const Sidebar = () => {
               <span> Reports </span>
             </li>
             </Link>) : (null)}
-            {sections.includes('Administrator') ? (<Link to='/Backups' style={{ textDecoration: 'none'}}>
+            {sections.includes('Administrator') ? (
+            <Link to='/Backups' style={{ textDecoration: 'none'}}>
             <li>
               <SettingsBackupRestoreIcon className='icon'/>
               <span> Backups </span>
@@ -178,9 +220,8 @@ const Sidebar = () => {
             <Button 
             sx={{ textTransform: "none"}}>
             </Button>
-            </li>
-         
-      </Link>
+            </li>   
+          </Link>
 
           </ul>
       </div>

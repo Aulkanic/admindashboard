@@ -243,6 +243,7 @@ const Navbar = () => {
     </li>
     )
   })
+
   return (
     <>
       <StyledBackdrop open={showBackdrop}>
@@ -346,7 +347,7 @@ const Navbar = () => {
         </div>
         <div style={{margin:'0px 45px 0px 15px'}}>
         <Badge 
-        badgeContent='1' 
+        badgeContent={notif.length} 
         color="error"
         sx={{
             display: 'flex',

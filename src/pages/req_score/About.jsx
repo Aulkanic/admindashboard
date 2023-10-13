@@ -167,9 +167,9 @@ export const About = () => {
       const { value: choice } = await Swal.fire({
         input: 'textarea',
         inputLabel: 'Enter Choices you want to Add',
-        inputPlaceholder: 'Type your message here...',
+        inputPlaceholder: 'Type your choices here...',
         inputAttributes: {
-          'aria-label': 'Type your message here'
+          'aria-label': 'Type your choices here'
         },
         showCancelButton: true,
         inputValidator: (value) => {
@@ -275,8 +275,12 @@ export const About = () => {
     }
     const EditQForm = async(data) =>{
       const { value: question } = await Swal.fire({
-        title: 'Enter Question you want to Replace/Edit',
-        input: 'text',
+        input: 'textarea',
+        inputLabel: 'Enter Questions you want to replace',
+        inputPlaceholder: 'Type your questions here...',
+        inputAttributes: {
+          'aria-label': 'Type your questions here'
+        },
         confirmButtonText: 'Save Changes',
         showCancelButton: true,
         inputValue: data.questions,
@@ -460,14 +464,14 @@ export const About = () => {
         <div className="aboutContainer">
         <Navbar/>
         <div className="top">
-          <h1>Score Card</h1>
-          <FormControl fullWidth>
-            <InputLabel id="demo-simple-select-label">Scholarship Program</InputLabel>
+          <p className="scorecardh">Score Card</p>
+          <FormControl sx={{backgroundColor:'white'}} fullWidth>
+            <InputLabel id="demo-simple-select-label">Choose Scholarship Program...</InputLabel>
             <Select
               labelId="demo-simple-select-label"
               id="demo-simple-select"
               value={schoname}
-              label="Scholarship Program"
+              label="Choose Scholarship Program..."
               onChange={handleChange}
             >
               {schoprog?.map((data,index) =>{

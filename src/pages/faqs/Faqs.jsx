@@ -28,6 +28,8 @@ import Select from 'react-select';
 import AddIcon from '@mui/icons-material/Add';
 import { useSelector } from 'react-redux';
 import Swal from 'sweetalert2';
+import { MdClear } from "react-icons/md";
+import { TiArrowBack } from "react-icons/ti";
 
 
 const StyledButton = styled(Button)`
@@ -84,22 +86,23 @@ const Faqs = () => {
 
 const CustomDataGrid = styled(DataGrid)({
   '& .MuiDataGrid-columnHeaders': {
-    color: 'white', 
+    color: 'black', 
     fontWeight:'bold',
-    backgroundColor:'#0047a4',
-    fontWeight:'bold'
+    backgroundColor:'white',
+    fontWeight:'bold',
+    borderBottom:'2px solid black'
   },
 
 });
   const style = {
-    position: 'absolute',
+    position: 'relative',
     top: '50%',
     left: '50%',
     transform: 'translate(-50%, -50%)',
-    width: '700px',
-    height: 'minmax(400px,maxContent)',
+    width: '1070px',
+    height: '486px',
     bgcolor: 'background.paper',
-    padding:'10px',
+    padding:'70px 30px 50px 30px',
     borderRadius:'5px',
     
   };
@@ -111,33 +114,33 @@ const CustomDataGrid = styled(DataGrid)({
   const columns = [
     {
       field: 'name',
-      headerName: 'STAFF NAME',
+      headerName: 'Staff Name',
       width: 350,
       editable: false,
     },
     {
       field: 'action',
-      headerName: 'ACTION',
+      headerName: 'Action',
       width: 270,
       editable: false,
     },
     {
       field: 'applicantNum',
-      headerName: 'APPLICANT CODE',
-      width: 200,
+      headerName: 'Applicant Code',
+      width: 250,
       editable: false,
     },
     {
       field: 'date',
-      headerName: 'WHEN',
-      width: 170,
+      headerName: 'When',
+      width: 250,
       editable: false,
     }
   ];
   const columns1 = [
     {
       field: 'profile',
-      headerName: 'ACTIVE STATUS',
+      headerName: 'Active Status',
       width: 200,
       renderCell: (params) => {
         const isOnline = params.row.isOnline;
@@ -168,34 +171,34 @@ const CustomDataGrid = styled(DataGrid)({
 
     {
       field: 'name',
-      headerName: 'STAFF NAME',
+      headerName: 'Staff Name',
       width: 250,
       editable: false,
     },
     {
       field: 'email',
-      headerName: 'STAFF EMAIL',
+      headerName: 'Staff Email',
       width: 250,
       editable: false,
     },
     {
       field: 'jobDescription',
-      headerName: 'ROLE',
+      headerName: 'Role',
       width: 170,
       editable: false,
     },
     {
       field: 'status',
-      headerName: 'ACCOUNT STATUS',
+      headerName: 'Account Status',
       width: 200,
       editable: false,
     },
     {
       field: 'insert',
-      headerName: 'ACTIONS',
+      headerName: 'Action',
       width: 150,
       renderCell: (params) => (
-        <Button sx={{textTransform:'none',backgroundColor:'blue',color:'white',borderRadius:'10px'}} variant='contained' onClick={() => handleOpen1(params.row)}>Edit Details</Button>
+        <Button sx={{textTransform:'none',backgroundColor:'#043F97',color:'white',borderRadius:'10px'}} variant='contained' onClick={() => handleOpen1(params.row)}>Edit Details</Button>
       ),
     },
   ];
@@ -500,20 +503,22 @@ const handleModuleCheckboxChange1 = (moduleId) => {
                   aria-labelledby="modal-modal-title"
                   aria-describedby="modal-modal-description">
             <Box sx={style}>
-              <div className="buttonclosed">
-              <StyledButton onClick={handleClose}>X</StyledButton>
+            <div style={{margin:5,width:'100%',height:'30px',display:'flex',alignItems:'center',justifyContent:'space-between'}}>
+                  <div>
+                  <Typography sx={{fontSize:32,fontWeight:700,color:'#043F97',fontFamily:'Roboto Serif',lineHeight:'37px'}}>
+                  Create Staff Accounts
+                  </Typography>
+                  <Typography sx={{fontSize:14,fontWeight:400,color:'#000000',fontFamily:'Roboto Serif',lineHeight:'16px'}}>
+                  Fill up the necessary details.
+                  </Typography>
+                  </div>
+                <div style={{width:'50px',marginRight:'15px',height:'50px',marginTop:'-35px'}}>
+                <button style={{height:'100%',backgroundColor:'red',color:'white',padding:'0px',width:'100%',border:'none',borderRadius:'5px'}} onClick={handleClose}>
+                  <MdClear style={{fontSize:'30px',fontWeight:'700'}}/>
+                </button>
                 </div>
-
-              <div className="form">
-                <Typography sx={{fontSize:35,color:'#666'}}>
-                  Create Employee Accounts.
-                </Typography>
-                <div style={{display:'flex',justifyContent:'space-between',alignItems:"center"}}>
-                <Typography>
-                  Please input necessary Details
-                </Typography>
-                </div>
-
+              </div>
+              <div>
                 <TextField
                    label='Employee Name' 
                     margin='normal' 
@@ -534,12 +539,13 @@ const handleModuleCheckboxChange1 = (moduleId) => {
                     color='secondary'
                     />
                   {errors.email && <p style={{color:'red',margin:'2px'}}>{errors.email}</p>}
-                  <div style={{width:'100%'}}> 
-                    <label htmlFor="employee">Role:</label>
+                  <div style={{width:'100%',height:'50px',marginTop:'20px'}}> 
                     <Select
                       value={jobDes}
                       fullWidth
+                      styles={{height:'100%'}}
                       onChange={handleChange}
+                      placeholder="Select Role..."
                       options={roles.map((option) => ({
                         value: option.role,
                         label: `${option.role}(${option.total})`,
@@ -549,8 +555,8 @@ const handleModuleCheckboxChange1 = (moduleId) => {
               <div>
 
             </div>
-                <div style={{margin:10,width:'100%',height:'30px',display:'flex',alignItems:'flex-end',justifyContent:'flex-end',marginTop:'25px'}}>
-                <Button sx={{textTransform:'none'}} className="myButton" variant='contained' onClick={handleClose}>Cancel</Button>
+                <div className='modalbottombtn'>
+                <Button sx={{textTransform:'none',backgroundColor:'red'}} className="myButton2" variant='contained' onClick={handleClose}>Cancel</Button>
                 <Button sx={{marginLeft:'10px',textTransform:'none'}} className="myButton1" variant='contained' onClick={AddbMCC}>Add Employee</Button>
                 </div>
                 </div>
@@ -562,16 +568,22 @@ const handleModuleCheckboxChange1 = (moduleId) => {
                 aria-describedby="modal-modal-description">
                 <Box sx={style}>
                 <div style={{margin:5,width:'100%',height:'30px',display:'flex',alignItems:'center',justifyContent:'space-between'}}>
-                <Typography sx={{fontSize:25,fontWeight:700,color:'#666'}}>Edit Staff Details</Typography>
-                <div style={{width:'40px',marginRight:'15px'}}>
+                  <div>
+                  <Typography sx={{fontSize:32,fontWeight:700,color:'#043F97',fontFamily:'Roboto Serif',lineHeight:'37px'}}>
+                  Edit Staff Details
+                  </Typography>
+                  <Typography sx={{fontSize:14,fontWeight:400,color:'#000000',fontFamily:'Roboto Serif',lineHeight:'16px'}}>
+                  Fill up the necessary details.
+                  </Typography>
+                  </div>
+                <div style={{width:'50px',marginRight:'15px',height:'50px',marginTop:'-35px'}}>
                 <button style={{height:'100%',backgroundColor:'red',color:'white',padding:'0px',width:'100%',border:'none',borderRadius:'5px'}} onClick={handleClose1}>
-                  x
+                  <MdClear style={{fontSize:'30px',fontWeight:'700'}}/>
                 </button>
                 </div>
-
                 </div>
 
-                <div style={{margin: 20}} className="form">
+                <div style={{margin: '20px 0px 0px -10px'}} className="form">
                 {olddata ? (
                   <>
                    <TextField 
@@ -605,7 +617,7 @@ const handleModuleCheckboxChange1 = (moduleId) => {
                         label: `${option.role}(${option.total})`,
                       }))}
                     /></>)}
-                      </div>
+                </div>
                 {olddata.jobDescription !== 'Administrator' && (<div>
                 <FormLabel id="demo-row-radio-buttons-group-label">Account Status</FormLabel>
                 <RadioGroup
@@ -623,229 +635,250 @@ const handleModuleCheckboxChange1 = (moduleId) => {
                 </div>)}
 
                 </div>
-                <div style={{width:'100%',display:'flex',justifyContent:'space-around'}}>
-                <Button className="myButton" variant='contained' onClick={handleClose1}>Cancel</Button>
-                <Button className="myButton1" variant='contained' onClick={UpdateBMCC}>Save Changes</Button>
+                <div className='modalbottombtn'>
+                <Button sx={{textTransform:'none',marginRight:'15px',backgroundColor:'red'}} className="myButton2" variant='contained' onClick={handleClose1}>
+                  Cancel
+                </Button>
+                <Button sx={{textTransform:'none'}} className="myButton1" variant='contained' onClick={UpdateBMCC}>Save Changes</Button>
                 </div>
                 </Box>
             </Modal>
-        <Dialog
-        fullScreen
-        open={open2}
-        onClose={handleClose2}
-        TransitionComponent={Transition}
-      >
-        <AppBar sx={{ position: 'relative' }}>
-          <Toolbar>
-            <IconButton
-              edge="start"
-              color="inherit"
-              onClick={handleClose2}
-              aria-label="close"
-            >
-              <ArrowBackIcon />
-            </IconButton>
-            <Typography sx={{ ml: 2, flex: 1,fontWeight:'bold',textTransform:'capitalize' }} variant="h6" component="div">
-              Staff Role Management
-            </Typography>
-          </Toolbar>
-        </AppBar>
-           <Box sx={{padding:'15px',backgroundColor:'#f1f3fa'}}>
-            <Card sx={{padding:'15px',display:'flex',justifyContent:'space-between'}}>
-              <div style={{width:'80%'}}>
-              <Typography sx={{color:'blue',fontWeight:'bold'}}>LIST OF ROLES</Typography>
-              <ul className='descript'>
-                  <li><p><strong>Account Creation</strong> - Responsible for creating employee accounts and assigning access privileges to the MYDO website.</p></li>
-                  <li><p><strong>Account Management</strong> - Responsible for editing employee details and status.</p></li>
-                  <li><p><strong>Scholarship Programs</strong> - In charge of creating and managing scholarship programs and their statuses.</p></li>
-                  <li><p><strong>Score Card</strong> - Responsible for configuring scoring criteria for specific questions and answers on application forms.</p></li>
-                  <li><p><strong>Requirements Management</strong> - Responsible for creating lists of requirements for specific scholarship programs.</p></li>
-                  <li><p><strong>Evaluation</strong> - Responsible for evaluating and determining the status of registered applicants.</p></li>
-                  <li><p><strong>Passing Score and Slots</strong> -  In charge of setting and adjusting passing scores and available slots for specific scholarships.</p></li>
-                  <li><p><strong>Requirements Verification</strong> - Responsible for checking and verifying documents submitted by applicants.</p></li>
-                  <li><p><strong>Applicant Management</strong> - Responsible for adding and managing applicant profiles, including marking them as successful or unsuccessful.</p></li>
-                  <li><p><strong>Appointment Scheduling</strong> -  Responsible for scheduling appointments for qualified applicants and evaluating their interview results.</p></li>
-                  <li><p><strong>Appointment Management</strong> - Responsible for adding and managing appointments, including marking them as successful or unsuccessful.</p></li>
-                  <li><p><strong>Scholarship Monitoring</strong> -  In charge of monitoring and managing the activities of scholars.</p></li>
-                  <li><p><strong>News and Announcements</strong> -  Responsible for creating the latest news and announcements to inform scholars and applicants.</p></li>
-                  <li><p><strong>Rule Implementation</strong> - Responsible for enforcing the rules and guidelines of the scholarship program.</p></li>
-                  <li><p><strong>Website Maintenance</strong> - Responsible for regularly updating the content of the website for both applicants and scholars.</p></li>
-                  <li><p><strong>Reporting</strong> - Responsible for generating summaries and reports on scholarship program data.</p></li>
-              </ul>
-              </div>
-              <div style={{width:'20%'}}>
-                <Typography sx={{color:'blue',fontWeight:'bold'}}>LIST OF STAFFS</Typography>
-                <div className='listofrole'>
-                  <div className='rolesect'>
-                    <div>
-                    {Administrator?.map((data) =>{
-                      return(
-                        <>
-                        <li>{data.role}</li>
-                        </>
-                      ) 
-                    })}
-                    </div>
-                    <div>
-                    {Officer?.map((data) =>{
-                      return(
-                        <>
-                        <li>{data.role}</li>
-                        </>
-                      )
-                      
-                    })}
-                    
-                    </div>
-                  </div>
-                  <div className='rolesect'>
-                    <div>
-                    {Manager?.map((data) =>{
-                      return(
-                        <>
-                        <li>{data.role}</li>
-                        </>
-                      )
-                      
-                    })}
-                    
-                    </div>
-                    <div>
-                    {Coordinator?.map((data) =>{
-                      return(
-                        <>
-                        <li>{data.role}</li>
-                        </>
-                      )
-                      
-                    })}
-                   
-                    </div>
-                  </div>
-                </div>
-                {!btnstaff && <Button onClick={() =>setBtnstaff(true)} sx={{fontSize:'12px',textTransform:'none'}}><AddIcon sx={{fontSize:'12px'}}/>Add Staff</Button>}
-                {btnstaff && <Button onClick={() =>setBtnstaff(false)} sx={{fontSize:'12px',textTransform:'none'}}>Close</Button>}
-
-                {btnstaff && (
-                <>
-                <Typography sx={{fontSize:'14px',fontStyle:'italic'}}>Select  staff you want to add</Typography>
-                <div className='roleaddbtn'>
-                  {roles.map((data,index) => (
-                    <>
-                    {data.role === 'Administrator' ? (null) : (<label key={index}>
-                      <input
-                        type="checkbox"
-                        className='checkaccess'
-                        value={data.id}
-                        checked={selectedModules1.includes(data.role)}
-                        onChange={() => handleModuleCheckboxChange1(data.role)}
-                      />
-                      {data.role}
-                    </label>)}
-                    </>
-                  ))}
-                </div>
-                <Button sx={{backgroundColor:'blue',color:'white',textTransform:'none'}} variant='contained' onClick={AddRoles}>Add Staff</Button>
-                </>
-                )}
-                
-              </div>
-            </Card>
-           <div style={{marginTop:'20px'}}> 
-            <label style={{color:'blue',fontWeight:'bold',fontSize:'16px'}} htmlFor="employee">ROLE</label>
-            <Select
-              value={jobDes}
-              fullWidth
-              placeholder='Select roles here ...'
-              onChange={handleChange}
-              options={roles.map((option) => ({
-                value: option.role,
-                label: `${option.role}(${option.total})`,
-              }))}
-            />
-           </div>
-            <div style={{margin:'15px'}}>
-              <div style={{display:'flex',width:'100%',justifyContent:'space-between',alignItems:'center',margin:'5px'}}>
-              <label style={{marginLeft:'-15px',color:'blue',fontWeight:'bold',fontSize:'16px',textTransform:'uppercase'}} htmlFor="section">Choose Roles Access here</label>
-            </div>
-                    <div>
-        <div className='websacc'>
-        {websection.map((data,index) => (
-          <label key={index}>
-            <input
-              type="checkbox"
-              className='checkaccess'
-              value={data.id}
-              checked={selectedModules.includes(data.name)}
-              onChange={() => handleModuleCheckboxChange(data.name)}
-            />
-            {data.name}
-          </label>
-        ))}</div>
-      </div>
-              <div style={{display:'flex',justifyContent:'flex-end',alignItems:'flex-end',margin:'10px'}}>
-              <Button sx={{textTransform:'none',backgroundColor:'blue'}} variant='contained' onClick={Authorization}>
-              Save Role Access
-            </Button>
-              </div>
-
-            </div>
-
-            <div className='authlist'>
-            {accessEmp?.map((data) => {
-              const lists = data.accessList?.split(', ').map(list => list.trim());
-              return (
-                <>
-                {data.role === 'Administrator' ? null : (<div className='roleacclist' style={{width:'100%',height:'100%'}} key={data.id}>
-                  <p style={{textTransform:'uppercase',marginTop:'10px'}}>{data.role} access list</p>
-                  <div className='staffacclist'>
-                  <ul>
-                    {lists?.map((list, index) => {
-                      if (list === '') return null; 
-                      return (
-                        <>
-                        <li key={index}>
-                        {list} <button style={{ backgroundColor: 'red', color: 'white', border: 'none', cursor: 'pointer',marginLeft:'25px',width:'20px' }} onClick={() => DeleteAuth(list, data)}>x</button>
-                        </li>
-                        
-                        </>
-                      );
-                    })}
+            <Dialog
+            fullScreen
+            open={open2}
+            onClose={handleClose2}
+            TransitionComponent={Transition}
+          >
+            <AppBar sx={{ position: 'relative' }}>
+              <Toolbar>
+                <IconButton
+                  edge="start"
+                  color="inherit"
+                  onClick={handleClose2}
+                  aria-label="close"
+                >
+                  <TiArrowBack />
+                </IconButton>
+                <Typography sx={{ ml: 2, flex: 1,fontWeight:'bold',textTransform:'capitalize' }} variant="h6" component="div">
+                  Staff Role Management
+                </Typography>
+              </Toolbar>
+            </AppBar>
+              <Box sx={{padding:'15px',backgroundColor:'#f1f3fa'}}>
+                <Card sx={{padding:'15px',display:'flex',justifyContent:'space-between'}}>
+                  <div style={{width:'80%'}}>
+                  <Typography sx={{color:'blue',fontWeight:'bold'}}>LIST OF ROLES</Typography>
+                  <ul className='descript'>
+                      <li><p><strong>Account Creation</strong> - Responsible for creating employee accounts and assigning access privileges to the MYDO website.</p></li>
+                      <li><p><strong>Account Management</strong> - Responsible for editing employee details and status.</p></li>
+                      <li><p><strong>Scholarship Programs</strong> - In charge of creating and managing scholarship programs and their statuses.</p></li>
+                      <li><p><strong>Score Card</strong> - Responsible for configuring scoring criteria for specific questions and answers on application forms.</p></li>
+                      <li><p><strong>Requirements Management</strong> - Responsible for creating lists of requirements for specific scholarship programs.</p></li>
+                      <li><p><strong>Evaluation</strong> - Responsible for evaluating and determining the status of registered applicants.</p></li>
+                      <li><p><strong>Passing Score and Slots</strong> -  In charge of setting and adjusting passing scores and available slots for specific scholarships.</p></li>
+                      <li><p><strong>Requirements Verification</strong> - Responsible for checking and verifying documents submitted by applicants.</p></li>
+                      <li><p><strong>Applicant Management</strong> - Responsible for adding and managing applicant profiles, including marking them as successful or unsuccessful.</p></li>
+                      <li><p><strong>Appointment Scheduling</strong> -  Responsible for scheduling appointments for qualified applicants and evaluating their interview results.</p></li>
+                      <li><p><strong>Appointment Management</strong> - Responsible for adding and managing appointments, including marking them as successful or unsuccessful.</p></li>
+                      <li><p><strong>Scholarship Monitoring</strong> -  In charge of monitoring and managing the activities of scholars.</p></li>
+                      <li><p><strong>News and Announcements</strong> -  Responsible for creating the latest news and announcements to inform scholars and applicants.</p></li>
+                      <li><p><strong>Rule Implementation</strong> - Responsible for enforcing the rules and guidelines of the scholarship program.</p></li>
+                      <li><p><strong>Website Maintenance</strong> - Responsible for regularly updating the content of the website for both applicants and scholars.</p></li>
+                      <li><p><strong>Reporting</strong> - Responsible for generating summaries and reports on scholarship program data.</p></li>
                   </ul>
                   </div>
+                  <div style={{width:'20%'}}>
+                    <Typography sx={{color:'blue',fontWeight:'bold'}}>LIST OF STAFFS</Typography>
+                    <div className='listofrole'>
+                      <div className='rolesect'>
+                        <div>
+                        {Administrator?.map((data) =>{
+                          return(
+                            <>
+                            <li>{data.role}</li>
+                            </>
+                          ) 
+                        })}
+                        </div>
+                        <div>
+                        {Officer?.map((data) =>{
+                          return(
+                            <>
+                            <li>{data.role}</li>
+                            </>
+                          )
+                          
+                        })}
+                        
+                        </div>
+                      </div>
+                      <div className='rolesect'>
+                        <div>
+                        {Manager?.map((data) =>{
+                          return(
+                            <>
+                            <li>{data.role}</li>
+                            </>
+                          )
+                          
+                        })}
+                        
+                        </div>
+                        <div>
+                        {Coordinator?.map((data) =>{
+                          return(
+                            <>
+                            <li>{data.role}</li>
+                            </>
+                          )
+                          
+                        })}
+                      
+                        </div>
+                      </div>
+                    </div>
+                    {!btnstaff && <Button onClick={() =>setBtnstaff(true)} sx={{fontSize:'12px',textTransform:'none'}}><AddIcon sx={{fontSize:'12px'}}/>Add Staff</Button>}
+                    {btnstaff && <Button onClick={() =>setBtnstaff(false)} sx={{fontSize:'12px',textTransform:'none'}}>Close</Button>}
 
-                </div>)}
-                </>
-              );
-            })}
-            </div>
-           </Box>
-        </Dialog>
+                    {btnstaff && (
+                    <>
+                    <Typography sx={{fontSize:'14px',fontStyle:'italic'}}>Select  staff you want to add</Typography>
+                    <div className='roleaddbtn'>
+                      {roles.map((data,index) => (
+                        <>
+                        {data.role === 'Administrator' ? (null) : (<label key={index}>
+                          <input
+                            type="checkbox"
+                            className='checkaccess'
+                            value={data.id}
+                            checked={selectedModules1.includes(data.role)}
+                            onChange={() => handleModuleCheckboxChange1(data.role)}
+                          />
+                          {data.role}
+                        </label>)}
+                        </>
+                      ))}
+                    </div>
+                    <Button sx={{backgroundColor:'blue',color:'white',textTransform:'none'}} variant='contained' onClick={AddRoles}>Add Staff</Button>
+                    </>
+                    )}
+                    
+                  </div>
+                </Card>
+              <div style={{marginTop:'20px'}}> 
+                <label style={{color:'blue',fontWeight:'bold',fontSize:'16px'}} htmlFor="employee">ROLE</label>
+                <Select
+                  value={jobDes}
+                  fullWidth
+                  placeholder='Select roles here ...'
+                  onChange={handleChange}
+                  options={roles.map((option) => ({
+                    value: option.role,
+                    label: `${option.role}(${option.total})`,
+                  }))}
+                />
+              </div>
+                <div style={{margin:'15px'}}>
+                  <div style={{display:'flex',width:'100%',justifyContent:'space-between',alignItems:'center',margin:'5px'}}>
+                  <label style={{marginLeft:'-15px',color:'blue',fontWeight:'bold',fontSize:'16px',textTransform:'uppercase'}} htmlFor="section">Choose Roles Access here</label>
+                </div>
+                        <div>
+            <div className='websacc'>
+            {websection.map((data,index) => (
+              <label key={index}>
+                <input
+                  type="checkbox"
+                  className='checkaccess'
+                  value={data.id}
+                  checked={selectedModules.includes(data.name)}
+                  onChange={() => handleModuleCheckboxChange(data.name)}
+                />
+                {data.name}
+              </label>
+            ))}</div>
+          </div>
+                  <div style={{display:'flex',justifyContent:'flex-end',alignItems:'flex-end',margin:'10px'}}>
+                  <Button sx={{textTransform:'none',backgroundColor:'blue'}} variant='contained' onClick={Authorization}>
+                  Save Role Access
+                </Button>
+                  </div>
+
+                </div>
+
+                <div className='authlist'>
+                {accessEmp?.map((data) => {
+                  const lists = data.accessList?.split(', ').map(list => list.trim());
+                  return (
+                    <>
+                    {data.role === 'Administrator' ? null : (<div className='roleacclist' style={{width:'100%',height:'100%'}} key={data.id}>
+                      <p style={{textTransform:'uppercase',marginTop:'10px'}}>{data.role} access list</p>
+                      <div className='staffacclist'>
+                      <ul>
+                        {lists?.map((list, index) => {
+                          if (list === '') return null; 
+                          return (
+                            <>
+                            <li key={index}>
+                            {list} <button style={{ backgroundColor: 'red', color: 'white', border: 'none', cursor: 'pointer',marginLeft:'25px',width:'20px' }} onClick={() => DeleteAuth(list, data)}>x</button>
+                            </li>
+                            
+                            </>
+                          );
+                        })}
+                      </ul>
+                      </div>
+
+                    </div>)}
+                    </>
+                  );
+                })}
+                </div>
+              </Box>
+            </Dialog>
             <div className="top">
               <Card elevation={0} style={{width:'100%',display:'flex',justifyContent:'space-between',height:100,alignItems:'center',border:'none',paddingRight:'15px'}}>
-              <h1 style={{color:'blue',textTransform:'uppercase'}}>Staff Accounts</h1>
-              <Button 
-              sx={{height:'35px',textTransform:'none',color:'blue',backgroundColor:'rgba(246, 246, 246, 1)',fontWeight:'bold'}}
-              onClick={handleClick}
-              variant='contained' size='small'>
-                {activeState === 'admin' && 'Manage Employee'}
-                {activeState === 'log' && 'View Activity Log'}
-              </Button>
-              </Card>
-              
+              <h1 style={{color:'#043F97',textTransform:'uppercase'}}>Staff Accounts</h1>
+              </Card>             
               <div className="containeremaccs">
                     {activeState === 'log' && 
                     <div className="emacsslist">
                       <div style={{width:'100%',display:'flex',justifyContent:'space-between',alignItems:'center',marginBottom:'10px'}}>
-                        <div></div>
-                          <div>
-                              <Button sx={{height:'35px',textTransform:'none',color:'blue',backgroundColor:'rgba(246, 246, 246, 1)',fontWeight:'bold',marginRight:'10px'}}
+                        <div>
+                          <p className='stafflish'>Staff List</p>
+                        </div>
+                        <div>
+                              <Button 
+                              sx={{height:'35px',textTransform:'none',color:'blue',backgroundColor:'rgba(246, 246, 246, 1)',fontWeight:'bold',marginRight:'10px',
+                              '&:hover': {
+                                backgroundColor: '#043F97',
+                                color:'white',
+                                cursor: 'pointer',
+                              },
+                            }}
+                              onClick={handleClick}
+                              variant='contained' size='small'>
+                                {activeState === 'admin' && 'Manage Employee'}
+                                {activeState === 'log' && 'View Activity Log'}
+                              </Button>
+                              <Button sx={{height:'35px',textTransform:'none',color:'blue',backgroundColor:'rgba(246, 246, 246, 1)',fontWeight:'bold',marginRight:'10px',
+                                '&:hover': {
+                                  backgroundColor: '#043F97',
+                                  color:'white',
+                                  cursor: 'pointer',
+                                },  
+                            }}
                                variant='contained' onClick={handleOpen2}> Manage staffs </Button>
-                              <Button sx={{height:'35px',textTransform:'none',color:'blue',backgroundColor:'rgba(246, 246, 246, 1)',fontWeight:'bold',marginRight:'8px'}}
+                              <Button sx={{height:'35px',textTransform:'none',color:'blue',backgroundColor:'rgba(246, 246, 246, 1)',fontWeight:'bold',marginRight:'8px',
+                                '&:hover': {
+                                  backgroundColor: '#043F97',
+                                  color:'white',
+                                  cursor: 'pointer',
+                                },  
+                            }}
                                variant='contained' onClick={handleOpen}> Add staffs </Button>
-                          </div>
+                        </div>
                       </div>
-                      <div className='bmccEmp'>
+                      <div className='dataGridCon'>
                       <CustomDataGrid    
                         rows={bmcc}
                         columns={columns1}
@@ -870,9 +903,24 @@ const handleModuleCheckboxChange1 = (moduleId) => {
                     {activeState === 'admin' && 
                     <Card sx={{backgroundColor:'white'}}>
                     <div className="emaccsact">
-                      <h1 style={{color:'#666'}}>Activity Log</h1>
+                      <div style={{width:'100%',display:'flex',justifyContent:'space-between',alignItems:'center',marginBottom:'10px'}}>
+                      <p className='stafflish'>Activity Log</p>
+                      <Button 
+                              sx={{height:'35px',textTransform:'none',color:'blue',backgroundColor:'rgba(246, 246, 246, 1)',fontWeight:'bold',marginRight:'10px',
+                              '&:hover': {
+                                backgroundColor: '#043F97',
+                                color:'white',
+                                cursor: 'pointer',
+                              },
+                            }}
+                              onClick={handleClick}
+                              variant='contained' size='small'>
+                                {activeState === 'admin' && 'Manage Employee'}
+                                {activeState === 'log' && 'View Activity Log'}
+                      </Button>
+                      </div>
+
                       <div className='dataGridCon' style={{width:'100%'}}>
-                        <Card sx={{margin:'10px'}}>
                       <CustomDataGrid 
                         rows={actlog}
                         columns={columns}
@@ -890,12 +938,11 @@ const handleModuleCheckboxChange1 = (moduleId) => {
                         pageSizeOptions={[25]}  
                         disableRowSelectionOnClick
                       />
-                      </Card>
                       </div>
                     </div>
-                    </Card>}
+                    </Card>
+                    }
               </div>
-          
             </div>
         </div>
     </div>
