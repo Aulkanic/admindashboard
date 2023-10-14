@@ -324,3 +324,6 @@ export const Userlistsreports = {
 export const AdminNotify = {
     ADMIN_NOTIF: () => axiosInstance.get(Endpoints.ADMIN_NOTIF)
 }
+export const SeenAdminNotify = {
+    SEEN_NOTIF: (data) => axiosInstance.post(Endpoints.SEEN_NOTIF,data)
+}

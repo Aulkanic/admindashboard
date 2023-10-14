@@ -6,7 +6,7 @@ import MenuItem from '@mui/material/MenuItem';
 import Fade from '@mui/material/Fade';
 import Button from '@mui/material/Button';
 import { styled } from '@mui/material/styles';
-import { UpdatePassword, UpdateProfile,LogoutAdmin,AdminNotify } from '../../api/request';
+import { UpdatePassword, UpdateProfile,LogoutAdmin,AdminNotify,SeenAdminNotify } from '../../api/request';
 import Badge from '@mui/material/Badge';
 import Avatar from '@mui/material/Avatar';
 import Backdrop from '@mui/material/Backdrop';
@@ -138,7 +138,7 @@ const Navbar = () => {
     React.useEffect(() =>{
       async function Fetch(){
         const res = await AdminNotify.ADMIN_NOTIF();
-        console.log(res)
+        
         setNotif(res.data.reverse())
       }
       Fetch()
@@ -210,25 +210,24 @@ const Navbar = () => {
     .catch(err => console.log(err));
     }
 
-    function timeAgo(timestamp) {
+    function timeAgo(date) {
+      const timestamp = new Date(date)
       const now = new Date();
-      const target = new Date(timestamp);
-      const timeDiff = now - target;
-      
-      const seconds = Math.floor(timeDiff / 1000);
-      const minutes = Math.floor(seconds / 60);
-      const hours = Math.floor(minutes / 60);
-      
-      if (seconds < 60) {
-          return "just now";
-      } else if (minutes === 1) {
-          return "a minute ago";
-      } else if (minutes < 60) {
-          return minutes + " minutes ago";
-      } else if (hours === 1) {
-          return "1 hour ago";
+      const diffInSeconds = Math.floor((now - timestamp) / 1000);
+    
+      if (diffInSeconds < 10) {
+        return "just now";
+      } else if (diffInSeconds < 60) {
+        return `${diffInSeconds} seconds ago`;
+      } else if (diffInSeconds < 3600) {
+        const minutes = Math.floor(diffInSeconds / 60);
+        return `${minutes} ${minutes === 1 ? 'minute' : 'minutes'} ago`;
+      } else if (diffInSeconds < 86400) {
+        const hours = Math.floor(diffInSeconds / 3600);
+        return `${hours} ${hours === 1 ? 'hour' : 'hours'} ago`;
       } else {
-          return hours + " hours ago";
+        const days = Math.floor(diffInSeconds / 86400);
+        return `${days} ${days === 1 ? 'day' : 'days'} ago`;
       }
   }
   const notification = notif?.map((data,index) =>{
@@ -237,12 +236,29 @@ const Navbar = () => {
       <div className="notification-text">
         {data.actions}
       </div>
-      <div className="timestamp">
+      <div className={data.remarks === 'unread' ? "unreadtime" : "timestamp"}>
         {timeAgo(data.timestamp)}
       </div>
     </li>
     )
   })
+
+  const readAll = async() =>{
+      const unreadNotif = notif?.filter((data) => data.remarks === 'unread')
+      if(unreadNotif.length === 0){
+          return
+      }else{
+        for(let i = 0;i < unreadNotif.length; i++){
+          const det = unreadNotif[i];
+          const formData = new FormData;
+          formData.append('notifId',det.adnotifId)
+          await SeenAdminNotify.SEEN_NOTIF(formData)
+          .then((res) =>{
+            setNotif(res.data.reverse())
+          })
+        }
+      }
+  }
 
   return (
     <>
@@ -347,7 +363,7 @@ const Navbar = () => {
         </div>
         <div style={{margin:'0px 45px 0px 15px'}}>
         <Badge 
-        badgeContent={notif.length} 
+        badgeContent={notif?.filter((data) => data.remarks === 'unread').length} 
         color="error"
         sx={{
             display: 'flex',
@@ -383,7 +399,7 @@ const Navbar = () => {
               <div>
                 <div style={{display:'flex',justifyContent:'space-between',alignItems:'center',borderBottom:'2px solid black'}}>
                   <p style={{margin:'0px'}}>Notifications</p>
-                  <Button sx={{fontSize:'12px',textTransform:'none'}}>Clear All</Button>
+                  <Button onClick={readAll} sx={{fontSize:'12px',textTransform:'none'}}>Clear All</Button>
                 </div>
                 <ul className="notification-list">
                 {notification}

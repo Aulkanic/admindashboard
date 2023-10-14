@@ -501,7 +501,7 @@ const Contact = () => {
       </Dialog>
 
     <div style={{display:'flex',justifyContent:'space-between',marginBottom:10}}>
-      <h1>Requirements</h1>
+      <p className="scorecardh">Requirements</p>
       <button className="myButton1" onClick={handleOpen}> Add Requirements</button>
     </div>
       <Card>

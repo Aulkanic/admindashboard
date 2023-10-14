@@ -1595,7 +1595,7 @@ try {
           <div className="top">
 
           <div className="headerAppoint">
-          <h1> Appointments </h1>
+          <p className="scorecardh"> Appointments </p>
           </div>
           <Box sx={{ width:'90%' }}>
       <Tabs

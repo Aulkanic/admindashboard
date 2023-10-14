@@ -93,7 +93,7 @@ const Home = () => {
       <Sidebar />
       <div className="homeContainer">
       <Navbar />
-      <Box
+    <Box
       sx={{
         margin:'10px',
         display: 'flex',

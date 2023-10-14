@@ -141,7 +141,7 @@ const Users = () => {
       <div className="usersContainer">
         <Navbar />
         <div className='userlistcon'>
-          <h1> Users Account List </h1>
+          <p className="scorecardh"> Users Account List </p>
       <Box>
         <Card sx={{width:'100%'}}>
         <CustomDataGrid

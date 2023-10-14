@@ -485,9 +485,9 @@ const handleEditFileChange = (e) => {
         <Navbar/>
         <div className="top">
           <Card>
-          <div style={{width:'95%',display:'flex',justifyContent:'space-between',alignItems:'center'}}>
-          <h1 style={{color:'#666'}}>Scholarships Program 
-          </h1>
+          <div style={{width:'95%',display:'flex',justifyContent:'space-between',alignItems:'center',padding:'40px 10px 0px 30px'}}>
+          <p className="scorecardh">Scholarships Program 
+          </p>
           <button className="myButton" onClick={handleOpen}>Add</button>
           </div>
           {schocat.length > 0 ? (

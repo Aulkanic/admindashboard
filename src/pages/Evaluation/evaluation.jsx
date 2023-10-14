@@ -871,7 +871,7 @@ const Evaluation = () => {
             <div className='evaluationcon'>
               <div style={{width:'100%',height: 100,display:'flex',justifyContent:'space-between',padding:10}}>
                   <div style={{width:'30%',display:'flex',flexDirection:'column',justifyContent:'space-between',height:'100%'}}>
-                  <h1 style={{color:'#666',whiteSpace:"nowrap",fontWeight:"700"}}>Registered Applicants</h1>
+                  <p className="scorecardh">Registered Applicants</p>
                   </div>
                   <div style={{marginRight:5,height:'100%'}}>
                     <div style={{display:'flex',flexDirection:'column',height:'100%',width:'100%',alignItems:'center'}}>

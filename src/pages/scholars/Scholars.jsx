@@ -34,6 +34,9 @@ import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { MultiInputDateTimeRangeField } from '@mui/x-date-pickers-pro/MultiInputDateTimeRangeField';
 import { useSelector } from 'react-redux';
 import Figure from 'react-bootstrap/Figure';
+import { GrUserNew } from "react-icons/gr";
+import { IoSchool } from "react-icons/io5";
+import { RiPassPendingFill } from "react-icons/ri";
 import CustomNoRowsOverlay from '../Design/Norows';
 const localizedFormat = require('dayjs/plugin/localizedFormat');
 dayjs.extend(localizedFormat);
@@ -44,10 +47,7 @@ const CustomDataGrid = styled(DataGrid)({
     color: 'white', 
     fontWeight:'bold',
     backgroundColor:'#0047a4',
-    fontWeight:'bold',
-    margin:"0px",
-    borderTopLeftRadius:'0px',
-    borderTopRightRadius:'0px'
+    fontWeight:'bold'
   },
 
 });
@@ -134,7 +134,8 @@ const Scholars = () => {
   const [renewDet,setRenewDet] = useState([])
   const [renewScho,setRenewScho] = useState([])
   const [fullscreenImage, setFullscreenImage] = useState(null);
-  const [inf,setInf] = useState([])
+  const [inf,setInf] = useState([]);
+  const [screen,setScreen] = useState(0)
 
   const openFullscreen = (imageSrc) => {
     setFullscreenImage(imageSrc);
@@ -214,7 +215,9 @@ const Scholars = () => {
     borderRadius:'10px'
 
   };
-  
+  let PendingRenewal = data?.filter((data) => data.remarks === 'Pending Renewal')
+  let NewScholar = data?.filter((data) => data.remarks === 'New Scholar')
+  let ExistingScholar = data?.filter((data) => data.remarks === 'Existing Scholar')
   const closeImageModal = () => {
     setSelectedImage('');
     setImageModalOpen(false);
@@ -295,7 +298,7 @@ const Scholars = () => {
     },
     {
       field: 'insert',
-      headerName: 'Details',
+      headerName: 'Action',
       width: 90,
       renderCell: (params) => (
         <ViewButton sx={{textTransform:'none',color:'white'}} className="myButton" onClick={() => view(params.row)}>View</ViewButton>
@@ -348,7 +351,7 @@ const Scholars = () => {
     },
     {
       field: 'insert',
-      headerName: 'Details',
+      headerName: 'Action',
       width: 90,
       renderCell: (params) => (
         <ViewButton sx={{textTransform:'none',color:'white'}} className="myButton" onClick={() => view1(params.row)}>View</ViewButton>
@@ -427,38 +430,62 @@ const Scholars = () => {
       })
       return
     }
-      setShowBackdrop(true);
-      let counter = 0;
-      for (let i = 0; i < selectedRows.length; i++) {
-        const row = selectedRows[i];
-        const status = 'Revoke'
-        const reason = 'Inactive'
-        const formData = new FormData();
-        formData.append('batch',row.Batch)
-        formData.append('ScholarshipApplied',row.scholarshipApplied)
-        formData.append('applicantNum',row.applicantNum)
-        formData.append('Name',row.Name)
-        formData.append('Reason',reason)
-        formData.append('status',status)
-        formData.append('email',row.email)
-        ScholarStand.UPDATE_SCHOSTAND(formData)
-        .then(res => {
-          const data = res.data.result?.filter(data => data.status === 'Active' || data.status === 'Hold')
-          setData(data)
-          counter++;
-          if (counter === selectedRows.length) {
-            setShowBackdrop(false);
-            swal({
-              title: "Success",
-              text: "Done!",
-              icon: "success",
-              button: "OK",
-            });
+    Swal.fire({
+      title: 'Are you sure?',
+      text: "You won't be able to revert this!",
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonText: 'Yes, delete it!',
+      cancelButtonText: 'No, cancel!',
+      confirmButtonColor: '#3085d6',
+      cancelButtonColor: '#d33',
+      reverseButtons: true
+    }).then(async(result) => {
+      if (result.isConfirmed) {
+        setShowBackdrop(true);
+        let counter = 0;
+        for (let i = 0; i < selectedRows.length; i++) {
+          const row = selectedRows[i];
+          const status = 'Revoke'
+          const reason = 'Inactive'
+          const formData = new FormData();
+          formData.append('batch',row.Batch)
+          formData.append('ScholarshipApplied',row.scholarshipApplied)
+          formData.append('applicantNum',row.applicantNum)
+          formData.append('Name',row.Name)
+          formData.append('Reason',reason)
+          formData.append('status',status)
+          formData.append('email',row.email)
+          ScholarStand.UPDATE_SCHOSTAND(formData)
+          .then(res => {
+            PendingRenewal = res.data.result?.filter((data) => data.remarks === 'Pending Renewal')
+            setData(res.data.result)
+            counter++;
+            if (counter === selectedRows.length) {
+              setShowBackdrop(false);
+              swal({
+                title: "Success",
+                text: "Done!",
+                icon: "success",
+                button: "OK",
+              });
+            }
           }
+           )
+          .catch(err => console.log(err));
         }
-         )
-        .catch(err => console.log(err));
+      } else if (
+        /* Read more about handling dismissals below */
+        result.dismiss === Swal.DismissReason.cancel
+      ) {
+        Swal.fire(
+          'Cancelled',
+          'The Selected Scholar actions has cancelled. :)',
+          'error'
+        )
       }
+    })      
+
 
     }
     const NotifyAll = () =>{
@@ -618,11 +645,6 @@ const Scholars = () => {
           },
         }}
         pageSizeOptions={[25]}
-        checkboxSelection
-        onRowSelectionModelChange={handleRowSelectionModelChange}
-        rowSelectionModel={rowSelectionModel}
-        disableRowSelectionOnClick
-        isRowSelectable={(params) => !params.row.k || !params.row.k.Status}
       />
           </Box>
         </>
@@ -855,7 +877,6 @@ const Scholars = () => {
          </div>
       </Box>
       </Dialog>
-
       <Dialog
         fullScreen
         open={open2}
@@ -1075,10 +1096,11 @@ const Scholars = () => {
             <Navbar/>
             <div className="top">
             
-    <h1>Scholars</h1>
+    <p className="scorecardh">Scholars</p>
 
     {page === 0 && (
     <>
+
     <div style={{display:'flex',justifyContent:'space-between',margin:'10px'}}>
     <Dropdown onSelect={handleDropdownChange}>
       <Dropdown.Toggle variant="success" id="dropdown-basic" >
@@ -1101,9 +1123,70 @@ const Scholars = () => {
     </Dropdown>
     <Button className='myButton1' sx={{textTransform:'none',color:'white'}} onClick={() =>setOpen1(true)}>Generate Renewal</Button>
     </div>
+    <Box
+      sx={{
+        margin:'10px',
+        display: 'flex',
+        flexDirection:'row',
+        justifyContent:'space-around',
+        flexWrap: 'wrap',
+        '& > :not(style)': {
+          m: 1,
+          width: '30%',
+          height: 70,
+          backgroundColor:"#FFFFFF",
+          borderRadius:'10px'
+        },
+      }}>
 
-    <Box sx={{ height: 400, width: '100%' }}>
-      <Card>
+    <Card elevation={0} sx={{ minWidth: 200,display:'flex',justifyContent:'space-between',alignItems:'center',padding:'10px 15px 10px 10px'}}>
+      <Typography sx={{ fontSize: 20,fontWeight:'900',color:'black',lineHeight:'17.57px',fontFamily:'Roboto Serif',textAlign:'center' }} gutterBottom>
+          New <br/>
+          Scholars
+      </Typography>
+      <div className="totalicon">
+      <Typography variant="h5" component="div" sx={{borderRight:'2px solid black',width:'80%',color:'#043F97',fontFamily:'Roboto Serif',fontWeight:'700',lineHeight:'23.42px'}}>
+          {NewScholar.length}
+      </Typography>
+      <GrUserNew style={{width:'20px',color:'blue'}} />
+      </div>
+      <Button onClick={(e) => setScreen(1)} size="small" sx={{color:'#666',fontFamily:'Roboto Serif',fontWeight:'400',lineHeight:'11.42px',fontStyle:'italic',textTransform:'none'}}>
+        View <br /> all
+      </Button>
+    </Card>
+
+    <Card elevation={0} sx={{ minWidth: 200,display:'flex',justifyContent:'space-between',alignItems:'center',padding:'10px 15px 10px 30px'}}>
+        <Typography sx={{ fontSize: 20,fontWeight:'900',color:'black',lineHeight:'17.57px',fontFamily:'Roboto Serif' ,textAlign:'center'}} gutterBottom>
+          Existing <br/> Scholars
+        </Typography>
+        <div className="totalicon">
+        <Typography variant="h5" component="div" sx={{borderRight:'2px solid black',width:'80%',color:'#043F97',fontFamily:'Roboto Serif',fontWeight:'700',lineHeight:'23.42px'}}>
+          {ExistingScholar.length}
+        </Typography>
+        <IoSchool style={{width:'20px',color:'blue'}} />
+        </div>
+        <Button onClick={(e) => setScreen(2)} size="small" sx={{color:'#666',fontFamily:'Roboto Serif',fontWeight:'400',lineHeight:'11.42px',fontStyle:'italic',textTransform:'none'}}>
+        View <br /> all
+        </Button>
+    </Card>
+
+    <Card elevation={0} sx={{ minWidth: 200,display:'flex',justifyContent:'space-between',alignItems:'center',padding:'10px 15px 10px 30px'}}>
+    <Typography sx={{ fontSize: 20,fontWeight:'900',color:'black',lineHeight:'17.57px',fontFamily:'Roboto Serif',textAlign:'center' }} gutterBottom>
+          Pending <br/> Renewal
+        </Typography>
+        <div className="totalicon">
+        <Typography variant="h5" component="div" sx={{borderRight:'2px solid black',width:'80%',color:'#043F97',fontFamily:'Roboto Serif',fontWeight:'700',lineHeight:'23.42px'}}>
+          {PendingRenewal.length}
+        </Typography>
+        <RiPassPendingFill style={{width:'20px',color:'blue'}} />
+        </div>
+        <Button onClick={(e) => setScreen(3)} size="small" sx={{color:'#666',fontFamily:'Roboto Serif',fontWeight:'400',lineHeight:'11.42px',fontStyle:'italic',textTransform:'none'}}>
+        View <br /> all
+        </Button>
+    </Card>
+
+    </Box>
+    {screen === 0 && <Box sx={{ width: '100%',backgroundColor:'white',minHeight:'300px',height: 400 }}>
         <CustomDataGrid
         rows={data}
         columns={columns}
@@ -1116,7 +1199,73 @@ const Scholars = () => {
             },
           },
         }}
-x
+        sx={{minHeight:'300px'}}
+        slots={{
+          noRowsOverlay: CustomNoRowsOverlay,
+        }}
+        pageSizeOptions={[25]}
+      />
+    </Box>}
+    {screen === 1 && <Box sx={{width: '100%',backgroundColor:'white',minHeight:'300px',height: 400}}>
+        <CustomDataGrid
+        sx={{minHeight:'300px'}}
+        rows={NewScholar}
+        columns={columns}
+        getRowId={(row) => row.applicantNum}
+        scrollbarSize={10}
+        initialState={{
+          pagination: {
+            paginationModel: {
+              pageSize: 5,
+            },
+          },
+        }}
+        slots={{
+          noRowsOverlay: CustomNoRowsOverlay,
+        }}
+        pageSizeOptions={[25]}
+      />
+    </Box>}
+    {screen === 2 && <Box sx={{ width: '100%',backgroundColor:'white',minHeight:'300px',height: 400 }}>
+        <CustomDataGrid
+        rows={ExistingScholar}
+        columns={columns}
+        getRowId={(row) => row.applicantNum}
+        scrollbarSize={10}
+        initialState={{
+          pagination: {
+            paginationModel: {
+              pageSize: 5,
+            },
+          },
+        }}
+        sx={{minHeight:'300px'}}
+        slots={{
+          noRowsOverlay: CustomNoRowsOverlay,
+        }}
+        pageSizeOptions={[25]}
+      />
+
+    </Box>}
+    {screen === 3 && 
+    <>
+    <Box sx={{width: '100%',backgroundColor:'white',minHeight:'300px',height: 400}}>
+        <CustomDataGrid
+        rows={PendingRenewal}
+        columns={columns}
+        getRowId={(row) => row.applicantNum}
+        scrollbarSize={10}
+        initialState={{
+          pagination: {
+            paginationModel: {
+              pageSize: 5,
+            },
+          },
+        }}
+        sx={{minHeight:'300px'}}
+        slots={{
+          noRowsOverlay: CustomNoRowsOverlay,
+        }}
         pageSizeOptions={[25]}
         checkboxSelection
         onRowSelectionModelChange={handleRowSelectionModelChange}
@@ -1124,8 +1273,13 @@ x
         disableRowSelectionOnClick
         isRowSelectable={(params) => !params.row.k || !params.row.k.Status}
       />
-      </Card>
     </Box>
+    <div style={{width:'100%',display:'flex',justifyContent:'space-around',margin:'15px'}}>
+          <StyledButtonEdit sx={{textTransform:'none'}} className="myButton1" onClick={NotifyAll}>Notify All Selected Scholars</StyledButtonEdit>
+          <StyledButton sx={{textTransform:'none'}} className="myButton2" onClick={RemoveGrantAll}>Revoke Grant To All Selected Scholars</StyledButton>
+    </div>
+    </>
+    }
     </>
     )}
     {page === 1 && (
@@ -1144,11 +1298,6 @@ x
       </div>
       </>
     )}
-
-            {/* <div style={{width:'100%',display:'flex',justifyContent:'space-around',margin:'15px'}}>
-          <StyledButtonEdit className="myButton1" onClick={NotifyAll}>Notify All Selected Scholars</StyledButtonEdit>
-          <StyledButton className="myButton2" onClick={RemoveGrantAll}>Revoke Grant To All Selected Scholars</StyledButton>
-          </div> */}
             </div>
         </div>
     </div>

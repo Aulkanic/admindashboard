@@ -1065,7 +1065,7 @@ const style = {
 
       <div className="top">
         <div style={{width:'97.5%',padding:10}}>
-        <h1 style={{color:'#666',whiteSpace:"nowrap",fontWeight:"700"}}> Applicants </h1>
+        <p className="scorecardh"> Applicants </p>
       <Breadcrumbs sx={{backgroundColor:'#0047a4',marginBottom:'0px'}} aria-label="breadcrumb">
                   <Button onClick={() => setActiveState('All')}>
                     <Link
