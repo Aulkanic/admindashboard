@@ -83,6 +83,7 @@ const Faqs = () => {
   const [Coordinator,setCoordinator] = useState([])
   const [Manager,setManager] = useState([]);
   const [btnstaff,setBtnstaff] = useState(false)
+  const [isrole,setIsRole] = useState([])
 
 const CustomDataGrid = styled(DataGrid)({
   '& .MuiDataGrid-columnHeaders': {
@@ -212,6 +213,9 @@ const CustomDataGrid = styled(DataGrid)({
   } 
   const handleChange = (selected) => {
     setJobdes(selected);
+    const det = roles?.filter((data) => data.role === selected.value)
+    console.log(det[0].accessList)
+    setIsRole(det[0].accessList)
   };
 
   const handleChange3 = (selected) => {
@@ -332,9 +336,9 @@ const UpdateBMCC = (event) =>{
    )
   .catch(err => console.log(err));
 }
-const Authorization = (e) =>{
-  e.preventDefault()
-  if(!jobDes || !sectionId || sectionId.length === 0){
+const Authorization = () =>{
+ 
+  if(!selectedModules){
     swal({
       title: "Warning",
       text: "Please select necessary Details!",
@@ -343,7 +347,7 @@ const Authorization = (e) =>{
     });
     return
   }
-    const labels = sectionId.map((option) => option.label).join(', ');
+    const labels = selectedModules.map((option) => option).join(',');
     const formData = new FormData();
     formData.append('accessList',labels)
     formData.append('role',jobDes.value)
@@ -401,6 +405,7 @@ try {
         setShowBackdrop(true);
         UpdateEmployeeAccess.EMP_UPTDACCESS(formData)
         .then(res => {
+          console.log(res.data.result)
           setAccessEmp(res.data.result)
           setShowBackdrop(false);
           Swal.fire(
@@ -488,6 +493,21 @@ const handleModuleCheckboxChange1 = (moduleId) => {
     setSelectedModules1([...selectedModules1, moduleId]);
   }
 };
+const weblist = websection.map((data,index) => {
+  return(
+    <>
+  {isrole.includes(data.name) ? null : (<label key={index}>
+    <input
+      type="checkbox"
+      className='checkaccess'
+      value={data.id}
+      checked={selectedModules.includes(data.name) || isrole.includes(data.name)}
+      onChange={() => handleModuleCheckboxChange(data.name)}
+    />
+    {data.name}
+  </label>)}
+  </>)
+})
 
   return (
     <>
@@ -784,18 +804,8 @@ const handleModuleCheckboxChange1 = (moduleId) => {
                 </div>
                         <div>
             <div className='websacc'>
-            {websection.map((data,index) => (
-              <label key={index}>
-                <input
-                  type="checkbox"
-                  className='checkaccess'
-                  value={data.id}
-                  checked={selectedModules.includes(data.name)}
-                  onChange={() => handleModuleCheckboxChange(data.name)}
-                />
-                {data.name}
-              </label>
-            ))}</div>
+            {weblist}
+            </div>
           </div>
                   <div style={{display:'flex',justifyContent:'flex-end',alignItems:'flex-end',margin:'10px'}}>
                   <Button sx={{textTransform:'none',backgroundColor:'blue'}} variant='contained' onClick={Authorization}>
@@ -807,7 +817,7 @@ const handleModuleCheckboxChange1 = (moduleId) => {
 
                 <div className='authlist'>
                 {accessEmp?.map((data) => {
-                  const lists = data.accessList?.split(', ').map(list => list.trim());
+                  const lists = data.accessList?.split(',').map(list => list.trim());
                   return (
                     <>
                     {data.role === 'Administrator' ? null : (<div className='roleacclist' style={{width:'100%',height:'100%'}} key={data.id}>
