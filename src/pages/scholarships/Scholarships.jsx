@@ -47,9 +47,7 @@ const StyledButton = styled(Button)`
 
 
 const Scholarships = () => {
-  const { loginUser,user } = useContext(admininfo);
     const [schocat, setSchocat] = useState([]);
-    const [access,setAccess] = useState([])
     const [showBackdrop, setShowBackdrop] = useState(false);
     const [open, setOpen] = useState(false);
     const [open1, setOpen1] = useState(false);
@@ -64,7 +62,6 @@ const Scholarships = () => {
     const [olddata, setOlddata] = useState([]);
     const [iconprev, setSchoprev] = useState();
     const [iconprev1, setSchoprev1] = useState();
-    const [accessList,setAccesslist] = useState([]);
 
   const handleOpen = () => {
     setOpen(true)
