@@ -127,8 +127,10 @@
   }
   .dataGridCon{
     border: 2px solid black;
-    border-radius: 5px;
+    border-radius: 0px 0px 5px 5px;
     background-color: white;
     width: max-content;
-    height: 500px;
+    height: 600px;
+    min-height: 500px;
+    max-height: max-content;
   }

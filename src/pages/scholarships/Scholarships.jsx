@@ -1,7 +1,7 @@
 import Navbar from "../../components/navbar/Navbar"
 import Sidebar from "../../components/sidebar/Sidebar"
 import "./scholarships.scss"
-import { Paper, Box, Modal,Button,TextField, Typography} from "@mui/material"; 
+import { Box, Modal,Button,TextField, Typography} from "@mui/material"; 
 import './scholarship.css'
 import { FetchingSchoProg, CreateSchoProg, UpdateSchoProg,ListAccess } from "../../api/request";
 import { useEffect } from "react";
@@ -11,18 +11,17 @@ import RadioGroup from '@mui/material/RadioGroup';
 import FormControlLabel from '@mui/material/FormControlLabel';
 import FormLabel from '@mui/material/FormLabel';
 import swal from "sweetalert";
-import { DataGrid, GridCellParams } from '@mui/x-data-grid';
+import { DataGrid } from '@mui/x-data-grid';
 import Avatar from '@mui/material/Avatar';
 import Card from '@mui/material/Card';
 import { useContext } from "react";
 import { admininfo } from "../../App";
-import CardActions from '@mui/material/CardActions';
 import CardContent from '@mui/material/CardContent';
 import '../Button style/button.css'
-import { styled, ThemeProvider, createTheme } from '@mui/material';
+import { styled, createTheme } from '@mui/material';
 import { Backdrop, CircularProgress } from '@mui/material';
+import CustomNoRowsOverlay from "../Design/Norows";
 
-const theme = createTheme();
 const StyledBackdrop = styled(Backdrop)(({ theme }) => ({
   zIndex: theme.zIndex.drawer + 50,
   color: '#fff',
@@ -91,19 +90,12 @@ const Scholarships = () => {
   };
   
   useEffect(() => {
-    const fetchData = async () => {
+    async function fetchData() {
       try {
         setShowBackdrop(true);
-        const response = await Promise.all([
-          FetchingSchoProg.FETCH_SCHOPROG(),
-          ListAccess.ACCESS()
-        ]);
-        let acc = await ListAccess.ACCESS()
-        console.log(response)
-        const empacc = acc.data.result?.filter(data => data.employeeName === user.name)
-        setAccess(empacc)
-        setSchocat(response[0].data.SchoCat);
-        setAccesslist(response[1].data.result[0])
+        const response = await FetchingSchoProg.FETCH_SCHOPROG()
+        
+        setSchocat(response.data.SchoCat);
         setShowBackdrop(false);
         
       } catch (error) {
@@ -111,7 +103,7 @@ const Scholarships = () => {
       }
     };
   
-    fetchData();
+    fetchData()
   }, []);
 
   useEffect(() => {
@@ -292,7 +284,7 @@ const handleEditFileChange = (e) => {
       {
         field: 'description',
         headerName: 'Description',
-        width: 500,
+        width: 520,
         editable: false,
       },
       {
@@ -311,7 +303,6 @@ const handleEditFileChange = (e) => {
         ),
       },
     ];
-
   return (
     <>
   <StyledBackdrop open={showBackdrop}>
@@ -484,38 +475,33 @@ const handleEditFileChange = (e) => {
     <div className="scholarshipsContainer">
         <Navbar/>
         <div className="top">
-          <Card>
-          <div style={{width:'95%',display:'flex',justifyContent:'space-between',alignItems:'center',padding:'40px 10px 0px 30px'}}>
-          <p className="scorecardh">Scholarships Program 
-          </p>
-          <button className="myButton" onClick={handleOpen}>Add</button>
+                <div style={{width:'95%',display:'flex',justifyContent:'space-between',alignItems:'center',padding:'40px 10px 0px 30px'}}>
+                <p className="scorecardh">Scholarships Program 
+                </p>
+                <button className="myButton" onClick={handleOpen}>Add</button>
+                </div>
+                <div className="dataGridCon">
+                <CustomDataGrid
+                  sx={{height:'300px'}}
+                  rows={schocat}
+                  columns={columns}
+                  getRowId={(row) => row.schoProgId}
+                  initialState={{
+                    pagination: {
+                      paginationModel: {
+                        pageSize: 25,
+                      },
+                    },
+                  }}
+                  slots={{
+                    noRowsOverlay: CustomNoRowsOverlay,
+                  }}
+                  pageSizeOptions={[25]}  
+                  disableRowSelectionOnClick
+                />
+                </div>
           </div>
-          {schocat.length > 0 ? (
-    <CustomDataGrid
-      className='dataGrid'
-      rows={schocat}
-      columns={columns}
-      autoHeight 
-      autoPageSize
-      getRowId={(row) => row.schoProgId}
-      scrollbarSize={10}
-      initialState={{
-        pagination: {
-          paginationModel: {
-            pageSize: 10,
-          },
-        },
-      }}
-      pageSizeOptions={[25]}  
-      disableRowSelectionOnClick
-    />
-  ) : (
-    <p>No data available</p>
-  )}
-    </Card>
-          </div>
-        
-            </div>
+        </div>
     </div>
   </>
   )

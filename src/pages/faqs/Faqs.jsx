@@ -937,6 +937,7 @@ const weblist = websection.map((data,index) => {
                       <div className='dataGridCon' style={{width:'100%'}}>
                       <CustomDataGrid 
                         rows={actlog}
+                        sx={{height:'maxContent'}}
                         columns={columns}
                         autoHeight 
                         autoPageSize
