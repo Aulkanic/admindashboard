@@ -213,8 +213,8 @@ const CustomDataGrid = styled(DataGrid)({
   } 
   const handleChange = (selected) => {
     setJobdes(selected);
-    const det = roles?.filter((data) => data.role === selected.value)
-    console.log(det[0].accessList)
+    const det = accessEmp?.filter((data) => data.role === selected.value)
+
     setIsRole(det[0].accessList)
   };
 
@@ -371,6 +371,8 @@ const Authorization = () =>{
           button: "OK",
         });
        setEmployeeId('')
+       setJobdes('')
+       setSelectedModules([[]])
        setSectionId([])
       }
 
@@ -405,7 +407,9 @@ try {
         setShowBackdrop(true);
         UpdateEmployeeAccess.EMP_UPTDACCESS(formData)
         .then(res => {
-          console.log(res.data.result)
+          setJobdes('')
+          setSelectedModules([[]])
+          setSectionId([])
           setAccessEmp(res.data.result)
           setShowBackdrop(false);
           Swal.fire(
