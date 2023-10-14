@@ -1107,7 +1107,7 @@ const style = {
                     </Link>
                   </Button>
       </Breadcrumbs>      
-      <Box sx={{ height: '500px', width: '100%',backgroundColor:'white',margin:"0px",minHeight:'300px'}}>
+      <Box sx={{ height: '500px', width: '100%',backgroundColor:'white',margin:"0px",minHeight:'300px',maxHeight:"maxContent"}}>
                 {activeState === 'All' && (
                   <CustomDataGrid
                     rows={filteredRows}
@@ -1121,7 +1121,7 @@ const style = {
                         },
                       },
                     }}
-                    sx={{minHeight:'300px',border:'none',borderRadius:'0px'}}
+                    sx={{hieght:'100%',border:'none',borderRadius:'0px'}}
                     slots={{
                       noRowsOverlay: CustomNoRowsOverlay,
                     }}
@@ -1135,7 +1135,7 @@ const style = {
                       columns={completeColumn}
                       getRowId={(row) => row.applicantNum}
                       scrollbarSize={10}
-                      sx={{minHeight:'300px',border:'none',borderRadius:'0px'}}
+                      sx={{hieght:'100%',border:'none',borderRadius:'0px'}}
                       initialState={{
                         pagination: {
                           paginationModel: {
@@ -1157,7 +1157,7 @@ const style = {
                     <CustomDataGrid
                       rows={groupedUsers.incomplete}
                       columns={incompleteColumn}
-                      sx={{minHeight:'300px',border:'none',borderRadius:'0px'}}
+                      sx={{hieght:'100%',border:'none',borderRadius:'0px'}}
                       getRowId={(row) => row.applicantNum}
                       scrollbarSize={10}
                       initialState={{

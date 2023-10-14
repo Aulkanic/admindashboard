@@ -479,7 +479,7 @@ const handleEditFileChange = (e) => {
                 </div>
                 <div className="dataGridCon">
                 <CustomDataGrid
-                  sx={{height:'300px'}}
+                  sx={{height:'100%'}}
                   rows={schocat}
                   columns={columns}
                   getRowId={(row) => row.schoProgId}
