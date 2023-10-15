@@ -64,7 +64,7 @@ const Endpoints = {
     EMP_ACCESS:"admin/EmployeeAccess",
     UPDATE_EMPACCESS:"admin/UpdateAccess",
     WEBSITE:"admin/WebsiteImg",
-    FETCH_WEBSITE:"admin/WebImg",
+    FETCH_WEBSITE:"admin/WebImg1",
     FETCH_ROLE:"admin/Roles",
     ADD_ROLE:"admin/AddRoles",
     REMOVE_ROLE:"admin/RemoveRoles",
