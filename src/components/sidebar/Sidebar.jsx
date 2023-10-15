@@ -48,38 +48,7 @@ const Sidebar = () => {
        dispatch(setAdmin([]))
        navigate('/')
   }
-  const sidebarData = [
-    {
-      sectionName: 'Web',
-      items: [
-        { label: 'Employees', icon: 'GroupsIcon', link: '/faqs' },
-        { label: 'Scholarships', icon: 'SchoolIcon', link: '/scholarships' },
-        { label: 'Score Card', icon: 'MoneyIcon', link: '/about' },
-        { label: 'Requirements', icon: 'NoteAddIcon', link: '/contact' },
-      ],
-    },
-    {
-      sectionName: 'Informations',
-      items: [
-        { label: 'User Accounts', icon: 'AccountBoxIcon', link: '/users' },
-        { label: 'Evaluation', icon: 'VerifiedIcon', link: '/Evaluation' },
-        { label: 'Applicants', icon: 'PeopleAltIcon', link: '/applicants' },
-        { label: 'Appointments', icon: 'CalendarMonthIcon', link: '/appointments' },
-        { label: 'Scholars', icon: 'HistoryEduIcon', link: '/scholars' },
-      ],
-    },
-    {
-      sectionName: 'Maintenance',
-      items: [
-        { label: 'BMCC Website', icon: 'LanguageIcon', link: '/Website-Maintenance' },
-        { label: 'Announcement', icon: 'CampaignIcon', link: '/Announcement' },
-        { label: 'Rules', icon: 'GavelIcon', link: '/Rules' },
-        { label: 'News', icon: 'FeedIcon', link: '/news' },
-        { label: 'Reports', icon: 'AssessmentIcon', link: '/Report' },
-        { label: 'Backups', icon: 'SettingsBackupRestoreIcon', link: '/Backups' },
-      ],
-    },
-  ];
+
 
 
   return (
@@ -225,8 +194,6 @@ const Sidebar = () => {
 
           </ul>
       </div>
-
-     
     </div>
   )
 }

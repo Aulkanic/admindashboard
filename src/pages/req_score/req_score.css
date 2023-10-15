@@ -5,7 +5,7 @@
     flex-direction: column;
     padding: 10px;
     background-color: white;
-    border: 2px solid #9e9a9a;
+    border: 2px solid rgb(47, 150, 219);
     height: max-content;
 }
 .questionchoose .questioncon p{
@@ -30,7 +30,6 @@
     margin: 5px;
     justify-content: space-between;
     align-items: top;
-    border: 1px solid black;
     height: max-content;
 }
 .choiceli p{
@@ -62,7 +61,7 @@
     width: 100%;
     display: grid;
     grid-template-columns: repeat(auto-fit,minmax(300px, 1fr));
-    grid-gap: 5px;
+    gap: 25px;
     height: max-content;
     margin-bottom: 10px;
 }

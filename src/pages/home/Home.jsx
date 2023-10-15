@@ -4,8 +4,6 @@ import "./home.scss"
 import "./home.css"
 import Box from '@mui/material/Box';
 import Card from '@mui/material/Card';
-import CardActions from '@mui/material/CardActions';
-import CardContent from '@mui/material/CardContent';
 import Button from '@mui/material/Button';
 import Typography from '@mui/material/Typography';
 import { FetchingBmccScho,ApplicantsRequest } from '../../api/request';
@@ -20,13 +18,13 @@ import { BsFillCalendarDateFill } from "react-icons/bs";
 
 const CustomDataGrid = styled(DataGrid)({
   '& .MuiDataGrid-columnHeaders': {
-    backgroundColor: 'white', 
-    color: 'black', 
+    backgroundColor: '#043F97', 
+    color: 'white', 
     fontFamily:'Roboto Serif',
     fontWeight:'700',
     lineHeight:'17.57px',
-    fontSize:'17px',
-    borderBottom:'2px solid black'
+    fontSize:'15px',
+    borderBottom:'2px solid gray'
   },
 });
 const Home = () => {
@@ -166,10 +164,10 @@ const Home = () => {
           width: 'max-content',
           color:'#666',
           fontFamily:'font-family: "Open Sans",sans-serif',
-          border:'2px solid black',
+          border:'2px solid gray',
           borderRadius:'5px'
         }}>
-      <CustomDataGrid className="dataGrid"
+      <CustomDataGrid
         rows={post}
         columns={columns}
         getRowId={(row) => row.applicantNum}

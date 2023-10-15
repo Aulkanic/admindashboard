@@ -14,6 +14,9 @@ import { Button, Card } from '@mui/material';
 import swal from 'sweetalert';
 import { Backdrop, CircularProgress } from '@mui/material';
 import { styled } from '@mui/material';
+import { FaDownload } from "react-icons/fa6";
+import { TbRestore } from "react-icons/tb";
+import { FcDataBackup } from "react-icons/fc";
 
 const StyledBackdrop = styled(Backdrop)(({ theme }) => ({
   zIndex: theme.zIndex.drawer + 50,
@@ -120,8 +123,8 @@ const Backup = () => {
             <h1>Backup and Restore</h1>
               <div>
                 <div className='headbackup'>
-                <p style={{margin:'0px'}}>Select or download backup data</p>
-                <Button onClick={Backingup} className='myButton' sx={{textTransform:'none',color:'white'}}>Backup now!</Button>
+                <p style={{margin:'0px'}}>Select and restore or download backup data</p>
+                <Button onClick={Backingup} className='myButton' sx={{textTransform:'none',color:'white'}}><FcDataBackup style={{marginRight:'2px'}}/>Backup now!</Button>
                 </div>
                 <h1 className='listback'>List of Backup Data</h1>
                 <Card sx={{padding:'15px'}}>
@@ -140,6 +143,7 @@ const Backup = () => {
                 </FormControl>
                 <div className='backupactions'>
                     <Button onClick={Restoring} className='myButton1' sx={{textTransform:'none',color:'white'}}>
+                    <TbRestore style={{marginRight:'2px',marginTop:'-3px'}}/>
                         Restore
                     </Button>
                     <Button 
@@ -149,6 +153,7 @@ const Backup = () => {
                         textTransform:'none',
                         color:'white',
                         marginLeft:'10px'}}>
+                        <FaDownload style={{marginRight:'2px',marginTop:'-3px'}}/>
                         Download
                     </Button>
                 </div>

@@ -160,13 +160,25 @@ const Navbar = () => {
     formData.append('id',admin[0].id)
     UpdatePassword.UPDATE_PASS(formData)
     .then(res => {
-      setShowBackdrop(false)
-      swal({
-        title: "Success",
-        text: res.data.message,
-        icon: "success",
-        button: "OK",
-      });
+      if(res.data.success === 0){
+        setShowBackdrop(false)
+        swal({
+          title: "Error",
+          text: res.data.message,
+          icon: "error",
+          button: "OK",
+        });
+        
+      }else{
+        setShowBackdrop(false)
+        swal({
+          title: "Success",
+          text: res.data.message,
+          icon: "success",
+          button: "OK",
+        });
+      }
+
     }
      )
     .catch(err => console.log(err));

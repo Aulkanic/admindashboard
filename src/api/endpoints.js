@@ -73,7 +73,7 @@ const Endpoints = {
     FETCH_SCORESLOT:'Dynamic/PassSlot',
     DECRE_SCORESLOT:'Dynamic/DecreSlot',
     COLOR:'Dynamic/Colors',
-    FFETCH_COLOR:'Dynamic/Colorslist',
+    FFETCH_COLOR:'Dynamic/Colorslist1',
     FETCH_RULE:'Dynamic/Rulelist',
     FETCH_LOGOS:'Dynamic/Logolist',
     LOGOS:'Dynamic/Logo',
