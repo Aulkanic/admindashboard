@@ -203,13 +203,13 @@ const Evaluation = () => {
         {
           field: 'SchoIarshipApplied',
           headerName: 'Scholarship Applied',
-          width: 150,
+          width: 250,
           editable: false,
         },
         {
           field: 'Name',
           headerName: 'Name',
-          width: 150,
+          width: 250,
           editable: false,
         },
         {
@@ -227,11 +227,11 @@ const Evaluation = () => {
         {
           field: 'stat',
           headerName: 'Score',
-          width: 70,
+          width: 90,
           editable: false,
           renderCell: (params) =>(
             <>
-            <p style={{margin:'0px'}}>{params.row.score}</p>
+            <p style={{margin:'0px'}}>{params.row.score}/100</p>
             </>
           ),
         },
@@ -251,7 +251,7 @@ const Evaluation = () => {
           {
             field: 'score',
             headerName: 'Details',
-            width: 350,
+            width: 250,
             renderCell: (params) => {
               let status
               if(params.value >= passSlot.passingscore){
@@ -289,13 +289,13 @@ const Evaluation = () => {
         {
           field: 'SchoIarshipApplied',
           headerName: 'Scholarship Applied',
-          width: 150,
+          width: 250,
           editable: false,
         },
         {
           field: 'Name',
           headerName: 'Name',
-          width: 150,
+          width: 250,
           editable: false,
         },
         {
@@ -313,11 +313,11 @@ const Evaluation = () => {
         {
           field: 'stat',
           headerName: 'Score',
-          width: 70,
+          width: 90,
           editable: false,
           renderCell: (params) =>(
             <>
-            <p style={{margin:'0px'}}>{params.row.score}</p>
+            <p style={{margin:'0px'}}>{params.row.score}/100</p>
             </>
           ),
         },
@@ -356,13 +356,13 @@ const Evaluation = () => {
         {
           field: 'SchoIarshipApplied',
           headerName: 'Scholarship Applied',
-          width: 150,
+          width: 250,
           editable: false,
         },
         {
           field: 'Name',
           headerName: 'Name',
-          width: 150,
+          width: 250,
           editable: false,
         },
         {
@@ -380,11 +380,11 @@ const Evaluation = () => {
         {
           field: 'stat',
           headerName: 'Score',
-          width: 70,
+          width: 90,
           editable: false,
           renderCell: (params) =>(
             <>
-            <p style={{margin:'0px'}}>{params.row.score}</p>
+            <p style={{margin:'0px'}}>{params.row.score}/100</p>
             </>
           ),
         },
@@ -404,7 +404,7 @@ const Evaluation = () => {
           {
             field: 'grantedAccess',
             headerName: 'Details',
-            width: 350,
+            width: 250,
             renderCell: (params) => {
               console.log(params.row)
               return(
@@ -802,7 +802,6 @@ const Evaluation = () => {
                   <div className="tbscon">
                   <p><strong>Address:</strong> {applicantsInfo.address}</p>
                   <p><strong>Baranggay:</strong> {applicantsInfo.baranggay}</p>
-                  <p><strong>Citizenship:</strong> {applicantsInfo.citizenship}</p>
                   <p><strong>Birthday:</strong> {applicantsInfo.birthday}</p>
                   <p><strong>Place of Birth:</strong> {applicantsInfo.birthPlace}</p>
                   </div>

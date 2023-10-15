@@ -181,7 +181,7 @@ const Appointment = () => {
   const { admin  } = useSelector((state) => state.login)
   const [Qualified, setQualified] = useState([]);
   const [appointedList, setAppointedList] = useState([]);
-  const [appointmentDate, setAppointmentDate] = useState(null);
+  const [appointmentDate, setAppointmentDate] = useState(dayjs());
   const [Agenda, setAgenda] = useState('');
   const [Location, setLocation] = useState('');
   const initialStartTime = dayjs().set('hour', 9).set('minute', 0);
@@ -311,10 +311,10 @@ const Appointment = () => {
       errors.start = 'This Field is Required'
     }
     
-    const currentDate = moment();
     const officeHourStart = moment('08:59 AM', 'hh:mm A');
     const officeHourEnd = moment('05:00 PM', 'hh:mm A');
     const date = new Date(appointmentDate).toDateString();
+  
     const value = { $d: new Date(startTime) };
     const start = value.$d.toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit', hour12: true });
     const value1 = { $d: new Date(endTime) };
@@ -345,6 +345,7 @@ const Appointment = () => {
       return;
     }
     setAppDetails({start,end,date})
+    console.log(appDetails)
     setStep(1)
     setErrors('')
   }
@@ -430,8 +431,6 @@ const Appointment = () => {
   const Reapp = async(data) => {
     const applicantNum = data.applicantNum;
     setShowBackdrop(true);
-    const res = await FetchingUserAppdetails.FETCH_USERDET(applicantNum);
-    const info = res.data.result[0];
     const email = data.Email
     const adminName = admin[0].name;
     const applicantCode = data.applicantCode;
@@ -441,7 +440,8 @@ const Appointment = () => {
     formData.append('applicantNum',applicantNum);
     formData.append('applicantCode',applicantCode);
     formData.append('schedDate',schedDate);
-    formData.append('email',email)
+    formData.append('email',email);
+    formData.append('Name',data.Name);
       Reaapointed.RE_APPOINT(formData)
       .then(res => {
         setQualified(res.data.results.data1);
@@ -479,7 +479,8 @@ const Appointment = () => {
       formData.append('guardian',dataappinfo.guardianName)
       SetApproved.SET_APPROVE(formData)
     .then(res => {
-      setQualified(res.data.results.data1);
+      console.log(res)
+      setQualified(res.data.results.data1)
       setAppointedList(res.data.results.data2)
       setShowBackdrop(false);
       swal({
@@ -1519,7 +1520,6 @@ try {
                 <p><strong>Gender: </strong>{userFulldet.gender}</p>
                 <p><strong>Address: </strong>{userFulldet.address}</p>
                 <p><strong>Baranggay: </strong>{userFulldet.baranggay}</p>
-                <p><strong>Citizenship: </strong>{userFulldet.citizenship}</p>
                 <p><strong>Birthday: </strong>{userFulldet.birthday}</p>
                 <p><strong>Place of Birth: </strong>{userFulldet.birthPlace}</p>
                 </div>
@@ -1633,7 +1633,7 @@ try {
             }}
             value={appointmentDate}
             onChange={(newValue) => setAppointmentDate(newValue)}
-            defaultValue={dayjs('2022-04-17')}
+            defaultValue={dayjs()}
             views={['year', 'month', 'day']}
             minDate={currentDate}
           />
@@ -2040,10 +2040,6 @@ try {
                         noRowsOverlay: CustomNoRowsOverlay,
                       }}
                       pageSizeOptions={[25]}
-                      checkboxSelection
-                      onRowSelectionModelChange={handleReappSelectionModelChange}
-                      rowSelectionModel={reappSelectionModel}
-                      disableRowSelectionOnClick
                     />
                   )}
                   {activeState === 'Nores' && (

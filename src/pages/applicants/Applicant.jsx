@@ -497,12 +497,12 @@ const style = {
     {
       field: 'Name',
       headerName: 'Name',
-      width: 150,
+      width: 250,
       editable: false,
     },
     {
-      field: 'yearLevel',
-      headerName: 'Year Level',
+      field: 'DateApplied',
+      headerName: 'Date Applied',
       width: 150,
       editable: false,
     },
@@ -514,7 +514,6 @@ const style = {
       renderCell: (params) => {
         const ForEva = docslisted.filter(user => user.schoName === params.row.SchoIarshipApplied && user.batch === params.row.Batch && user.docsfor === 'Application');
         const Subuser = documentaryListed.filter(user => user.applicantId === params.row.applicantNum && user.docsFor === 'Application');
-        const approve = Subuser.filter(user => user.Status === 'Approved');
         const pval = `${Subuser.length}/${ForEva.length}`
 
         return(
@@ -593,13 +592,13 @@ const style = {
     {
       field: 'SchoIarshipApplied',
       headerName: 'Scholarship Applied',
-      width: 150,
+      width: 200,
       editable: false,
     },
     {
       field: 'Name',
       headerName: 'Name',
-      width: 150,
+      width: 250,
       editable: false,
     },
     {
@@ -681,13 +680,13 @@ const style = {
     {
       field: 'SchoIarshipApplied',
       headerName: 'Scholarship Applied',
-      width: 150,
+      width: 200,
       editable: false,
     },
     {
       field: 'Name',
       headerName: 'Name',
-      width: 150,
+      width: 250,
       editable: false,
     },
     {
