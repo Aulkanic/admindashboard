@@ -344,8 +344,8 @@ const Website = () => {
         />
         </DialogContent>
         <DialogActions>
-          <Button sx={{color:'white'}} className='myButton' onClick={handleClose}>Cancel</Button>
-          <Button sx={{color:'white'}}  className='myButton1' onClick={editFaqs}>Save Changes</Button>
+          <button className='btnofficials1' onClick={handleClose}>Cancel</button>
+          <button className="btnofficials" onClick={editFaqs}>Save Changes</button>
         </DialogActions>
       </Dialog>
       <Dialog open={open1} onClose={handleClose1}>
@@ -373,8 +373,8 @@ const Website = () => {
         />
         </DialogContent>
         <DialogActions>
-          <Button sx={{color:'white'}} className='myButton' onClick={handleClose1}>Cancel</Button>
-          <Button sx={{color:'white'}}  className='myButton1' onClick={createFaqs}>Add Faqs</Button>
+          <button className='btnofficials1' onClick={handleClose1}>Cancel</button>
+          <button className="btnofficials" onClick={createFaqs}>Add Faqs</button>
         </DialogActions>
       </Dialog>
     <StyledBackdrop open={showBackdrop}>
@@ -413,7 +413,7 @@ const Website = () => {
                     </Card>
                     </div>
                     <div style={{width:'100%',display:'flex',justifyContent:'center',alignItems:'center',margin:'10px'}}>
-                      <Button onClick={LinksUpdate} sx={{color:'white'}} className='myButton1'>Save</Button>
+                      <button className="btnofficials" onClick={LinksUpdate}>Save</button>
                     </div>
                 </div>  
                 <div style={{width:'90%',height:'100%'}}>
@@ -478,7 +478,7 @@ const Website = () => {
                       </button>
                     </div>
                     <div style={{margin:'10px'}}>
-                      <Button className='myButton' variant='contained' onClick={setColor}>Save Changes</Button>
+                      <button className='btnofficials1' onClick={setColor}>Save Changes</button>
                     </div>
                   </div>
                 </Card>
@@ -549,7 +549,7 @@ const Website = () => {
                           type='file' onChange={(e) =>setCarou2(e.target.files[0])} id="input-with-sx" label="" variant="outlined" />
                           </Button><br />
                           <div style={{margin:'10px',width:'100%',display:'flex',justifyContent:'center'}}>
-                          <Button className='myButton' onClick={upload} variant='contained'>Save All Images</Button>
+                          <button className='btnofficials1' onClick={upload}>Save All Images</button>
                           </div>
                         </Box>
                             </Typography>
@@ -608,7 +608,7 @@ const Website = () => {
                             </Typography>
                           </CardContent>
                           <div style={{margin:'10px',width:'100%',display:'flex',justifyContent:'center'}}>
-                          <Button className='myButton' onClick={trivCreate} variant='contained'>Save</Button>
+                          <button className='btnofficials1' onClick={trivCreate}>Save</button>
                           </div>
                         </Box>
                             </Typography>
@@ -622,7 +622,7 @@ const Website = () => {
                     </Card>  
                 <div>
                   <div style={{margin:'10px'}}>
-                    <Button sx={{color:'white'}} className='myButton1' onClick={handleClickOpen1}><AddIcon />Add Faqs</Button>
+                    <button className="btnofficials" onClick={handleClickOpen1}><AddIcon />Add Faqs</button>
                   </div>
                   {faqs?.map((data,index) =>{
                     const num = index
@@ -635,8 +635,8 @@ const Website = () => {
                             id="panel4bh-header"
                           >
                             <Typography sx={{ width: '33%', flexShrink: 0,fontWeight:700}}> {data.faqsQuestions}</Typography>
-                            <Button className='myButton' onClick={() =>handleClickOpen(data)} sx={{color:'white',marginLeft:'50%'}}>Edit</Button>
-                            <Button className='myButton2' onClick={() =>deleteFaqs(data)} sx={{color:'white',marginLeft:'2%'}}>Delete</Button>
+                            <button className='btnofficials1' onClick={() =>handleClickOpen(data)} style={{marginLeft:'50%'}}>Edit</button>
+                            <button className="btnofficials2" onClick={() =>deleteFaqs(data)} sx={{color:'white',marginLeft:'2%'}}>Delete</button>
                           </AccordionSummary>
                           <AccordionDetails>
                             <Typography>

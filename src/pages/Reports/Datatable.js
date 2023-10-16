@@ -11,7 +11,6 @@ const CustomDataGrid = styled(DataGrid)({
       backgroundColor:'#0047a4',
       fontWeight:'bold'
     },
-  
   });
 
 export default function Datatable(data) {

@@ -160,8 +160,8 @@ const News = () => {
             </div>
           </div>
           <div style={{width:'100%',display:'flex',justifyContent:'space-around',alignItems:'center'}}>
-            <Button onClick={handleClose} className='myButton2' sx={{color:'white'}}>Cancel</Button>
-            <Button onClick={Create} className='myButton1' sx={{color:'white'}}>Publish News</Button>
+            <button className='btnofficials2' onClick={handleClose}>Cancel</button>
+            <button className="btnofficials" onClick={Create}>Publish News</button>
           </div>
           </div>
         </Box>
@@ -190,7 +190,7 @@ const News = () => {
       </div>
       <div className='news'>
         <div style={{width:'100%'}}>
-        <Button onClick={handleClickOpen} sx={{color:'white',float:'right'}} className='myButton1'>Create News</Button>
+        <button className="btnofficials" onClick={handleClickOpen}>Create News</button>
         </div>
         <h2 style={{margin:'5px'}}>Recent News</h2>
           { newslist?.map((data) =>{
@@ -222,7 +222,7 @@ const News = () => {
     {activeState === 'NewsHead' &&
     <>
     <div style={{margin:'15px 0px 0px 30px'}}>
-      <Button onClick={tabschange} sx={{color:'white'}} className='myButton2'><ArrowBackIosNewIcon/>Back</Button>
+      <button className='btnofficials2' onClick={tabschange}><ArrowBackIosNewIcon/>Back</button>
     </div>
     <div style={{width:'95%',height:'85%',padding:'30px 30px 0px 30px'}}>
       <Card sx={{width:'95%',padding:'15px'}}>
@@ -248,7 +248,7 @@ const News = () => {
     <div className='ncard' style={{width:'100%',height:'100vh',display:'flex',justifyContent:'center',alignItems:'center',flexDirection:'column'}}>
       <p className='NoNews'>No News Available</p>
       <div style={{margin:'10px'}}>
-      <Button onClick={handleClickOpen} sx={{color:'white',float:'right'}} className='myButton1'>Create News</Button>
+      <button className="btnofficials" onClick={handleClickOpen}>Create News</button>
       </div>
     
     </div>)}

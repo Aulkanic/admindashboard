@@ -301,7 +301,7 @@ const Scholars = () => {
       headerName: 'Action',
       width: 90,
       renderCell: (params) => (
-        <ViewButton sx={{textTransform:'none',color:'white'}} className="myButton" onClick={() => view(params.row)}>View</ViewButton>
+        <button className='btnofficials1' onClick={() => view(params.row)}>View</button>
       ),
     },
 
@@ -354,7 +354,7 @@ const Scholars = () => {
       headerName: 'Action',
       width: 90,
       renderCell: (params) => (
-        <ViewButton sx={{textTransform:'none',color:'white'}} className="myButton" onClick={() => view1(params.row)}>View</ViewButton>
+        <button className='btnofficials1' onClick={() => view1(params.row)}>View</button>
       ),
     },
 
@@ -898,11 +898,11 @@ const Scholars = () => {
             <Typography sx={{ ml: 2, flex: 1 }} variant="h6" component="div">
               Scholar Updated Information
             </Typography>
-            <StyledButtonEdit className="myButton1" sx={{marginLeft:'15px'}} autoFocus color="inherit"
+            <button className="btnofficials" sx={{marginLeft:'15px'}} autoFocus color="inherit"
             onClick={() =>SetSchoRenewed(inf)}
             >
               PASS THE RENEW
-            </StyledButtonEdit>
+            </button>
           </Toolbar>
         </AppBar>
       <Box sx={{width:'98.5%',padding:'10px',height:'100%',display:'flex',backgroundColor:'whitesmoke',flexDirection:'column'}}>
@@ -1084,7 +1084,7 @@ const Scholars = () => {
       </DemoContainer>
     </LocalizationProvider>
     <div style={{display:'flex',justifyContent:'center',alignItems:'center',margin:'15px'}}>
-    <Button onClick={generateRenew} sx={{textTransform:'none',color:'white'}} className='myButton1'>Generate</Button>
+    <button className="btnofficials" onClick={generateRenew}>Generate</button>
     </div>
 
       </div>
@@ -1121,7 +1121,7 @@ const Scholars = () => {
         })}
       </Dropdown.Menu>
     </Dropdown>
-    <Button className='myButton1' sx={{textTransform:'none',color:'white'}} onClick={() =>setOpen1(true)}>Generate Renewal</Button>
+    <button className="btnofficials" onClick={() =>setOpen1(true)}>Generate Renewal</button>
     </div>
     <Box
       sx={{
@@ -1275,8 +1275,8 @@ const Scholars = () => {
       />
     </Box>
     <div style={{width:'100%',display:'flex',justifyContent:'space-around',margin:'15px'}}>
-          <StyledButtonEdit sx={{textTransform:'none'}} className="myButton1" onClick={NotifyAll}>Notify All Selected Scholars</StyledButtonEdit>
-          <StyledButton sx={{textTransform:'none'}} className="myButton2" onClick={RemoveGrantAll}>Revoke Grant To All Selected Scholars</StyledButton>
+          <button className="btnofficials" onClick={NotifyAll}>Notify All Selected Scholars</button>
+          <button className="btnofficials2" onClick={RemoveGrantAll}>Revoke Grant To All Selected Scholars</button>
     </div>
     </>
     }
@@ -1286,11 +1286,11 @@ const Scholars = () => {
       <>
       <div>
         <div style={{display:'flex',justifyContent:'space-between',margin:'10px'}}>
-        <Button className='myButton2' sx={{textTransform:'none',color:'white'}} onClick={() =>setPage(0)}>Back</Button>
-        {renewDet[0].remarks === 'Pending' && (<Button className='myButton1' sx={{textTransform:'none',color:'white'}} onClick={() =>handleSetonoff('Ongoing')}>Start</Button>)}
-        {renewDet[0].remarks === 'Ongoing' && (<Button className='myButton1' sx={{textTransform:'none',color:'white'}} onClick={() =>handleSetonoff('Pause')}>Pause</Button>)}
-        {renewDet[0].remarks === 'Pause' && (<Button className='myButton1' sx={{textTransform:'none',color:'white'}} onClick={() =>handleSetonoff('Continuing')}>Resume</Button>)}
-        {renewDet[0].remarks === 'Done' && (<Button className='myButton1' sx={{textTransform:'none',color:'white'}} onClick={() =>handleSetonoff('Extend')}>Extend</Button>)}
+        <button className="btnofficials2" onClick={() =>setPage(0)}>Back</button>
+        {renewDet[0].remarks === 'Pending' && (<button className="btnofficials" onClick={() =>handleSetonoff('Ongoing')}>Start</button>)}
+        {renewDet[0].remarks === 'Ongoing' && (<button className="btnofficials" onClick={() =>handleSetonoff('Pause')}>Pause</button>)}
+        {renewDet[0].remarks === 'Pause' && (<button className="btnofficials" onClick={() =>handleSetonoff('Continuing')}>Resume</button>)}
+        {renewDet[0].remarks === 'Done' && (<button className="btnofficials" onClick={() =>handleSetonoff('Extend')}>Extend</button>)}
         </div>
         <div>
           {RenewalInformation}

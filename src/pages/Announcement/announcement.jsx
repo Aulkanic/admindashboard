@@ -141,7 +141,7 @@ const Announcement = () => {
                   </Typography>
                 </CardContent>
                 <div style={{width:'100%',display:'flex',justifyContent:'center'}}>
-              <Button className='myButton' onClick={Create} variant='contained'>Announce</Button>
+              <button className='btnofficials1' onClick={Create} variant='contained'>Announce</button>
 
               </div>
               </Card>

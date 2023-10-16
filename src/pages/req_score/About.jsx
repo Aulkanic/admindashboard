@@ -397,8 +397,8 @@ export const About = () => {
           {index + 1}. {data.questions}
           </p> 
           <div style={{display:'flex',whiteSpace:'nowrap'}}>
-          <button style={{padding:'5px',height:'32px'}} className='myButton1' onClick={() =>EditQForm(data)}><EditIcon sx={{fontSize:'13px'}}/></button>
-          <button style={{padding:'5px',marginLeft:'10px',height:'32px'}} onClick={() =>DeleteQuestion(data)} className='myButton2'><DeleteIcon sx={{fontSize:'13px'}}/></button>
+          <button style={{marginRight:'5px'}} className="btnofficials" onClick={() =>EditQForm(data)}><EditIcon style={{fontSize:'13px'}}/></button>
+          <button className='btnofficials2' onClick={() =>DeleteQuestion(data)}><DeleteIcon style={{fontSize:'13px'}}/></button>
           </div>
 
           </div>
@@ -407,13 +407,13 @@ export const About = () => {
               return(
                 <li className='choiceli' key={index}>
                  <p>- {data1.value}</p> 
-                <button onClick={() =>DeleteChoice(data1)} style={{padding:'5px',marginLeft:'10px',height:'32px'}} className='myButton2'>
+                <button className='btnofficials2' onClick={() =>DeleteChoice(data1)}>
                   <DeleteIcon sx={{fontSize:'13px'}}/>
                 </button></li>
               )
             })}
           </ul>
-          <div className='addchoice'><button className='myButton1' onClick={() =>AddChoices(data)}>+Add Choices</button></div>
+          <div className='addchoice'><button className="btnofficials" onClick={() =>AddChoices(data)}>+Add Choices</button></div>
         </div>
       )
     })
@@ -497,7 +497,7 @@ export const About = () => {
             <div className="frmcontainer">
             {FormTemplate}
             </div>
-            <button style={{float:'right'}} onClick={AddQuestions} className='myButton1'>Add Questions</button>
+            <button className="btnofficials" style={{float:'right'}} onClick={AddQuestions}>Add Questions</button>
           </Card> }   
           {value === '2' && 
          <Card sx={{padding:'10px',backgroundColor:'transparent',fontSize:'14px'}} elevation={0}>
@@ -509,7 +509,7 @@ export const About = () => {
           <p className='pscoreinst'>5.Use the following formula to calculate the score for a selected choice: (Percentage of Selected Choice / 100) * Specific Question's Value.</p>
            
               {ScoreTemplate}
-               <button style={{float:'right',marginBottom:'10px'}} onClick={SaveScore} className='myButton1'>Set Score</button>
+               <button className="btnofficials" style={{float:'right',marginBottom:'10px'}} onClick={SaveScore}>Set Score</button>
          </Card> }       
         </div>
         </div>

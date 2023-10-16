@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from 'react'
-import { DataGrid } from '@mui/x-data-grid';
 import Form from 'react-bootstrap/Form';
-import { Button,Box } from '@mui/material';
+import Button from 'react-bootstrap/Button';
 import './payroll.css'
 import { styled } from '@mui/material/styles';
 import Paper from '@mui/material/Paper';
@@ -11,8 +10,10 @@ import TableContainer from '@mui/material/TableContainer';
 import TableHead from '@mui/material/TableHead';
 import TablePagination from '@mui/material/TablePagination';
 import TableRow from '@mui/material/TableRow';
-import TableFooter from '@mui/material';
 import TableCell, { tableCellClasses } from '@mui/material/TableCell';
+import { BsFillPrinterFill } from 'react-icons/bs';
+import { BiSolidFileExport } from 'react-icons/bi';
+import createExcelReport from './excel';
 
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
   [`&.${tableCellClasses.head}`]: {
@@ -32,9 +33,7 @@ const tableContainerStyle = {
 
 function Payroll(pay){
   const [payroll,setPayroll] = useState([])
-  const [tabs,setTabs] = useState(0)
   const [selection,setSelection] = useState('')
-  const [total,setTotal] = useState('')
   const [page, setPage] = React.useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(10);
 
@@ -54,16 +53,27 @@ function Payroll(pay){
   useEffect(() =>{
 
       if(selection === 'Elementary'){
-        const Elementary = pay.data.elementary.scholarList;
+        const Elementary = pay
+        ? pay.data && pay.data.elementary && pay.data.elementary.scholarList
+          ? pay.data.elementary.scholarList
+          : []
+        : [];
         setPayroll(Elementary)
       }
       if(selection === 'Highschool'){
-
-        const Highschool = pay.data.highSchool.scholarList;
+        const Highschool = pay
+        ? pay.data && pay.data.highSchool && pay.data.highSchool.scholarList
+          ? pay.data.highSchool.scholarList
+          : []
+        : [];
         setPayroll(Highschool)
       }
       if(selection === 'College'){
-        const College = pay.data.college.scholarList;
+        const College = pay
+        ? pay.data && pay.data.college && pay.data.college.scholarList
+          ? pay.data.college.scholarList
+          : []
+        : [];
         setPayroll(College)
       }
   },[payroll,selection])
@@ -138,12 +148,13 @@ function Payroll(pay){
     AmountDue: convertToPesos(payroll.reduce((total, user) => total + user.AmountDue, 0)),
   };
 
-  const modifiedList = payroll.map((item, index) => ({
-    ...item,
+  const modifiedList = payroll?.map((item, index) => ({
     userNum: index + 1,
+    ...item
 
   }));
-
+  const reporTitle = 'User Report'
+  const date = new Date().toLocaleDateString();
   return (
     <div className='payrollContent'>
 
@@ -160,7 +171,8 @@ function Payroll(pay){
           </Form.Select>
           </div>
           <div>
-            <Button sx={{color:'white',textTransform:'none'}} onClick={handlePrint} className='myButton'>Print</Button>
+            <Button style={{marginRight:'10px'}} onClick={handlePrint}><BsFillPrinterFill style={{marginRight:'2px',marginTop:'-2px'}}/>Print</Button>
+            <Button onClick={() => createExcelReport(modifiedList,reporTitle,date)}><BiSolidFileExport style={{marginRight:'2px',marginTop:'-4px'}}/>Export</Button>
           </div>
       </div>
       <div className='payrollTable'>

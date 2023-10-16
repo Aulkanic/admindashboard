@@ -1003,8 +1003,8 @@ try {
       renderCell: (params) => (
           <>
           <div style={{display:'flex',flexDirection:'column',height:'100%',width:'100%',justifyContent:'center',alignItems:'center'}}>
-          <ViewButton className="myButton"
-          onClick={() => appointUserInfo(params.row)}>View Details</ViewButton>
+          <button className='btnofficials1'
+          onClick={() => appointUserInfo(params.row)}>View Details</button>
           </div>
         </>
       ),
@@ -1069,10 +1069,10 @@ try {
         return(
           <>
           <div style={{width:"100%",display:'flex',flexDirection:'column',height:'100%',justifyContent:'center',alignItems:'center'}}>
-        <StyledButtonEdit className="myButton1" sx={{width:'100%'}}
+        <button className="btnofficials" sx={{width:'100%'}}
         onClick={() => Approved(params.row)}>
           SET QUALIFIED
-          </StyledButtonEdit>
+          </button>
         </div>
         </>)
       },
@@ -1137,16 +1137,16 @@ try {
         return(
           <>
           <div style={{display:'flex'}}>
-        {params.row.grantedAccess === '' || params.row.grantedAccess === 'No' ? (<StyledButtonAccess sx={{color:'white'}} className="myButton"
+        {params.row.grantedAccess === '' || params.row.grantedAccess === 'No' ? (<button className='btnofficials1'
         onClick={() =>handleOpenDialog1(params.row)}>
-          Access</StyledButtonAccess>) : (<StyledButtonEdit sx={{color:'white'}} className="myButton1"
+          Access</button>) : (<button className="btnofficials"
         onClick={() => Approved(params.row)}>
           SET QUALIFIED
-          </StyledButtonEdit>)}
-          <StyledButton className="myButton2"
+          </button>)}
+          <button className='btnofficials2'
         onClick={() => handleOpenDialog2(params.row)}>
           Failed
-          </StyledButton>
+          </button>
         </div>
         </>)
       },
@@ -1216,10 +1216,10 @@ try {
         return(
           <>
           <div style={{width:"100%",display:'flex',flexDirection:'column',height:'100%',justifyContent:'center',alignItems:'center'}}>
-            <StyledButtonEdit sx={{width:'100%'}} className="myButton1"
+            <button className="btnofficials"
               onClick={() => Reapp(params.row)}>
                   Reappoint
-            </StyledButtonEdit>
+            </button>
         </div>
         </>)
       },
@@ -1284,16 +1284,16 @@ try {
         return(
           <>
           <div style={{display:'flex'}}>
-        {params.row.grantedAccess === '' || params.row.grantedAccess === 'No' ? (<StyledButtonAccess className="myButton"
+        {params.row.grantedAccess === '' || params.row.grantedAccess === 'No' ? (<button className='btnofficials1'
         onClick={() =>handleOpenDialog1(params.row)}>
-          Access</StyledButtonAccess>) : (<StyledButtonEdit className="myButton1"
+          Access</button>) : (<button className="btnofficials"
         onClick={() => Approved(params.row)}>
           SET QUALIFIED
-          </StyledButtonEdit>)}
-          <StyledButton className="myButton2"
+          </button>)}
+          <button className='btnofficials2'
         onClick={() => handleOpenDialog2(params.row)}>
           Failed
-          </StyledButton>
+          </button>
         </div>
         </>)
       },
@@ -1337,7 +1337,7 @@ try {
         <img src={selectedImage.image} alt="Full Image" style={{ width: '100%', height: '100%' }} />
       </DialogContent>
       <DialogActions>
-        <Button className="myButton" sx={{color:'white'}} onClick={closeImageModal}>Close</Button>
+        <button className='btnofficials1' onClick={closeImageModal}>Close</button>
       </DialogActions>
       </Dialog>
       {/* End of Dialog for Image Expandin */}
@@ -1372,8 +1372,8 @@ try {
             />
           </DialogContent>
           <DialogActions>
-            <Button sx={{color:'white'}} className="myButton" onClick={handleCloseDialog1}>Cancel</Button>
-            <Button sx={{color:'white'}} className="myButton1" onClick={Access}>Submit</Button>
+            <button className='btnofficials1' onClick={handleCloseDialog1}>Cancel</button>
+            <button className="btnofficials" onClick={Access}>Submit</button>
           </DialogActions>
       </Dialog>
       {/* End of Dialog for Access */}
@@ -1396,8 +1396,8 @@ try {
           />
         </DialogContent>
         <DialogActions>
-          <Button className="myButton" onClick={handleCloseDialog}>Cancel</Button>
-          <Button className="myButton1" onClick={Failed}>Submit</Button>
+          <button className='btnofficials1' onClick={handleCloseDialog}>Cancel</button>
+          <button className="btnofficials" onClick={Failed}>Submit</button>
         </DialogActions>
       </Dialog>
       <Modal
@@ -1423,12 +1423,12 @@ try {
         <Card style={{padding:'10px',height:'90%',overflow:'auto'}}>
           <h3>Select User To be Added in Appointed Schedule</h3>
         <div style={{width:'100%'}}>
-              <StyledButton className="myButton2" onClick={handleClose}> X </StyledButton>
+              <button className='btnofficials2' onClick={handleClose}> X </button>
             </div> 
           <div style={{margin:'10px',width:'100%'}}>
-          <Button variant="contained" className="myButton1" onClick={addOtherUser}>
+          <button className="btnofficials" onClick={addOtherUser}>
             ADD TO LIST
-          </Button>
+          </button>
           </div>  
       <DataGrid
                       rows={Qualified}
@@ -1470,12 +1470,12 @@ try {
             <Typography sx={{ ml: 2, flex: 1 }} variant="h6" component="div">
               Applicant Information
             </Typography>
-            <StyledButton className="myButton2" autoFocus color="inherit" onClick={() =>InterviewResult('False')}>
+            <button className='btnofficials2' onClick={() =>InterviewResult('False')}>
               REJECT
-            </StyledButton>
-            <StyledButtonEdit className="myButton1" sx={{marginLeft:'15px'}} autoFocus color="inherit" onClick={() =>InterviewResult('True')}>
+            </button>
+            <button className="btnofficials" sx={{marginLeft:'15px'}} autoFocus color="inherit" onClick={() =>InterviewResult('True')}>
               PASS
-            </StyledButtonEdit>
+            </button>
           </Toolbar>
         </AppBar>
       <Box sx={{width:'98.5%',padding:'10px',height:'100%',display:'flex',backgroundColor:'whitesmoke'}}>
@@ -1825,7 +1825,7 @@ try {
                                 <div style={{width:'100%',display:'flex',justifyContent:'space-around',alignItems:'center'}}>
                                 <Card style={{width:'100%',display:'flex',justifyContent:'space-around',alignItems:'center',padding:'10px'}}>
                                 <h3>{date}</h3>
-                                <StyledButton className="myButton2" variant="contained" onClick={cancelAppointment}>Cancel Schedule</StyledButton>
+                                <button className='btnofficials2' onClick={cancelAppointment}>Cancel Schedule</button>
                                 </Card>
                                 </div>
                                 {Object.entries(timeBatch).map(([timeRange, data]) => {
@@ -1849,8 +1849,8 @@ try {
                                         
                                       </div>
                                       <div style={{display:'flex',flexDirection:'column',justifyContent:'space-around',height:'100%'}}>
-                                      <StyledButton sx={{marginBottom:'5px'}} className="myButton" variant="contained" size="small" onClick={() => cancelBatch(selectedAppointment.selectedDate,timeRange, data)}>Cancel Batch</StyledButton>
-                                      <Button className="myButton1" variant="contained" size="small" onClick={() => handleOpen(selectedAppointment.selectedDate,timeBatch, data)}>Add User</Button>
+                                      <button className='btnofficials1' onClick={() => cancelBatch(selectedAppointment.selectedDate,timeRange, data)}>Cancel Batch</button>
+                                      <button className="btnofficials" onClick={() => handleOpen(selectedAppointment.selectedDate,timeBatch, data)}>Add User</button>
                                       </div>
                                       </Card>
                                       </div>
@@ -2069,13 +2069,13 @@ try {
             </Card>
             <div style={{width:'97%',margin:'10px',display:'flex',justifyContent:'flex-end',alignItems:'flex-end'}}>
             {activeState === 'Passed' && <div sx={{width:'90%',margin:'10px',display:'flex',justifyContent:'flex-end',flexDirection:'column',alignItems:'flex-end'}}>
-              <Button className="myButton1" onClick={Addall} sx={{margin:'10px'}} variant='contained'>SET ALL SELECTED TO SCHOLARS</Button>
+              <button className="btnofficials" onClick={Addall} sx={{margin:'10px'}} variant='contained'>SET ALL SELECTED TO SCHOLARS</button>
             </div>}
             {activeState === 'Reject' && <div sx={{width:'90%',margin:'10px',display:'flex',justifyContent:'flex-end',flexDirection:'column',alignItems:'flex-end'}}>
-                <Button className="myButton2" onClick={FailedAll} sx={{margin:'10px'}} variant='contained'>SET FAILED THE SELECTED USERS</Button>
+                <button className='btnofficials2' onClick={FailedAll} >SET FAILED THE SELECTED USERS</button>
             </div>}
             {activeState === 'Nores' && <div sx={{width:'90%',margin:'10px',display:'flex',justifyContent:'flex-end',flexDirection:'column',alignItems:'flex-end'}}>
-                <Button className="myButton2" onClick={FailedAll} sx={{margin:'10px'}} variant='contained'>SET FAILED THE SELECTED USERS</Button>
+                <button className='btnofficials2' onClick={FailedAll} style={{margin:'10px'}}>SET FAILED THE SELECTED USERS</button>
             </div>}
             </div>
         </Card>          

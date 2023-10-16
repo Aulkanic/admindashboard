@@ -1,7 +1,7 @@
 import Navbar from '../../components/navbar/Navbar';
 import Sidebar from '../../components/sidebar/Sidebar';
 import './contact.scss';
-import { Box, Modal,Button,Card} from "@mui/material"; 
+import { Box, Modal,Button,Card,Typography} from "@mui/material"; 
 import { DataGrid} from '@mui/x-data-grid';
 import { ListofReq, FetchingSchoProg, Addrequirements,NewDeadline,DeleteReq,ListAccess } from '../../api/request';
 import { useState } from 'react';
@@ -22,44 +22,28 @@ import '../Button style/button.css';
 import Dialog from '@mui/material/Dialog';
 import DialogActions from '@mui/material/DialogActions';
 import DialogContent from '@mui/material/DialogContent';
-import { useContext } from "react";
-import { admininfo } from "../../App";
 import './requirement.css'
 import DialogTitle from '@mui/material/DialogTitle';
-import { styled, ThemeProvider, createTheme } from '@mui/material';
+import { styled } from '@mui/material';
 import { Backdrop, CircularProgress } from '@mui/material';
 import { useSelector } from 'react-redux';
+import { MdClear } from "react-icons/md";
+import CustomNoRowsOverlay from '../Design/Norows';
 
 const StyledBackdrop = styled(Backdrop)(({ theme }) => ({
   zIndex: theme.zIndex.drawer + 50,
   color: '#fff',
 }));
 
-const StyledButton = styled(Button)`
-  && {
-    float: right;
-    background-color: red;
-    transition: opacity 0.3s ease;
-    color:white;
+const CustomDataGrid = styled(DataGrid)({
+  '& .MuiDataGrid-columnHeaders': {
+    color: 'white', 
+    fontWeight:'bold',
+    backgroundColor:'#0047a4',
+    fontWeight:'bold'
+  },
+});
 
-    &:hover {
-      opacity: 0.8;
-    }
-  }
-`;
-const StyledButtonEdit = styled(Button)`
-  && {
-    float: right;
-    background-color: green;
-    transition: opacity 0.3s ease;
-    color:white;
-    margin-right:10px;
-
-    &:hover {
-      opacity: 0.8;
-    }
-  }
-`;
 
 
 const Contact = () => {
@@ -109,16 +93,17 @@ const Contact = () => {
   const handleClose = () => setOpen(false);
   
   const style = {
-    position: 'absolute',
+    position: 'relative',
     top: '50%',
     left: '50%',
     transform: 'translate(-50%, -50%)',
     width: '60%',
-    height: '80%',
+    height: 'maxContent',
     bgcolor: 'background.paper',
-    overflow: 'auto',
-    padding:'10px',
-    borderRadius:'10px'
+    padding:'40px 10px 10px 10px',
+    borderRadius:'5px',
+    display:'flex',
+    flexDirection:'column'
   };
 
   useEffect(() => {
@@ -313,19 +298,18 @@ const Contact = () => {
     {
       field: 'numSubmissions',
       headerName: 'Total Submitted',
-      width: 100,
+      width: 150,
       editable: false,
     },
     {
     field: 'insert',
     headerName: 'Actions',
-    width: 250,
+    width: 220,
     renderCell: (params) => {
-
       return(
         <>
-      <StyledButtonEdit sx={{textTransform:'none'}} className='myButton1' onClick={() => handleOpenDialog(params.row)}>Edit Deadline</StyledButtonEdit>
-      <StyledButton sx={{textTransform:'none'}} className='myButton2' onClick={() => Delete(params.row)}>Delete</StyledButton>
+      <button style={{marginRight:'5px'}} className="btnofficials" onClick={() => handleOpenDialog(params.row)}>Edit Deadline</button>
+      <button className='btnofficials2' onClick={() => Delete(params.row)}>Delete</button>
       </>
     )},
     },
@@ -347,20 +331,29 @@ const Contact = () => {
         aria-labelledby="modal-modal-title"
         aria-describedby="modal-modal-description">
         <Box sx={style}>
-            <div className="buttonclosed">
-              <StyledButton onClick={handleClose}> X </StyledButton>
+            <div style={{margin:5,width:'100%',height:'30px',display:'flex',alignItems:'center',justifyContent:'space-between'}}>
+                  <div>
+                  <Typography sx={{fontSize:22,fontWeight:700,color:'#043F97',fontFamily:'Roboto Serif',lineHeight:'27px'}}>
+                  Create requirements for Scholarship Program
+                  </Typography>
+                  <Typography sx={{fontSize:14,fontWeight:400,color:'#000000',fontFamily:'Roboto Serif',lineHeight:'16px'}}>
+                  Fill up the necessary details.
+                  </Typography>
+                  </div>
+                <div style={{width:'50px',marginRight:'15px',height:'50px',marginTop:'-35px'}}>
+                <button style={{height:'100%',backgroundColor:'red',color:'white',padding:'0px',width:'100%',border:'none',borderRadius:'5px'}} onClick={handleClose}>
+                  <MdClear style={{fontSize:'30px',fontWeight:'700'}}/>
+                </button>
+                </div>
             </div>
-            <div className="form">
-              <div style={{margin:10,width:'90%'}}>
-              <h1 style={{color:'#666',fontWeight:1000}}>Create Requirements For Scholarship Program</h1>
-              </div>
-                    <div style={{width:'100%'}}>
-                    <FormControl sx={{ width:'100%'}}>
-                      <InputLabel id="demo-simple-select-label" className='inputlbl'>
+            <div className="requireform">
+                    <div>
+                      <InputLabel id="demo-simple-select-label">
                         Choose Scholarship Category
                       </InputLabel>
                         <Select
-                            
+                        fullWidth
+                            size='small'
                             MenuProps={{
                               getContentAnchorEl: null,
                               anchorOrigin: {
@@ -388,66 +381,67 @@ const Contact = () => {
                                 {item.name}
                               </MenuItem>
                             ))}
-                        </Select>
-                      
-                    </FormControl> 
+                        </Select> 
                     </div>
                     <div>
+                    <InputLabel id="demo-simple-select-label">
+                    Requirement Name
+                      </InputLabel>
                     <TextField 
-                                label='Requirement Name' 
-                                margin='normal' 
-                                variant='outlined'
-                                size='large'
-                                fullWidth
-                                onChange={(e) =>setReqname(e.target.value)}  
-                                color='secondary'
+                      variant='outlined'
+                      size='small'
+                      fullWidth
+                      onChange={(e) =>setReqname(e.target.value)}  
+                      color='primary'
                       />
-                    <FormControl fullWidth>
-                      <InputLabel id="demo-simple-select-label">Requirements For:</InputLabel>
+                    </div>
+                    <div>
+                    <InputLabel id="demo-simple-select-label">Requirements For:</InputLabel>
                       <Select
                         labelId="demo-simple-select-label"
                         id="demo-simple-select"
                         value={docsfor}
                         label="Requirements For:"
+                        size='small'
+                        fullWidth
                         onChange={(e) =>setDocsfor(e.target.value)}
                       >
                         <MenuItem value={'Application'}>Application</MenuItem>
                         <MenuItem value={'Renewal'}>Renewal</MenuItem>
                       </Select>
-                    </FormControl>
+                    </div>
+                    <div>
                     <LocalizationProvider dateAdapter={AdapterDayjs}>
-                      <DemoContainer components={['DateField']}>
+                    <InputLabel id="demo-simple-select-label">Deadline</InputLabel>
+                    <DemoContainer sx={{paddingTop:'0px'}} components={['DateField']}>
                     <DateField 
                                 slotProps={{
                                   textField: {
-                                    size: "large",
+                                    size: "small",
                                     error: false,
                                   },
                                 }}
-                    sx={{marginBottom:'10px',marginTop:'10px'}}
-                      className="dataField"
-                      label="Deadline"
                       value={deadline}
                       fullWidth
+                      size='small'
                       defaultValue={deadlineDate}
                       color='primary'
                       onChange={(newValue) => setDeadline(newValue)}
                       format="LL"
+                      
                     />
                     </DemoContainer>
-                    {/* {errors.date && <p 
-                    style={{color:'red'}}>
-                    {errors.date}
-                    </p>} */}
                     </LocalizationProvider>
-                    <div style={{marginTop:'10px'}}>
+                    </div>
+                    <div>
+                    <InputLabel id="demo-simple-select-label">Select a Year Batch</InputLabel>
                             <TextField
                                 select
-                                label="Select a Year Batch"
                                 value={batch}
                                 onChange={handleYearChange}
                                 fullWidth
-                                color='secondary'
+                                color='primary'
+                                size='small'
                               >
             
                                 {generateYearOptions().map((year) => (
@@ -457,12 +451,11 @@ const Contact = () => {
                                 ))}
                             
                             </TextField> 
-                            </div>
                     </div>
-                    <div style={{width:'100%',display:'flex',justifyContent:'space-around',margin:10}}>
-                      <button className="myButton" onClick={handleClose}>Cancel</button>
-                      <button className="myButton1" onClick={AddReq}>Add</button>
-                    </div>
+            </div>
+            <div style={{width:'97%',margin:'10px',display:'flex',justifyContent:'flex-end',alignItems:'flex-end'}}>
+                      <button style={{marginRight:'10px'}} className='btnofficials1' onClick={handleClose}>Cancel</button>
+                      <button className="btnofficials" onClick={AddReq}>Add</button>
             </div>
         </Box>
       </Modal>
@@ -495,28 +488,35 @@ const Contact = () => {
                     </div>
         </DialogContent>
         <DialogActions>
-          <Button sx={{color:'white'}} className='myButton' onClick={handleCloseDialog}>Cancel</Button>
-          <Button sx={{color:'white'}} className='myButton1' onClick={Edit}>Save</Button>
+          <button className='btnofficials1' onClick={handleCloseDialog}>Cancel</button>
+          <button className="btnofficials" onClick={Edit}>Save</button>
         </DialogActions>
       </Dialog>
 
     <div style={{display:'flex',justifyContent:'space-between',marginBottom:10}}>
       <p className="scorecardh">Requirements</p>
-      <button className="myButton1" onClick={handleOpen}> Add Requirements</button>
+      <button className="btnofficials" onClick={handleOpen}> Add Requirements</button>
     </div>
-      <Card>
-         <DataGrid style={{width: "100%", padding: 0.5,fontSize:12}}
+      <Card sx={{  width: '100%',backgroundColor:'white',minHeight:'300px',maxHeight:'maxContent' }}>
+         <CustomDataGrid
             rows={mergedData}
             columns={columns}
             getRowId={(row) => row.requirementID}
-            scrollbarSize={10}
             initialState={{
               pagination: {
                 paginationModel: {
-                  pageSize: 10,
-                },},}}
-                  pageSizeOptions={[25]}
-              disableRowSelectionOnClick/>
+                  pageSize: 20,
+
+                 },
+                },
+              
+              }}
+              slots={{
+                noRowsOverlay: CustomNoRowsOverlay,
+              }}
+            sx={{height:'100%'}}
+            pageSizeOptions={[20,50]}
+            disableRowSelectionOnClick/>
         </Card>
          </div>
       </div>

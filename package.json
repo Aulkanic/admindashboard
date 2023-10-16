@@ -66,6 +66,7 @@
     "sweetalert": "^2.1.2",
     "sweetalert2": "^11.7.20",
     "web-vitals": "^2.1.4",
+    "xlsx": "^0.18.5",
     "yup": "^1.1.1"
   },
   "scripts": {

@@ -205,7 +205,7 @@ const Rulesect = () => {
                         </Card>
                   </Box>
                   <div style={{width:'100%',display:'flex',alignItems:'center',justifyContent:'center'}}>
-            <Button className='myButton' onClick={uploadLogo} variant='contained'>Save</Button>
+            <button className='btnofficials1' onClick={uploadLogo} variant='contained'>Save</button>
             </div>
             </div>
           </div>

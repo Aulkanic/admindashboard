@@ -242,7 +242,7 @@ const Evaluation = () => {
             renderCell: (params) => (
                 <>
                 <div style={{display:'flex',flexDirection:'column',height:'100%',width:'100%',justifyContent:'center',alignItems:'center'}}>
-                <button className='myButton'
+                <button className='btnofficials1'
                 onClick={() => view(params.row)}>View Details</button>
                 </div>
               </>
@@ -263,20 +263,20 @@ const Evaluation = () => {
               return(
                 <>
                 <div style={{width:"100%",display:'flex',height:'100%',justifyContent:'center',alignItems:'center'}}>
-              {status === 'Passed' && <button className='myButton1' 
+              {status === 'Passed' && <button className="btnofficials"
               onClick={() => setFirsttoSecStat(params.row)}>
                 Add to Applicants List
                 </button>}
               {status === 'Failed' && (<>
-                {params.row.grantedAccess === '' || !params.row.grantedAccess ? (<button className='myButton'  
+                {params.row.grantedAccess === '' || !params.row.grantedAccess ? (<button className='btnofficials1'  
               onClick={() =>handleOpenDialog(params.row)}>
-                Access</button>) : (<button className='myButton1' 
+                Access</button>) : (<button className="btnofficials"
               onClick={() => setFirsttoSecStat(params.row)}>
                 Add to Applicants List
                 </button>)}
-                <button style={{marginLeft:'10px'}} className='myButton2' 
-              onClick={() => failed(params.row)}>
-                Failed
+                <button className='btnofficials2' style={{marginLeft:'10px'}}
+                onClick={() => failed(params.row)}>
+                  Failed
                 </button>
                 </>)}
               </div>
@@ -342,7 +342,7 @@ const Evaluation = () => {
               return(
                 <>
                 <div style={{width:"100%",display:'flex',flexDirection:'column',height:'100%',justifyContent:'center',alignItems:'center'}}>
-              <button className='myButton1' 
+              <button className="btnofficials"
               onClick={() => setFirsttoSecStat(params.row)}>
                 Add to Applicants List
                 </button>
@@ -395,7 +395,7 @@ const Evaluation = () => {
             renderCell: (params) => (
                 <>
                 <div style={{display:'flex',flexDirection:'column',height:'100%',width:'100%',justifyContent:'center',alignItems:'center'}}>
-                <button className='myButton'
+                <button className='btnofficials1'
                 onClick={() => view(params.row)}>View Details</button>
                 </div>
               </>
@@ -410,13 +410,13 @@ const Evaluation = () => {
               return(
                 <>
                 <div style={{width:"100%",display:'flex',height:'100%',justifyContent:'center',alignItems:'center'}}>
-              {params.row.grantedAccess === '' || !params.row.grantedAccess ? (<button className='myButton'
+              {params.row.grantedAccess === '' || !params.row.grantedAccess ? (<button className='btnofficials1'
               onClick={() =>handleOpenDialog(params.row)}>
-                Access</button>) : (<button className='myButton1' 
+                Access</button>) : (<button className="btnofficials" 
               onClick={() => setFirsttoSecStat(params.row)}>
                 Add to Applicants List
                 </button>)}
-                <button className='myButton2' style={{marginLeft:'5px'}}
+                <button className='btnofficials2' style={{marginLeft:'5px'}}
               onClick={() => failed(params.row)}>
                 Failed
                 </button>
@@ -741,8 +741,8 @@ const Evaluation = () => {
           />
         </DialogContent>
         <DialogActions>
-          <Button className='myButton' sx={{color:'white'}} onClick={handleCloseDialog}>Cancel</Button>
-          <Button className='myButton1' sx={{color:'white'}} onClick={Access}>Submit</Button>
+          <button className='btnofficials1' onClick={handleCloseDialog}>Cancel</button>
+          <button className="btnofficials" onClick={Access}>Submit</button>
         </DialogActions>
       </Dialog>
     <Dialog
@@ -903,7 +903,7 @@ const Evaluation = () => {
                       />
                       </div>
                       <div>
-                      {isButtonVisible && <Button className='myButton1' onClick={ScoreSlot} variant='contained' size='small'>Save Changes</Button>}
+                      {isButtonVisible && <button className="btnofficials" onClick={ScoreSlot}>Save Changes</button>}
                       </div>
                     </div>
                   </div>
@@ -1025,7 +1025,7 @@ const Evaluation = () => {
               
             </div>
             {activeState === 'Passed' && <div sx={{width:'90%',margin:'10px',display:'flex',justifyContent:'flex-end',flexDirection:'column',alignItems:'flex-end'}}>
-              <Button className='myButton' onClick={Addall} sx={{margin:'10px'}} variant='contained'>ADD ALL SELECTED TO APPLICANT LIST</Button>
+              <button className='btnofficials' onClick={Addall} >ADD ALL SELECTED TO APPLICANT LIST</button>
             </div>}
             {activeState === 'Failed' && <div sx={{width:'90%',margin:'10px',display:'flex',justifyContent:'flex-end',flexDirection:'column',alignItems:'flex-end'}}>
                   <Checkbox
@@ -1033,7 +1033,7 @@ const Evaluation = () => {
                     onChange={handleChangeCheckbox}
                     inputProps={{ 'aria-label': 'controlled' }}
                   /><span>Sent Notification</span>
-                <Button className='myButton2' onClick={FailedAll} sx={{margin:'10px'}} variant='contained'>SET FAILED THE SELECTED USERS</Button>
+                <button className='btnofficials2' onClick={FailedAll} style={{margin:'10px'}} >SET FAILED THE SELECTED USERS</button>
             </div>}
             </Card>
         </div>

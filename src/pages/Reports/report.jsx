@@ -20,9 +20,11 @@ import Button from 'react-bootstrap/Button';
 import Offcanvas from 'react-bootstrap/Offcanvas';
 import FilterIcon from '../../Images/filter.png'
 import { Payrollreports,Userlistsreports } from '../../api/request';
-import CustomNoRowsOverlay from '../Design/Norows';
+import createExcelReport from './excel';
 import { FaFilter } from 'react-icons/fa';
 import { MdOutlineClear } from 'react-icons/md';
+import { BsFillPrinterFill } from 'react-icons/bs';
+import { BiSolidFileExport } from 'react-icons/bi';
 
 
 const BpIcon = styled('span')(({ theme }) => ({
@@ -339,6 +341,9 @@ const handleSubmitFilter = async () => {
     setSelectedSchoprog([])
     setSelectedYearlevel([])
   }
+  const reporTitle = 'User Report'
+  const date = new Date().toLocaleDateString();
+
   return (
     <>
       <Offcanvas show={show} placement='end' onHide={handleClose}>
@@ -476,7 +481,11 @@ const handleSubmitFilter = async () => {
                 <Box>
                   <div style={{marginBottom:'15px',display:'flex',justifyContent:"space-between"}}>
                     <Button style={{backgroundColor:'white',color:'black'}} onClick={handleShow}><img style={{width:'15px'}} src={FilterIcon} alt='' />All Filters</Button>
-                    <Button onClick={handlePrint}>Print</Button>
+                    <div>
+                    <Button style={{marginRight:'10px'}} onClick={handlePrint}><BsFillPrinterFill style={{marginRight:'2px',marginTop:'-2px'}}/>Print</Button>
+                    <Button onClick={() => createExcelReport(filteredStudents,reporTitle,date)}><BiSolidFileExport style={{marginRight:'2px',marginTop:'-4px'}}/>Export</Button>
+                    </div>
+
                  
                   </div>
                   <div id='printable'>

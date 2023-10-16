@@ -25,14 +25,14 @@
 
 
 .myButton1 {
-	box-shadow:inset 0px 1px 0px 0px #a4e271;
-	background:linear-gradient(to bottom, #89c403 5%, #77a809 100%);
-	background-color:#89c403;
+	box-shadow:inset 0px 1px 0px 0px #020300;
+	background:white;
+	background-color:#031735;
 	border-radius:3px;
-	border:1px solid #74b807;
+	border:2px solid #04010c;
 	display:inline-block;
 	cursor:pointer;
-	color:#ffffff;
+	color:#0f0e0e;
 	font-family:Arial;
 	font-size:13px;
 	font-weight:bold;
@@ -73,4 +73,58 @@
 .myButton2:active {
 	position:relative;
 	top:1px;
+}
+.btnofficials{
+	background-color:white;
+	border-radius:5px;
+	border:2px solid #dcdcdc;
+	display:inline-block;
+	cursor:pointer;
+	color:#0f0e0e;
+	font-family:Arial;
+	font-size:13px;
+	font-weight:bold;
+	padding:6px 17px;
+	text-decoration:none;
+}
+.btnofficials:hover {
+	background-color:#2e8b57;
+	color: white;
+	border-radius:5px;
+}
+.btnofficials1{
+	background-color:white;
+	border-radius:5px;
+	border:2px solid #dcdcdc;
+	display:inline-block;
+	cursor:pointer;
+	color:#0f0e0e;
+	font-family:Arial;
+	font-size:13px;
+	font-weight:bold;
+	padding:6px 17px;
+	text-decoration:none;
+}
+.btnofficials1:hover {
+	background-color:#043F97;
+	color: white;
+	border-radius:5px;
+}
+.btnofficials2{
+	background-color:white;
+	border-radius:5px;
+	border:2px solid #dcdcdc;
+	display:inline-block;
+	cursor:pointer;
+	color:#0f0e0e;
+	font-family:Arial;
+	font-size:13px;
+	font-weight:bold;
+	padding:6px 17px;
+	text-decoration:none;
+}
+.btnofficials2:hover {
+	background-color:#af002a;
+	color: white;
+	border-radius:5px;
 }

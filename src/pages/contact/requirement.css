@@ -43,14 +43,23 @@
     align-items: center;
     border-bottom: 2px solid #252525;
 }
-.dataField {
-    border-color: initial !important; /* Change or remove the border color */
-  }
-  .Mui-error .dataField {
-    border-color: black;
-  }
-  
-  /* Or use !important */
-  .dataField {
-    border-color: black !important;
-  }
+.requireform{
+    margin-top: 25px;
+    padding: 0px 15px 0px 5px;
+}
+.requireform div{
+    margin-bottom: 5px;
+}
+body{
+  margin: 0;
+}
+p{
+  margin: 0px;
+}
+.css-rtrcn9-MuiTablePagination-root .MuiTablePagination-selectLabel {
+    display: none;
+    margin: 0px;
+}
+.css-levciy-MuiTablePagination-displayedRows{
+    margin: 0px;
+}

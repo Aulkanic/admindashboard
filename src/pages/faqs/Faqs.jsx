@@ -580,8 +580,8 @@ const weblist = websection.map((data,index) => {
 
             </div>
                 <div className='modalbottombtn'>
-                <Button sx={{textTransform:'none',backgroundColor:'red'}} className="myButton2" variant='contained' onClick={handleClose}>Cancel</Button>
-                <Button sx={{marginLeft:'10px',textTransform:'none'}} className="myButton1" variant='contained' onClick={AddbMCC}>Add Employee</Button>
+                <button className='btnofficials2' onClick={handleClose}>Cancel</button>
+                <button className="btnofficials" sx={{marginLeft:'10px'}} onClick={AddbMCC}>Add Employee</button>
                 </div>
                 </div>
             </Box>
@@ -660,10 +660,10 @@ const weblist = websection.map((data,index) => {
 
                 </div>
                 <div className='modalbottombtn'>
-                <Button sx={{textTransform:'none',marginRight:'15px',backgroundColor:'red'}} className="myButton2" variant='contained' onClick={handleClose1}>
+                <button className='btnofficials2' onClick={handleClose1}>
                   Cancel
-                </Button>
-                <Button sx={{textTransform:'none'}} className="myButton1" variant='contained' onClick={UpdateBMCC}>Save Changes</Button>
+                </button>
+                <button className="btnofficials" onClick={UpdateBMCC}>Save Changes</button>
                 </div>
                 </Box>
             </Modal>

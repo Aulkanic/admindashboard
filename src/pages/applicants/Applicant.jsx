@@ -550,7 +550,7 @@ const style = {
       width: 100,
       renderCell: (params) => (
         <>
-        <ViewButton className='myButton' onClick={() => view(params.row)}>View</ViewButton>
+        <button className='btnofficials1' onClick={() => view(params.row)}>View</button>
         </>
       ),
     },
@@ -569,18 +569,18 @@ const style = {
         return(
         <>
         <div style={{display:'flex'}}>
-      {isApproved && <StyledButtonEdit className='myButton1' onClick={() => ApplicantCheck(params.row)}>Set Qualified</StyledButtonEdit>}
+      {isApproved && <button className="btnofficials" onClick={() => ApplicantCheck(params.row)}>Set Qualified</button>}
       {!isApproved && (<>
-                {params.row.grantedAccess === '' || !params.row.grantedAccess ? (<StyledButtonAccess sx={{color:'white'}} className='myButton'
+                {params.row.grantedAccess === '' || !params.row.grantedAccess ? (<button className='btnofficials1'
               onClick={() =>handleOpenDialog1(params.row)}>
-                Access</StyledButtonAccess>) : (<StyledButtonEdit sx={{color:'white'}} className='myButton1'
+                Access</button>) : (<button className="btnofficials"
               onClick={() => ApplicantCheck(params.row)}>
                 SET QUALIFIED
-                </StyledButtonEdit>)}
-                <StyledButton className='myButton2'
+                </button>)}
+                <button className='btnofficials2'
               onClick={() => setDialog(true)}>
                 Failed
-                </StyledButton>
+                </button>
                 </>)}
       </div>
         </>
@@ -652,8 +652,8 @@ const style = {
         renderCell: (params) => (
             <>
             <div style={{display:'flex',flexDirection:'column',height:'100%',width:'100%',justifyContent:'center',alignItems:'center'}}>
-            <ViewButton className='myButton'
-            onClick={() => view(params.row)}>View Details</ViewButton>
+            <button className='btnofficials1'
+            onClick={() => view(params.row)}>View Details</button>
             </div>
           </>
         ),
@@ -666,10 +666,10 @@ const style = {
           return(
             <>
             <div style={{width:"100%",display:'flex',flexDirection:'column',height:'100%',justifyContent:'center',alignItems:'center'}}>
-          <StyledButtonEdit sx={{width:'100%'}} className='myButton1'
+          <button className="btnofficials"
           onClick={() => ApplicantCheck(params.row)}>
             SET QUALIFIED
-            </StyledButtonEdit>
+            </button>
           </div>
           </>)
         },
@@ -739,8 +739,8 @@ const style = {
         renderCell: (params) => (
             <>
             <div style={{display:'flex',flexDirection:'column',height:'100%',width:'100%',justifyContent:'center',alignItems:'center'}}>
-            <ViewButton className='myButton'
-            onClick={() => view(params.row)}>View Details</ViewButton>
+            <button className='btnofficials1'
+            onClick={() => view(params.row)}>View Details</button>
             </div>
           </>
         ),
@@ -754,16 +754,16 @@ const style = {
           return(
             <>
             <div style={{display:'flex'}}>
-          {params.row.grantedAccess === '' || !params.row.grantedAccess ? (<StyledButtonAccess className='myButton'
+          {params.row.grantedAccess === '' || !params.row.grantedAccess ? (<button className='btnofficials1'
           onClick={() =>handleOpenDialog1(params.row)}>
-            Access</StyledButtonAccess>) : (<StyledButtonEdit className='myButton1' 
+            Access</button>) : (<button className="btnofficials"
           onClick={() => ApplicantCheck(params.row)}>
             SET QUALIFIED
-            </StyledButtonEdit>)}
-            <StyledButton className='myButton2'
+            </button>)}
+            <button className='btnofficials2'
           onClick={() => handleOpenDialog2(params.row)}>
             Failed
-            </StyledButton>
+            </button>
           </div>
           </>)
         },
@@ -924,7 +924,7 @@ const style = {
     <img src={selectedImage} alt="Full Image" style={{ width: '100%', height: '100%' }} />
   </DialogContent>
   <DialogActions>
-    <Button className='myButton' sx={{color:'white'}} onClick={closeImageModal}>Close</Button>
+    <button className='btnofficials1' sx={{color:'white'}} onClick={closeImageModal}>Close</button>
   </DialogActions>
     </Dialog>
   {/* End of Dialog for Image Expandin */}
@@ -936,7 +936,7 @@ const style = {
         <Box sx={style}>
           <div className="docusersub">
           <div style={{width:'100%'}}>
-              <StyledButton className='myButton2' onClick={handleClose}> X </StyledButton>
+              <button className='btnofficials2' onClick={handleClose}> X </button>
           </div> 
           <Typography sx={{fontSize:'25px'}}>Check the Submitted Requirements/Documents if it valid and viewable</Typography>
             {docusubmitted.length > 0 ? (<div className="clas"> 
@@ -979,8 +979,8 @@ const style = {
                   /><span>Sent Notification</span>
         </div>
         <DialogActions>
-          <Button sx={{color:'white'}} className='myButton' onClick={handleCloseDialog}>Cancel</Button>
-          <Button sx={{color:'white'}} className='myButton1' onClick={failed}>Submit</Button>
+          <button className='btnofficials1' onClick={handleCloseDialog}>Cancel</button>
+          <button className="btnofficials" onClick={failed}>Submit</button>
         </DialogActions>
     </Dialog>
   {/* End of Dialog for Failed User */}
@@ -1015,8 +1015,8 @@ const style = {
                   /><span>Sent Notification</span>
         </div>
         <DialogActions>
-          <Button className='myButton' onClick={handleCloseDialog}>Cancel</Button>
-          <Button className='myButton1' onClick={failed}>Submit</Button>
+          <button className='btnofficials1' onClick={handleCloseDialog}>Cancel</button>
+          <button className="btnofficials" onClick={failed}>Submit</button>
         </DialogActions>
     </Dialog>
   {/* End of Dialog for All Failed User */}
@@ -1051,8 +1051,8 @@ const style = {
           />
         </DialogContent>
         <DialogActions>
-          <Button sx={{color:'white'}} className='myButton' onClick={handleCloseDialog1}>Cancel</Button>
-          <Button sx={{color:'white'}} className='myButton1' onClick={Access}>Submit</Button>
+          <button className='btnofficials1' onClick={handleCloseDialog1}>Cancel</button>
+          <button className="btnofficials" onClick={Access}>Submit</button>
         </DialogActions>
     </Dialog>
   {/* End of Dialog for Access */}
@@ -1182,7 +1182,7 @@ const style = {
       <div style={{width:'97%',margin:'10px',display:'flex',justifyContent:'flex-end',alignItems:'flex-end'}}>
       {activeState === 'Complete' && 
       <div>
-              <Button className="myButton" onClick={Addall} sx={{margin:'10px'}} variant='contained'>ADD ALL SELECTED TO QUALIFIED LIST</Button>
+              <button className='btnofficials' onClick={Addall} sx={{margin:'10px'}} variant='contained'>ADD ALL SELECTED TO QUALIFIED LIST</button>
       </div>}
       {activeState === 'Incomplete' && <div sx={{width:'90%',margin:'10px',display:'flex',justifyContent:'flex-end',flexDirection:'column',alignItems:'flex-end'}}>
                   <Checkbox
@@ -1190,7 +1190,7 @@ const style = {
                     onChange={handleChangeCheckbox}
                     inputProps={{ 'aria-label': 'controlled' }}
                   /><span>Sent Notification</span>
-                <Button className="myButton2" onClick={FailedAll} sx={{margin:'10px'}} variant='contained'>SET FAILED ALL SELECTED USERS</Button>
+                <button className='btnofficials2' onClick={FailedAll} style={{margin:'10px'}}>SET FAILED ALL SELECTED USERS</button>
             </div>}
       </div>
     </div>

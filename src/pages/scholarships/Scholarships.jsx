@@ -1,9 +1,9 @@
 import Navbar from "../../components/navbar/Navbar"
 import Sidebar from "../../components/sidebar/Sidebar"
 import "./scholarships.scss"
-import { Box, Modal,Button,TextField, Typography} from "@mui/material"; 
+import { Box, Modal,Button,TextField, Typography, InputLabel} from "@mui/material"; 
 import './scholarship.css'
-import { FetchingSchoProg, CreateSchoProg, UpdateSchoProg,ListAccess } from "../../api/request";
+import { FetchingSchoProg, CreateSchoProg, UpdateSchoProg } from "../../api/request";
 import { useEffect } from "react";
 import { useState } from "react";
 import Radio from '@mui/material/Radio';
@@ -14,13 +14,12 @@ import swal from "sweetalert";
 import { DataGrid } from '@mui/x-data-grid';
 import Avatar from '@mui/material/Avatar';
 import Card from '@mui/material/Card';
-import { useContext } from "react";
-import { admininfo } from "../../App";
 import CardContent from '@mui/material/CardContent';
 import '../Button style/button.css'
-import { styled, createTheme } from '@mui/material';
+import { styled } from '@mui/material';
 import { Backdrop, CircularProgress } from '@mui/material';
 import CustomNoRowsOverlay from "../Design/Norows";
+import { MdClear } from "react-icons/md";
 
 const StyledBackdrop = styled(Backdrop)(({ theme }) => ({
   zIndex: theme.zIndex.drawer + 50,
@@ -29,9 +28,11 @@ const StyledBackdrop = styled(Backdrop)(({ theme }) => ({
 
 const CustomDataGrid = styled(DataGrid)({
   '& .MuiDataGrid-columnHeaders': {
-    color: 'black', 
+    color: 'white', 
+    fontWeight:'bold',
+    backgroundColor:'#0047a4',
+    fontWeight:'bold'
   },
-
 });
 
 
@@ -80,12 +81,11 @@ const Scholarships = () => {
     top: '50%',
     left: '50%',
     transform: 'translate(-50%, -50%)',
-    width: '60%',
-    height: '90%',
+    width: '80%',
+    height: 'maxContent',
     bgcolor: 'background.paper',
-    overflow: 'auto',
-    padding:'10px',
-    borderRadius:'10px'
+    padding:'50px 10px 10px 20px',
+    borderRadius:'5px'
   };
   
   useEffect(() => {
@@ -264,7 +264,7 @@ const handleEditFileChange = (e) => {
     const columns = [
       {
         field: 'icon',
-        headerName: 'Scholarship Logo',
+        headerName: 'Program Logo',
         width: 150, 
         renderCell: (params) => {     
           return (
@@ -297,8 +297,9 @@ const handleEditFileChange = (e) => {
         headerName: 'Actions',
         width: 150,
         renderCell: (params) => (
-          <Button sx={{textTransform:'none'}} className="myButton1" variant='contained' onClick={() => handleOpen1(params.row)}>
-            Edit Details</Button>
+          <button className="btnofficials" onClick={() => handleOpen1(params.row)}>
+            Edit Details
+          </button>
         ),
       },
     ];
@@ -315,40 +316,62 @@ const handleEditFileChange = (e) => {
         aria-describedby="modal-modal-description"
       >
         <Box sx={style} >
-        <div style={{width:'100%',height:'100%',display:'flex',flexDirection:'column'}}>
-            <div style={{width:'100%'}}>
-              <StyledButton sx={{float:'right'}} variant="contained" onClick={handleClose}> X </StyledButton>
-            </div>
-            <div style={{width:'100%',height:'70px'}}>
-            <Typography sx={{fontSize:'30px',fontWeight:'700',textAlign:'center',color:'#666'}}>Create Scholarship Program</Typography>
-            </div>
-            <div style={{width:'100%',height:'80%',display:'flex',justifyContent:'center',alignItems:'center'}}>
-              
-              <div style={{width:'20%'}}>
-                <Typography sx={{textAlign:'center',marginBottom:'20px'}}>Scholarship Logo Preview</Typography>
-                  <img style={{width: '100%'}} className='previmg' src={iconprev} alt=''/>
-              </div>
-                <Card sx={{width:'75%',marginLeft:'10px',paddingTop:'10px'}} elevation={2}>
-                <div style={{width:'100%'}}>
-                  <Typography sx={{marginLeft:'20px'}}>Scholarship Logo</Typography>
-                  <Button>
-                  <TextField sx={{backgroundColor:'whitesmoke',border:'none',marginLeft:'10px'}}
-                  type='file' id="input-with-sx" label="" variant="outlined" 
-                  onChange={handleFileChange}/>
-                  </Button><br />
-                  <CardContent>
-                  <Typography variant="h5" component="div">
-                  <Box sx={{ display: 'flex', alignItems: 'flex-end' }}>
-                  <TextField fullWidth placeholder={olddata.name} id="input-with-sx" label="Scholarship Name" variant="outlined" 
-                    onChange={(e) => setSchotitle(e.target.value)}/>
-                </Box>
+        <div style={{margin:5,width:'100%',height:'30px',display:'flex',alignItems:'center',justifyContent:'space-between'}}>
+              <div>
+                  <Typography sx={{fontSize:22,fontWeight:700,color:'#043F97',fontFamily:'Roboto Serif',lineHeight:'27px'}}>
+                  Create requirements for Scholarship Program
                   </Typography>
-                </CardContent>
+                  <Typography sx={{fontSize:14,fontWeight:400,color:'#000000',fontFamily:'Roboto Serif',lineHeight:'16px'}}>
+                  Fill up the necessary details.
+                  </Typography>
+                  </div>
+                <div style={{width:'50px',marginRight:'15px',height:'50px',marginTop:'-35px'}}>
+                <button style={{height:'100%',backgroundColor:'red',color:'white',padding:'0px',width:'100%',border:'none',borderRadius:'5px'}} onClick={handleClose}>
+                  <MdClear style={{fontSize:'30px',fontWeight:'700'}}/>
+                </button>
+                </div>
+        </div>
+        <div style={{width:'100%',height:'80%',display:'flex',marginTop:'20px'}}>
+              
+              <div style={{width:'40%',height:'100%'}}>
+              <div style={{border:'2px solid #dcdcdc',height:'300px',display:'flex',borderRadius:'5px',justifyContent:'center',alignItems:'center'}}>
+                {!iconprev ? (
+                  <Typography sx={{textAlign:'center',marginBottom:'20px',fontSize:'25px',fontWeight:'bold'}}>
+                    Scholarship Logo<br/> Preview
+                  </Typography>
+                ) : (
+                <img style={{width: '100%',minHeight:'150px',objectFit:'contain'}} className='previmg' src={iconprev} alt=""/>
+                )}
+              </div>
+                  <Button sx={{padding:'10px 0px 10px 0px',width:'100%'}}>
+                  <TextField sx={{backgroundColor:'whitesmoke',border:'none',width:'100%'}}
+                  type='file' id="input-with-sx" label="" variant="outlined" fullWidth
+                  onChange={handleFileChange}/>
+                  </Button>
+                <div style={{display:'flex',justifyContent:'center',alignItems:'center'}}>
+                <Typography sx={{fontSize:'20px',fontWeight:'bold'}}>Scholarship Logo</Typography>
+                </div>
+              </div>
+              <Card sx={{width:'55%',marginLeft:'10px',height:'100%'}} elevation={0}>
+                <div style={{width:'100%'}}>
+                  <Box sx={{ display: 'flex'}}>
+                  <div style={{width:'110px',display:'flex',justifyContent:'center',alignItems:'center',height:'59px',flexDirection:'column',marginRight:'5px'}}>
+                  <InputLabel sx={{color:'black',fontWeight:'bold'}}>Scholarship</InputLabel>
+                  <InputLabel sx={{color:'black',fontWeight:'bold'}}>Name</InputLabel>
+                  </div> 
                   <div style={{width:'100%'}}>
-                  <FormLabel sx={{marginLeft:'20px'}} id="demo-row-radio-buttons-group-label" className="status">Status</FormLabel>
+                  <TextField fullWidth placeholder={olddata.name} id="input-with-sx" variant="outlined" size="large"
+                    onChange={(e) => setSchotitle(e.target.value)}/>
+                  </div>
+                  </Box>
+                  <div style={{display: 'flex',margin:'10px 0px 10px 0px'}}>
+                  <div style={{width:'110px',display:'flex',justifyContent:'center',alignItems:'center',marginRight:'5px'}}>
+                  <InputLabel sx={{color:'black',fontWeight:'bold'}}>Status</InputLabel>
+                  </div>
+                  <div style={{border:'2px solid #dcdcdc',width:'100%',paddingLeft:'20px',borderRadius:'5px',height:'58px',paddingTop:'6px'}}>
                   <RadioGroup
                       row
-                      sx={{marginLeft:'20px'}}
+                      sx={{width:'100%'}}
                       aria-labelledby="demo-row-radio-buttons-group-label"
                       name="row-radio-buttons-group"
                       defaultValue={olddata.status}
@@ -359,32 +382,32 @@ const handleEditFileChange = (e) => {
                       }}  
                     >
                 
-                  <FormControlLabel value="Open" control={<Radio />} label="Open" className="edtstatus"/>
-                  <FormControlLabel value="Under Evaluation" control={<Radio />} label="Under Evaluation" className="edtstatus"/>
-                  <FormControlLabel value="Paused" control={<Radio />} label="Paused" className="edtstatus"/>
+                  <FormControlLabel value="Open" control={<Radio />} label="Open"/>
+                  <FormControlLabel value="Under Evaluation" control={<Radio />} label="Under Evaluation" sx={{margin:'0px 50px 0px 50px'}}/>
+                  <FormControlLabel value="Paused" control={<Radio />} label="Paused"/>
                   </RadioGroup>
                   </div>
-                  <CardContent>
-                  <Typography sx={{ fontSize: 17 }} color="text.secondary" gutterBottom>
-                    Description:
-                  </Typography>
-                  <Typography variant="h5" component="div">
-                  <Box sx={{ display: 'flex', alignItems: 'flex-end' }}>
+
+                  </div>
+                  <div style={{ display: 'flex'}}>
+                  <div style={{width:'110px',display:'flex',justifyContent:'center',alignItems:'center',height:'59px',flexDirection:'column',marginRight:'5px'}}>
+                  <InputLabel sx={{color:'black',fontWeight:'bold'}}>Description</InputLabel>
+                  </div> 
+                  <div  style={{width:'100%'}}>
                   <TextField multiline
                   onChange={(e) => setSchodesc(e.target.value)}
                   value={description}
-                    rows={6} fullWidth id="input-with-sx" label="" variant="outlined" />
-                </Box>
-                  </Typography>
-                </CardContent>
+                    rows={9} fullWidth id="input-with-sx" variant="outlined" />
+                  </div>
                 </div>
-                <div className="buttonbacapp2">
-                <button onClick={handleClose} className="myButton">Cancel</button>
-                <button onClick={Create} className="myButton1">Create</button>
                 </div>
-                </Card>
-            </div>           
-            </div>
+              </Card>
+              
+        </div> 
+        <div style={{display:'flex',justifyContent:'flex-end',alignItems:'flex-end'}}>
+                <button style={{marginRight:'10px'}} className='btnofficials1' onClick={handleClose}>Cancel</button>
+                <button className="btnofficials" onClick={Create}>Create</button>
+        </div>          
         </Box>
       </Modal>
 {/* Modal for Edit button */}
@@ -462,7 +485,7 @@ const handleEditFileChange = (e) => {
                 </div>
                 <div className="buttonbacapp2">
                 <button onClick={handleClose1} className="myButton">Cancel</button>
-                <button onClick={Edit} className="myButton1">Save</button>
+                <button className="btnofficials" onClick={Edit}>Save</button>
                  </div>
                 </Card>
             </div>
@@ -474,10 +497,10 @@ const handleEditFileChange = (e) => {
     <div className="scholarshipsContainer">
         <Navbar/>
         <div className="top">
-                <div style={{width:'95%',display:'flex',justifyContent:'space-between',alignItems:'center',padding:'40px 10px 0px 30px'}}>
+                <div style={{width:'100%',display:'flex',justifyContent:'space-between',alignItems:'center',padding:'10px 10px 0px 10px'}}>
                 <p className="scorecardh">Scholarships Program 
                 </p>
-                <button className="myButton" onClick={handleOpen}>Add</button>
+                <button className='btnofficials1' onClick={handleOpen}>Add</button>
                 </div>
                 <div className="dataGridCon">
                 <CustomDataGrid

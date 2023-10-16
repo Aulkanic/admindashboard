@@ -124,7 +124,7 @@ const Backup = () => {
               <div>
                 <div className='headbackup'>
                 <p style={{margin:'0px'}}>Select and restore or download backup data</p>
-                <Button onClick={Backingup} className='myButton' sx={{textTransform:'none',color:'white'}}><FcDataBackup style={{marginRight:'2px'}}/>Backup now!</Button>
+                <button className='btnofficials1' onClick={Backingup}><FcDataBackup style={{marginRight:'2px'}}/>Backup now!</button>
                 </div>
                 <h1 className='listback'>List of Backup Data</h1>
                 <Card sx={{padding:'15px'}}>
@@ -142,12 +142,11 @@ const Backup = () => {
                     
                 </FormControl>
                 <div className='backupactions'>
-                    <Button onClick={Restoring} className='myButton1' sx={{textTransform:'none',color:'white'}}>
+                    <button className="btnofficials" onClick={Restoring}>
                     <TbRestore style={{marginRight:'2px',marginTop:'-3px'}}/>
                         Restore
-                    </Button>
-                    <Button 
-                    className='myButton'
+                    </button>
+                    <button className='btnofficials1'
                     onClick={downloadBackup}
                     sx={{
                         textTransform:'none',
@@ -155,7 +154,7 @@ const Backup = () => {
                         marginLeft:'10px'}}>
                         <FaDownload style={{marginRight:'2px',marginTop:'-3px'}}/>
                         Download
-                    </Button>
+                    </button>
                 </div>
                 </Card>
               </div>
