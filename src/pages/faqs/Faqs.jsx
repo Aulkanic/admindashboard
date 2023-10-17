@@ -5,7 +5,7 @@ import './employeeaccs.css'
 import React, {useEffect, useState} from 'react'
 import { AddBMCC,FetchingBMCC,Activitylog,UpdateEmp,ListAccess,EmployeeAccess,WebSection,UpdateEmployeeAccess,
 BmccAddroles,BmccRoles,BmccRemroles } from '../../api/request';
-import { Box, Modal,Card,Button, Typography} from "@mui/material"; 
+import { Box, Modal,Card,Button, Typography, InputLabel} from "@mui/material"; 
 import TextField from '@mui/material/TextField';
 import { DataGrid} from '@mui/x-data-grid';
 import Radio from '@mui/material/Radio';
@@ -87,11 +87,10 @@ const Faqs = () => {
 
 const CustomDataGrid = styled(DataGrid)({
   '& .MuiDataGrid-columnHeaders': {
-    color: 'black', 
+    color: 'white', 
     fontWeight:'bold',
-    backgroundColor:'white',
-    fontWeight:'bold',
-    borderBottom:'2px solid black'
+    backgroundColor:'#0047a4',
+    fontWeight:'bold'
   },
 
 });
@@ -101,9 +100,9 @@ const CustomDataGrid = styled(DataGrid)({
     left: '50%',
     transform: 'translate(-50%, -50%)',
     width: '1070px',
-    height: '486px',
+    height: 'maxContent',
     bgcolor: 'background.paper',
-    padding:'70px 30px 50px 30px',
+    padding:'70px 30px 20px 30px',
     borderRadius:'5px',
     
   };
@@ -122,7 +121,7 @@ const CustomDataGrid = styled(DataGrid)({
     {
       field: 'action',
       headerName: 'Action',
-      width: 270,
+      width: 300,
       editable: false,
     },
     {
@@ -199,7 +198,7 @@ const CustomDataGrid = styled(DataGrid)({
       headerName: 'Action',
       width: 150,
       renderCell: (params) => (
-        <Button sx={{textTransform:'none',backgroundColor:'#043F97',color:'white',borderRadius:'10px'}} variant='contained' onClick={() => handleOpen1(params.row)}>Edit Details</Button>
+        <button className='btnofficials1' onClick={() => handleOpen1(params.row)}>Edit Details</button>
       ),
     },
   ];
@@ -541,21 +540,21 @@ const weblist = websection.map((data,index) => {
                   <MdClear style={{fontSize:'30px',fontWeight:'700'}}/>
                 </button>
                 </div>
-              </div>
-              <div>
-                <TextField
-                   label='Employee Name' 
-                    margin='normal' 
+            </div>
+            <div style={{margin:'25px 0px 15px 0px'}}>
+                <div>
+                  <InputLabel>Employee Name</InputLabel>
+                  <TextField 
                     variant='outlined'
                     size='small'
                     fullWidth
                     onChange={(e) =>setUsername(e.target.value)}  
                     color='secondary'
                     />
-  
+                </div>
+                <div style={{margin:'20px 0px 20px 0px'}}>
+                <InputLabel>Employee Email</InputLabel>
                 <TextField
-                   label='Email' 
-                    margin='normal' 
                     variant='outlined'
                     size='small'
                     fullWidth
@@ -563,27 +562,26 @@ const weblist = websection.map((data,index) => {
                     color='secondary'
                     />
                   {errors.email && <p style={{color:'red',margin:'2px'}}>{errors.email}</p>}
-                  <div style={{width:'100%',height:'50px',marginTop:'20px'}}> 
+                </div>
+                  <div style={{marginBottom:'20px'}}> 
+                    <InputLabel>Select Role</InputLabel>
                     <Select
                       value={jobDes}
                       fullWidth
                       styles={{height:'100%'}}
                       onChange={handleChange}
-                      placeholder="Select Role..."
+                      placeholder=""
                       options={roles.map((option) => ({
                         value: option.role,
                         label: `${option.role}(${option.total})`,
                       }))}
                     />
                   </div>
-              <div>
-
-            </div>
                 <div className='modalbottombtn'>
-                <button className='btnofficials2' onClick={handleClose}>Cancel</button>
+                <button style={{marginRight:'10px'}} className='btnofficials2' onClick={handleClose}>Cancel</button>
                 <button className="btnofficials" sx={{marginLeft:'10px'}} onClick={AddbMCC}>Add Employee</button>
                 </div>
-                </div>
+            </div>
             </Box>
             </Modal>
             <Modal
@@ -610,21 +608,25 @@ const weblist = websection.map((data,index) => {
                 <div style={{margin: '20px 0px 0px -10px'}} className="form">
                 {olddata ? (
                   <>
-                   <TextField 
+                  <div>
+                    <InputLabel>Staff Name</InputLabel>
+                    <TextField 
                    variant='outlined' 
-                   label='Staff Name'
                    size='small' 
                    fullWidth
                    sx={{marginBottom:'15px'}}
                    defaultValue={olddata.name}
                    />
-                   <TextField 
+                  </div>
+                  <div>
+                    <InputLabel>Staff Email</InputLabel>
+                    <TextField 
                    variant='outlined' 
-                   label='Staff Email' 
                    size='small'
                    fullWidth
                    defaultValue={olddata.email}
                    />
+                  </div>
                   </>
                   ) : (null)}
                 
@@ -660,7 +662,7 @@ const weblist = websection.map((data,index) => {
 
                 </div>
                 <div className='modalbottombtn'>
-                <button className='btnofficials2' onClick={handleClose1}>
+                <button style={{marginRight:'10px'}} className='btnofficials2' onClick={handleClose1}>
                   Cancel
                 </button>
                 <button className="btnofficials" onClick={UpdateBMCC}>Save Changes</button>
@@ -861,35 +863,21 @@ const weblist = websection.map((data,index) => {
                           <p className='stafflish'>Staff List</p>
                         </div>
                         <div>
-                              <Button 
-                              sx={{height:'35px',textTransform:'none',color:'blue',backgroundColor:'rgba(246, 246, 246, 1)',fontWeight:'bold',marginRight:'10px',
-                              '&:hover': {
-                                backgroundColor: '#043F97',
-                                color:'white',
-                                cursor: 'pointer',
-                              },
-                            }}
+                              <button
+                              className='btnofficials1'
                               onClick={handleClick}
                               variant='contained' size='small'>
                                 {activeState === 'admin' && 'Manage Employee'}
                                 {activeState === 'log' && 'View Activity Log'}
-                              </Button>
-                              <Button sx={{height:'35px',textTransform:'none',color:'blue',backgroundColor:'rgba(246, 246, 246, 1)',fontWeight:'bold',marginRight:'10px',
-                                '&:hover': {
-                                  backgroundColor: '#043F97',
-                                  color:'white',
-                                  cursor: 'pointer',
-                                },  
-                            }}
-                               variant='contained' onClick={handleOpen2}> Manage staffs </Button>
-                              <Button sx={{height:'35px',textTransform:'none',color:'blue',backgroundColor:'rgba(246, 246, 246, 1)',fontWeight:'bold',marginRight:'8px',
-                                '&:hover': {
-                                  backgroundColor: '#043F97',
-                                  color:'white',
-                                  cursor: 'pointer',
-                                },  
-                            }}
-                               variant='contained' onClick={handleOpen}> Add staffs </Button>
+                              </button>
+                              <button style={{margin:'0px 10px 0px 10px'}} className='btnofficials1'
+                               onClick={handleOpen2}>
+                                 Manage staffs 
+                              </button>
+                              <button className='btnofficials1'
+                               onClick={handleOpen}>
+                                 Add staffs 
+                            </button>
                         </div>
                       </div>
                       <div className='dataGridCon'>
@@ -934,10 +922,10 @@ const weblist = websection.map((data,index) => {
                       </Button>
                       </div>
 
-                      <div className='dataGridCon' style={{width:'100%'}}>
+                      <div style={{padding:'0px 20px 30px 40px'}} className='dataGridCon'>
                       <CustomDataGrid 
                         rows={actlog}
-                        sx={{height:'maxContent'}}
+                        sx={{height:'100%'}}
                         columns={columns}
                         autoHeight 
                         autoPageSize

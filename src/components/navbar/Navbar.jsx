@@ -143,14 +143,17 @@ const Navbar = () => {
       }
       Fetch()
     },[])
-  const UpdatePasswordUser = (event) =>{
-    event.preventDefault();
-    if(!password ||!repass){
-      alert("Please fill all the fields");
+  const UpdatePasswordUser = () =>{
+    if(!password || !repass){
+      swal("Error","Please provide necessary information first",'warning')
       return
     }
     if(!oldpass){
-      alert("Please fill all the fields");
+      swal("Error","Please provide necessary information first",'warning')
+      return
+    }
+    if(password != repass){
+      swal("Error","New Password did not match",'warning')
       return
     }
     setShowBackdrop(true)
@@ -351,7 +354,7 @@ const Navbar = () => {
             />
               <TextField
               id="outlined-controlled"
-              label="Re-type Password"
+              label="Confirm Password"
               value={repass}
               type='password'
               sx={{marginBottom:'10px'}}
