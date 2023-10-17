@@ -337,7 +337,7 @@ const UpdateBMCC = (event) =>{
 }
 const Authorization = () =>{
  
-  if(!selectedModules){
+  if(!selectedModules || !jobDes || !jobDes.value){
     swal({
       title: "Warning",
       text: "Please select necessary Details!",

@@ -577,7 +577,7 @@ const style = {
               onClick={() => ApplicantCheck(params.row)}>
                 SET QUALIFIED
                 </button>)}
-                <button className='btnofficials2'
+                <button style={{marginLeft:'10px'}} className='btnofficials2'
               onClick={() => setDialog(true)}>
                 Failed
                 </button>
