@@ -9,47 +9,10 @@ import { DataGrid} from '@mui/x-data-grid';
 import Avatar from '@mui/material/Avatar';
 import Chip from '@mui/material/Chip';
 import './user.css'
-import { GridColDef } from '@mui/x-data-grid';
 
 const Users = () => {
   
-  const [display, setDisplay] = useState([]);
-
-  const handleButtonClick = async (id) => {
-    const updatedDisplay = display.map(row => {
-      if (row.applicantNum === id) {
-        let newRemarks;
-        if (row.remarks === 'Active') {
-          newRemarks = 'Inactive';
-        } else if (row.remarks === 'Inactive') {
-          newRemarks = 'Deactivated';
-        } else {
-          newRemarks = 'Active';
-        }
-        return { ...row, remarks: newRemarks };
-      }
-      return row;
-    });
-  
-    setDisplay(updatedDisplay);
-
-    try {
-      const remarksstat = updatedDisplay.find(row => row.applicantNum === id)?.remarks;
-      const applicantNum = updatedDisplay.find(row => row.applicantNum === id)?.applicantNum;
-      console.log(remarksstat,applicantNum)
-      const formData = new FormData();
-      formData.append('remarks',remarksstat);
-      formData.append('applicantNum',applicantNum)
-     const response = await setRemarks.SET_REMARKS(formData);
-      console.log(response);
-    } catch (error) {
-      console.log('Error updating status:', error);
-      // Rollback the display state to its previous value on error
-      setDisplay(prevDisplay => prevDisplay.map(row => (row.applicantNum === id ? { ...row } : row)));
-    }
-  };
-  
-  
+  const [display, setDisplay] = useState([]);  
   const columns = [
     { 
       field: 'applicantNum',
@@ -130,9 +93,13 @@ const Users = () => {
     async function Fetch(){
       const userinfo = await UsersRequest.ALL_USERS()
       setDisplay(userinfo.data.UserAccounts);
+      
     }
     Fetch();
-   
+    const intervalId = setInterval(() => {
+      Fetch();
+    }, 5000); 
+    return () => clearInterval(intervalId);
   }, []);
   return (
     <>
