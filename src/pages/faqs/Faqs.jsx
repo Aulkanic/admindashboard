@@ -340,7 +340,7 @@ const Authorization = () =>{
   if(!selectedModules || !jobDes || !jobDes.value){
     swal({
       title: "Warning",
-      text: "Please select necessary Details!",
+      text: "Please select necessary details!",
       icon: "warning",
       button: "OK",
     });
@@ -814,9 +814,9 @@ const weblist = websection.map((data,index) => {
             </div>
           </div>
                   <div style={{display:'flex',justifyContent:'flex-end',alignItems:'flex-end',margin:'10px'}}>
-                  <Button sx={{textTransform:'none',backgroundColor:'blue'}} variant='contained' onClick={Authorization}>
+                  <button className='btnofficials1' onClick={Authorization}>
                   Save Role Access
-                </Button>
+                </button>
                   </div>
 
                 </div>
@@ -903,23 +903,17 @@ const weblist = websection.map((data,index) => {
                     </div>}
 
                     {activeState === 'admin' && 
-                    <Card sx={{backgroundColor:'white'}}>
+                    <Card sx={{backgroundColor:'white',padding:'10px'}}>
                     <div className="emaccsact">
                       <div style={{width:'100%',display:'flex',justifyContent:'space-between',alignItems:'center',marginBottom:'10px'}}>
                       <p className='stafflish'>Activity Log</p>
-                      <Button 
-                              sx={{height:'35px',textTransform:'none',color:'blue',backgroundColor:'rgba(246, 246, 246, 1)',fontWeight:'bold',marginRight:'10px',
-                              '&:hover': {
-                                backgroundColor: '#043F97',
-                                color:'white',
-                                cursor: 'pointer',
-                              },
-                            }}
+                      <button
+                              className='btnofficials1'
                               onClick={handleClick}
-                              variant='contained' size='small'>
+                              >
                                 {activeState === 'admin' && 'Manage Employee'}
                                 {activeState === 'log' && 'View Activity Log'}
-                      </Button>
+                      </button>
                       </div>
 
                       <div style={{padding:'0px 20px 30px 40px'}} className='dataGridCon'>

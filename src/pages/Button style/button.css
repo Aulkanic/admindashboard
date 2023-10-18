@@ -75,12 +75,12 @@
 	top:1px;
 }
 .btnofficials{
-	background-color:white;
+	background-color:#2e8b57;
 	border-radius:5px;
-	border:2px solid #dcdcdc;
+	border:2px solid #035225;
 	display:inline-block;
 	cursor:pointer;
-	color:#0f0e0e;
+	color:#dcdcdc;
 	font-family:Arial;
 	font-size:13px;
 	font-weight:bold;
@@ -88,17 +88,17 @@
 	text-decoration:none;
 }
 .btnofficials:hover {
-	background-color:#2e8b57;
+	background-color:#1c5736;
 	color: white;
 	border-radius:5px;
 }
 .btnofficials1{
-	background-color:white;
+	background-color:#043F97;
 	border-radius:5px;
-	border:2px solid #dcdcdc;
+	border:2px solid #043F97;
 	display:inline-block;
 	cursor:pointer;
-	color:#0f0e0e;
+	color:#dcdcdc;
 	font-family:Arial;
 	font-size:13px;
 	font-weight:bold;
@@ -106,17 +106,17 @@
 	text-decoration:none;
 }
 .btnofficials1:hover {
-	background-color:#043F97;
+	background-color:#012355;
 	color: white;
 	border-radius:5px;
 }
 .btnofficials2{
-	background-color:white;
+	background-color:#af002a;
 	border-radius:5px;
-	border:2px solid #dcdcdc;
+	border:2px solid #960325;
 	display:inline-block;
 	cursor:pointer;
-	color:#0f0e0e;
+	color:#dcdcdc;
 	font-family:Arial;
 	font-size:13px;
 	font-weight:bold;
@@ -124,7 +124,7 @@
 	text-decoration:none;
 }
 .btnofficials2:hover {
-	background-color:#af002a;
+	background-color:#75021d;
 	color: white;
 	border-radius:5px;
 }

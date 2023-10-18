@@ -1288,8 +1288,8 @@ const Scholars = () => {
         <div style={{display:'flex',justifyContent:'space-between',margin:'10px'}}>
         <button className="btnofficials2" onClick={() =>setPage(0)}>Back</button>
         {renewDet[0].remarks === 'Pending' && (<button className="btnofficials" onClick={() =>handleSetonoff('Ongoing')}>Start</button>)}
-        {renewDet[0].remarks === 'Ongoing' && (<button className="btnofficials" onClick={() =>handleSetonoff('Pause')}>Pause</button>)}
-        {renewDet[0].remarks === 'Pause' && (<button className="btnofficials" onClick={() =>handleSetonoff('Continuing')}>Resume</button>)}
+        {renewDet[0].remarks === 'Ongoing' || renewDet[0].remarks === 'Continue' ? (<button className="btnofficials" onClick={() =>handleSetonoff('Pause')}>Pause</button>) : null}
+        {renewDet[0].remarks === 'Pause' && (<button className="btnofficials" onClick={() =>handleSetonoff('Continue')}>Resume</button>)}
         {renewDet[0].remarks === 'Done' && (<button className="btnofficials" onClick={() =>handleSetonoff('Extend')}>Extend</button>)}
         </div>
         <div>
