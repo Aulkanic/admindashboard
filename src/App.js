@@ -35,7 +35,7 @@ function App() {
     localStorage.setItem('user', JSON.stringify(userData));
   };
   return (
-    <div className="App">
+    <div className="App" style={{backgroundColor:'#f1f3fa'}}>
         <BrowserRouter>
         <admininfo.Provider value={{ user, loginUser }}>
         <Provider store={store}>

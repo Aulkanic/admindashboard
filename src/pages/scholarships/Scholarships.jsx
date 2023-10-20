@@ -28,25 +28,10 @@ const StyledBackdrop = styled(Backdrop)(({ theme }) => ({
 
 const CustomDataGrid = styled(DataGrid)({
   '& .MuiDataGrid-columnHeaders': {
-    color: 'white', 
-    fontWeight:'bold',
-    backgroundColor:'#0047a4',
     fontWeight:'bold'
   },
 });
 
-
-const StyledButton = styled(Button)`
-  && {
-    float: right;
-    background-color: red;
-    transition: opacity 0.3s ease;
-
-    &:hover {
-      opacity: 0.8;
-    }
-  }
-`;
 
 
 const Scholarships = () => {
@@ -295,7 +280,7 @@ const handleEditFileChange = (e) => {
         headerName: 'Actions',
         width: 150,
         renderCell: (params) => (
-          <button className="btnofficials" onClick={() => handleOpen1(params.row)}>
+          <button className="btnofficials1" onClick={() => handleOpen1(params.row)}>
             Edit Details
           </button>
         ),

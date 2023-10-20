@@ -29,12 +29,12 @@ const Backup = () => {
     const [backup,setBackup] = useState([])
     const [filename, setBackupFiles] = useState('');
     const [showBackdrop, setShowBackdrop] = useState(false);
-    console.log(apiURL)
+
     useEffect(() =>{
         async function Fetch(){
             setShowBackdrop(true)
             let res = await BackupLists.BACKUP()
-            console.log(res)
+
             setBackup(res.data.reverse())
             setShowBackdrop(false)
         }

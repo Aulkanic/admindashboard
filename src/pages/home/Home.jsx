@@ -18,8 +18,6 @@ import { BsFillCalendarDateFill } from "react-icons/bs";
 
 const CustomDataGrid = styled(DataGrid)({
   '& .MuiDataGrid-columnHeaders': {
-    backgroundColor: '#043F97', 
-    color: 'white', 
     fontFamily:'Roboto Serif',
     fontWeight:'700',
     lineHeight:'17.57px',
@@ -35,11 +33,10 @@ const Home = () => {
 
     async function Fetch(){
       const scholars = await FetchingBmccScho.FETCH_SCHOLARS()
-      const scho = scholars.data.Scholars?.filter(data => data.status === 'Approved' && data.remarks === 'Existing Scholar' || data.remarks === 'New Scholar')
+      const scho = scholars.data.Scholars?.filter(data => data.status === 'Approved' && (data.remarks === 'Existing Scholar' || data.remarks === 'New Scholar'))
       setTotalscho(scho)
       const response = await ApplicantsRequest.ALL_APPLICANTS()
       const appdatali = response.data.results;
-      console.log(appdatali)
       setPost(appdatali.reverse());
     }
     Fetch();
@@ -164,7 +161,6 @@ const Home = () => {
           width: 'max-content',
           color:'#666',
           fontFamily:'font-family: "Open Sans",sans-serif',
-          border:'2px solid gray',
           borderRadius:'5px'
         }}>
       <CustomDataGrid

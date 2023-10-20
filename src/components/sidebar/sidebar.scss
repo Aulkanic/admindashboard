@@ -2,15 +2,12 @@
     background-color: rgb(47, 150, 219);
     flex: 1;
     height: 100%;
-
     .top{
         background-color: rgb(47, 150, 219);
         height: 80px;
         display: flex;
         align-items: center;
         justify-content: center;
-        border-bottom: 2px solid #fff;
-
         img{
             width: 150px;
             height: 100%;
@@ -27,13 +24,13 @@
 
     .center{
         width: 100%;
-        height: 100%;
+        height: max-content;
         background-color: rgb(47, 150, 219);
         padding-left: 10px;
         padding-top: 10px;
         margin: 0px 6px 0px 0px;
         text-decoration: none;
-
+        padding-bottom: 60px;
         ul{
             list-style: none;
             margin: 0;

@@ -14,13 +14,6 @@ const Users = () => {
   
   const [display, setDisplay] = useState([]);  
   const columns = [
-    { 
-      field: 'applicantNum',
-      headerName: 'Applicant ID',
-      width: 90, 
-      editable: false,
-    
-    },
 
     {
       field: 'ScholarshipApplied',
@@ -75,8 +68,15 @@ const Users = () => {
 
     {
       field: 'status',
+      headerName: 'Status',
+      width: 200,
+      editable: false,
+    
+    },
+    {
+      field: 'remarks',
       headerName: 'Remarks',
-      width: 250,
+      width: 200,
       editable: false,
     
     },
@@ -112,7 +112,6 @@ const Users = () => {
       <Box>
         <Card sx={{width:'100%'}}>
         <CustomDataGrid
-              className='dataGrid'
               rows={display}
               columns={columns}
               getRowId={(row) => row.applicantNum}
@@ -122,9 +121,6 @@ const Users = () => {
                   paginationModel: {
                     pageSize: 5,
                   },},}}
-
-              checkboxSelection   
-              disableRowSelectionOnClick
               pageSizeOptions={[25]}
             />
             </Card>

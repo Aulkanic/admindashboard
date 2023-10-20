@@ -1,0 +1,11 @@
+.truncated-text1{
+    overflow: hidden;
+    white-space: normal;
+    height: 100px;
+    text-overflow: ellipsis;
+  }
+  .seemore{
+    border: none;
+    background-color: transparent;
+    color: blue;
+  }

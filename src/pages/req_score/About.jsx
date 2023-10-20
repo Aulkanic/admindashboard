@@ -456,9 +456,9 @@ export const About = () => {
 
   return (
     <>
-              <StyledBackdrop open={showBackdrop}>
-                <CircularProgress color="inherit" />
-              </StyledBackdrop>
+    <StyledBackdrop open={showBackdrop}>
+      <CircularProgress color="inherit" />
+    </StyledBackdrop>
     <div className="about">
         <Sidebar/>
         <div className="aboutContainer">

@@ -77,7 +77,7 @@
 .btnofficials{
 	background-color:#2e8b57;
 	border-radius:5px;
-	border:2px solid #035225;
+	border:2px solid #058d40;
 	display:inline-block;
 	cursor:pointer;
 	color:#dcdcdc;
@@ -86,6 +86,7 @@
 	font-weight:bold;
 	padding:6px 17px;
 	text-decoration:none;
+	margin-right: 5px;
 }
 .btnofficials:hover {
 	background-color:#1c5736;

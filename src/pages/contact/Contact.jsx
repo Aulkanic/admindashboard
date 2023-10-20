@@ -37,9 +37,6 @@ const StyledBackdrop = styled(Backdrop)(({ theme }) => ({
 
 const CustomDataGrid = styled(DataGrid)({
   '& .MuiDataGrid-columnHeaders': {
-    color: 'white', 
-    fontWeight:'bold',
-    backgroundColor:'#0047a4',
     fontWeight:'bold'
   },
 });
@@ -308,7 +305,7 @@ const Contact = () => {
     renderCell: (params) => {
       return(
         <>
-      <button style={{marginRight:'5px'}} className="btnofficials" onClick={() => handleOpenDialog(params.row)}>Edit Deadline</button>
+      <button style={{marginRight:'5px'}} className="btnofficials1" onClick={() => handleOpenDialog(params.row)}>Edit Deadline</button>
       <button className='btnofficials2' onClick={() => Delete(params.row)}>Delete</button>
       </>
     )},
@@ -333,8 +330,8 @@ const Contact = () => {
         <Box sx={style}>
             <div style={{margin:5,width:'100%',height:'30px',display:'flex',alignItems:'center',justifyContent:'space-between'}}>
                   <div>
-                  <Typography sx={{fontSize:22,fontWeight:700,color:'#043F97',fontFamily:'Roboto Serif',lineHeight:'27px'}}>
-                  Create requirements for Scholarship Program
+                  <Typography sx={{fontSize:32,fontWeight:700,color:'#043F97',fontFamily:'Roboto Serif',lineHeight:'27px'}}>
+                  Add Scholarship Requirements
                   </Typography>
                   <Typography sx={{fontSize:14,fontWeight:400,color:'#000000',fontFamily:'Roboto Serif',lineHeight:'16px'}}>
                   Fill up the necessary details.
@@ -385,7 +382,7 @@ const Contact = () => {
                     </div>
                     <div>
                     <InputLabel id="demo-simple-select-label">
-                    Requirement Name
+                     Name of Requirement
                       </InputLabel>
                     <TextField 
                       variant='outlined'
@@ -412,7 +409,7 @@ const Contact = () => {
                     </div>
                     <div>
                     <LocalizationProvider dateAdapter={AdapterDayjs}>
-                    <InputLabel id="demo-simple-select-label">Deadline</InputLabel>
+                    <InputLabel id="demo-simple-select-label">Due Date</InputLabel>
                     <DemoContainer sx={{paddingTop:'0px'}} components={['DateField']}>
                     <DateField 
                                 slotProps={{
@@ -495,7 +492,7 @@ const Contact = () => {
 
     <div style={{display:'flex',justifyContent:'space-between',marginBottom:10}}>
       <p className="scorecardh">Requirements</p>
-      <button className="btnofficials" onClick={handleOpen}> Add Requirements</button>
+      <button className="btnofficials1" onClick={handleOpen}> Add Requirements</button>
     </div>
       <Card sx={{  width: '100%',backgroundColor:'white',minHeight:'300px',maxHeight:'maxContent' }}>
          <CustomDataGrid

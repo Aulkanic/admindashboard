@@ -87,9 +87,6 @@ const Faqs = () => {
 
 const CustomDataGrid = styled(DataGrid)({
   '& .MuiDataGrid-columnHeaders': {
-    color: 'white', 
-    fontWeight:'bold',
-    backgroundColor:'#0047a4',
     fontWeight:'bold'
   },
 
@@ -571,7 +568,9 @@ const weblist = websection.map((data,index) => {
                       styles={{height:'100%'}}
                       onChange={handleChange}
                       placeholder=""
-                      options={roles.map((option) => ({
+                      options={roles
+                        .filter(data => data.role !== 'Administrator')
+                        .map((option) => ({
                         value: option.role,
                         label: `${option.role}(${option.total})`,
                       }))}
@@ -638,7 +637,9 @@ const weblist = websection.map((data,index) => {
                       value={upjobDes}
                       fullWidth
                       onChange={handleChange3}
-                      options={roles.map((option) => ({
+                      options={roles
+                        .filter(data => data.role !== 'Administrator')
+                        .map((option) => ({
                         value: option.role,
                         label: `${option.role}(${option.total})`,
                       }))}
@@ -798,9 +799,11 @@ const weblist = websection.map((data,index) => {
                   fullWidth
                   placeholder='Select roles here ...'
                   onChange={handleChange}
-                  options={roles.map((option) => ({
+                  options={roles
+                    .filter(data => data.role !== 'Administrator')
+                    .map((option) => ({
                     value: option.role,
-                    label: `${option.role}(${option.total})`,
+                    label: `${option.role}(${option.total})`
                   }))}
                 />
               </div>

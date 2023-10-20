@@ -1,23 +1,14 @@
 import './sidebar.scss';
 import DashboardIcon from '@mui/icons-material/Dashboard';
-import InfoIcon from '@mui/icons-material/Info';
-import RecentActorsIcon from '@mui/icons-material/RecentActors';
-import LiveHelpIcon from '@mui/icons-material/LiveHelp';
 import SchoolIcon from '@mui/icons-material/School';
-import ViewListIcon from '@mui/icons-material/ViewList';
 import AccountBoxIcon from '@mui/icons-material/AccountBox';
 import CalendarMonthIcon from '@mui/icons-material/CalendarMonth';
 import HistoryEduIcon from '@mui/icons-material/HistoryEdu';
-import AnnouncementIcon from '@mui/icons-material/Announcement';
 import FeedIcon from '@mui/icons-material/Feed';
-import ReportIcon from '@mui/icons-material/Report';
 import LogoutIcon from '@mui/icons-material/Logout';
-import { Tabs, Tab, Box, Modal,Card,Button } from "@mui/material"; 
+import { Button } from "@mui/material"; 
 import { LogoutAdmin } from '../../api/request';
 import { Link, useNavigate } from 'react-router-dom';
-import { useContext } from "react";
-import { admininfo } from "../../App";
-import swal from 'sweetalert';
 import GroupsIcon from '@mui/icons-material/Groups';
 import MoneyIcon from '@mui/icons-material/Money';
 import NoteAddIcon from '@mui/icons-material/NoteAdd';
@@ -38,7 +29,7 @@ const Sidebar = () => {
   const { admin  } = useSelector((state) => state.login)
   const navigate = useNavigate();
   const [activeSection,setActiveSection] = useState(0);
-  const sections = admin[1].split(', '); 
+  const sections = admin[1].split(','); 
   
   const Logout = async() =>{
     const formData = new FormData();
@@ -56,7 +47,7 @@ const Sidebar = () => {
 
       <div className='top'> 
           <img className="mydo" src="https://drive.google.com/uc?id=12yKj9K3Caiaq3hP1JRKRbaLpkIuvapkZ" 
-         alt=""/>
+         alt="MYDO"/>
       </div>
       <div className='center'> 
           <ul>
