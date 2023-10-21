@@ -7,10 +7,8 @@ import { useEffect, useState } from 'react';
 import Select from '@mui/material/Select';
 import InputLabel from '@mui/material/InputLabel';
 import MenuItem from '@mui/material/MenuItem';
-import { useContext } from "react";
-import { admininfo } from "../../App";
 import FormControl from '@mui/material/FormControl';
-import { CreatingScore,FetchingScore,ListAccess,ApplicationForm,QuestionForm,QuestionDelete,QuestionScore,
+import { FetchingScore,ListAccess,ApplicationForm,QuestionForm,QuestionDelete,QuestionScore,
           EditFormQuestion,ChoiceDelete,ChoiceForm,ChoiceScore } from '../../api/request';
 import Swal from 'sweetalert2';
 import Tabs from '@mui/material/Tabs';
@@ -18,9 +16,10 @@ import Tab from '@mui/material/Tab';
 import DeleteIcon from '@mui/icons-material/Delete';
 import EditIcon from '@mui/icons-material/Edit';
 import { Card } from '@mui/material';
-import { styled, ThemeProvider, createTheme } from '@mui/material';
+import { styled, createTheme } from '@mui/material';
 import { Backdrop, CircularProgress } from '@mui/material';
 import React from 'react';
+import { MdClear } from "react-icons/md";
 import { useSelector } from 'react-redux';
 
 const theme = createTheme();
@@ -112,6 +111,14 @@ export const About = () => {
     const chosen = allChoicesForQuestions?.map(item => item.choices).flat();
 
     const AddQuestions = async() =>{
+      if(!schoname){
+        Swal.fire({
+          title: 'Warning',
+          text: "Please select Scholarship Program first!",
+          icon: 'warning',
+        })
+        return
+      }
       const { value: formValues } = await Swal.fire({
         input: 'textarea',
         inputLabel: 'Enter Questions you want to Add',
@@ -397,8 +404,8 @@ export const About = () => {
           {index + 1}. {data.questions}
           </p> 
           <div style={{display:'flex',whiteSpace:'nowrap'}}>
-          <button style={{marginRight:'5px'}} className="btnofficials" onClick={() =>EditQForm(data)}><EditIcon style={{fontSize:'13px'}}/></button>
-          <button className='btnofficials2' onClick={() =>DeleteQuestion(data)}><DeleteIcon style={{fontSize:'13px'}}/></button>
+          <button style={{marginRight:'5px'}} className="btnofficials1" onClick={() =>EditQForm(data)}><EditIcon style={{fontSize:'13px'}}/></button>
+          <button className='btnofficials3' onClick={() =>DeleteQuestion(data)}><DeleteIcon style={{fontSize:'13px'}}/></button>
           </div>
 
           </div>
@@ -407,8 +414,8 @@ export const About = () => {
               return(
                 <li className='choiceli' key={index}>
                  <p>- {data1.value}</p> 
-                <button className='btnofficials2' onClick={() =>DeleteChoice(data1)}>
-                  <DeleteIcon sx={{fontSize:'13px'}}/>
+                <button className='btnclear' onClick={() =>DeleteChoice(data1)}>
+                  <MdClear sx={{fontSize:'13px'}}/>
                 </button></li>
               )
             })}
@@ -493,7 +500,6 @@ export const About = () => {
           </Tabs>
           {value === '1' && 
          <Card sx={{padding:'10px',backgroundColor:'transparent'}} elevation={0}>
-            <p>Instructions:</p>
             <div className="frmcontainer">
             {FormTemplate}
             </div>

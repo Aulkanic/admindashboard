@@ -25,6 +25,7 @@ import { FaFilter } from 'react-icons/fa';
 import { MdOutlineClear } from 'react-icons/md';
 import { BsFillPrinterFill } from 'react-icons/bs';
 import { BiSolidFileExport } from 'react-icons/bi';
+import PrintablePage from './printablePage';
 
 
 const BpIcon = styled('span')(({ theme }) => ({
@@ -147,6 +148,7 @@ const Report = () => {
   const [selectedSchoprog, setSelectedSchoprog] = useState([]);
   const [filteredStudents, setFilteredStudents] = useState([]);
   const [selectedRem, setSelectedRem] = useState([]);
+  const [isPrinting,setPrinting] = useState(false)
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
@@ -346,7 +348,10 @@ const handleSubmitFilter = async () => {
 
   return (
     <>
-      <Offcanvas show={show} placement='end' onHide={handleClose}>
+    <PrintablePage value={filteredStudents}/>
+      {/* {isPrinting ? (<PrintablePage value={filteredStudents}/>) : ( */}
+        <>
+        <Offcanvas show={show} placement='end' onHide={handleClose}>
         <Offcanvas.Header style={{backgroundColor:'black'}}>
           <Offcanvas.Title style={{fontWeight:'bold',color:'white',letterSpacing:'5px'}}>Filters</Offcanvas.Title>
           
@@ -388,9 +393,9 @@ const handleSubmitFilter = async () => {
                   
                 >
                   <FormControlLabel  value="" control={<BpRadio  />} label="All" />
-                  <FormControlLabel  value="MALE" control={<BpRadio  />} label="Male" />
-                  <FormControlLabel  value="FEMALE" control={<BpRadio  />} label="Female" />
-                  <FormControlLabel  value="OTHERS" control={<BpRadio  />} label="Others" />
+                  <FormControlLabel  value="Male" control={<BpRadio  />} label="Male" />
+                  <FormControlLabel  value="Female" control={<BpRadio  />} label="Female" />
+                  <FormControlLabel  value="Others" control={<BpRadio  />} label="Others" />
                 </RadioGroup>
               </FormControl>
               </div>
@@ -463,50 +468,52 @@ const handleSubmitFilter = async () => {
            </div>
         </Offcanvas.Body>
       </Offcanvas>
-    <div className="scholarships" style={{backgroundColor:'whitesmoke'}}>
-        <Sidebar/>
-    <div className="scholarshipsContainer">
-        <Navbar/>
-        <div>
-          <h2 style={{margin:'5px 0px 10px 20px'}}>Reports</h2>
-          <Box sx={{ width: '100%', typography: 'body1' }}>
-            <TabContext value={value}>
-              <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
-                <TabList onChange={handleChange} aria-label="lab API tabs example">
-                  <Tab label="User Reports" value="1" />
-                  <Tab label="Payroll " value="2" />
-                </TabList>
-              </Box>
-              <TabPanel value="1">
-                <Box>
-                  <div style={{marginBottom:'15px',display:'flex',justifyContent:"space-between"}}>
-                    <Button style={{backgroundColor:'white',color:'black'}} onClick={handleShow}><img style={{width:'15px'}} src={FilterIcon} alt='' />All Filters</Button>
-                    <div>
-                    <Button style={{marginRight:'10px'}} onClick={handlePrint}><BsFillPrinterFill style={{marginRight:'2px',marginTop:'-2px'}}/>Print</Button>
-                    <Button onClick={() => createExcelReport(filteredStudents,reporTitle,date)}><BiSolidFileExport style={{marginRight:'2px',marginTop:'-4px'}}/>Export</Button>
+      <div className="scholarships" style={{backgroundColor:'whitesmoke'}}>
+          <Sidebar/>
+      <div className="scholarshipsContainer">
+          <Navbar/>
+          <div>
+            <h2 style={{margin:'5px 0px 10px 20px'}}>Reports</h2>
+            <Box sx={{ width: '100%', typography: 'body1' }}>
+              <TabContext value={value}>
+                <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
+                  <TabList onChange={handleChange} aria-label="lab API tabs example">
+                    <Tab label="User Reports" value="1" />
+                    <Tab label="Payroll " value="2" />
+                  </TabList>
+                </Box>
+                <TabPanel value="1">
+                  <Box>
+                    <div style={{marginBottom:'15px',display:'flex',justifyContent:"space-between"}}>
+                      <Button style={{backgroundColor:'white',color:'black'}} onClick={handleShow}><img style={{width:'15px'}} src={FilterIcon} alt='' />All Filters</Button>
+                      <div>
+                      <Button style={{marginRight:'10px'}} onClick={handlePrint}><BsFillPrinterFill style={{marginRight:'2px',marginTop:'-2px'}}/>Print</Button>
+                      <Button onClick={() => createExcelReport(filteredStudents,reporTitle,date)}><BiSolidFileExport style={{marginRight:'2px',marginTop:'-4px'}}/>Export</Button>
+                      </div>
+
+                  
+                    </div>
+                    <div id='printable'>
+                    <Batch data={{filteredStudents,filterCriteria}}/>
                     </div>
 
-                 
-                  </div>
+                  </Box>
+                </TabPanel>
+
+                <TabPanel value="2">
                   <div id='printable'>
-                  <Batch data={{filteredStudents,filterCriteria}}/>
+                  <Payroll data={payroll}/>
                   </div>
-
-                </Box>
-              </TabPanel>
-
-              <TabPanel value="2">
-                <div id='printable'>
-                <Payroll data={payroll}/>
-                </div>
-        
-              </TabPanel>
-            </TabContext>
-          </Box>
-        </div>
-        </div>
-    </div>
-    </>
+          
+                </TabPanel>
+              </TabContext>
+            </Box>
+          </div>
+          </div>
+      </div>
+      </>
+    {/* )} */}
+   </> 
   )
 }
 

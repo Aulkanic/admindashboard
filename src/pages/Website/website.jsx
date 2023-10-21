@@ -381,13 +381,13 @@ const Website = () => {
     <div className="scholarshipsContainer" style={{backgroundColor:'#f1f3fa'}}>
         <Navbar/>
         <div style={{backgroundColor:'#f1f3fa',padding:10}}>
-          <h1 style={{marginTop:10,marginLeft:30,color:'#666'}}>Website Maintenance</h1>
+          <h1 style={{ fontSize: 30,fontWeight:'900',color:'black',lineHeight:'17.57px',fontFamily:'Roboto Serif',margin:'20px 0px 10px 10px' }}>Website Maintenance</h1>
           <Typography style={{marginTop:10,marginLeft:30}}>
           Keep your website's content fresh and relevant by regularly updating text, images, videos, and other media. This includes adding new content, removing outdated information, and ensuring all links are working correctly.
           </Typography>
             <div style={{width:'100%',margin: 20,height:'100%'}}>
                 <div style={{width:'90%',height:'100%'}}>
-                    <Card sx={{width:'98.5%',margin:'10px 0px 10px 0px',textAlign:'center',backgroundColor:'blue',padding:'10px'}}>
+                    <Card sx={{ fontSize: 20,fontWeight:'900',color:'white',lineHeight:'17.57px',fontFamily:'Roboto Serif',textAlign:'center',backgroundColor:'#043F97',padding:'15px 0px 15px 0px',borderTopRightRadius:'10px',borderTopLeftRadius:'10px' }}>
                       <Typography sx={{fontSize:'20px',fontWeight:'1000',color:'white'}}>Links</Typography>
                     </Card> 
                     <div style={{width:'100%',display:'flex',justifyContent:'space-around',backgroundColor:'white'}}> 
@@ -413,10 +413,10 @@ const Website = () => {
                     </div>
                 </div>  
                 <div style={{width:'90%',height:'100%'}}>
-                <Card sx={{width:'98.5%',margin:'10px 0px 10px 0px',textAlign:'center',backgroundColor:'blue',padding:'10px'}}>
+                <Card sx={{ fontSize: 20,fontWeight:'900',color:'white',lineHeight:'17.57px',fontFamily:'Roboto Serif',textAlign:'center',backgroundColor:'#043F97',padding:'15px 0px 15px 0px',borderTopRightRadius:'10px',borderTopLeftRadius:'10px' }}>
                   <Typography sx={{fontSize:'20px',fontWeight:'1000',color:'white'}}>Website Themes</Typography>
                   </Card>
-                <Card sx={{ width:'97%',display:'flex',height:'100%',padding:'15.5px',justifyContent:'space-around'}} elevation={3}>
+                <Card sx={{ width:'100%',display:'flex',height:'100%',padding:'15.5px',justifyContent:'space-around'}} elevation={1}>
                   <div>
                   <Card sx={{width:'98.5%',margin:'10px 0px 10px 0px',textAlign:'center',backgroundColor:'blue',padding:'10px'}}>
                   <Typography sx={{fontSize:'20px',fontWeight:'1000',color:'white'}}>Color Themes</Typography>
@@ -481,7 +481,7 @@ const Website = () => {
                     
                 </div> 
                 <div style={{width:'90%',height:'100%'}}>
-                    <Card sx={{width:'98.5%',margin:'10px 0px 10px 0px',textAlign:'center',backgroundColor:'blue',padding:'10px'}}>
+                    <Card sx={{ fontSize: 20,fontWeight:'900',color:'white',lineHeight:'17.57px',fontFamily:'Roboto Serif',textAlign:'center',backgroundColor:'#043F97',padding:'15px 0px 15px 0px',borderTopRightRadius:'10px',borderTopLeftRadius:'10px' }}>
                       <Typography sx={{fontSize:'20px',fontWeight:'1000',color:'white'}}>Website Images</Typography>
                       </Card>
                     <Card sx={{ width:'100%',display:'flex',height:'100%'}} elevation={3}>
@@ -553,32 +553,32 @@ const Website = () => {
                     </Card> 
                 </div>  
                 <div style={{width:'90%',height:'100%'}}>
-                    <Card sx={{width:'98.5%',margin:'10px 0px 10px 0px',textAlign:'center',backgroundColor:'blue',padding:'10px'}}>
+                    <Card sx={{ fontSize: 20,fontWeight:'900',color:'white',lineHeight:'17.57px',fontFamily:'Roboto Serif',textAlign:'center',backgroundColor:'#043F97',padding:'15px 0px 15px 0px',borderTopRightRadius:'10px',borderTopLeftRadius:'10px' }}>
                       <Typography sx={{fontSize:'20px',fontWeight:'1000',color:'white'}}>Trivia of the Day</Typography>
                       </Card>  
-                    <Card sx={{ width:'100%',display:'flex',height:'100%',marginTop:'10px'}} elevation={3}>
-                        <CardActionArea sx={{width:'60%',padding:10 }}>
+                    <Card sx={{ width:'100%',display:'flex',height:'100%',backgroundColor:'white',boxShadow:'none'}} elevation={0}>
+                        <Card sx={{width:'60%',padding:'10px',height:'100%',boxShadow:'none' }}>
                           <CardMedia
-                          sx={{width:'100%',height:'100%' }}
+                          sx={{width:'100%',height:'200px',border:'2px solid gray',borderRadius:'5px' }}
                             component="img"
-                            style={{ objectFit: 'cover', height: '100%', width: '100%',margin:'10px'}}
+                            style={{ objectFit: 'contain', height: '400px', width: '100%'}}
                             image={trivimgprev || trivia.picture}
                             alt="green iguana"
                           />
-                        </CardActionArea>
-                        <div style={{width:'40%'}}>
-                        <CardContent sx={{width:'auto',display:'flex',justifyContent:'center',alignItems:'center'}}>
-                            <Typography variant="body2" color="text.secondary">
-                            <Box sx={{width:'100%'}}>
-                            <Typography sx={{color:'black',fontSize:'17px'}}>
-                              Select Images
+                          <div>
+                          <Typography sx={{color:'black',fontSize:'17px'}}>
+                              Select Trivia Images
                             </Typography>
-                          <Button>
-                          <TextField sx={{backgroundColor:'whitesmoke',border:'none'}}
+                          <Button sx={{width:'100%'}}>
+                          <TextField fullWidth sx={{backgroundColor:'whitesmoke',border:'none'}}
                           type='file' onChange={(e) =>setTrivimg(e.target.files[0])} id="input-with-sx" label="" variant="outlined" />
-                          </Button><br />
-                          <CardContent>
-                          <CardContent>
+                          </Button>
+                          </div>
+                        </Card>
+                        <div style={{width:'40%',padding:'10px'}}>
+                            <Box sx={{width:'100%'}}>
+                          <div>
+                          <div>
                             <Typography variant="h5" component="div">
                             <Box>
                             <TextField 
@@ -590,7 +590,7 @@ const Website = () => {
                               value={trivtitle} onChange={(e) => setTrivtitle(e.target.value)}/>
                           </Box>
                             </Typography>
-                          </CardContent>
+                          </div>
                             <Typography sx={{ fontSize: 17 }} color="text.secondary" gutterBottom>
                               Content:
                             </Typography>
@@ -602,18 +602,16 @@ const Website = () => {
                               rows={10} fullWidth id="input-with-sx" label="" variant="outlined" />
                           </Box>
                             </Typography>
-                          </CardContent>
+                          </div>
                           <div style={{margin:'10px',width:'100%',display:'flex',justifyContent:'center'}}>
                           <button className='btnofficials1' onClick={trivCreate}>Save</button>
                           </div>
-                        </Box>
-                            </Typography>
-                          </CardContent>
-                          </div>
+                          </Box>
+                        </div>
                     </Card> 
                 </div>  
                 <div style={{width:'90%',height:'100%'}}>
-                    <Card sx={{width:'98.5%',margin:'10px 0px 10px 0px',textAlign:'center',backgroundColor:'blue',padding:'10px'}}>
+                    <Card sx={{ fontSize: 20,fontWeight:'900',color:'white',lineHeight:'17.57px',fontFamily:'Roboto Serif',textAlign:'center',backgroundColor:'#043F97',padding:'15px 0px 15px 0px',borderTopRightRadius:'10px',borderTopLeftRadius:'10px' }}>
                       <Typography sx={{fontSize:'20px',fontWeight:'1000',color:'white'}}>FAQs</Typography>
                     </Card>  
                 <div>
@@ -631,7 +629,7 @@ const Website = () => {
                             id="panel4bh-header"
                           >
                             <Typography sx={{ width: '33%', flexShrink: 0,fontWeight:700}}> {data.faqsQuestions}</Typography>
-                            <button className='btnofficials1' onClick={() =>handleClickOpen(data)} style={{marginLeft:'50%'}}>Edit</button>
+                            <button className='btnofficials1' onClick={() =>handleClickOpen(data)} style={{marginLeft:'50%',marginRight:'15px'}}>Edit</button>
                             <button className="btnofficials2" onClick={() =>deleteFaqs(data)} sx={{color:'white',marginLeft:'2%'}}>Delete</button>
                           </AccordionSummary>
                           <AccordionDetails>

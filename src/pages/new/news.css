@@ -31,6 +31,7 @@
   height: 100%;
   overflow: auto;
   display: flex;
+  background-color: white;
   flex-direction: column;
  }
  .imgnews{

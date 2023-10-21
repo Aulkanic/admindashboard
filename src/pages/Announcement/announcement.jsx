@@ -116,7 +116,7 @@ const Announcement = () => {
           <div style={{backgroundColor:'#f1f3fa',width:'100%',height:'100vh',overflow:'auto',display:'flex',justifyContent:'center',alignItems:'center'}}>
             <div style={{width:'90%',height:'100%',display:'flex'}}>
               <div style={{width:'50%',height:'100%'}}>
-              <Typography sx={{ fontSize: 20,fontWeight:'900',color:'black',lineHeight:'17.57px',fontFamily:'Roboto Serif',textAlign:'center',marginBottom:'7px' }}>
+              <Typography sx={{ fontSize: 20,fontWeight:'900',color:'white',lineHeight:'17.57px',fontFamily:'Roboto Serif',textAlign:'center',marginBottom:'7px',backgroundColor:'#043F97',padding:'15px 0px 15px 0px',borderTopRightRadius:'10px',borderTopLeftRadius:'10px' }}>
                 Create Announcement
                 </Typography>
               <Card sx={{width:'100%',height:'max',paddingBottom:'30px'}}>
@@ -153,7 +153,7 @@ const Announcement = () => {
               </Card>
               </div>
               <div style={{marginLeft:'10px',marginRight:'10px',width:'70%',height:'600px',overflow:'auto',display:'flex',flexDirection:'column'}}>
-              <h1 style={{ fontSize: 20,fontWeight:'900',color:'black',lineHeight:'17.57px',fontFamily:'Roboto Serif',textAlign:'center' }}>
+              <h1 style={{ fontSize: 20,fontWeight:'900',color:'white',lineHeight:'17.57px',fontFamily:'Roboto Serif',textAlign:'center',backgroundColor:'#043F97',padding:'15px 0px 15px 0px',borderTopRightRadius:'10px',borderTopLeftRadius:'10px' }}>
                 List of Announced
               </h1>
                 {AnnouncedList}

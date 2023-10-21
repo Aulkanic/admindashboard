@@ -23,7 +23,6 @@ import IconButton from '@mui/material/IconButton';
 import Dialog from '@mui/material/Dialog';
 import { styled } from '@mui/material';
 import { Backdrop, CircularProgress } from '@mui/material';
-import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import Select from 'react-select';
 import AddIcon from '@mui/icons-material/Add';
 import { useSelector } from 'react-redux';
@@ -31,19 +30,6 @@ import Swal from 'sweetalert2';
 import { MdClear } from "react-icons/md";
 import { TiArrowBack } from "react-icons/ti";
 
-
-const StyledButton = styled(Button)`
-  && {
-    float: right;
-    background-color: red;
-    transition: opacity 0.3s ease;
-    width:'50px';
-
-    &:hover {
-      opacity: 0.8;
-    }
-  }
-`;
 const Transition = React.forwardRef(function Transition(props, ref) {
   return <Slide direction="up" ref={ref} {...props} />;
 });

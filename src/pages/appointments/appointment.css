@@ -34,6 +34,7 @@
 .imgdocuapt img{
     width: 300px;
     height: 300px;
+    object-fit: contain;
 }
 .aptfrmuserscore{
     display: flex;
@@ -79,13 +80,22 @@
 .imgprofatp{
     width: 100%;
     margin-top: 10px;
+    height: max-content;
+    min-height: 500px;
     border: 2px solid #252525;
+    display: flex;
+    justify-content: center;
+    align-items: center;
     border-top-left-radius: 20px;
 }
 .imgprofatp img{
     width: 100%;
-    min-height: 60%;
+    max-height: 600px;
+    min-height: 500px;
     object-fit: cover;
     border-top-left-radius: 20px;
-
+}
+.imgprofatp p{
+    font-size: 30px;
+    font-weight: bold;
 }

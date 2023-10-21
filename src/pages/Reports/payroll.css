@@ -16,3 +16,32 @@
     height: max-content;
     border-radius: 10px;
 }
+#component-to-print, #component-to-print * {
+    visibility: hidden;
+  }
+  #component-to-print {
+    position: absolute;
+    left: 0;
+    top: 0;
+  }
+@media print {
+    body * {
+      visibility: hidden;
+    }
+    @page {
+        margin-top: 0;
+      }
+      /* Hide the date and URL */
+      .date, .url, .website, .footer, .url-container {
+        display: none !important;
+      }
+    #component-to-print, #component-to-print * {
+      visibility: visible;
+    }
+    #component-to-print {
+        width: 100%;
+      position: absolute;
+      left: 0;
+      top: 0;
+    }
+  }

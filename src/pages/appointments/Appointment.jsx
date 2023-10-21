@@ -2,7 +2,7 @@ import "./appointment.scss";
 import * as React from 'react';
 import Sidebar from "../../components/sidebar/Sidebar";
 import Navbar from "../../components/navbar/Navbar";    
-import { Tabs, Tab, Box, Button, Typography, Modal,Card,Chip} from "@mui/material"; 
+import { Tabs, Tab, Box, Button, Typography, Modal,Card,Chip, InputLabel} from "@mui/material"; 
 import { FetchingQualified, CreateAppointment,FetchingAppointList
   , Reaapointed, SetApproved,FetchingApplicantsInfo,SetApplicant,Addusertolistapp,FetchingBmccSchoinfo,FailedUser,
     CancelApp,CancelBatch,FetchingApplist,FetchingUserAppdetails,ListofSub, SetInterview,GrantAccess1,ListAccess,USERFRM_ID } from "../../api/request";
@@ -1457,7 +1457,7 @@ try {
         onClose={handleCloseUserDetails}
         TransitionComponent={Transition}
       >
-        <AppBar sx={{ position: 'relative' }}>
+        <AppBar sx={{ position: 'relative',backgroundColor:'#043F97' }}>
           <Toolbar>
             <IconButton
               edge="start"
@@ -1470,7 +1470,7 @@ try {
             <Typography sx={{ ml: 2, flex: 1 }} variant="h6" component="div">
               Applicant Information
             </Typography>
-            <button className='btnofficials2' onClick={() =>InterviewResult('False')}>
+            <button className='btnofficials2' style={{marginRight:'10px'}} onClick={() =>InterviewResult('False')}>
               REJECT
             </button>
             <button className="btnofficials" sx={{marginLeft:'15px'}} autoFocus color="inherit" onClick={() =>InterviewResult('True')}>
@@ -1481,10 +1481,10 @@ try {
       <Box sx={{width:'98.5%',padding:'10px',height:'100%',display:'flex',backgroundColor:'whitesmoke'}}>
          <div style={{width:'35%',marginLeft:'20px',minHeight:'100vh',maxHeight:'maxContent'}}>
             <div className="imgprofatp">
-            <img
+            {userFulldet.profile ? (<img
                 alt="Remy Sharp"
                 src={userFulldet.profile}
-              />
+              />) : (<p>No Image</p>)}
             </div>
             <div style={{width:'100%',height:'41%'}}>
               <div className="aptuserdetails">
@@ -1613,20 +1613,21 @@ try {
         {value === 0 && 
         <Box>
         {step === 0 && <Card className="cards">
-          <div style={{width:'100%',backgroundColor:'blue',display:'flex',alignItems:'center',justifyContent:'center'}}>
+          <div style={{ fontSize: 20,fontWeight:'900',color:'white',lineHeight:'17.57px',fontFamily:'Roboto Serif',textAlign:'center',backgroundColor:'#043F97',padding:'15px 0px 15px 0px',borderTopRightRadius:'10px',borderTopLeftRadius:'10px',display:'flex',justifyContent:'center',alignItems:'center' }}>
         <h2 style={{color:'white'}}>Set Appointment Schedule</h2>
         </div>
         <div className="frmappoint">
         <div className="datagloc">
             <div className="dateAppoint">
+              <InputLabel sx={{ fontSize: 20,fontWeight:'900',color:'white',lineHeight:'17.57px',fontFamily:'Roboto Serif',textAlign:'center',backgroundColor:'#043F97',padding:'15px 0px 15px 0px',borderTopRightRadius:'10px',borderTopLeftRadius:'10px',display:'flex',justifyContent:'center',alignItems:'center' }}>Select Appointment Date</InputLabel>
             <LocalizationProvider dateAdapter={AdapterDayjs}>
-            <DemoItem label={'Select Appointment Date'}>
-          <Card elevation={3}>
+            <DemoItem>
+          <Card elevation={1}>
           <DateCalendar
             sx={{
               width:'100%',
               backgroundColor: 'whitesmoke',
-              borderRadius: '8px',
+              borderRadius: '5px',
               padding: '16px',
               fontFamily: 'Arial, sans-serif',
               fontSize: '18px',
@@ -1653,13 +1654,13 @@ try {
             </div>
         </div>
         <div className="timestend">
-          <h3 style={{color:'green',margin:'10px'}}>Set Appointment Details</h3>
+          <h3 style={{ fontSize: 20,fontWeight:'900',color:'black',lineHeight:'17.57px',fontFamily:'Roboto Serif',textAlign:'left',margin:'20px 0px 20px 0px' }}>Set Appointment Details</h3>
             
             <div className="appinf">
+            <InputLabel sx={{color:'black',fontWeight:'bold'}}>Agenda:</InputLabel>
             <TextField 
             fullWidth
             id="outlined-basic" 
-            label="Agenda"
             value={Agenda}
             onChange={(e) => setAgenda(e.target.value)} 
             variant="outlined" /> 
@@ -1675,10 +1676,10 @@ try {
               </MuiAlert>}    
             </div>
             <div className="appinf">
+            <InputLabel sx={{color:'black',fontWeight:'bold'}}>Location:</InputLabel>
           <TextField 
             fullWidth
             id="outlined-basic" 
-            label="Location"
             value={Location}
             onChange={(e) => setLocation(e.target.value)}
             variant="outlined" /> 
@@ -1695,6 +1696,7 @@ try {
             </div>
             <div style={{display:'flex'}}>
             <div style={{marginRight:'20px'}}>
+            <InputLabel sx={{color:'black',fontWeight:'bold'}}>Time start:</InputLabel>
             <LocalizationProvider dateAdapter={AdapterDayjs}>
             <DemoContainer components={['TimeField', 'TimeField', 'TimeField']}>
               <TimeField 
@@ -1704,7 +1706,6 @@ try {
                               error: false,
                             },
                           }}
-                label="Time Start"
                 value={startTime}
                 onChange={(newValue) => setStartTime(newValue)}
                 format="hh:mm A"
@@ -1723,6 +1724,7 @@ try {
             </LocalizationProvider>
             </div>
             <div>
+            <InputLabel sx={{color:'black',fontWeight:'bold'}}>Time end:</InputLabel>
             <LocalizationProvider dateAdapter={AdapterDayjs}>
             <DemoContainer components={['TimeField', 'TimeField', 'TimeField']}>
               <TimeField
@@ -1732,7 +1734,6 @@ try {
                 error: false,
               },
             }} 
-                label="Time End"
                 value={endTime}
                 onChange={(newValue) => setEndTime(newValue)}
                 format="hh:mm A"
@@ -1754,7 +1755,7 @@ try {
             </div>
             <div>
             <CardContent>
-                  <Typography sx={{ fontSize: 17 }} color="text.secondary" gutterBottom>
+                  <Typography sx={{color:'black',fontWeight:'bold'}} gutterBottom>
                     Reminders:
                   </Typography>
                   <Typography variant="h5" component="div">
@@ -1775,12 +1776,12 @@ try {
         </Card>
         }
 
-        {step === 1 && <Card className="cards">
+        {step === 1 && <div className="cards">
       <div className="applicalist">
         <div style={{width:'100%',display:'flex'}}>
 
             <Card style={{width:'100%'}}>
-            <div style={{width:'100%',backgroundColor:'blue',display:'flex',alignItems:'center',justifyContent:'center'}}>
+            <div style={{ fontSize: 20,fontWeight:'900',color:'white',lineHeight:'17.57px',fontFamily:'Roboto Serif',textAlign:'center',backgroundColor:'#043F97',padding:'15px 0px 15px 0px',borderTopRightRadius:'10px',borderTopLeftRadius:'10px',display:'flex',justifyContent:'center',alignItems:'center' }}>
             <h2 style={{color:'white'}}>Select User to be Appointed</h2>
             </div>
             <DataGrid
@@ -1808,7 +1809,7 @@ try {
             <Button className="appointBtn" onClick={handleSave} variant="contained">APPOINT</Button>
           </div>
          </div>
-        </Card>}
+        </div>}
         </Box>}
         {value === 1 && 
         <Box sx={{display:'flex',height:'100%',width:'90%'}}>

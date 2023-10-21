@@ -9,7 +9,7 @@
     height: max-content;
 }
 .questionchoose .questioncon p{
-    font-size: 13px;
+    font-size: 19px;
     width: 70%;
     font-weight: 700;
     height: max-content;
@@ -25,7 +25,7 @@
     width: 100%;
     border-radius: 5px;
     padding: 5px;
-    font-size: 13px;
+    font-size: 17px;
     display: flex;
     margin: 5px;
     justify-content: space-between;
@@ -60,8 +60,8 @@
     padding: 0;
     width: 100%;
     display: grid;
-    grid-template-columns: repeat(auto-fit,minmax(300px, 1fr));
-    gap: 25px;
+    grid-template-columns: repeat(auto-fit,minmax(600px, 1fr));
+    gap: 0px;
     height: max-content;
     margin-bottom: 10px;
 }
@@ -90,4 +90,8 @@
     text-align: left;
     color:#043F97 ; 
   }
-  
+  .btnclear{
+    border: none;
+    color: red;
+    background-color: transparent;
+  }

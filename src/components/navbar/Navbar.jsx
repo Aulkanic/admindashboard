@@ -372,11 +372,8 @@ const Navbar = () => {
       </Modal>
     <div className='navbar1'>
       <div className='wrapper1'>
-        <div className='search'>
-          <input type='text' placeholder='Search' />
-          <SearchIcon/>
-        </div>
-        <div style={{margin:'0px 45px 0px 15px'}}>
+
+        <div style={{margin:'0px 35px 0px 15px'}}>
         <Badge 
         badgeContent={notif?.filter((data) => data.remarks === 'unread').length} 
         color="error"
