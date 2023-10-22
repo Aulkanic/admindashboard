@@ -351,7 +351,7 @@ const handleSubmitFilter = async () => {
     <PrintablePage value={filteredStudents}/>
       {/* {isPrinting ? (<PrintablePage value={filteredStudents}/>) : ( */}
         <>
-        <Offcanvas show={show} placement='end' onHide={handleClose}>
+      <Offcanvas show={show} placement='end' onHide={handleClose}>
         <Offcanvas.Header style={{backgroundColor:'black'}}>
           <Offcanvas.Title style={{fontWeight:'bold',color:'white',letterSpacing:'5px'}}>Filters</Offcanvas.Title>
           
