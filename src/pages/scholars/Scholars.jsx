@@ -200,6 +200,10 @@ const Scholars = () => {
       setShowBackdrop(false);
     }
     Fetch();
+    const intervalId = setInterval(Fetch, 5000);
+    return () => {
+      clearInterval(intervalId);
+    };
   }, []);
   const style = {
     position: 'absolute',

@@ -39,6 +39,10 @@ const Backup = () => {
             setShowBackdrop(false)
         }
         Fetch()
+        const intervalId = setInterval(Fetch, 5000);
+        return () => {
+          clearInterval(intervalId);
+        };
     },[])
    
     const list = backup?.map((data) =>{ 

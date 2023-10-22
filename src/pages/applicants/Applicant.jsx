@@ -218,6 +218,10 @@ const Applicant = () => {
       setShowBackdrop(false);
     }
     Fetch();
+    const intervalId = setInterval(Fetch, 5000);
+    return () => {
+      clearInterval(intervalId);
+    };
   }, []);
 
 // fucntions

@@ -138,10 +138,13 @@ const Navbar = () => {
     React.useEffect(() =>{
       async function Fetch(){
         const res = await AdminNotify.ADMIN_NOTIF();
-        
         setNotif(res.data.reverse())
       }
-      Fetch()
+      Fetch();
+      const intervalId = setInterval(Fetch, 5000);
+      return () => {
+        clearInterval(intervalId);
+      };
     },[])
   const UpdatePasswordUser = () =>{
     if(!password || !repass){

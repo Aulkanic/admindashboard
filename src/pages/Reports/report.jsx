@@ -206,6 +206,10 @@ const Report = () => {
       setSchoprog(scho.data.SchoCat.sort((a, b) => a.name.localeCompare(b.name)))
     }
     Fetch()
+    const intervalId = setInterval(Fetch, 5000);
+    return () => {
+      clearInterval(intervalId);
+    };
 },[])
 
 const handleSubmitFilter = async () => {
