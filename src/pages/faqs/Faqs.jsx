@@ -209,7 +209,6 @@ const CustomDataGrid = styled(DataGrid)({
   const handleClose1 = () => setOpen1(false);
   useEffect(() =>{
         async function Fetch(){
-        setShowBackdrop(true);
         const list = await FetchingBMCC.FETCH_BMCC()
         const actlog = await Activitylog.ACTIVITY_LOG()
         const access = await ListAccess.ACCESS()
@@ -234,7 +233,6 @@ const CustomDataGrid = styled(DataGrid)({
           setEmployeeAccess(access.data.result)
           const activitylog = actlog.data.Log
           setActlog(activitylog.reverse())
-          setShowBackdrop(false);
         }
         Fetch();
         const intervalId = setInterval(Fetch, 5000);

@@ -285,7 +285,6 @@ const Appointment = () => {
 
   useEffect(() => {
     async function Fetch(){
-      setShowBackdrop(true);
       const response = await FetchingQualified.FETCH_QUALIFIED();
       const listing  = await FetchingAppointList.FETCH_LISTAPPOINT();
       const list = response.data.List.filter(user => user.isAppointed === 'No');
@@ -294,7 +293,6 @@ const Appointment = () => {
       setAccess(empacc)
       setQualified(list);
       setAppointedList(listing.data.AppointmentList)
-      setShowBackdrop(false);
     }
     Fetch();
     const intervalId = setInterval(Fetch, 5000);

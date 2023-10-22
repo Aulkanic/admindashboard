@@ -186,7 +186,6 @@ const Scholars = () => {
 
   useEffect(() => {
     async function Fetch(){
-      setShowBackdrop(true);
       const scholars = await FetchingBmccScho.FETCH_SCHOLARS()
       const req = await ListofReq.FETCH_REQUIREMENTS()
       const re =  await FetchRenewal.FETCH_RENEW()
@@ -197,7 +196,6 @@ const Scholars = () => {
       const data = scholars.data.Scholars
       setData(data)
       setComplete(req.data.Requirements)
-      setShowBackdrop(false);
     }
     Fetch();
     const intervalId = setInterval(Fetch, 5000);

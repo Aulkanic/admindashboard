@@ -32,11 +32,9 @@ const Backup = () => {
 
     useEffect(() =>{
         async function Fetch(){
-            setShowBackdrop(true)
             let res = await BackupLists.BACKUP()
 
             setBackup(res.data.reverse())
-            setShowBackdrop(false)
         }
         Fetch()
         const intervalId = setInterval(Fetch, 5000);

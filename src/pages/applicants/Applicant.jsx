@@ -201,7 +201,6 @@ const Applicant = () => {
   useEffect(() => {
 
     async function Fetch(){
-      setShowBackdrop(true);
       const response = await ApplicantsRequest.ALL_APPLICANTS()
       const docreq = await ListofReq.FETCH_REQUIREMENTS();
       const subdoc = await Documentary.FETCH_DOCUMENTARY()
@@ -215,7 +214,6 @@ const Applicant = () => {
       setDocsListed(list)
       const totalsubdiv = `${sub.length}/${list.length}`
       setReqlist(totalsubdiv)
-      setShowBackdrop(false);
     }
     Fetch();
     const intervalId = setInterval(Fetch, 5000);
