@@ -46,9 +46,9 @@ function App() {
             <Route element={<AuthGuard />}>
                 <Route path='home' element={<Home/>} />
                 <Route path='scholarships' element={<Scholarships/>}/>
-                <Route path='about' element={<About />} />
-                <Route path='contact' element={<Contact />} />
-                <Route path='faqs' element={<Faqs />} />
+                <Route path='Scorecard' element={<About />} />
+                <Route path='Requirements' element={<Contact />} />
+                <Route path='Staffs' element={<Faqs />} />
                 <Route path='news' element={<News/>} />
                 <Route path='applicants' element={<Applicant/>} />
                 <Route path='single' element={<Single/>} />
@@ -61,7 +61,7 @@ function App() {
                 <Route path='Website-Maintenance' element={<Website/>} />
                 <Route path='Report' element={<Report/>} />
                 <Route path='Report/User' element={<UserList/>} />
-                <Route path='Backups' element={<Backup/>} />
+                {/* <Route path='Backups' element={<Backup/>} /> */}
           </Route>
         </Route>
       </Routes>

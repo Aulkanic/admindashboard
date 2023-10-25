@@ -8,11 +8,13 @@ import TableCell, { tableCellClasses } from '@mui/material/TableCell';
 import { styled } from '@mui/material/styles';
 import './payroll.css'
 import { useState } from 'react';
+import MYDO from '../../Images/mydo.jpg'
 
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
     [`&.${tableCellClasses.head}`]: {
       backgroundColor: "#0047a4",
-      color: theme.palette.common.white,
+      color: "black",
+      fontWeight:'bold'
   
     },
     [`&.${tableCellClasses.body}`]: {
@@ -35,25 +37,20 @@ const PrintablePage = (val) => {
     const formattedDate = date.toLocaleDateString('en-US', options);
     const [page, setPage] = React.useState(0);
     const [rowsPerPage, setRowsPerPage] = useState(10);
-    
-    const columns = [
-        { field: 'userNum', headerName: '#', width: 30,  align: 'left', },
-        { field: 'Name', headerName: 'Name', width: 250,  align: 'left', },
-        { field: 'gender', headerName: 'Gender', width: 100,  align: 'left', },
-        { field: 'yearLevel', headerName: 'Year Level', width: 150,  align: 'left', },
-        { field: 'baranggay', headerName: 'Baranggay', width: 150,  align: 'left', },
-        { field: 'batch', headerName: 'Batch', width: 100,  align: 'left', },
-        { field: 'ScholarshipApplied', headerName: 'Scholarship Program', width: 170,  align: 'left', },
-      ];
+    const columns = val.cols ? val.cols : []
+    const title = val.head ? val.head : '';
+    const totalRow = val.row ? val.row : [];
+
     const modifiedList = data?.map((item, index) => ({
         userNum: index + 1,
         ...item
     
       }));
   return (
-    <div id="component-to-print" style={{padding:'20px 5px 20px 5px'}}>
-        <div style={{display:'flex',justifyContent:'center',alignItems:'center',width:'100%'}}>
-        <h1 style={{fontWeight:'bold',margin:'0px'}}>MYDO Daily Reports</h1>
+    <div id="component-to-print" style={{padding:'20px 0px 20px 0px'}}>
+        <div style={{display:'flex',justifyContent:'center',alignItems:'center',width:'100%',flexDirection:'column'}}>
+          <img src={MYDO} style={{width:'60px',heigt:'60px',objectFit:'contain'}} alt="" />
+        <h1 style={{fontWeight:'bold',margin:'0px'}}>{title}</h1>
         </div>
 
         <p><strong>Date:</strong>{formattedDate}</p>
@@ -77,11 +74,11 @@ const PrintablePage = (val) => {
               ?.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
               ?.map((row) => {
                 return (
-                  <TableRow hover role="checkbox" tabIndex={-1} key={row.scholarCode}>
+                  <TableRow sx={{fontSize:'10px'}} hover role="checkbox" tabIndex={-1} key={row.scholarCode}>
                     {columns.map((column) => {
                       const value = row[column.field];
                       return (
-                        <TableCell key={column.field} align={column.align}>
+                        <TableCell sx={{fontSize:'10px'}} key={column.field} align={column.align}>
                           {column.format && typeof value === 'number'
                             ? column.format(value)
                             : value}
@@ -95,6 +92,13 @@ const PrintablePage = (val) => {
           </TableBody>
         </Table>
       </TableContainer>
+      {title === 'Payroll Report' && <div style={{display: 'flex', justifyContent: 'space-between', padding: '8px', fontWeight: 'bold' }}>
+        {columns.map((column) => (
+          <span key={column.field} style={{ minWidth: column.width,paddingLeft:'15px',fontSize:'11px',fontWeight:'bold' }}>
+            {totalRow[column.field]}
+          </span>
+        ))}
+      </div>}
     </div>
   )
 }

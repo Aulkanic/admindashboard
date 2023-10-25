@@ -20,12 +20,10 @@ import Button from 'react-bootstrap/Button';
 import Offcanvas from 'react-bootstrap/Offcanvas';
 import FilterIcon from '../../Images/filter.png'
 import { Payrollreports,Userlistsreports } from '../../api/request';
-import createExcelReport from './excel';
 import { FaFilter } from 'react-icons/fa';
 import { MdOutlineClear } from 'react-icons/md';
 import { BsFillPrinterFill } from 'react-icons/bs';
-import { BiSolidFileExport } from 'react-icons/bi';
-import PrintablePage from './printablePage';
+
 
 
 const BpIcon = styled('span')(({ theme }) => ({
@@ -148,7 +146,6 @@ const Report = () => {
   const [selectedSchoprog, setSelectedSchoprog] = useState([]);
   const [filteredStudents, setFilteredStudents] = useState([]);
   const [selectedRem, setSelectedRem] = useState([]);
-  const [isPrinting,setPrinting] = useState(false)
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
@@ -347,13 +344,9 @@ const handleSubmitFilter = async () => {
     setSelectedSchoprog([])
     setSelectedYearlevel([])
   }
-  const reporTitle = 'User Report'
-  const date = new Date().toLocaleDateString();
 
   return (
     <>
-    <PrintablePage value={filteredStudents}/>
-      {/* {isPrinting ? (<PrintablePage value={filteredStudents}/>) : ( */}
         <>
       <Offcanvas show={show} placement='end' onHide={handleClose}>
         <Offcanvas.Header style={{backgroundColor:'black'}}>
@@ -377,7 +370,7 @@ const handleSubmitFilter = async () => {
                   onChange={handleInputChange}
                   
                 >
-                  <FormControlLabel value="Applicants" control={<BpRadio  />} label="Applicants" />
+                  <FormControlLabel value="Applicant" control={<BpRadio  />} label="Applicant" />
                   <FormControlLabel  value="Approved" control={<BpRadio  />} label="Scholars" />
                   <FormControlLabel  value="Failed" control={<BpRadio  />} label="Disqualified" />
                 </RadioGroup>
@@ -415,7 +408,7 @@ const handleSubmitFilter = async () => {
                   name="radio-buttons-group"
                   
                 >
-                 {filterCriteria.Status === 'Applicants' && AppliList}
+                 {filterCriteria.Status === 'Applicant' && AppliList}
                  {filterCriteria.Status === 'Approved' && SchoList}
                  {filterCriteria.Status === 'Failed' && FailList}
                 </RadioGroup>
@@ -492,7 +485,7 @@ const handleSubmitFilter = async () => {
                       <Button style={{backgroundColor:'white',color:'black'}} onClick={handleShow}><img style={{width:'15px'}} src={FilterIcon} alt='' />All Filters</Button>
                       <div>
                       <Button style={{marginRight:'10px'}} onClick={handlePrint}><BsFillPrinterFill style={{marginRight:'2px',marginTop:'-2px'}}/>Print</Button>
-                      <Button onClick={() => createExcelReport(filteredStudents,reporTitle,date)}><BiSolidFileExport style={{marginRight:'2px',marginTop:'-4px'}}/>Export</Button>
+                      
                       </div>
 
                   

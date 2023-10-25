@@ -12,8 +12,7 @@ import TablePagination from '@mui/material/TablePagination';
 import TableRow from '@mui/material/TableRow';
 import TableCell, { tableCellClasses } from '@mui/material/TableCell';
 import { BsFillPrinterFill } from 'react-icons/bs';
-import { BiSolidFileExport } from 'react-icons/bi';
-import createExcelReport from './excel';
+import PrintablePage from './printablePage';
 
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
   [`&.${tableCellClasses.head}`]: {
@@ -84,7 +83,18 @@ function Payroll(pay){
 
   const columns = [
     { field: 'userNum', headerName: '#', width: 70,  align: 'left', },
-    { field: 'Name', headerName: 'Name', width: 200,  align: 'left', },
+    { field: 'Name', 
+    headerName: 'Name(Scholarship Benefeciary)', 
+    width: 200,  
+    align: 'left',
+    renderHeader: (params) => (
+      <div>
+        <div style={{ whiteSpace: 'pre-line' }}>{params.field}</div>
+        <div style={{ fontSize: 12, color: 'gray' }}>Scholarship Beneficiary</div>
+      </div>
+    ),
+    height: 'maxContent', 
+  },
     { field: 'InclusiveDate', headerName: 'Inclusive Date', width: 170,  align: 'left', },
     {
       field: 'January',
@@ -138,7 +148,7 @@ function Payroll(pay){
   const totalRow = {
     id: 'total',
     scholarCode: 'Total',
-    Name: '',
+    Name: 'Total',
     InclusiveDate: '',
     January: convertToPesos(calculateTotalAmount('January')),
     February: convertToPesos(calculateTotalAmount('February')),
@@ -153,9 +163,11 @@ function Payroll(pay){
     ...item
 
   }));
-  const reporTitle = 'User Report'
+  const reportTitle = 'Payroll Report'
   const date = new Date().toLocaleDateString();
   return (
+    <>
+      <PrintablePage value={payroll} cols={columns} head={reportTitle} row={totalRow}/>
     <div className='payrollContent'>
 
       <div className='payrollContainer2'>
@@ -172,7 +184,7 @@ function Payroll(pay){
           </div>
           <div>
             <Button style={{marginRight:'10px'}} onClick={handlePrint}><BsFillPrinterFill style={{marginRight:'2px',marginTop:'-2px'}}/>Print</Button>
-            <Button onClick={() => createExcelReport(modifiedList,reporTitle,date)}><BiSolidFileExport style={{marginRight:'2px',marginTop:'-4px'}}/>Export</Button>
+            
           </div>
       </div>
       <div className='payrollTable'>
@@ -234,6 +246,7 @@ function Payroll(pay){
     </Paper>
       </div>
     </div>
+    </>
   )
 }
 

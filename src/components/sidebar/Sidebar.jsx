@@ -59,7 +59,7 @@ const Sidebar = () => {
           </Link>
             <p className="title"> Web </p>
           {sections.includes('Account Creation') || sections.includes('Account Management') || sections.includes('Administrator') ? (
-          <Link to='/faqs' style={{ textDecoration: "none" }}>
+          <Link to='/Staffs' style={{ textDecoration: "none" }}>
             <li>
               <GroupsIcon className='icon'/>
               <span> Employees </span>
@@ -73,14 +73,14 @@ const Sidebar = () => {
             </li>
           </Link>) : (null)}
           {sections.includes('Score Card') || sections.includes('Administrator') ? (
-          <Link to='/about' style={{ textDecoration: "none" }}>
+          <Link to='/Scorecard' style={{ textDecoration: "none" }}>
             <li>
               <MoneyIcon className='icon'/>
               <span> Score Card </span>
             </li>
           </Link>) : (null)}
           {sections.includes('Requirements Management') || sections.includes('Administrator') ? (
-          <Link to="/contact" style={{ textDecoration: "none" }}>
+          <Link to="/Requirements" style={{ textDecoration: "none" }}>
             <li>
               <NoteAddIcon className='icon'/>
               <span> Requirements </span>
@@ -165,13 +165,13 @@ const Sidebar = () => {
               <span> Reports </span>
             </li>
             </Link>) : (null)}
-            {sections.includes('Administrator') ? (
+            {/* {sections.includes('Administrator') ? (
             <Link to='/Backups' style={{ textDecoration: 'none'}}>
             <li>
               <SettingsBackupRestoreIcon className='icon'/>
               <span> Backups </span>
             </li>
-            </Link>) : (null)}
+            </Link>) : (null)} */}
 
             <Link onClick={Logout} style={{ textDecoration: "none"}}>
             <li>

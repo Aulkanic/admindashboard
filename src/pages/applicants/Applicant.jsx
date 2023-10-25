@@ -940,7 +940,7 @@ const style = {
           <div style={{width:'100%'}}>
               <button className='btnofficials2' onClick={handleClose}> X </button>
           </div> 
-          <Typography sx={{fontSize:'25px'}}>Check the Submitted Requirements/Documents if it valid and viewable</Typography>
+          <Typography sx={{fontSize:'25px'}}>Check the submitted requirements if it valid and viewable</Typography>
             {docusubmitted.length > 0 ? (<div className="clas"> 
           {docusubmitted}
           </div>) : (<div style={{display:'flex',justifyContent:'center',alignItems:'center',width:'100%',height:'100%',flexDirection:'column'}}>

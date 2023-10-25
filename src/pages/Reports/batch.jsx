@@ -1,8 +1,6 @@
 import React, { useEffect, useState } from 'react'
-import FloatingLabel from 'react-bootstrap/FloatingLabel';
-import Form from 'react-bootstrap/Form';
+import PrintablePage from './printablePage';
 import './batch.css'
-import Button from 'react-bootstrap/Button';
 import Datatable from './Datatable';
 
 function capitalize(string) {
@@ -35,9 +33,25 @@ function Batch(filterdata){
     { field: 'yearLevel', headerName: 'Year Level', width: 150 },
     { field: 'batch', headerName: 'Batch', width: 130 },
   ];
-
+  const columns1 = [
+    { field: 'userNum', headerName: '#', width: 30,  align: 'left', },
+    { field: 'Name', headerName: 'Name', width: 250,  align: 'left', },
+    { field: 'gender', headerName: 'Gender', width: 100,  align: 'left', },
+    { field: 'yearLevel', headerName: 'Year Level', width: 150,  align: 'left', },
+    { field: 'baranggay', headerName: 'Baranggay', width: 150,  align: 'left', },
+    { field: 'batch', headerName: 'Batch', width: 100,  align: 'left', },
+    { field: 'ScholarshipApplied', headerName: 'Scholarship Program', width: 170,  align: 'left', },
+  ];
+  let title = 'List of User Report';
+  if(stat === 'Applicant'){
+    title = 'List of Applicants Report'
+  }
+  if(stat === 'Approved'){
+    title = 'List of Scholars Report'
+  }
   return (
     <>
+    <PrintablePage value={data} cols={columns1} head={title}/>
       <div>
         <Datatable props={modifiedList} col={columns}/>
       </div>
