@@ -161,7 +161,7 @@ const News = () => {
             <Typography>Select Picture:</Typography>
             <Button>
             <TextField sx={{backgroundColor:'whitesmoke',border:'none',marginLeft:'10px'}}
-              onChange={(e) =>setNewsimg(e.target.files[0])} type='file' id="input-with-sx" label="" variant="outlined" 
+              onChange={(e) =>setNewsimg(e.target.files[0])} type='file' accept=".jpg, .jpeg, .png" id="input-with-sx" label="" variant="outlined" 
               />
             </Button>
             </div>

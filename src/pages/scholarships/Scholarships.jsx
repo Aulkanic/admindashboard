@@ -328,7 +328,7 @@ const handleEditFileChange = (e) => {
               </div>
                   <Button sx={{padding:'10px 0px 10px 0px',width:'100%'}}>
                   <TextField sx={{backgroundColor:'whitesmoke',border:'none',width:'100%'}}
-                  type='file' id="input-with-sx" label="" variant="outlined" fullWidth
+                  type='file' accept=".jpg, .jpeg, .png" id="input-with-sx" label="" variant="outlined" fullWidth
                   onChange={handleFileChange}/>
                   </Button>
                 <div style={{display:'flex',justifyContent:'center',alignItems:'center'}}>
@@ -426,7 +426,7 @@ const handleEditFileChange = (e) => {
               </div>
                   <Button sx={{padding:'10px 0px 10px 0px',width:'100%'}}>
                   <TextField sx={{backgroundColor:'whitesmoke',border:'none',width:'100%'}}
-                  type='file' id="input-with-sx" label="" variant="outlined" fullWidth
+                  type='file' accept=".jpg, .jpeg, .png" id="input-with-sx" label="" variant="outlined" fullWidth
                   onChange={handleEditFileChange}/>
                   </Button>
                 <div style={{display:'flex',justifyContent:'center',alignItems:'center'}}>

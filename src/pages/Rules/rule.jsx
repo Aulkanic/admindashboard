@@ -209,7 +209,7 @@ const Rulesect = () => {
                       />
                         <Button>
                         <TextField sx={{backgroundColor:'whitesmoke',border:'none'}}
-                        type='file' onChange={(e) =>setBmcc(e.target.files[0])} id="input-with-sx" label="" variant="outlined" />
+                        type='file' accept=".jpg, .jpeg, .png" onChange={(e) =>setBmcc(e.target.files[0])} id="input-with-sx" label="" variant="outlined" />
                         </Button>
                       </Box>
                         </Typography>
@@ -231,7 +231,7 @@ const Rulesect = () => {
                               />
                                 <Button>
                                 <TextField sx={{backgroundColor:'whitesmoke',border:'none'}}
-                                type='file' onChange={(e) =>setMayor(e.target.files[0])} id="input-with-sx" label="" variant="outlined" />
+                                type='file' accept=".jpg, .jpeg, .png" onChange={(e) =>setMayor(e.target.files[0])} id="input-with-sx" label="" variant="outlined" />
                                 </Button>
                               </Box>
                                 </Typography>

@@ -503,7 +503,7 @@ const Website = () => {
                             </Typography>
                           <Button>
                           <TextField sx={{backgroundColor:'whitesmoke',border:'none'}}
-                          type='file' onChange={(e) => setLimg(e.target.files[0])} id="input-with-sx" label="" variant="outlined" />
+                          type='file' accept=".jpg, .jpeg, .png" onChange={(e) => setLimg(e.target.files[0])} id="input-with-sx" label="" variant="outlined" />
                           </Button>
                         </Box>
                             </Typography>
@@ -532,17 +532,17 @@ const Website = () => {
                             <label htmlFor="">Image 1:</label>
                           <Button>
                           <TextField sx={{backgroundColor:'whitesmoke',border:'none'}}
-                          type='file' onChange={(e) =>setCarou(e.target.files[0])} id="input-with-sx" label="" variant="outlined" />
+                          type='file' accept=".jpg, .jpeg, .png" onChange={(e) =>setCarou(e.target.files[0])} id="input-with-sx" label="" variant="outlined" />
                           </Button><br />
                           <label htmlFor="">Image 2:</label>
                           <Button>
                           <TextField sx={{backgroundColor:'whitesmoke',border:'none'}}
-                          type='file' onChange={(e) =>setCarou1(e.target.files[0])} id="input-with-sx" label="" variant="outlined" />
+                          type='file' accept=".jpg, .jpeg, .png" onChange={(e) =>setCarou1(e.target.files[0])} id="input-with-sx" label="" variant="outlined" />
                           </Button><br />
                           <label htmlFor="">Image 3:</label>
                           <Button>
                           <TextField sx={{backgroundColor:'whitesmoke',border:'none'}}
-                          type='file' onChange={(e) =>setCarou2(e.target.files[0])} id="input-with-sx" label="" variant="outlined" />
+                          type='file' accept=".jpg, .jpeg, .png" onChange={(e) =>setCarou2(e.target.files[0])} id="input-with-sx" label="" variant="outlined" />
                           </Button><br />
                           <div style={{margin:'10px',width:'100%',display:'flex',justifyContent:'center'}}>
                           <button className='btnofficials1' onClick={upload}>Save All Images</button>
@@ -571,7 +571,7 @@ const Website = () => {
                             </Typography>
                           <Button sx={{width:'100%'}}>
                           <TextField fullWidth sx={{backgroundColor:'whitesmoke',border:'none'}}
-                          type='file' onChange={(e) =>setTrivimg(e.target.files[0])} id="input-with-sx" label="" variant="outlined" />
+                          type='file' accept=".jpg, .jpeg, .png" onChange={(e) =>setTrivimg(e.target.files[0])} id="input-with-sx" label="" variant="outlined" />
                           </Button>
                           </div>
                         </Card>
