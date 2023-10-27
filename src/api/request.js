@@ -324,6 +324,12 @@ export const Userlistsreports = {
 export const AdminNotify = {
     ADMIN_NOTIF: () => axiosInstance.get(Endpoints.ADMIN_NOTIF)
 }
+export const SchoinfOld = {
+    SCHO_OLD: (data) => axiosInstance.get(Endpoints.SCHOLAROLD+data)
+}
 export const SeenAdminNotify = {
     SEEN_NOTIF: (data) => axiosInstance.post(Endpoints.SEEN_NOTIF,data)
+}
+export const DeclinedRenewal = {
+    DECLINED: (data) => axiosInstance.post(Endpoints.DECLINED,data)
 }

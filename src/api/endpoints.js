@@ -102,10 +102,12 @@ const Endpoints = {
     FETCH_RENEWCODE:'RenewalForm/RenewCode/',
     FETCH_RENEWSCHO:'RenewalForm/Scho',
     RENEWED:'RenewalForm/Renewed',
+    DECLINED:'RenewalForm/Declined',
     BACKUP:'admin/Backuplists',
     BACKUPNOW:'admin/Backup',
     RESTORE:'admin/Restore',
     ADMIN_NOTIF:'admin/Notification',
+    SCHOLAROLD: 'BMCCScholar/Renew/'
 }
 
 export default Endpoints

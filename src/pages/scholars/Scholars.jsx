@@ -9,7 +9,7 @@ import Typography from '@mui/material/Typography';
 import { DataGrid} from '@mui/x-data-grid';
 import React, {useEffect, useState} from 'react'
 import { FetchingBmccScho, FetchingBmccSchoinfo,ScholarStand ,ListofReq,UserActivity,ListAccess, GenerateRenewal,FetchRenewal,
-FetchRenewalDet,SetRenewalDetails,FetchRenewalCode,SetSchoRenewDetails,RenewedScho} from '../../api/request';
+FetchRenewalDet,SetRenewalDetails,FetchRenewalCode,SetSchoRenewDetails,RenewedScho,DeclinedRenewal,SchoinfOld} from '../../api/request';
 import './scholar.css'
 import Divider from '@mui/material/Divider';
 import swal from 'sweetalert';
@@ -135,7 +135,8 @@ const Scholars = () => {
   const [renewScho,setRenewScho] = useState([])
   const [fullscreenImage, setFullscreenImage] = useState(null);
   const [inf,setInf] = useState([]);
-  const [screen,setScreen] = useState(0)
+  const [screen,setScreen] = useState(0);
+  const [old,setOld] = useState([])
 
   const openFullscreen = (imageSrc) => {
     setFullscreenImage(imageSrc);
@@ -198,10 +199,10 @@ const Scholars = () => {
       setComplete(req.data.Requirements)
     }
     Fetch();
-    const intervalId = setInterval(Fetch, 5000);
-    return () => {
-      clearInterval(intervalId);
-    };
+    // const intervalId = setInterval(Fetch, 5000);
+    // return () => {
+    //   clearInterval(intervalId);
+    // };
   }, []);
   const style = {
     position: 'absolute',
@@ -241,15 +242,22 @@ const Scholars = () => {
   };
   const view1 = async (data) => {
     setInf(data)
+    console.log(data)
     setShowBackdrop(true);
     const renewTitle = renewDet[0].renewTitle;
     const tablename = renewDet[0].reqtable;
-    const scholarCode = data.scholarCode
+    const scholarCode = data.scholarCode;
+    const applicantNum = data.applicantNum;
+    console.log(applicantNum)
     const formData = new FormData()
     formData.append('renewTitle',renewTitle)
     formData.append('tablename',tablename)
     formData.append('scholarCode',scholarCode)
     const response = await SetSchoRenewDetails.FETCH_SCHORE(formData);
+    console.log(response)
+    const re= await SchoinfOld.SCHO_OLD(scholarCode)
+    console.log(re)
+    setOld(re.data.inf[0])
     setRenewScho(response.data)
     setShowBackdrop(false);
     setOpen2(true);
@@ -348,7 +356,7 @@ const Scholars = () => {
     {
       field: 'Status',
       headerName: 'Status',
-      width: 100,
+      width: 150,
       editable: false,
     },
     {
@@ -361,6 +369,49 @@ const Scholars = () => {
     },
 
   ];
+
+  const RenewalDecline = async(val) =>{
+    setOpen2(false)
+    const result = await Swal.fire({
+      input: 'textarea',
+      inputLabel: 'Enter the reason of not accpeting the renewal update',
+      inputPlaceholder: 'Type here...',
+      inputAttributes: {
+        'aria-label': 'Type here',
+        maxlength: 255, // Set the maximum length of input
+        rows: 4, 
+      },
+      focusConfirm: false,
+      confirmButtonText: 'Submit',
+      showCancelButton:true,
+      preConfirm: (value) => {
+        if (!value) {
+          Swal.showValidationMessage('Please input a First!!');
+          return false; // Prevent the dialog from closing
+        }
+        if(value.length > 255){
+          Swal.showValidationMessage("The field can contain up to a maximum of 255 characters.")
+          return false;
+        }
+        return value; 
+      }
+    }).then(async(results) =>{
+      if(results.isConfirmed){
+        const formData = new FormData();
+        formData.append('applicantNum',old.applicantNum)
+        formData.append('scholarCode',old.scholarCode)
+        formData.append('reasons',results.value)
+        formData.append('renewTitle',renewDet[0].renewTitle)
+        await DeclinedRenewal.DECLINED(formData)
+        .then((res) =>{
+          setSchore(res.data);
+          setInf([])
+        })
+      }else if (results.dismiss === Swal.DismissReason.cancel) {
+        setOpen2(true);
+      }
+    })
+  }
   const handleClose = () => setOpen(false);
   const handleClose1 = () => setOpen1(false);
   const handleClose2 = () => setOpen2(false);
@@ -682,11 +733,11 @@ const Scholars = () => {
         setShowBackdrop(false)
       })
     }
-
+console.log(old)
   return (
     <>
       <StyledBackdrop open={showBackdrop}>
-                <CircularProgress color="inherit" />
+          <CircularProgress color="inherit" />
       </StyledBackdrop>
       <Dialog fullScreen open={imageModalOpen} onClose={closeImageModal}>
       <DialogTitle>{selectedImage.name}</DialogTitle>
@@ -900,6 +951,11 @@ const Scholars = () => {
             <Typography sx={{ ml: 2, flex: 1 }} variant="h6" component="div">
               Scholar Updated Information
             </Typography>
+            <button className="btnofficials2" style={{marginRight:'15px'}} autoFocus color="inherit"
+            onClick={() =>RenewalDecline(inf)}
+            >
+              NOT ACCEPTED
+            </button>
             <button className="btnofficials" sx={{marginLeft:'15px'}} autoFocus color="inherit"
             onClick={() =>SetSchoRenewed(inf)}
             >
@@ -960,57 +1016,105 @@ const Scholars = () => {
                 </Form.Group>
                 <Form.Group as={Col}>
                       <Form.Label className='frmlabel'>Phone Number</Form.Label>
+                      {data.phoneNum !== old.phoneNum && <p style={{margin:'0px',fontSize:'10px',fontStyle:'italic',fontWeight:'bold'}}>Old</p>}
                       <Form.Control
                         type="text" 
                         name='Name'
                         value={data.phoneNum} 
                       disabled
                       />
+{data.phoneNum !== old.phoneNum && <p style={{margin:'0px',fontSize:'10px',fontStyle:'italic',fontWeight:'bold'}}>New!</p>}
+                      {data.phoneNum !== old.phoneNum && <Form.Control
+                        type="text" 
+                        name='Name'
+                        value={old.phoneNum} 
+                      disabled
+                      />}
                 </Form.Group>
                 <Form.Group as={Col}>
                       <Form.Label className='frmlabel'>School</Form.Label>
+                      {data.school !== old.school && <p style={{margin:'0px',fontSize:'10px',fontStyle:'italic',fontWeight:'bold'}}>Old</p>}
                       <Form.Control
                         type="text" 
                         name='Name'
                         value={data.school} 
                       disabled
                       />
+                      {data.school !== old.school && <p style={{margin:'0px',fontSize:'10px',fontStyle:'italic',fontWeight:'bold'}}>New!</p>}
+                    {data.school !== old.school && <Form.Control
+                        type="text" 
+                        name='Name'
+                        value={old.school} 
+                      disabled
+                      />}
                 </Form.Group>
                 <Form.Group as={Col}>
                       <Form.Label className='frmlabel'>Year Level</Form.Label>
+                      {data.yearLevel !== old.yearLevel && <p style={{margin:'0px',fontSize:'10px',fontStyle:'italic',fontWeight:'bold'}}>Old</p>}
                       <Form.Control
                         type="text" 
                         name='Name'
                         value={data.yearLevel} 
                       disabled
                       />
+                      {data.yearLevel !== old.yearLevel && <p style={{margin:'0px',fontSize:'10px',fontStyle:'italic',fontWeight:'bold'}}>New!</p>}
+                    {data.yearLevel !== old.yearLevel && <Form.Control
+                        type="text" 
+                        name='Name'
+                        value={old.yearLevel} 
+                      disabled
+                      />}
                 </Form.Group>
                 <Form.Group as={Col}>
                       <Form.Label className='frmlabel'>Grade/Year</Form.Label>
+                      {data.gradeLevel !== old.gradeLevel && <p style={{margin:'0px',fontSize:'10px',fontStyle:'italic',fontWeight:'bold'}}>Old</p>}
                       <Form.Control
                         type="text" 
                         name='Name'
                         value={data.gradeLevel} 
                       disabled
                       />
+                      {data.gradeLevel !== old.gradeLevel && <p style={{margin:'0px',fontSize:'10px',fontStyle:'italic',fontWeight:'bold'}}>New!</p>}
+                    {data.gradeLevel !== old.gradeLevel && <Form.Control
+                        type="text" 
+                        name='Name'
+                        value={old.gradeLevel} 
+                      disabled
+                      />}
                 </Form.Group>
                 <Form.Group as={Col}>
                       <Form.Label className='frmlabel'>Guardian</Form.Label>
+                      {data.guardian !== old.guardian && <p style={{margin:'0px',fontSize:'10px',fontStyle:'italic',fontWeight:'bold'}}>Old</p>}
                       <Form.Control
                         type="text" 
                         name='Name'
                         value={data.guardian} 
                       disabled
                       />
+                      {data.guardian !== old.guardian && <p style={{margin:'0px',fontSize:'10px',fontStyle:'italic',fontWeight:'bold'}}>New!</p>}
+                      {data.guardian !== old.guardian && <Form.Control
+                        type="text" 
+                        name='Name'
+                        value={old.guardian} 
+                      disabled
+                      />}
                 </Form.Group>
                 <Form.Group as={Col}>
                       <Form.Label className='frmlabel'>Baranggay</Form.Label>
+                      {data.Baranggay !== old.Baranggay && <p style={{margin:'0px',fontSize:'10px',fontStyle:'italic',fontWeight:'bold'}}>Old</p>}
                       <Form.Control
                         type="text" 
                         name='Name'
                         value={data.Baranggay} 
                       disabled
                       />
+                      {data.Baranggay !== old.Baranggay && <p style={{margin:'0px',fontSize:'10px',fontStyle:'italic',fontWeight:'bold'}}>New!</p>}
+                    {data.Baranggay !== old.Baranggay && <Form.Control
+                        type="text" 
+                        name='Name'
+                        value={old.school} 
+                      disabled
+                      />}
                 </Form.Group>
                 <Form.Group as={Col}>
                       <Form.Label className='frmlabel'>Remarks</Form.Label>
