@@ -1020,14 +1020,14 @@ console.log(old)
                       <Form.Control
                         type="text" 
                         name='Name'
-                        value={data.phoneNum} 
+                        value={old.phoneNum} 
                       disabled
                       />
 {data.phoneNum !== old.phoneNum && <p style={{margin:'0px',fontSize:'10px',fontStyle:'italic',fontWeight:'bold'}}>New!</p>}
                       {data.phoneNum !== old.phoneNum && <Form.Control
                         type="text" 
                         name='Name'
-                        value={old.phoneNum} 
+                        value={data.phoneNum} 
                       disabled
                       />}
                 </Form.Group>
@@ -1037,14 +1037,14 @@ console.log(old)
                       <Form.Control
                         type="text" 
                         name='Name'
-                        value={data.school} 
+                        value={old.school} 
                       disabled
                       />
                       {data.school !== old.school && <p style={{margin:'0px',fontSize:'10px',fontStyle:'italic',fontWeight:'bold'}}>New!</p>}
                     {data.school !== old.school && <Form.Control
                         type="text" 
                         name='Name'
-                        value={old.school} 
+                        value={data.school} 
                       disabled
                       />}
                 </Form.Group>
@@ -1054,14 +1054,14 @@ console.log(old)
                       <Form.Control
                         type="text" 
                         name='Name'
-                        value={data.yearLevel} 
+                        value={old.yearLevel} 
                       disabled
                       />
                       {data.yearLevel !== old.yearLevel && <p style={{margin:'0px',fontSize:'10px',fontStyle:'italic',fontWeight:'bold'}}>New!</p>}
                     {data.yearLevel !== old.yearLevel && <Form.Control
                         type="text" 
                         name='Name'
-                        value={old.yearLevel} 
+                        value={data.yearLevel} 
                       disabled
                       />}
                 </Form.Group>
@@ -1071,14 +1071,14 @@ console.log(old)
                       <Form.Control
                         type="text" 
                         name='Name'
-                        value={data.gradeLevel} 
+                        value={old.gradeLevel} 
                       disabled
                       />
                       {data.gradeLevel !== old.gradeLevel && <p style={{margin:'0px',fontSize:'10px',fontStyle:'italic',fontWeight:'bold'}}>New!</p>}
                     {data.gradeLevel !== old.gradeLevel && <Form.Control
                         type="text" 
                         name='Name'
-                        value={old.gradeLevel} 
+                        value={data.gradeLevel} 
                       disabled
                       />}
                 </Form.Group>
@@ -1088,14 +1088,14 @@ console.log(old)
                       <Form.Control
                         type="text" 
                         name='Name'
-                        value={data.guardian} 
+                        value={old.guardian} 
                       disabled
                       />
                       {data.guardian !== old.guardian && <p style={{margin:'0px',fontSize:'10px',fontStyle:'italic',fontWeight:'bold'}}>New!</p>}
                       {data.guardian !== old.guardian && <Form.Control
                         type="text" 
                         name='Name'
-                        value={old.guardian} 
+                        value={data.guardian} 
                       disabled
                       />}
                 </Form.Group>
@@ -1105,14 +1105,14 @@ console.log(old)
                       <Form.Control
                         type="text" 
                         name='Name'
-                        value={data.Baranggay} 
+                        value={old.Baranggay} 
                       disabled
                       />
                       {data.Baranggay !== old.Baranggay && <p style={{margin:'0px',fontSize:'10px',fontStyle:'italic',fontWeight:'bold'}}>New!</p>}
                     {data.Baranggay !== old.Baranggay && <Form.Control
                         type="text" 
                         name='Name'
-                        value={old.school} 
+                        value={data.school} 
                       disabled
                       />}
                 </Form.Group>
