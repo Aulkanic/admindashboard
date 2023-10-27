@@ -236,7 +236,7 @@ const Navbar = () => {
       const now = new Date().toLocaleString("en-US", { timeZone });
     
       // Convert the input date to the specified time zone
-      const timestamp = new Date(date).toLocaleString("en-US", { timeZone });
+      const timestamp = new Date(date);
     
       // Convert both dates to timestamps
       const nowTimestamp = new Date(now).getTime();
