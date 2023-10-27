@@ -216,10 +216,7 @@ const Applicant = () => {
       setReqlist(totalsubdiv)
     }
     Fetch();
-    const intervalId = setInterval(Fetch, 5000);
-    return () => {
-      clearInterval(intervalId);
-    };
+
   }, []);
 
 // fucntions
@@ -251,6 +248,24 @@ const check = async (data, index) => {
   const requirement_Name = data.requirement_Name;
   const applicantNum = applicantsInfo[0].applicantCode;
   const adminName = admin[0].name;
+  if(!status[requirement_Name]){
+    swal({
+      text: 'Please select Status first',
+      timer: 2000,
+      buttons: false,
+      icon: "warning",
+    })
+    return
+}
+  if(!Comments[requirement_Name]){
+      swal({
+        text: 'Please select Comments first',
+        timer: 2000,
+        buttons: false,
+        icon: "warning",
+      })
+      return
+  }
   const formData = new FormData();
   formData.append('Comments', Comments[requirement_Name]);
   formData.append('requirement_Name', requirement_Name);
@@ -781,15 +796,31 @@ const style = {
       ...prevStatus,
       [requirement_Name]: value || prevStatus[requirement_Name] || 'Unchecked',
     }));
+    
+    if (value === 'Approved') {
+      // Set the comments to "Image Accepted" when the status is changed to "Approved"
+      setComments((prevComments) => ({
+        ...prevComments,
+        [requirement_Name]: 'Image Accepted',
+      }));
+    }else{
+      setComments((prevComments) => {
+        const updatedComments = { ...prevComments };
+        delete updatedComments[requirement_Name];
+        return updatedComments;
+      });
+    }
   };
 
   const handleCommentsChange = (e) => {
     const { value } = e.target;
     setComments((prevComments) => ({
       ...prevComments,
-      [requirement_Name]: value || prevComments[requirement_Name] || 'Image Accepted'
+      [requirement_Name]: value || prevComments[requirement_Name] || 'Image Accepted',
     }));
   };
+  console.log(data)
+  console.log(requirement_Name)
   return (
     <>
         <div className="Docuinfo">
@@ -805,6 +836,7 @@ const style = {
                       <RadioGroup
                         size='small'
                         row
+                        
                         aria-labelledby="demo-row-radio-buttons-group-label"
                         name="row-radio-buttons-group"
                         value={
@@ -820,18 +852,21 @@ const style = {
                       >
                         <FormControlLabel
                           value="Approved"
-                          control={<Radio checked={status[requirement_Name] === 'Approved'}/>}
+                          control={<Radio checked={status[requirement_Name] === 'Approved' || Status === 'Approved'}/>}
                           label="Approved"
+                          
                         />
                         <FormControlLabel
                           value="Reject"
                           control={<Radio checked={status[requirement_Name] === 'Reject'} />}
                           label="Reject"
+                          disabled={Status === 'Approved'}
                         />
                         <FormControlLabel
                           value="For_Review"
                           control={<Radio checked={status[requirement_Name] === 'For_Review'} />}
                           label="For Further Evaluation"
+                          disabled={Status === 'Approved'}
                         />
                       </RadioGroup>
                     </FormControl>
@@ -844,30 +879,42 @@ const style = {
                         row
                         aria-labelledby="demo-row-radio-buttons-group-label"
                         name="row-radio-buttons-group"
-                        value={Comments[requirement_Name] || 'Image Accepted'}
+                        value={
+                          status[Status] === 'Approved'
+                            ? 'Image Accepted'
+                            : Comments[requirement_Name]
+                        }
                         onChange={handleCommentsChange}
                       >
-                        <FormControlLabel
+                        {status[requirement_Name] === 'Approved' || Status === 'Approved' ? null :
+                          (<>
+                          <FormControlLabel
                           value="Blurred Images"
-                          control={<Radio checked={Comments[requirement_Name] === 'Blurred Images'} />}
+                          control={<Radio checked={Comments[requirement_Name] === 'Blurred Images' && status[requirement_Name] !== 'Approved'} />}
                           label="Blurred Images"
                         />
                         <FormControlLabel
                           value="Invalid File Image"
-                          control={<Radio checked={Comments[requirement_Name] === 'Invalid File Image'} />}
+                          control={<Radio checked={Comments[requirement_Name] === 'Invalid File Image' && status[requirement_Name] !== 'Approved'} />}
                           label="Invalid File Image"
                         />
-                        <FormControlLabel
+                        </>)
+                        }
+                        {status[requirement_Name] !== 'Approved' && Status !== 'Approved' ? null : 
+                        (<FormControlLabel
                           value="Image Accepted"
-                          control={<Radio checked={Comments[requirement_Name] === 'Image Accepted'} />}
+                          control={<Radio checked={Comments[requirement_Name] === 'Image Accepted' || status[requirement_Name] === 'Approved' || Status === 'Approved'} />}
                           label="Image Accepted"
-                        />
+                        />)}
                       </RadioGroup>
+                      {Status === 'Approved' && (<p style={{color:'green',fontWeight:'bold'}}>
+                        Already Checked
+                      </p>)}
                     </FormControl>
                   </div>
-                  <div>
+                  {Status !== 'Approved' && <div>
                     <StyledButtonEdit onClick={() => check(data, index)}><CheckCircleOutlineRoundedIcon/> Check </StyledButtonEdit>
-                  </div>
+                  </div>}
                 </div>
                 <div className="subdocsprev">
                   <button onClick={() => openImageModal(File)}>

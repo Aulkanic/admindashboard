@@ -23,6 +23,7 @@ import swal from 'sweetalert';
 import { useNavigate } from 'react-router-dom';
 import Popover from '@mui/material/Popover';
 import NotificationsRoundedIcon from '@mui/icons-material/NotificationsRounded';
+const moment = require('moment-timezone');
 
 
 const StyledBadge = styled(Badge)(({ theme }) => ({
@@ -229,9 +230,20 @@ const Navbar = () => {
     }
 
     function timeAgo(date) {
-      const timestamp = new Date(date)
-      const now = new Date();
-      const diffInSeconds = Math.floor((now - timestamp) / 1000);
+      const timeZone = "Asia/Manila";
+
+      // Get the current time in the specified time zone
+      const now = new Date().toLocaleString("en-US", { timeZone });
+    
+      // Convert the input date to the specified time zone
+      const timestamp = new Date(date).toLocaleString("en-US", { timeZone });
+    
+      // Convert both dates to timestamps
+      const nowTimestamp = new Date(now).getTime();
+      const timestampTimestamp = new Date(timestamp).getTime();
+    
+      const diffInSeconds = Math.floor((nowTimestamp - timestampTimestamp) / 1000);
+
     
       if (diffInSeconds < 10) {
         return "just now";

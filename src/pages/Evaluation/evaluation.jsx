@@ -475,6 +475,33 @@ const Evaluation = () => {
     const ScoreSlot = () =>{
       const data1 = passscore || passSlot.passingscore;
       const data2 = slots || passSlot.slots
+      if(data1 < 0 || data2 < 0){
+        swal({
+          title: "Failed",
+          text: "Not Accepted.It must not a negative number!",
+          icon: "error",
+          button: "OK",
+        });
+        return
+      }
+      if(data1 <= 49){
+        swal({
+          title: "Failed",
+          text: "Score not Accepted.It must be equal or greater than 50!",
+          icon: "error",
+          button: "OK",
+        });
+        return
+      }
+      if(data1 > 100){
+        swal({
+          title: "Failed",
+          text: "Score not Accepted.It must not greater than 100!",
+          icon: "error",
+          button: "OK",
+        });
+        return
+      }
       const formData = new FormData();
       formData.append('passscore',data1);
       formData.append('slots',data2);
@@ -878,7 +905,7 @@ const Evaluation = () => {
                     <TextField
                         id="outlined-number"
                         label="Passing Score"
-                        type="text"
+                        type="number"
                         size='small'
                         placeholder={passSlot.passingscore}
                         sx={{width:'30%',marginRight:5}}
@@ -892,7 +919,7 @@ const Evaluation = () => {
                         id="outlined-number"
                         label="Available Slot"
                         placeholder={passSlot.slots}
-                        type="text"
+                        type="number"
                         size='small'
                         sx={{width:'30%'}}
                         onChange={(e) =>setSlots(e.target.value)}
