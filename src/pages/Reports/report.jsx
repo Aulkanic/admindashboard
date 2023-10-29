@@ -485,20 +485,14 @@ const handleSubmitFilter = async () => {
                       <Button style={{backgroundColor:'white',color:'black'}} onClick={handleShow}><img style={{width:'15px'}} src={FilterIcon} alt='' />All Filters</Button>
                       <div>
                       <Button style={{marginRight:'10px'}} onClick={handlePrint}><BsFillPrinterFill style={{marginRight:'2px',marginTop:'-2px'}}/>Print</Button>
-                      
                       </div>
-
-                  
                     </div>
-                    <div id='printable'>
                     <Batch data={{filteredStudents,filterCriteria}}/>
-                    </div>
-
                   </Box>
                 </TabPanel>
 
                 <TabPanel value="2">
-                  <div id='printable'>
+                  <div >
                   <Payroll data={payroll}/>
                   </div>
           

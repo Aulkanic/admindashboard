@@ -9,11 +9,16 @@ import { styled } from '@mui/material/styles';
 import './payroll.css'
 import { useState } from 'react';
 import MYDO from '../../Images/mydo.jpg'
+import Marilao from '../../Images/marilao.jpg'
+import { FaLocationDot } from 'react-icons/fa6';
+import { TbWorldWww } from 'react-icons/tb';
+import { FiMail } from 'react-icons/fi';
+import { BsFacebook } from 'react-icons/bs';
 
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
     [`&.${tableCellClasses.head}`]: {
       backgroundColor: "#0047a4",
-      color: "black",
+      color: "white",
       fontWeight:'bold'
   
     },
@@ -47,10 +52,19 @@ const PrintablePage = (val) => {
     
       }));
   return (
-    <div id="component-to-print" style={{padding:'20px 0px 20px 0px'}}>
+    <div id="component-to-print">
         <div style={{display:'flex',justifyContent:'center',alignItems:'center',width:'100%',flexDirection:'column'}}>
-          <img src={MYDO} style={{width:'60px',heigt:'60px',objectFit:'contain'}} alt="" />
-        <h1 style={{fontWeight:'bold',margin:'0px'}}>{title}</h1>
+          <div style={{display:'flex',justifyContent:'space-between',alignItems:'center',width:'100vw',marginTop:'10px',padding:'10px'}}>
+          <img src={Marilao} style={{width:'100px',heigt:'100px',objectFit:'contain'}} alt="" />
+          <div style={{textAlign:'center'}}>
+            <p style={{margin:'0px',fontWeight:'bold',lineHeight:'16.45px',fontSize:'20px'}}>REPUBLIC OF THE PHILIPPINES</p>
+            <p style={{margin:'10px 0px 10px 0px',fontWeight:'bold',lineHeight:'16.45px',fontSize:'20px'}}>PROVINCE OF BULACAN</p>
+            <p style={{margin:'0px',fontWeight:'bold',lineHeight:'16.45px',fontSize:'20px'}}>MUNICIPAL GOVERNMENT OF BULACAN</p>
+          </div>
+          <img src={MYDO} style={{width:'200px',heigt:'200px',objectFit:'contain',borderRadius:'50%'}} alt="" />
+          </div>
+          
+          <h1 style={{fontWeight:'bold',margin:'0px'}}>{title}</h1>
         </div>
 
         <p><strong>Date:</strong>{formattedDate}</p>
@@ -99,6 +113,12 @@ const PrintablePage = (val) => {
           </span>
         ))}
       </div>}
+      <footer>
+        <div>
+        <FaLocationDot className='iconspr'/> 2nd Floor,New Marilao Municipal Bldg, Patubig,Marilao,Bulacan <TbWorldWww className='iconspr'/> www.marilao.gov.ph <FiMail className='iconspr'/> mayor@marilao.gov.ph  <BsFacebook className='iconspr'/> MYDO
+        </div>
+        
+      </footer>
     </div>
   )
 }
