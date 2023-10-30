@@ -19,11 +19,12 @@ import Batch from './batch';
 import Button from 'react-bootstrap/Button';
 import Offcanvas from 'react-bootstrap/Offcanvas';
 import FilterIcon from '../../Images/filter.png'
-import { Payrollreports,Userlistsreports } from '../../api/request';
+import { Payrollreports,Userlistsreports,DailyRep } from '../../api/request';
 import { FaFilter } from 'react-icons/fa';
 import { MdOutlineClear } from 'react-icons/md';
 import { BsFillPrinterFill } from 'react-icons/bs';
-
+import Select from '@mui/material/Select';
+import InputLabel from '@mui/material/InputLabel';
 
 
 const BpIcon = styled('span')(({ theme }) => ({
@@ -146,6 +147,7 @@ const Report = () => {
   const [selectedSchoprog, setSelectedSchoprog] = useState([]);
   const [filteredStudents, setFilteredStudents] = useState([]);
   const [selectedRem, setSelectedRem] = useState([]);
+  const [daterep,setDateRep] = useState('')
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
@@ -203,11 +205,23 @@ const Report = () => {
       setSchoprog(scho.data.SchoCat.sort((a, b) => a.name.localeCompare(b.name)))
     }
     Fetch()
-    const intervalId = setInterval(Fetch, 5000);
-    return () => {
-      clearInterval(intervalId);
-    };
+
 },[])
+
+useEffect(() =>{
+  async function Fetch(){
+    const formData = new FormData()
+    formData.append('Status',filterCriteria.Status)
+    formData.append('filter',daterep)
+    await DailyRep.REPORTS_DATE(formData)
+    .then((res) =>{
+      setFilteredStudents(res.data)
+    })
+  }
+  if(daterep !== ''){
+    Fetch()
+  }
+},[daterep])
 
 const handleSubmitFilter = async () => {
 
@@ -344,6 +358,14 @@ const handleSubmitFilter = async () => {
     setSelectedSchoprog([])
     setSelectedYearlevel([])
   }
+  var dateLabel =  '';
+  if(filterCriteria.Status ==='Applicant'){
+    dateLabel = 'Filter by Application Date';
+  }
+  if(filterCriteria.Status === 'Approved'){
+    dateLabel = 'Filter by Approval Date';
+  }
+
 
   return (
     <>
@@ -483,7 +505,24 @@ const handleSubmitFilter = async () => {
                   <Box>
                     <div style={{marginBottom:'15px',display:'flex',justifyContent:"space-between"}}>
                       <Button style={{backgroundColor:'white',color:'black'}} onClick={handleShow}><img style={{width:'15px'}} src={FilterIcon} alt='' />All Filters</Button>
-                      <div>
+                      <div style={{display:'flex',width:'400px',justifyContent:'space-between'}}>
+                      <div style={{width:'250px'}}>
+                        <FormControl fullWidth>
+                          <InputLabel id="demo-simple-select-label">{dateLabel}</InputLabel>
+                          <Select
+                            labelId="demo-simple-select-label"
+                            id="demo-simple-select"
+                            value={daterep}
+                            label={dateLabel}
+                            onChange={(e) =>setDateRep(e.target.value)}
+                          >
+                            <MenuItem value={'today'}>Today</MenuItem>
+                            <MenuItem value={'thisWeek'}>This Week</MenuItem>
+                            <MenuItem value={'thisMonth'}>This Month</MenuItem>
+                            <MenuItem value={'thisYear'}>This Year</MenuItem>
+                          </Select>
+                        </FormControl>
+                      </div>
                       <Button style={{marginRight:'10px'}} onClick={handlePrint}><BsFillPrinterFill style={{marginRight:'2px',marginTop:'-2px'}}/>Print</Button>
                       </div>
                     </div>

@@ -333,3 +333,6 @@ export const SeenAdminNotify = {
 export const DeclinedRenewal = {
     DECLINED: (data) => axiosInstance.post(Endpoints.DECLINED,data)
 }
+export const DailyRep = {
+    REPORTS_DATE: (data) => axiosInstance.post(Endpoints.ANNUAL,data)
+}

@@ -41,7 +41,7 @@ const PrintablePage = (val) => {
     const options = { year: 'numeric', month: 'long', day: 'numeric' };
     const formattedDate = date.toLocaleDateString('en-US', options);
     const [page, setPage] = React.useState(0);
-    const [rowsPerPage, setRowsPerPage] = useState(10);
+    const [rowsPerPage, setRowsPerPage] = useState(20);
     const columns = val.cols ? val.cols : []
     const title = val.head ? val.head : '';
     const totalRow = val.row ? val.row : [];
@@ -53,7 +53,7 @@ const PrintablePage = (val) => {
       }));
   return (
     <div id="component-to-print">
-        <div style={{display:'flex',justifyContent:'center',alignItems:'center',width:'100%',flexDirection:'column'}}>
+        <div style={{display:'flex',justifyContent:'left',alignItems:'left',width:'100%',flexDirection:'column'}}>
           <div style={{display:'flex',justifyContent:'space-between',alignItems:'center',width:'100vw',marginTop:'10px',padding:'10px'}}>
           <img src={Marilao} style={{width:'100px',heigt:'100px',objectFit:'contain'}} alt="" />
           <div style={{textAlign:'center'}}>
@@ -63,11 +63,12 @@ const PrintablePage = (val) => {
           </div>
           <img src={MYDO} style={{width:'200px',heigt:'200px',objectFit:'contain',borderRadius:'50%'}} alt="" />
           </div>
-          
+          <div style={{width:'100%',display:'flex',flexDirection:'column'}}>
           <h1 style={{fontWeight:'bold',margin:'0px'}}>{title}</h1>
-        </div>
+          <p><strong>Date:</strong>{formattedDate}</p>
+          </div>
 
-        <p><strong>Date:</strong>{formattedDate}</p>
+        </div>
         <TableContainer sx={tableContainerStyle}>
         <Table stickyHeader>
           <TableHead sx={{borderRadius:'5px 5px 0px 0px',backgroundColor:'black'}}>

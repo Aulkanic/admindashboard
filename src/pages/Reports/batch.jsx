@@ -22,36 +22,39 @@ function Batch(filterdata){
     yearLevel: capitalize(item.yearLevel),
 
   }));
-  const columns = [
-    { field: 'userNum', headerName: '#', width: 70 },
-    { field: 'Name', headerName: 'Name', width: 200 },
-    { field: 'gender', headerName: 'Gender', width: 100 },
-    { field: 'ScholarshipApplied', headerName: 'Scholarship Applied', width: 150 },
-    { field: 'remarks', headerName: 'Remarks', width: 130 },
-    { field: 'status', headerName: 'Status', width: 130 },
-    { field: 'baranggay', headerName: 'Baranggay', width: 170 },
-    { field: 'yearLevel', headerName: 'Year Level', width: 150 },
-    { field: 'batch', headerName: 'Batch', width: 130 },
-  ];
-  const columns1 = [
-    { field: 'userNum', headerName: '#', width: 30,  align: 'left', },
-    { field: 'Name', headerName: 'Name', width: 250,  align: 'left', },
-    { field: 'gender', headerName: 'Gender', width: 100,  align: 'left', },
-    { field: 'yearLevel', headerName: 'Year Level', width: 150,  align: 'left', },
-    { field: 'baranggay', headerName: 'Baranggay', width: 150,  align: 'left', },
-    { field: 'batch', headerName: 'Batch', width: 100,  align: 'left', },
-    { field: 'ScholarshipApplied', headerName: 'Scholarship Program', width: 170,  align: 'left', },
-  ];
+  
   let title = 'List of User Report';
+  let columns=[]
   if(stat === 'Applicant'){
-    title = 'List of Applicants Report'
+    title = 'List of Applicants Report';
+    columns = [
+      { field: 'userNum', headerName: '#', width: 50 },
+      { field: 'Name', headerName: 'Name', width: 170 },
+      { field: 'gender', headerName: 'Gender', width: 100 },
+      { field: 'ScholarshipApplied', headerName: 'Scholarship Applied', width: 100 },
+      { field: 'status', headerName: 'Status', width: 130 },
+      { field: 'baranggay', headerName: 'Baranggay', width: 150 },
+      { field: 'yearLevel', headerName: 'Year Level', width: 150 },
+      { field: 'batch', headerName: 'Batch', width: 130 },
+      { field: 'date', headerName: 'Date', width: 120 },
+    ];
   }
   if(stat === 'Approved'){
-    title = 'List of Scholars Report'
+    title = 'List of Scholars Report';
+    columns = [
+      { field: 'userNum', headerName: '#', width: 30,  align: 'left', },
+      { field: 'Name', headerName: 'Name', width: 250,  align: 'left', },
+      { field: 'gender', headerName: 'Gender', width: 100,  align: 'left', },
+      { field: 'yearLevel', headerName: 'Year Level', width: 150,  align: 'left', },
+      { field: 'baranggay', headerName: 'Baranggay', width: 150,  align: 'left', },
+      { field: 'batch', headerName: 'Batch', width: 100,  align: 'left', },
+      { field: 'ScholarshipApplied', headerName: 'Scholarship Program', width: 170,  align: 'left', },
+      { field: 'approveDate', headerName: 'Date', width: 150 },
+    ];
   }
   return (
     <>
-    <PrintablePage value={data} cols={columns1} head={title}/>
+    <PrintablePage value={data} cols={columns} head={title}/>
       <div>
         <Datatable props={modifiedList} col={columns}/>
       </div>
