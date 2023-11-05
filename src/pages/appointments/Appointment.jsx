@@ -403,7 +403,6 @@ const Appointment = () => {
       formData.append('guardian',dataappinfo.guardianName)
       SetApproved.SET_APPROVE(formData)
     .then(res => {
-      console.log(res)
       setQualified(res.data.results.data1)
       setAppointedList(res.data.results.data2)
       setShowBackdrop(false);
