@@ -1292,7 +1292,7 @@ console.log(old)
     </Card>
 
     </Box>
-    {screen === 0 && <Box sx={{ width: '100%',backgroundColor:'white',minHeight:'300px',height: 400 }}>
+    {screen === 0 && <Box sx={{ width: '100%',backgroundColor:'white',minHeight:'300px',height: 'maxContent' }}>
         <CustomDataGrid
         rows={data}
         columns={columns}
@@ -1301,7 +1301,7 @@ console.log(old)
         initialState={{
           pagination: {
             paginationModel: {
-              pageSize: 5,
+              pageSize: 10,
             },
           },
         }}
@@ -1312,7 +1312,7 @@ console.log(old)
         pageSizeOptions={[25]}
       />
     </Box>}
-    {screen === 1 && <Box sx={{width: '100%',backgroundColor:'white',minHeight:'300px',height: 400}}>
+    {screen === 1 && <Box sx={{width: '100%',backgroundColor:'white',minHeight:'300px',height: 'maxContent'}}>
         <CustomDataGrid
         sx={{minHeight:'300px'}}
         rows={NewScholar}
@@ -1322,7 +1322,7 @@ console.log(old)
         initialState={{
           pagination: {
             paginationModel: {
-              pageSize: 5,
+              pageSize: 10,
             },
           },
         }}
@@ -1332,7 +1332,7 @@ console.log(old)
         pageSizeOptions={[25]}
       />
     </Box>}
-    {screen === 2 && <Box sx={{ width: '100%',backgroundColor:'white',minHeight:'300px',height: 400 }}>
+    {screen === 2 && <Box sx={{ width: '100%',backgroundColor:'white',minHeight:'300px',height: 'maxContent' }}>
         <CustomDataGrid
         rows={ExistingScholar}
         columns={columns}
@@ -1341,7 +1341,7 @@ console.log(old)
         initialState={{
           pagination: {
             paginationModel: {
-              pageSize: 5,
+              pageSize: 10,
             },
           },
         }}
@@ -1355,7 +1355,7 @@ console.log(old)
     </Box>}
     {screen === 3 && 
     <>
-    <Box sx={{width: '100%',backgroundColor:'white',minHeight:'300px',height: 400}}>
+    <Box sx={{width: '100%',backgroundColor:'white',minHeight:'300px',height: 'maxContent'}}>
         <CustomDataGrid
         rows={PendingRenewal}
         columns={columns}
@@ -1364,7 +1364,7 @@ console.log(old)
         initialState={{
           pagination: {
             paginationModel: {
-              pageSize: 5,
+              pageSize: 10,
             },
           },
         }}

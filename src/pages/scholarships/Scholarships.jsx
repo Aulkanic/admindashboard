@@ -28,7 +28,8 @@ const StyledBackdrop = styled(Backdrop)(({ theme }) => ({
 
 const CustomDataGrid = styled(DataGrid)({
   '& .MuiDataGrid-columnHeaders': {
-    fontWeight:'bold'
+    fontWeight:'bold',
+    fontSize:'18px'
   },
 });
 

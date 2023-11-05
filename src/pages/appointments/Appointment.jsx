@@ -42,7 +42,7 @@ import CloseIcon from '@mui/icons-material/Close';
 import Slide from '@mui/material/Slide';
 import { styled, createTheme } from '@mui/material';
 import { Backdrop, CircularProgress } from '@mui/material';
-import NoAccountsIcon from '@mui/icons-material/NoAccounts';
+import UserIcon from '../../Images/userrandom.png'
 import { useSelector } from "react-redux";
 import CustomNoRowsOverlay from "../Design/Norows";
 
@@ -58,8 +58,6 @@ const CustomDataGrid = styled(DataGrid)({
   },
 
 });
-
-const theme = createTheme();
 const StyledBackdrop = styled(Backdrop)(({ theme }) => ({
   zIndex: theme.zIndex.drawer + 50,
   color: '#fff',
@@ -111,70 +109,6 @@ const Transition = React.forwardRef(function Transition(props, ref) {
 });
 
 
-const CustomTabs = styled(Tabs)({
-  '& .MuiTabs-flexContainer': {
-    color: 'white', 
-    backgroundColor:'#252525',
-    margin:'10px 10px 0px 0px',
-    borderRadius: '0px 15px 0 0',
-  },
-});
-const CustomTab = styled(Tab)(({ theme }) => ({
-  textTransform: 'none',
-  minWidth: 100,
-  color:'white',
-  [theme.breakpoints.up('sm')]: {
-    minWidth: 120,
-  },
-}));
-const StyledButton = styled(Button)`
-  && {
-    float: right;
-    background-color: red;
-    color:white;
-    transition: opacity 0.3s ease;
-
-    &:hover {
-      opacity: 0.8;
-    }
-  }
-`;
-const StyledButtonEdit = styled(Button)`
-  && {
-    background-color: green;
-    color:white;
-    margin-right:10px;
-    transition: opacity 0.3s ease;
-
-    &:hover {
-      opacity: 0.8;
-    }
-  }
-`;
-const StyledButtonAccess = styled(Button)`
-  && {
-    background-color: yellow;
-    color:white;
-    margin-right:10px;
-    transition: opacity 0.3s ease;
-
-    &:hover {
-      opacity: 0.8;
-    }
-  }
-`;
-const ViewButton = styled(Button)`
-  && {
-    background-color: blue;
-    color:white;
-    margin-right:10px;
-    transition: opacity 0.3s ease;
-
-    &:hover {
-      opacity: 0.8;
-    }
-  }
-`;
 
 
 const Appointment = () => {
@@ -198,7 +132,6 @@ const Appointment = () => {
   const [showBackdrop, setShowBackdrop] = useState(false);
   const [failinf,setFailInf] = useState([]);
   const [value, setValue] = React.useState(0);
-  const [value1, setValue1] = React.useState(0);
   const [step,setStep] = useState(0)
   const [rowSelectionModel, setRowSelectionModel] = useState([]);
   const [failedSelectionModel,setFailedSelectionModel] = useState([]);
@@ -212,7 +145,6 @@ const Appointment = () => {
   const [userFulldocs,setUserFulldocs] = useState([]);
   const [imageModalOpen, setImageModalOpen] = useState(false);
   const [selectedImage, setSelectedImage] = useState({});
-  const [access,setAccess] = useState([])
   const [who,setWho] = useState('');
   const [isSend,setIsSend] = useState('No');
   const [email,setEmail] = useState('');
@@ -224,6 +156,7 @@ const Appointment = () => {
   const [activeState,setActiveState] = useState('All');
   const [userAppsched,setUserAppsched] = useState([]);
   const [siblings,setSiblings] = useState([]);
+  const [active,setActive] = useState(0)
 
   const handleOpenDialog1 = (data) => {
     setOpenDialog1(true);
@@ -248,13 +181,6 @@ const Appointment = () => {
 
   const handleChange = (event, newValue) => {
     setValue(newValue);
-  };
-  const handleChange1 = (event, newValue) => {
-    setValue1(newValue);
-  };
-  const openImageModal = (image,name) => {
-    setSelectedImage({image,name});
-    setImageModalOpen(true);
   };
   
   const closeImageModal = () => {
@@ -288,9 +214,6 @@ const Appointment = () => {
       const response = await FetchingQualified.FETCH_QUALIFIED();
       const listing  = await FetchingAppointList.FETCH_LISTAPPOINT();
       const list = response.data.List.filter(user => user.isAppointed === 'No');
-      let acc = await ListAccess.ACCESS()
-      const empacc = acc.data.result?.filter(data => data.employeeName === admin[0].name)
-      setAccess(empacc)
       setQualified(list);
       setAppointedList(listing.data.AppointmentList)
     }
@@ -1235,15 +1158,9 @@ try {
       editable: true,
     },
     {
-      field: 'Status',
-      headerName: 'Status',
-      width: 100,
-      editable: true,
-    },
-    {
       field: 'Reason',
       headerName: 'Agenda',
-      width: 150,
+      width: 170,
       editable: true,
     },
     {
@@ -1273,7 +1190,7 @@ try {
     {
       field: 'yearLevel',
       headerName: 'Year Level',
-      width: 150,
+      width: 200,
       editable: true,
     },
     {
@@ -1291,7 +1208,7 @@ try {
         onClick={() => Approved(params.row)}>
           SET QUALIFIED
           </button>)}
-          <button className='btnofficials2'
+          <button style={{marginLeft:'5px'}} className='btnofficials2'
         onClick={() => handleOpenDialog2(params.row)}>
           Failed
           </button>
@@ -1311,21 +1228,24 @@ try {
   ? appointedList.filter(user => user.isPassed === 'False')
   : '';
   const ReappointList = appointedList && appointedList.length > 0
-  ? appointedList.filter(user => user.canGo === 'No' && user.isInterview !== 'Reappoint')
+  ? appointedList.filter(user => user.canGo === 'No' && user.isInterview !== 'Reappoint' && user.Status === 'Qualified')
   : '';
   const Noresponse = appointedList && appointedList.length > 0
-  ? appointedList.filter(user => user.canGo === 'Pending')
+  ? appointedList.filter(user => user.canGo === 'Pending' &&  user.Status === 'Qualified')
   : '';
-
   const userApplicationFrm = userForm?.map((data,index)=>{
     return(
-      <div style={{display:'flex',alignItems:'center',margin:'10px',height:"maxContent",justifyContent:'left'}} key={index}>
-      <Chip sx={{width:'50px',marginRight:'5px',marginTop:'-15px'}} label={data.score} color="primary" />
-      <p><strong>{index + 1}.</strong> {data.question} {data.answer}</p>
+      <div className='frmlistq' key={index}>
+      <Chip sx={{width:'60px',position:'absolute',left:0,top:10}} label={data.score} color="primary" />
+      <div style={{}}>
+        <p style={{margin:'0px',fontSize:'20px',fontWeight:'700',backgroundColor:'#f1f3fa',padding:'10px',width:'100%',borderRadius:'10px'}}>
+          <strong>{index + 1}.</strong> {data.question} 
+        </p>
+        <p style={{margin:'0px',fontSize:'18px',marginTop:'10px',marginLeft:'20px',fontStyle:'italic'}}>- {data.answer}</p>
+      </div>
       </div>
     )
   })
-
   return (
     <>
       <StyledBackdrop open={showBackdrop}>
@@ -1421,7 +1341,7 @@ try {
         overflow:'auto',
         width:'80%'
       }}>
-        <Card style={{padding:'10px',height:'90%',overflow:'auto'}}>
+      <Card style={{padding:'10px',height:'90%',overflow:'auto'}}>
           <h3>Select User To be Added in Appointed Schedule</h3>
         <div style={{width:'100%'}}>
               <button className='btnofficials2' onClick={handleClose}> X </button>
@@ -1432,7 +1352,7 @@ try {
           </button>
           </div>  
       <DataGrid
-                      rows={Qualified}
+        rows={Qualified}
                       columns={columns}
                       getRowId={(row) => row.applicantNum}
                       scrollbarSize={10}
@@ -1448,8 +1368,8 @@ try {
                       onRowSelectionModelChange={handleRowSelectionModelChange}
                       rowSelectionModel={rowSelectionModel}
                       disableRowSelectionOnClick
-                    /> 
-    </Card>
+      /> 
+      </Card>
       </Box>
       </Modal>
       <Dialog
@@ -1479,114 +1399,287 @@ try {
             </button>
           </Toolbar>
         </AppBar>
-      <Box sx={{width:'98.5%',padding:'10px',height:'100%',display:'flex',backgroundColor:'whitesmoke'}}>
-         <div style={{width:'35%',marginLeft:'20px',minHeight:'100vh',maxHeight:'maxContent'}}>
-            <div className="imgprofatp">
-            {userFulldet.profile ? (<img
-                alt="Remy Sharp"
-                src={userFulldet.profile}
-              />) : (<p>No Image</p>)}
-            </div>
-            <div style={{width:'100%',height:'41%'}}>
-              <div className="aptuserdetails">
-                <p>Name:{userFulldet.Name}</p>
-                <p>Age:{userFulldet.age}</p>
-                <p>Applicant Code: {userFulldet.applicantCode}</p>
-                <p>Status: {userFulldet.status}</p>
-                <p>Date Applied: {userFulldet.DateApplied}</p>
-                <p>Scholarship Applied: {userFulldet.SchoIarshipApplied}</p>
-              </div>
-            </div>
+      <Box sx={{width:'100%',padding:'10px',height:'maxContent',display:'flex',backgroundColor:'whitesmoke'}}>
+        <div style={{width:'30%',backgroundColor:'#f1f3fa',display:'flex',flexDirection:'column',alignItems:'center',paddingTop:'2%'}}>
+            <Card elevation={2} style={{backgroundColor:'white',width:"75%",height:'350px',marginBottom:'50px',display:'flex',flexDirection:'column',borderRadius:'5px'}}>
+                <div style={{width:'90%'}}>
+                  <h1 style={{margin:'10px 0px 0px 30px',fontSize:'25px',borderBottom:'5px solid #f1f3fa',color:'#7F7E7D',paddingBottom:'5px'}}>
+                    Applicant Profile
+                  </h1>
+                </div>
+                <div style={{display:'flex',flexDirection:"column",justifyContent:'center',alignItems:'center',marginTop:'20px',position:'relative'}}>
+                  {userFulldet.profile ? (
+                    <>
+                    <img 
+                    style={{width:'200px',height:'200px',borderRadius:'50%',objectFit:'cover',border:'2px solid black'}}
+                    src={userFulldet.profile}
+                     alt="" />
+                    </>
+                  ) : (
+                    <>
+                    <img 
+                    style={{width:'200px',height:'200px',borderRadius:'50%',objectFit:'cover',border:'2px solid black'}}
+                    src={UserIcon} 
+                    alt="" />
+                    </>
+                  )}
+                </div>
+                <div style={{display:'flex',justifyContent:'center',alignItems:'center',marginTop:'20px'}}>
+                  <h1 style={{fontSize:'18px',margin:'0px',fontWeight:'bold'}}>
+                    {userFulldet.Name}
+                  </h1>
+                </div>
+            </Card>
+            <Card elevation={2} style={{backgroundColor:'white',width:"75%",height:'max-content'}}>
+               <div style={{width:'90%'}}>
+                  <h1 style={{margin:'10px 0px 0px 30px',fontSize:'20px',borderBottom:'5px solid #f1f3fa',color:'#7F7E7D',paddingBottom:'5px'}}>
+                    Applicant Information
+                  </h1>
+                </div>
+                <div style={{display:'flex',flexDirection:'column',padding:'15px'}}>
+                  <p><strong>Applicant Code:</strong> {userFulldet.Name}</p>
+                  <p><strong>Scholarship Applied:</strong> {userFulldet.ScholarshipApplied
+                     }</p>
+                  <p><strong>Date Applied:</strong> {userFulldet.date}</p>
+                  <p><strong>Batch:</strong> {userFulldet.Batch}</p>
+                </div>
+            </Card>
          </div>
-         <div style={{width:'65%'}}>
-
-            <CustomTabs
-            value={value1}
-            onChange={handleChange1}
-            variant="scrollable"
-            scrollButtons="auto"
-            aria-label="scrollable auto tabs example"
-          >
-            <CustomTab label="User Information" />
-            <CustomTab label="Application Form" />
-            <CustomTab label="Documents Submitted" />
-          </CustomTabs>
-          {value1 === 0 && <>
-           
-            <div className="appuserfrm">
-              <div>
-                <h2>Personal Information</h2>
-                <div className="aptuser">
-                <p><strong>Name: </strong>{userFulldet.Name}</p>
-                <p><strong>Gender: </strong>{userFulldet.gender}</p>
-                <p><strong>Address: </strong>{userFulldet.address}</p>
-                <p><strong>Baranggay: </strong>{userFulldet.baranggay}</p>
-                <p><strong>Birthday: </strong>{userFulldet.birthday}</p>
-                <p><strong>Place of Birth: </strong>{userFulldet.birthPlace}</p>
-                </div>
-
-              </div>
-              <div className="aptuser">
-                <p><strong>Email: </strong>{userFulldet.email}</p>
-                <p><strong>Contact Number: </strong>{userFulldet.contactNum}</p>
-                <p><strong>School: </strong>{userFulldet.school}</p>
-                <p><strong>School Address: </strong>{userFulldet.schoolAddress}</p>
-                <p><strong>Year Level: </strong>{userFulldet.yearLevel}</p>
-                <p><strong>Grade/Year: </strong>{userFulldet.yearLevel}</p>
-                <p><strong>Course: </strong>{userFulldet.course}</p>
-                </div>
-              <div className="aptuser">
-                <h2>Family Information</h2>
-                <h3 className="aptheader">Father</h3>
-                <p><strong>Name: </strong>{userFulldet.fatherName}</p>
-                <p><strong>Highest Educational Attaintment: </strong>{userFulldet.fatherEducation}</p>
-                <p><strong>Occupation: </strong>{userFulldet.fatherOccupation}</p>
-                <h3 className="aptheader">Mother</h3>
-                <p><strong>Name: </strong>{userFulldet.motherName}</p>
-                <p><strong>Highest Educational Attaintment: </strong>{userFulldet.motherEducation}</p>
-                <p><strong>Occupation: </strong>{userFulldet.motherOccupation}</p>
-
-              </div>
-              <div className="aptuser">
-                <h3 className="aptheader">Guardian</h3>
-                <p><strong>Name: </strong>{userFulldet.guardianName}</p>
-                <p><strong>Address: </strong>{userFulldet.guardianAddress}</p>
-                <p><strong>Contact Number: </strong>{userFulldet.guardianContact}</p>
-                <h3 className="aptheader">Siblings</h3>
-                {siblings.length > 0 ? (<ul>
-                  {siblings?.map((data,index) =>{
-                    return(
-                      <li key={index}>{data.siblingName}</li>
-                    )
-                  })}
-                </ul>) : (<p>Only Child</p>)}
-              </div>
-            </div>
-          </>}
-          {value1 === 1 && <>
-          <div className="aptfrmuserscore">
-            {userApplicationFrm}
-          </div>
-          </>}
-          {value1 === 2 && <>
-            <div className="subdocsappdet">
-            {userFulldocs?.map((data) =>{
-              return (
-                <div className="imgdocuapt">
-                  <button onClick={() => openImageModal(data.File,data.requirement_Name)}>
-                    <p>{data.requirement_Name}</p>
-                  <img
-                    src={data.File}
-                    alt=""
-                  />
+         <div style={{width:'70%',backgroundColor:'#f1f3fa',display:'flex',flexDirection:'column',alignItems:'center',paddingTop:'2%'}}>
+            <Card elevation={0} style={{backgroundColor:'transparent',width:'95%',height:'150px',marginBottom:'20px',padding:'15px 10px 30px 35px'}}>
+              <h1>Applicant Information</h1>
+              <p>You can see applicant information</p>
+            </Card>
+            <Card elevation={0} style={{backgroundColor:'transparent',width:'95%',height:'100%'}}>
+                <div>
+                  <button
+                  onClick={() => setActive(0)}
+                  className={active === 0 ? 'evalActivepage1' : 'evalPage1'}
+                  >
+                    Personal Info
+                  </button>
+                  <button
+                  style={{margin:'0px 10px 0px 10px'}}
+                  onClick={() => setActive(1)}
+                  className={active === 1 ? 'evalActivepage1' : 'evalPage1'}
+                  >
+                    Parents Info
+                  </button>
+                  <button
+                  onClick={() => setActive(2)}
+                  className={active === 2 ? 'evalActivepage1' : 'evalPage1'}
+                  style={{marginRight:'10px'}}
+                  >
+                    Application Form
+                  </button>
+                  <button
+                  onClick={() => setActive(3)}
+                  className={active === 3 ? 'evalActivepage1' : 'evalPage1'}
+                  >
+                    Documents
                   </button>
                 </div>
-              )
-            })}
-        </div>
-          </>}
+                <Card sx={{width:'100%',height:"maxContent",padding:'20px'}}>
+                    {
+                      active===0 && (
+                        <div className='formpersona' style={{width:'100%',height:'100%',padding:'20px'}}>
+                          <div className='formpersonaChild'>
+                            <label htmlFor="">Name</label>
+                            <input 
+                            type="text" 
+                            value={userFulldet.Name} disabled />
+                          </div>
+                          <div className='formpersonaChild'>
+                            <label htmlFor="">Barangay</label>
+                            <input 
+                            type="text" 
+                            value={userFulldet.baranggay} disabled />
+                          </div>
+                          <div className='formpersonaChild'>
+                            <label htmlFor="">Email</label>
+                            <input 
+                            type="text" 
+                            value={userFulldet.email} disabled />
+                          </div>
+                          <div className='formpersonaChild'>
+                            <label htmlFor="">Birthday</label>
+                            <input 
+                            type="text" 
+                            value={userFulldet.birthday} disabled />
+                          </div>
+                          <div className='formpersonaChild'>
+                            <label htmlFor="">Contact Number</label>
+                            <input 
+                            type="text" 
+                            value={userFulldet.contactNum} disabled />
+                          </div>
+                          <div className='formpersonaChild'>
+                            <div style={{display:'flex'}}>
+                              <div style={{display:'flex',flexDirection:'column',marginRight:'10px'}}>
+                                <label htmlFor="">Gender</label>
+                                <input 
+                                style={{width:"200px"}}
+                                type="text" 
+                                value={userFulldet.gender} disabled />
+                              </div>
+                              <div style={{display:'flex',flexDirection:'column'}}>
+                                <label htmlFor="">Age</label>
+                                <input 
+                                style={{width:"200px"}}
+                                type="text" 
+                                value={userFulldet.age} disabled />
+                              </div>
+                            </div>
+                          </div>
+                          <div className='formpersonaChild1'>
+                            <label htmlFor="">Place of Birth</label>
+                            <input 
+                            type="text" 
+                            value={userFulldet.birthPlace} disabled />
+                          </div>
+                          <div className='formpersonaChild1'>
+                            <label htmlFor="">Address</label>
+                            <input 
+                            type="text" 
+                            value={userFulldet.address} disabled />
+                          </div>
+                        </div>
+                      )
+                    }
+                    {
+                      active === 1 && (
+                        <>
+                        <div className='famcon'>
+                          <div>
+                          <h1 style={{margin:'0px',fontSize:'25px',fontWeight:'bold'}}>Father Information</h1>
+                          <div className='fdetails'>
+                            <div>
+                              <label htmlFor="">Full Name</label>
+                              <input 
+                              type="text" 
+                              value={userFulldet.fatherName} disabled />
+                            </div>
+                            <div>
+                              <label htmlFor="">Highest Educational Attaintment</label>
+                              <input 
+                              type="text" 
+                              value={userFulldet.fatherEducation} disabled />
+                            </div>
+                            <div>
+                              <label htmlFor="">Occupation</label>
+                              <input 
+                              type="text" 
+                              value={userFulldet.fatherOccupation} disabled />
+                            </div>
+                          </div>
+                          </div>
+                          <div>
+                          <h1 style={{margin:'0px',fontSize:'25px',fontWeight:'bold'}}>Mother Information</h1>
+                          <div className='fdetails'>
+                            <div>
+                              <label htmlFor="">Full Name</label>
+                              <input 
+                              type="text" 
+                              value={userFulldet.motherName} disabled />
+                            </div>
+                            <div>
+                              <label htmlFor="">Highest Educational Attaintment</label>
+                              <input 
+                              type="text" 
+                              value={userFulldet.motherEducation} disabled />
+                            </div>
+                            <div>
+                              <label htmlFor="">Occupation</label>
+                              <input 
+                              type="text" 
+                              value={userFulldet.motherOccupation} disabled />
+                            </div>
+                          </div>
+                          </div>
+                          <div style={{height:'max-content'}}>
+                          <h1 style={{margin:'0px',fontSize:'25px',fontWeight:'bold'}}>Guardian Information</h1>
+                          <div className='fdetails'>
+                            <div>
+                              <label htmlFor="">Full Name</label>
+                              <input 
+                              type="text" 
+                              value={userFulldet.guardianName} disabled />
+                            </div>
+                            <div>
+                              <label htmlFor="">Relationship</label>
+                              <input 
+                              type="text" 
+                              value={userFulldet.relationship} disabled />
+                            </div>
+                            <div>
+                              <label htmlFor="">Address</label>
+                              <input 
+                              type="text" 
+                              value={userFulldet.guardianAddress} disabled />
+                            </div>
+                            <div>
+                              <label htmlFor="">Contact Number</label>
+                              <input 
+                              type="text" 
+                              value={userFulldet.guardianContact} disabled />
+                            </div>
+                          </div>
+                          </div>
+                          <div style={{height:'max-content'}}>
+                          <h1 style={{margin:'0px',fontSize:'25px',fontWeight:'bold'}}>List of Siblings</h1>
+                          {siblings.length > 0 ? (<div className='fdetails'>
+                            {siblings?.map((data,index) =>{
+                              return(
+                                <div key={index}>
+                                <label htmlFor="">Full Name</label>
+                                <input 
+                                type="text" 
+                                value={data.siblingName} disabled />
+                              </div>
+                              )
+                            })}
 
-         </div>
+                          </div>) : (
+                            <p style={{fontSize:'20px',fontWeight:'500',fontStyle:'italic',marginTop:'20px',marginLeft:'20px'}}>Only Child.</p>
+                          )}
+                          </div>
+                        </div>
+                        </>
+                      )
+                    }
+                    {
+                      active === 2 && (
+                        <>
+                        <div>
+                          <h1 style={{fontSize:'27px',fontWeight:'bold',marginBottom:'15px'}}>
+                            Total Score: {userFulldet.score}/100
+                          </h1>
+                         {userApplicationFrm}
+                        </div>
+                        </>
+                      )
+                    }
+                    {
+                      active === 3 && (
+                        <>
+                        <div className="appDocs">
+                          {userFulldocs.map((data,index) =>{
+                            return (
+                              <div key={index} className="docslistapp">
+                                <p style={{position:'absolute'}}>{data.requirement_Name}</p>
+                                <img 
+                                src={data.File} 
+                                alt="" />
+                              </div>
+                            )
+                          })}
+                        </div>
+                        </>
+                      )
+                    }
+                </Card>
+            </Card>
+         </div>          
       </Box>
       </Dialog>
     <div className="appointment">
@@ -1658,11 +1751,12 @@ try {
           <h3 style={{ fontSize: 20,fontWeight:'900',color:'black',lineHeight:'17.57px',fontFamily:'Roboto Serif',textAlign:'left',margin:'20px 0px 20px 0px' }}>Set Appointment Details</h3>
             
             <div className="appinf">
-            <InputLabel sx={{color:'black',fontWeight:'bold'}}>Agenda:</InputLabel>
+            <InputLabel sx={{color:'black',fontWeight:'bold',marginBottom:'10px'}}>Agenda:</InputLabel>
             <TextField 
             fullWidth
             id="outlined-basic" 
             value={Agenda}
+            size="small"
             onChange={(e) => setAgenda(e.target.value)} 
             variant="outlined" /> 
           {errors.agenda && <MuiAlert 
@@ -1677,11 +1771,12 @@ try {
               </MuiAlert>}    
             </div>
             <div className="appinf">
-            <InputLabel sx={{color:'black',fontWeight:'bold'}}>Location:</InputLabel>
+            <InputLabel sx={{color:'black',fontWeight:'bold',marginBottom:'10px'}}>Location:</InputLabel>
           <TextField 
             fullWidth
             id="outlined-basic" 
             value={Location}
+            size="small"
             onChange={(e) => setLocation(e.target.value)}
             variant="outlined" /> 
               {errors.location && <MuiAlert 
@@ -1696,7 +1791,7 @@ try {
               </MuiAlert>}
             </div>
             <div style={{display:'flex'}}>
-            <div style={{marginRight:'20px'}}>
+            <div style={{marginRight:'20px',width:'50%'}}>
             <InputLabel sx={{color:'black',fontWeight:'bold'}}>Time start:</InputLabel>
             <LocalizationProvider dateAdapter={AdapterDayjs}>
             <DemoContainer components={['TimeField', 'TimeField', 'TimeField']}>
@@ -1708,6 +1803,7 @@ try {
                             },
                           }}
                 value={startTime}
+                fullWidth
                 onChange={(newValue) => setStartTime(newValue)}
                 format="hh:mm A"
               />
@@ -1724,7 +1820,7 @@ try {
             </DemoContainer>
             </LocalizationProvider>
             </div>
-            <div>
+            <div style={{width:'55%'}}>
             <InputLabel sx={{color:'black',fontWeight:'bold'}}>Time end:</InputLabel>
             <LocalizationProvider dateAdapter={AdapterDayjs}>
             <DemoContainer components={['TimeField', 'TimeField', 'TimeField']}>
@@ -1755,8 +1851,8 @@ try {
             </div>
             </div>
             <div>
-            <CardContent>
-                  <Typography sx={{color:'black',fontWeight:'bold'}} gutterBottom>
+            <div style={{marginTop:'10px'}}>
+                  <Typography sx={{color:'black',fontWeight:'bold',marginBottom:'10px'}} gutterBottom>
                     Reminders:
                   </Typography>
                   <Typography variant="h5" component="div">
@@ -1767,7 +1863,7 @@ try {
                     rows={10} fullWidth id="input-with-sx" label="" variant="outlined" />
                 </Box>
                   </Typography>
-                </CardContent>
+            </div>
             </div>
         </div>
       </div>
@@ -1781,7 +1877,7 @@ try {
       <div className="applicalist">
         <div style={{width:'100%',display:'flex'}}>
 
-            <Card style={{width:'100%'}}>
+            <Card style={{width:'100%',height:'max-content'}}>
             <div style={{ fontSize: 20,fontWeight:'900',color:'white',lineHeight:'17.57px',fontFamily:'Roboto Serif',textAlign:'center',backgroundColor:'#043F97',padding:'15px 0px 15px 0px',borderTopRightRadius:'10px',borderTopLeftRadius:'10px',display:'flex',justifyContent:'center',alignItems:'center' }}>
             <h2 style={{color:'white'}}>Select User to be Appointed</h2>
             </div>
@@ -1793,7 +1889,7 @@ try {
                       initialState={{
                         pagination: {
                           paginationModel: {
-                            pageSize: 5,
+                            pageSize: 10,
                           },
                         },
                       }}
@@ -1892,7 +1988,9 @@ try {
                     <Link
                       underline="none"
                       sx={{
-                        color: activeState === 'All' ? 'white' : 'black',
+                        color:'white',
+                        borderBottom: activeState === 'All' ? '5px solid white' : 'none',
+                        transition:'all 0.3s ease-in-out',
                         display:'flex',
                         alignItems:'center'
                       }}
@@ -1905,7 +2003,9 @@ try {
                     <Link
                       underline="none"
                       sx={{
-                        color: activeState === 'Passed' ? 'white' : 'black',
+                        color: 'white',
+                        borderBottom: activeState === 'Passed' ? '5px solid white' : 'none',
+                        transition:'all 0.3s ease-in-out',
                         display:'flex',
                         alignItems:'center'
                       }}
@@ -1918,7 +2018,9 @@ try {
                     <Link
                       underline="none"
                       sx={{
-                        color: activeState === 'Reject' ? 'white' : 'black',
+                        color: 'white',
+                        borderBottom: activeState === 'Reject' ? '5px solid white' : 'none',
+                        transition:'all 0.3s ease-in-out',
                         display:'flex',
                         alignItems:'center'
                       }}
@@ -1931,7 +2033,9 @@ try {
                     <Link
                       underline="none"
                       sx={{
-                        color: activeState === 'Reapp' ? 'white' : 'black',
+                        color: 'white',
+                        borderBottom: activeState === 'Reapp' ? '5px solid white' : 'none',
+                        transition:'all 0.3s ease-in-out',
                         display:'flex',
                         alignItems:'center'
                       }}
@@ -1944,7 +2048,9 @@ try {
                     <Link
                       underline="none"
                       sx={{
-                        color: activeState === 'Nores' ? 'white' : 'black',
+                        color: 'white',
+                        borderBottom: activeState === 'Nores' ? '5px solid white' : 'none',
+                        transition:'all 0.3s ease-in-out',
                         display:'flex',
                         alignItems:'center'
                       }}

@@ -7,6 +7,7 @@ import { Box,Card } from "@mui/material";
 import { styled } from '@mui/material/styles';
 import { DataGrid} from '@mui/x-data-grid';
 import Avatar from '@mui/material/Avatar';
+import { CircularProgress, Typography } from '@mui/material';
 import Chip from '@mui/material/Chip';
 import './user.css'
 
@@ -111,7 +112,24 @@ const Users = () => {
           <p className="scorecardh"> Users Account List </p>
       <Box>
         <Card sx={{width:'100%'}}>
-        <CustomDataGrid
+        {display.length === 0 ? (
+        <div
+        style={{
+          position: 'absolute',
+          top: '50%',
+          left: '50%',
+          transform: 'translate(-50%, -50%)',
+          textAlign: 'center',
+        }}
+      >
+        <div style={{ marginBottom: '16px' }}>
+          <CircularProgress />
+        </div>
+        <div>
+          <p>Loading...</p>
+          <div className="loading-animation"></div>
+        </div>
+      </div>) : (<CustomDataGrid
               rows={display}
               columns={columns}
               getRowId={(row) => row.applicantNum}
@@ -119,10 +137,10 @@ const Users = () => {
               initialState={{
                 pagination: {
                   paginationModel: {
-                    pageSize: 5,
+                    pageSize: 10,
                   },},}}
-              pageSizeOptions={[25]}
-            />
+              pageSizeOptions={[20,30]}
+            />)}
             </Card>
           </Box>
         </div>

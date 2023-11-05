@@ -182,8 +182,7 @@ const Contact = () => {
       .then(res => {
         console.log(res)
         setReqlist(res.data.Requirements);
-        setShowBackdrop(false);
-        setOpen(true)
+        setShowBackdrop(false)
         swal({
           title: "Success",
           text: "Created Successfilly!",
@@ -222,10 +221,10 @@ const Contact = () => {
     const formData = new FormData();
     formData.append('newDeadline',date);
     formData.append('reqid',selected.requirementID)
+    setOpenDialog(false)
     setShowBackdrop(true);
     NewDeadline.NEW_DEADLINE(formData)
     .then(res => {
-      console.log(res)
       setReqlist(res.data.Requirements.results1);
       setOpenDialog(false)
       setShowBackdrop(false);

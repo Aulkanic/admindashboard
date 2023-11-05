@@ -513,6 +513,7 @@ const handleSubmitFilter = async () => {
                             labelId="demo-simple-select-label"
                             id="demo-simple-select"
                             value={daterep}
+                            size='small'
                             label={dateLabel}
                             onChange={(e) =>setDateRep(e.target.value)}
                           >

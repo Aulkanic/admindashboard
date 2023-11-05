@@ -99,3 +99,48 @@
     font-size: 30px;
     font-weight: bold;
 }
+.evalActivepage1{
+    transition: all 0.3s ease-in-out;
+    padding: 10px 30px 5px 20px;
+    background-color: white;
+    border: none;
+    font-weight: 900;
+    width: 250px;
+    border-top: 5px solid #0EB3E8;
+}
+.evalPage1{
+    transition: all 0.3s ease-in-out;
+    padding: 10px 30px 5px 20px;
+    background-color: white;
+    border: none;
+    width: 200px;
+    font-weight: 700;
+}
+.appDocs{
+    width: 100%;
+    height: max-content;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+}
+.docslistapp{
+    flex: 1;
+    display: flex;
+    position: relative;
+    flex-direction: column;
+    flex-basis: calc(50% - 20px);
+    min-width: 200px;
+    max-width: calc(50% - 20px);
+    height: 250px;
+    padding: 10px;
+    margin: 5px;
+}
+.docslistapp img{
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+}
+.docslistapp p{
+    top: -10px;
+    font-weight: 700;
+}

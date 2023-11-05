@@ -36,6 +36,14 @@ const Login = () => {
 
     const handleSubmit = async(e) => {
       e.preventDefault();
+      if(!email || !password){
+        swal({
+          text: 'Please provide email and password first',
+          timer: 2000,
+          buttons: false,
+          icon: "error",
+        })
+      }
       setShowBackdrop(true);
       await login.ADMIN_LOGIN({email,password}).then((res) =>{
       if(res.data.message === 'Success'){

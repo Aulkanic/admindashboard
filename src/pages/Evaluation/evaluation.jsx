@@ -3,7 +3,7 @@ import './evaluation.css'
 import Sidebar from '../../components/sidebar/Sidebar'
 import Navbar from '../../components/navbar/Navbar'
 import { DataGrid,} from '@mui/x-data-grid';
-import { Tabs, Tab, Box, Modal,Card,Button,Chip, ThemeProvider } from "@mui/material";  
+import { Tabs, Tab, Box,Card,Button,Chip } from "@mui/material";  
 import { ApplicantsRequest, FetchingApplicantsInfo, ListofSub,
    USERFRM_ID,SetApplicant,FailedUser,FetchingBmccSchoinfo,
       UpdatePassSlots,FetchPassSlots,DecrePassSlots,GrantAccess,ListAccess } from "../../api/request";
@@ -28,9 +28,10 @@ import Toolbar from '@mui/material/Toolbar';
 import IconButton from '@mui/material/IconButton';
 import Link from '@mui/material/Link';
 import Checkbox from '@mui/material/Checkbox';
-import { styled, createTheme } from '@mui/material';
+import { styled } from '@mui/material';
 import { Backdrop, CircularProgress } from '@mui/material';
 import CustomNoRowsOverlay from '../Design/Norows';
+import UserIcon from '../../Images/userrandom.png'
 
 const CustomDataGrid = styled(DataGrid)({
   '& .MuiDataGrid-columnHeaders': {
@@ -45,22 +46,6 @@ const CustomDataGrid = styled(DataGrid)({
 
 });
 
-const CustomTabs = styled(Tabs)({
-  '& .MuiTabs-flexContainer': {
-    color: 'white', 
-    backgroundColor:'#252525',
-    margin:'10px 10px 0px 0px',
-    borderRadius: '0px 15px 0 0',
-  },
-});
-const CustomTab = styled(Tab)(({ theme }) => ({
-  textTransform: 'none',
-  minWidth: 100,
-  color:'white',
-  [theme.breakpoints.up('sm')]: {
-    minWidth: 120,
-  },
-}));
 const StyledBackdrop = styled(Backdrop)(({ theme }) => ({
   zIndex: theme.zIndex.drawer + 50,
   color: '#fff',
@@ -70,8 +55,8 @@ const Transition = React.forwardRef(function Transition(props, ref) {
 });
 
 const Evaluation = () => {
-  const { loginUser,user } = useContext(admininfo);
-  const [showBackdrop, setShowBackdrop] = useState(false);
+    const { user } = useContext(admininfo);
+    const [showBackdrop, setShowBackdrop] = useState(false);
     const [data, setData] = useState([]);
     const [email,setEmail] = useState('');
     const [password,setPassword] = useState('')
@@ -95,6 +80,7 @@ const Evaluation = () => {
     const [who,setWho] = useState('');
     const [isSend,setIsSend] = useState('No')
     const [checked, setChecked] = React.useState(false);
+    const [active,setActive] = useState(0);
 
     const handleChange = (event, newValue) => {
       setTabValue(newValue);
@@ -118,7 +104,6 @@ const Evaluation = () => {
     useEffect(() => {
 
         async function Fetch(){
-          setShowBackdrop(true);
           const response = await ApplicantsRequest.ALL_APPLICANTS();
           const pass = await FetchPassSlots.FETCH_PASSSLOTS()
           const ForEva = response.data.results?.filter(user => user.status === 'For Evaluation')
@@ -127,7 +112,6 @@ const Evaluation = () => {
           setAccess(empacc)
           setData(ForEva);
           setPassSlot(pass.data.result[0])
-          setShowBackdrop(false);
         }
         Fetch();
       }, []);
@@ -146,7 +130,6 @@ const Evaluation = () => {
             ListofSub.FETCH_SUB(applicantNum),
             USERFRM_ID.FORMUSR(applicantNum)
           ]);
-          console.log(response)
           setSiblings(response[0].data.siblings)
           setApplicantInfo(response[0].data.results[0]);
           setUserScore(response[2].data)
@@ -190,7 +173,6 @@ const Evaluation = () => {
         }
       }
       const handleRowSelectionModelChange = (newRowSelectionModel) => {
-        console.log(newRowSelectionModel)
         setRowSelectionModel(newRowSelectionModel);
 
       };
@@ -723,16 +705,17 @@ const Evaluation = () => {
     const userfrmeval = userscore?.map((data,index) =>{
       return(
       <div className='frmlistq' key={index}>
-      <Chip sx={{width:'50px',marginRight:'5px'}} label={data.score} color="primary" />
-      <p><strong>{index + 1}.</strong> {data.question} {data.answer}</p>
+      <Chip sx={{width:'60px',position:'absolute',left:0,top:10}} label={data.score} color="primary" />
+      <div style={{}}>
+        <p style={{margin:'0px',fontSize:'20px',fontWeight:'700',backgroundColor:'#f1f3fa',padding:'10px',width:'100%',borderRadius:'10px'}}>
+          <strong>{index + 1}.</strong> {data.question} 
+        </p>
+        <p style={{margin:'0px',fontSize:'18px',marginTop:'10px',marginLeft:'20px',fontStyle:'italic'}}>- {data.answer}</p>
+      </div>
       </div>
 
     )})
-    const siblinglist = siblings?.map((data,index) =>{
-      return(
-        <li key={index}>{data.siblingName}</li>
-      )
-    })
+    console.log(applicantsInfo)
   return (
     <>
               <StyledBackdrop open={showBackdrop}>
@@ -793,98 +776,261 @@ const Evaluation = () => {
             </Typography>
           </Toolbar>
         </AppBar>
-      <Box sx={{width:'100%',height:'100%',display:'flex',backgroundColor:'whitesmoke'}}>
-         <div className='evalusrprof'>
-          <div className="evalusrcontainer">
-          <img style={{objectFit:'fill'}} src={applicantsInfo.profile} alt="" />
-            <div className='evalusridcontainer'>
-              <p className='evalusrid'><strong>Applicant Id:</strong> {applicantsInfo.applicantCode}</p>
-              <p className='evalusrid'><strong>Scholarship Applied:</strong> {applicantsInfo.SchoIarshipApplied}</p>
-              <p className='evalusrid'><strong>Date Applied:</strong> {applicantsInfo.DateApplied}</p>
-              <p className='evalusrid'><strong>Batch:</strong> {applicantsInfo.Batch}</p>
-            </div>
-          </div>
+      <Box sx={{width:'100%',height:'100%',display:'flex',backgroundColor:'whitesmoke',flexWrap:'wrap'}}>
+         <div style={{width:'30%',backgroundColor:'#f1f3fa',display:'flex',flexDirection:'column',alignItems:'center',paddingTop:'2%'}}>
+            <Card elevation={2} style={{backgroundColor:'white',width:"75%",height:'350px',marginBottom:'50px',display:'flex',flexDirection:'column',borderRadius:'5px'}}>
+                <div style={{width:'90%'}}>
+                  <h1 style={{margin:'10px 0px 0px 30px',fontSize:'25px',borderBottom:'5px solid #f1f3fa',color:'#7F7E7D',paddingBottom:'5px'}}>
+                    Applicant Profile
+                  </h1>
+                </div>
+                <div style={{display:'flex',flexDirection:"column",justifyContent:'center',alignItems:'center',marginTop:'20px',position:'relative'}}>
+                  {applicantsInfo.profile ? (
+                    <>
+                    <img 
+                    style={{width:'200px',height:'200px',borderRadius:'50%',objectFit:'cover',border:'2px solid black'}}
+                    src={applicantsInfo.profile}
+                    alt="" />
+                    </>
+                  ) : (
+                    <>
+                    <img 
+                    style={{width:'200px',height:'200px',borderRadius:'50%',objectFit:'cover',border:'2px solid black'}}
+                    src={UserIcon} 
+                    alt="" />
+                    </>
+                  )}
+                </div>
+                <div style={{display:'flex',justifyContent:'center',alignItems:'center',marginTop:'20px'}}>
+                  <h1 style={{fontSize:'18px',margin:'0px',fontWeight:'bold'}}>
+                    {applicantsInfo.Name}
+                  </h1>
+                </div>
+            </Card>
+            <Card elevation={2} style={{backgroundColor:'white',width:"75%",height:'max-content'}}>
+               <div style={{width:'90%'}}>
+                  <h1 style={{margin:'10px 0px 0px 30px',fontSize:'20px',borderBottom:'5px solid #f1f3fa',color:'#7F7E7D',paddingBottom:'5px'}}>
+                    Applicant Information
+                  </h1>
+                </div>
+                <div style={{display:'flex',flexDirection:'column',padding:'15px'}}>
+                  <p><strong>Applicant Code:</strong> {applicantsInfo.Name}</p>
+                  <p><strong>Scholarship Applied:</strong> {applicantsInfo.ScholarshipApplied
+                     }</p>
+                  <p><strong>Date Applied:</strong> {applicantsInfo.date}</p>
+                  <p><strong>Batch:</strong> {applicantsInfo.Batch}</p>
+                </div>
+            </Card>
          </div>
-         <div className='evalfrmdet'>
-                <CustomTabs
-                  value={tabValue}
-                  onChange={handleChange}
-                  aria-label="secondary tabs example"
-                  
-                >
-                  <CustomTab value="one" label="Personal Details" />
-                  <CustomTab value="two" label="Family/Guardian " />
-                  <CustomTab value="three" label="Form" />
-                </CustomTabs>
-                {tabValue === 'one' && 
-                <div className='taboneeval'>
-                  <div className="containertabs">
-                  <div className='tbscon'>
-                    <p><strong>Name:</strong> {applicantsInfo.Name}</p>
-                    <p><strong>Age:</strong> {applicantsInfo.age}</p>
-                    <p><strong>Gender:</strong> {applicantsInfo.gender}</p>
-                    <p><strong>Contact Number:</strong> {applicantsInfo.contactNum}</p>
-                    <p><strong>Email:</strong> {applicantsInfo.email}</p>
-                  </div>
-                  <div className="tbscon">
-                  <p><strong>Address:</strong> {applicantsInfo.address}</p>
-                  <p><strong>Baranggay:</strong> {applicantsInfo.baranggay}</p>
-                  <p><strong>Birthday:</strong> {applicantsInfo.birthday}</p>
-                  <p><strong>Place of Birth:</strong> {applicantsInfo.birthPlace}</p>
-                  </div>
-                  </div>
-
-                  <div className="containertabs1">
-                    <div className="tbscon">
-                    <p><strong>Last School Attended:</strong> {applicantsInfo.school}</p>
-                    <p><strong>School Address:</strong> {applicantsInfo.schoolAddress}</p>
-                    </div>
-                    <div className="tbscon">
-                    <p><strong>Year Level:</strong> {applicantsInfo.yearLevel}</p>
-                    <p><strong>Grade/Year:</strong> {applicantsInfo.gradeLevel}</p>
-                    <p><strong>Course:</strong> {applicantsInfo.course}</p>
-                    </div>
-
-                  </div>
+         <div style={{width:'70%',backgroundColor:'#f1f3fa',display:'flex',flexDirection:'column',alignItems:'center',paddingTop:'2%'}}>
+            <Card elevation={0} style={{backgroundColor:'transparent',width:'95%',height:'150px',marginBottom:'20px',padding:'15px 10px 30px 35px'}}>
+              <h1>Applicant Information</h1>
+              <p>You can see applicant information</p>
+            </Card>
+            <Card elevation={0} style={{backgroundColor:'transparent',width:'95%',height:'100%'}}>
+                <div>
+                  <button
+                  onClick={() => setActive(0)}
+                  className={active === 0 ? 'evalActivepage' : 'evalPage'}
+                  >
+                    Personal Info
+                  </button>
+                  <button
+                  style={{margin:'0px 10px 0px 10px'}}
+                  onClick={() => setActive(1)}
+                  className={active === 1 ? 'evalActivepage' : 'evalPage'}
+                  >
+                   Parents Info
+                  </button>
+                  <button
+                  onClick={() => setActive(2)}
+                  className={active === 2 ? 'evalActivepage' : 'evalPage'}
+                  >
+                    Application Form
+                  </button>
                 </div>
-                }
-                {tabValue === 'two' && 
-                <>
-                <div className='tabtwoeval'>
-                  
-                  <div className="evalfam">
-                  <h2>Father</h2>
-                  <p><strong>Name:</strong> {applicantsInfo.fatherName}</p>
-                  <p><strong>Highest Educational Attaintment:</strong><br /> {applicantsInfo.fatherEducation}</p>
-                  <p><strong>Occupation:</strong> {applicantsInfo.fatherOccupation}</p>
-                  </div>
-                  <div className="evalfam">
-                  <h2>Mother</h2>
-                  <p><strong>Name:</strong> {applicantsInfo.motherName}</p>
-                  <p><strong>Highest Educational Attaintment:</strong> {applicantsInfo.motherEducation}</p>
-                  <p><strong>Occupation:</strong> {applicantsInfo.motherOccupation}</p>
-                  </div>
-                  <div className="evalfam">
-                  <h2>Guardian </h2>
-                  <p><strong>Name:</strong> {applicantsInfo.guardianName}</p>
-                  <p><strong>Address:</strong> {applicantsInfo.guardianAddress}</p>
-                  <p><strong>Contact Number:</strong> {applicantsInfo.guardianContact}</p>
-                  <p><strong>Relationship:</strong> {applicantsInfo.relationship}</p>
-                  </div>
-                  <div className="siblingcon">
-                  <h2>Siblings </h2>
-                  {siblings.length > 0 ? (<ul>
-                    {siblinglist}
-                  </ul>) : (<p>Only Child</p>)}
-                </div>
-                </div>
+                <Card sx={{width:'100%',height:"maxContent",padding:'20px'}}>
+                    {
+                      active===0 && (
+                        <div className='formpersona' style={{width:'100%',height:'100%',padding:'20px'}}>
+                          <div className='formpersonaChild'>
+                            <label htmlFor="">Name</label>
+                            <input 
+                            type="text" 
+                            value={applicantsInfo.Name} disabled />
+                          </div>
+                          <div className='formpersonaChild'>
+                            <label htmlFor="">Barangay</label>
+                            <input 
+                            type="text" 
+                            value={applicantsInfo.baranggay} disabled />
+                          </div>
+                          <div className='formpersonaChild'>
+                            <label htmlFor="">Email</label>
+                            <input 
+                            type="text" 
+                            value={applicantsInfo.email} disabled />
+                          </div>
+                          <div className='formpersonaChild'>
+                            <label htmlFor="">Birthday</label>
+                            <input 
+                            type="text" 
+                            value={applicantsInfo.birthday} disabled />
+                          </div>
+                          <div className='formpersonaChild'>
+                            <label htmlFor="">Contact Number</label>
+                            <input 
+                            type="text" 
+                            value={applicantsInfo.contactNum} disabled />
+                          </div>
+                          <div className='formpersonaChild'>
+                            <div style={{display:'flex'}}>
+                              <div style={{display:'flex',flexDirection:'column',marginRight:'10px'}}>
+                                <label htmlFor="">Gender</label>
+                                <input 
+                                style={{width:"200px"}}
+                                type="text" 
+                                value={applicantsInfo.gender} disabled />
+                              </div>
+                              <div style={{display:'flex',flexDirection:'column'}}>
+                                <label htmlFor="">Age</label>
+                                <input 
+                                style={{width:"200px"}}
+                                type="text" 
+                                value={applicantsInfo.age} disabled />
+                              </div>
+                            </div>
+                          </div>
+                          <div className='formpersonaChild1'>
+                            <label htmlFor="">Place of Birth</label>
+                            <input 
+                            type="text" 
+                            value={applicantsInfo.birthPlace} disabled />
+                          </div>
+                          <div className='formpersonaChild1'>
+                            <label htmlFor="">Address</label>
+                            <input 
+                            type="text" 
+                            value={applicantsInfo.address} disabled />
+                          </div>
+                        </div>
+                      )
+                    }
+                    {
+                      active === 1 && (
+                        <>
+                        <div className='famcon'>
+                          <div>
+                          <h1 style={{margin:'0px',fontSize:'25px',fontWeight:'bold'}}>Father Information</h1>
+                          <div className='fdetails'>
+                            <div>
+                              <label htmlFor="">Full Name</label>
+                              <input 
+                              type="text" 
+                              value={applicantsInfo.fatherName} disabled />
+                            </div>
+                            <div>
+                              <label htmlFor="">Highest Educational Attaintment</label>
+                              <input 
+                              type="text" 
+                              value={applicantsInfo.fatherEducation} disabled />
+                            </div>
+                            <div>
+                              <label htmlFor="">Occupation</label>
+                              <input 
+                              type="text" 
+                              value={applicantsInfo.fatherOccupation} disabled />
+                            </div>
+                          </div>
+                          </div>
+                          <div>
+                          <h1 style={{margin:'0px',fontSize:'25px',fontWeight:'bold'}}>Mother Information</h1>
+                          <div className='fdetails'>
+                            <div>
+                              <label htmlFor="">Full Name</label>
+                              <input 
+                              type="text" 
+                              value={applicantsInfo.motherName} disabled />
+                            </div>
+                            <div>
+                              <label htmlFor="">Highest Educational Attaintment</label>
+                              <input 
+                              type="text" 
+                              value={applicantsInfo.motherEducation} disabled />
+                            </div>
+                            <div>
+                              <label htmlFor="">Occupation</label>
+                              <input 
+                              type="text" 
+                              value={applicantsInfo.motherOccupation} disabled />
+                            </div>
+                          </div>
+                          </div>
+                          <div style={{height:'max-content'}}>
+                          <h1 style={{margin:'0px',fontSize:'25px',fontWeight:'bold'}}>Guardian Information</h1>
+                          <div className='fdetails'>
+                            <div>
+                              <label htmlFor="">Full Name</label>
+                              <input 
+                              type="text" 
+                              value={applicantsInfo.guardianName} disabled />
+                            </div>
+                            <div>
+                              <label htmlFor="">Relationship</label>
+                              <input 
+                              type="text" 
+                              value={applicantsInfo.relationship} disabled />
+                            </div>
+                            <div>
+                              <label htmlFor="">Address</label>
+                              <input 
+                              type="text" 
+                              value={applicantsInfo.guardianAddress} disabled />
+                            </div>
+                            <div>
+                              <label htmlFor="">Contact Number</label>
+                              <input 
+                              type="text" 
+                              value={applicantsInfo.guardianContact} disabled />
+                            </div>
+                          </div>
+                          </div>
+                          <div style={{height:'max-content'}}>
+                          <h1 style={{margin:'0px',fontSize:'25px',fontWeight:'bold'}}>List of Siblings</h1>
+                          {siblings.length > 0 ? (<div className='fdetails'>
+                            {siblings?.map((data,index) =>{
+                              return(
+                                <div key={index}>
+                                <label htmlFor="">Full Name</label>
+                                <input 
+                                type="text" 
+                                value={data.siblingName} disabled />
+                              </div>
+                              )
+                            })}
 
-                </>}
-                {tabValue === 'three' &&
-                <div className='sheetsfrmeval'>
-                  <h4>Score: {applicantsInfo.score}</h4>
-                {userfrmeval}
-                </div>}
+                          </div>) : (
+                            <p style={{fontSize:'20px',fontWeight:'500',fontStyle:'italic',marginTop:'20px',marginLeft:'20px'}}>Only Child.</p>
+                          )}
+                          </div>
+                        </div>
+                        </>
+                      )
+                    }
+                    {
+                      active === 2 && (
+                        <>
+                        <div>
+                          <h1 style={{fontSize:'27px',fontWeight:'bold',marginBottom:'15px'}}>
+                            Total Score: {applicantsInfo.score}/100
+                          </h1>
+                         {userfrmeval}
+                        </div>
+                        </>
+                      )
+                    }
+                </Card>
+            </Card>
          </div>
       </Box>
     </Dialog>
@@ -941,7 +1087,9 @@ const Evaluation = () => {
                     <Link
                       underline="none"
                       sx={{
-                        color: activeState === 'All' ? 'white' : 'black',
+                        color: 'white' ,
+                        borderBottom: activeState === 'All' ? '5px solid white' : 'none',
+                        transition:'all 0.3s ease-in-out',
                         display:'flex',
                         alignItems:'center'
                       }}
@@ -954,7 +1102,9 @@ const Evaluation = () => {
                     <Link
                       underline="none"
                       sx={{
-                        color: activeState === 'Passed' ? 'white' : 'black',
+                        color: 'white',
+                        borderBottom: activeState === 'Passed' ? '5px solid white' : 'none',
+                        transition:'all 0.3s ease-in-out',
                         display:'flex',
                         alignItems:'center'
                       }}
@@ -967,7 +1117,9 @@ const Evaluation = () => {
                     <Link
                       underline="none"
                       sx={{
-                        color: activeState === 'Failed' ? 'white' : 'black',
+                        color:'white',
+                        borderBottom: activeState === 'Failed' ? '5px solid white' : 'none',
+                        transition:'all 0.3s ease-in-out',
                         display:'flex',
                         alignItems:'center'
                       }}
@@ -976,8 +1128,25 @@ const Evaluation = () => {
                       Failed({Failed.length})
                     </Link>
                   </Button>
-                </Breadcrumbs>
-                <Card sx={{height:'500px',borderRadius:'0px'}}>
+              </Breadcrumbs>
+                {data.length === 0 ? (
+        <div
+        style={{
+          position: 'absolute',
+          top: '50%',
+          left: '50%',
+          transform: 'translate(-50%, -50%)',
+          textAlign: 'center',
+        }}
+      >
+        <div style={{ marginBottom: '16px' }}>
+          <CircularProgress />
+        </div>
+        <div>
+          <p>Loading...</p>
+          <div className="loading-animation"></div>
+        </div>
+      </div>) : (<Card sx={{height:'500px',borderRadius:'0px'}}>
                     {activeState === 'All' && (
                   <CustomDataGrid
                     rows={data}
@@ -1047,7 +1216,7 @@ const Evaluation = () => {
                       disableRowSelectionOnClick
                     />
                   )}
-                </Card>
+                </Card>)}
               </Box>
               
             </div>

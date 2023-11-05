@@ -281,7 +281,6 @@ const check = async (data, index) => {
     if(res.data.success === 1){
       setDocumentaryListed(res.data.Documentary)
       setShowBackdrop(false);
-      setOpen(true)
       setComments('')
       setStatusCheck('')
       swal({
@@ -325,7 +324,6 @@ const style = {
     setShowBackdrop(true);
     CheckingApplicants.CHECK_APP({email,adminName,applicantNum,status,applicantCode,name})
     .then(res => {
-
       setPost(res.data.Applicants)
       setOpen(false)
       setShowBackdrop(false);
@@ -508,7 +506,7 @@ const style = {
     {
       field: 'SchoIarshipApplied',
       headerName: 'Scholarship Applied',
-      width: 200,
+      width: 170,
       editable: false,
     },
     {
@@ -609,7 +607,7 @@ const style = {
     {
       field: 'SchoIarshipApplied',
       headerName: 'Scholarship Applied',
-      width: 200,
+      width: 170,
       editable: false,
     },
     {
@@ -664,7 +662,7 @@ const style = {
     },
     {
         field: 'insert',
-        headerName: 'Actions',
+        headerName: 'Detail',
         width: 150,
         renderCell: (params) => (
             <>
@@ -677,7 +675,7 @@ const style = {
       },
       {
         field: 'score',
-        headerName: 'Details',
+        headerName: 'Actions',
         width: 150,
         renderCell: (params) => {
           return(
@@ -703,19 +701,13 @@ const style = {
     {
       field: 'Name',
       headerName: 'Name',
-      width: 250,
+      width: 230,
       editable: false,
     },
     {
       field: 'DateApplied',
       headerName: 'Date Applied',
       width: 150,
-      editable: false,
-    },
-    {
-      field: 'status',
-      headerName: 'Status',
-      width: 100,
       editable: false,
     },
     {
@@ -751,7 +743,7 @@ const style = {
     },
     {
         field: 'insert',
-        headerName: 'Actions',
+        headerName: 'Details',
         width: 150,
         renderCell: (params) => (
             <>
@@ -764,7 +756,7 @@ const style = {
       },
       {
         field: 'grantedAccess',
-        headerName: 'Details',
+        headerName: 'Actions',
         width: 250,
         renderCell: (params) => {
      
@@ -777,7 +769,7 @@ const style = {
           onClick={() => ApplicantCheck(params.row)}>
             SET QUALIFIED
             </button>)}
-            <button className='btnofficials2'
+            <button style={{marginLeft:'5px'}} className='btnofficials2'
           onClick={() => handleOpenDialog2(params.row)}>
             Failed
             </button>
@@ -819,8 +811,6 @@ const style = {
       [requirement_Name]: value || prevComments[requirement_Name] || 'Image Accepted',
     }));
   };
-  console.log(data)
-  console.log(requirement_Name)
   return (
     <>
         <div className="Docuinfo">
@@ -1119,7 +1109,9 @@ const style = {
                     <Link
                       underline="none"
                       sx={{
-                        color: activeState === 'All' ? 'white' : 'black',
+                        color: activeState === 'All' ? 'white' : 'white',
+                        borderBottom: activeState === 'All' ? '5px solid white' : 'none',
+                        transition:'all 0.3s ease-in-out',
                         display:'flex',
                         alignItems:'center'
                       }}
@@ -1132,7 +1124,9 @@ const style = {
                     <Link
                       underline="none"
                       sx={{
-                        color: activeState === 'Complete' ? 'white' : 'black',
+                        color:'white',
+                        borderBottom: activeState === 'Complete' ? '5px solid white' : 'none',
+                        transition:'all 0.3s ease-in-out',
                         display:'flex',
                         alignItems:'center'
                       }}
@@ -1145,7 +1139,9 @@ const style = {
                     <Link
                       underline="none"
                       sx={{
-                        color: activeState === 'Incomplete' ? 'white' : 'black',
+                        color: 'white',
+                        borderBottom: activeState === 'Incomplete' ? '5px solid white' : 'none',
+                        transition:'all 0.3s ease-in-out',
                         display:'flex',
                         alignItems:'center'
                       }}
@@ -1155,7 +1151,24 @@ const style = {
                     </Link>
                   </Button>
       </Breadcrumbs>      
-      <Box sx={{ height: '500px', width: '100%',backgroundColor:'white',margin:"0px",minHeight:'300px',maxHeight:"maxContent"}}>
+      {post.length === 0 ? (
+        <div
+        style={{
+          position: 'absolute',
+          top: '50%',
+          left: '50%',
+          transform: 'translate(-50%, -50%)',
+          textAlign: 'center',
+        }}
+      >
+        <div style={{ marginBottom: '16px' }}>
+          <CircularProgress />
+        </div>
+        <div>
+          <p>Loading...</p>
+          <div className="loading-animation"></div>
+        </div>
+      </div>) : (<Box sx={{ height: '650px', width: '100%',backgroundColor:'white',margin:"0px",minHeight:'300px',maxHeight:"maxContent"}}>
                 {activeState === 'All' && (
                   <CustomDataGrid
                     rows={filteredRows}
@@ -1165,7 +1178,7 @@ const style = {
                     initialState={{
                       pagination: {
                         paginationModel: {
-                          pageSize: 5,
+                          pageSize: 10,
                         },
                       },
                     }}
@@ -1177,31 +1190,31 @@ const style = {
                     disableRowSelectionOnClick
                   />
                 )}
-                  {activeState === 'Complete' && (
+                {activeState === 'Complete' && (
                     <CustomDataGrid
                       rows={groupedUsers.completed}
                       columns={completeColumn}
                       getRowId={(row) => row.applicantNum}
                       scrollbarSize={10}
-                      sx={{hieght:'100%',border:'none',borderRadius:'0px'}}
+                      sx={{height:'100%',border:'none',borderRadius:'0px'}}
                       initialState={{
                         pagination: {
                           paginationModel: {
-                            pageSize: 5,
+                            pageSize: 10,
                           },
                         },
                       }}
                       slots={{
                         noRowsOverlay: CustomNoRowsOverlay,
                       }}
-                      pageSizeOptions={[25]}
+                      pageSizeOptions={[20,30]}
                       checkboxSelection
                       onRowSelectionModelChange={handleRowSelectionModelChange}
                       rowSelectionModel={rowSelectionModel}
                       disableRowSelectionOnClick
                     />
-                  )}
-                  {activeState === 'Incomplete' && (
+                )}
+                {activeState === 'Incomplete' && (
                     <CustomDataGrid
                       rows={groupedUsers.incomplete}
                       columns={incompleteColumn}
@@ -1211,21 +1224,21 @@ const style = {
                       initialState={{
                         pagination: {
                           paginationModel: {
-                            pageSize: 5,
+                            pageSize: 10,
                           },
                         },
                       }}
                       slots={{
                         noRowsOverlay: CustomNoRowsOverlay,
                       }}
-                      pageSizeOptions={[25]}
+                      pageSizeOptions={[20,30]}
                       checkboxSelection
                       onRowSelectionModelChange={handleFailedSelectionModelChange}
                       rowSelectionModel={failedSelectionModel}
                       disableRowSelectionOnClick
                     />
-                  )}
-      </Box>
+                )}
+      </Box>)}
 
       </div>
       <div style={{width:'97%',margin:'10px',display:'flex',justifyContent:'flex-end',alignItems:'flex-end'}}>
