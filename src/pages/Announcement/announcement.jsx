@@ -41,7 +41,6 @@ const Announcement = () => {
     }
     const AnnouncedList = announced?.map((data,index) =>{
       let content;
-      console.log(data.content.length)
       if(data.content.length <= 210){
         content = <p className='truncated-text1'>{data.content}</p>
       }else{

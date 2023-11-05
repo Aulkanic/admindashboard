@@ -46,7 +46,7 @@ function Payroll(pay){
   const handlePrint = () => {
     window.print();
   };
-
+ 
   useEffect(() =>{
 
       if(selection === 'Elementary'){
@@ -137,7 +137,6 @@ function Payroll(pay){
       align: 'left',
     },
   ];
-
 
   const calculateTotalAmount = (month) => {
     return payroll.reduce((total, user) => total + user[month], 0);
