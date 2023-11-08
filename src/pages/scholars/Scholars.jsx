@@ -242,21 +242,16 @@ const Scholars = () => {
   };
   const view1 = async (data) => {
     setInf(data)
-    console.log(data)
     setShowBackdrop(true);
     const renewTitle = renewDet[0].renewTitle;
     const tablename = renewDet[0].reqtable;
     const scholarCode = data.scholarCode;
-    const applicantNum = data.applicantNum;
-    console.log(applicantNum)
     const formData = new FormData()
     formData.append('renewTitle',renewTitle)
     formData.append('tablename',tablename)
     formData.append('scholarCode',scholarCode)
     const response = await SetSchoRenewDetails.FETCH_SCHORE(formData);
-    console.log(response)
     const re= await SchoinfOld.SCHO_OLD(scholarCode)
-    console.log(re)
     setOld(re.data.inf[0])
     setRenewScho(response.data)
     setShowBackdrop(false);
@@ -364,7 +359,10 @@ const Scholars = () => {
       headerName: 'Action',
       width: 90,
       renderCell: (params) => (
+        <>
         <button className='btnofficials1' onClick={() => view1(params.row)}>View</button>
+        </>
+        
       ),
     },
 
@@ -583,33 +581,7 @@ const Scholars = () => {
       }
 
     }
-    const AddQuestions = async() =>{
-      const { value: formValues } = await Swal.fire({
-        title: 'Add Questions',
-        html:
-          '<input id="swal-input2" class="swal2-input" placeholder="Question">',
-        focusConfirm: false,
-        confirmButtonText: 'Submit',
-        showCancelButton:true,
-        preConfirm: () => {
-          const question2 = document.getElementById('swal-input2').value;
-          if (!question2) {
-            Swal.showValidationMessage('Please input a Question First!!');
-            return false; // Prevent the dialog from closing
-          }
-          if(question2.length > 255){
-            Swal.showValidationMessage("The Question field can contain up to a maximum of 255 characters.")
-            return false;
-          }
-          return [ question2];
-        },
-      })
-      if (formValues) {
-        
-        const question2 = formValues[1];
 
-      }
-    }
     const generateRenew = async() =>{
       const start = value[0].format('ddd MMM DD YYYY HH:mm:ss [GMT]ZZ (zz)')
       const end = value[1].format('ddd MMM DD YYYY HH:mm:ss [GMT]ZZ (zz)')
@@ -733,7 +705,6 @@ const Scholars = () => {
         setShowBackdrop(false)
       })
     }
-console.log(old)
   return (
     <>
       <StyledBackdrop open={showBackdrop}>
@@ -951,6 +922,8 @@ console.log(old)
             <Typography sx={{ ml: 2, flex: 1 }} variant="h6" component="div">
               Scholar Updated Information
             </Typography>
+            {inf.Status === 'Renewed' ? null : (
+            <>
             <button className="btnofficials2" style={{marginRight:'15px'}} autoFocus color="inherit"
             onClick={() =>RenewalDecline(inf)}
             >
@@ -961,6 +934,7 @@ console.log(old)
             >
               PASS THE RENEW
             </button>
+            </>)}
           </Toolbar>
         </AppBar>
       <Box sx={{width:'98.5%',padding:'10px',height:'100%',display:'flex',backgroundColor:'whitesmoke',flexDirection:'column'}}>
