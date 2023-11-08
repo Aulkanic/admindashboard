@@ -455,9 +455,9 @@ const Failed = async() =>{
       SetInterview.SET_INTERVIEW(formData)
       .then((res) => {
         if(res.data.success === 1){
-          console.log(res)
           setAppointedList(res.data.result)
           setShowBackdrop(false);
+          setUserOpen(false)
           swal({
             title: "Success",
             text: "Done!",

@@ -260,9 +260,12 @@ const Navbar = () => {
         return `${days} ${days === 1 ? 'day' : 'days'} ago`;
       }
   }
+  const urlLink = (link) => {
+    navigate(`/${link}`)
+  }
   const notification = notif?.map((data,index) =>{
     return(
-      <li key={index} className="notification-item">
+      <li key={index} style={{cursor:'pointer'}} onClick={() => urlLink(data.link)} className="notification-item">
       <div className="notification-text">
         {data.actions}
       </div>
