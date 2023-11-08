@@ -633,6 +633,7 @@ const Scholars = () => {
     }
     const RenewalInformation = renewDet?.map((value,index) =>{
       const dateObject = new Date(value.start);
+      const total = schore?.filter(dat => dat.Status === 'Renewed').length;
       const day = dateObject.getDate();
       const month = dateObject.toLocaleString('default', { month: 'short' }); 
       const year = dateObject.getFullYear();
@@ -653,7 +654,7 @@ const Scholars = () => {
             <div>
               <p><strong>Year:</strong> {value.year}</p>
               <p><strong>Status:</strong> {value.remarks}</p>
-              <p><strong>Total Scholar renewed:</strong> {value.total}</p>
+              <p><strong>Total Scholar renewed:</strong> {total}</p>
             </div>
           </div>
           <Box sx={{ width: '100%', height: 400,backgroundColor:'white' }}>
