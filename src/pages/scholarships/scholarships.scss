@@ -1,10 +1,9 @@
 .scholarships{
     display: flex;
     background-color: #f1f3fa;  
-    height: 100vh;
     .scholarshipsContainer{
         flex: 7;
-
+        width: 100%;
         background-color: #f1f3fa;  
         .top{
             margin: 10px;
@@ -141,7 +140,6 @@
 .buttonclosed{
     float: right;
     padding: 10px;
-    overflow: auto;
     cursor: pointer;
     
     button{

@@ -3,61 +3,62 @@ import PrintablePage from './printablePage';
 import './batch.css'
 import Datatable from './Datatable';
 
-function capitalize(string) {
-  return string.charAt(0).toUpperCase() + string.slice(1).toLowerCase();
-}
-
 function Batch(filterdata){
-  let data = filterdata.data ? filterdata.data.filteredStudents : [];
+  let data = filterdata.data ? filterdata.data.dataTransfer : [];
   const stat = filterdata.data ? filterdata.data.filterCriteria.Status : '';
 
-  const modifiedList = data.map((item, index) => ({
+  const modifiedList = data?.map((item, index) => ({
     ...item,
     userNum: index + 1,
-    Name: capitalize(item.Name),
-    gender: capitalize(item.gender),
-    ScholarshipApplied: capitalize(item.ScholarshipApplied),
-    status: capitalize(item.status),
-    baranggay: capitalize(item.baranggay),
-    yearLevel: capitalize(item.yearLevel),
-
   }));
   
-  let title = 'List of User Report';
-  let columns=[]
+  const title = filterdata.data ? filterdata.data.title : '';
+  let columns=[
+    { field: 'userNum', headerName: '#', width: 50 },
+    { field: 'Name', headerName: 'Name', width: 170 },
+    { field: 'gender', headerName: 'Gender', width: 100 },
+    { field: 'ScholarshipApplied', headerName: 'Scholarship Applied', width: 170 },
+    { field: 'UserProfileStatus', headerName: 'Status', width: 130 },
+    { field: 'Remarks', headerName: 'Remarks', width: 170 },
+    { field: 'baranggay', headerName: 'Baranggay', width: 150 },
+    { field: 'yearLevel', headerName: 'Year Level', width: 150 },
+    { field: 'Batch', headerName: 'Batch', width: 100 },
+    
+  ]
   if(stat === 'Applicant'){
-    title = 'List of Applicants Report';
     columns = [
       { field: 'userNum', headerName: '#', width: 50 },
       { field: 'Name', headerName: 'Name', width: 170 },
       { field: 'gender', headerName: 'Gender', width: 100 },
       { field: 'ScholarshipApplied', headerName: 'Scholarship Applied', width: 100 },
-      { field: 'status', headerName: 'Status', width: 130 },
+      { field: 'UserProfileStatus', headerName: 'Status', width: 130 },
+      { field: 'Remarks', headerName: 'Remarks', width: 170 },
       { field: 'baranggay', headerName: 'Baranggay', width: 150 },
       { field: 'yearLevel', headerName: 'Year Level', width: 150 },
-      { field: 'batch', headerName: 'Batch', width: 130 },
-      { field: 'date', headerName: 'Date', width: 120 },
+      { field: 'date', headerName: 'Date Applied', width: 150 },
+      { field: 'Batch', headerName: 'Batch', width: 130 },
     ];
   }
   if(stat === 'Approved'){
-    title = 'List of Scholars Report';
     columns = [
-      { field: 'userNum', headerName: '#', width: 30,  align: 'left', },
-      { field: 'Name', headerName: 'Name', width: 250,  align: 'left', },
-      { field: 'gender', headerName: 'Gender', width: 100,  align: 'left', },
-      { field: 'yearLevel', headerName: 'Year Level', width: 150,  align: 'left', },
-      { field: 'baranggay', headerName: 'Baranggay', width: 150,  align: 'left', },
-      { field: 'batch', headerName: 'Batch', width: 100,  align: 'left', },
-      { field: 'ScholarshipApplied', headerName: 'Scholarship Program', width: 170,  align: 'left', },
-      { field: 'approveDate', headerName: 'Date', width: 150 },
+      { field: 'userNum', headerName: '#', width: 50 },
+      { field: 'Name', headerName: 'Name', width: 170 },
+      { field: 'gender', headerName: 'Gender', width: 100 },
+      { field: 'ScholarshipApplied', headerName: 'Scholarship Applied', width: 170 },
+      { field: 'UserProfileStatus', headerName: 'Status', width: 130 },
+      { field: 'Remarks', headerName: 'Remarks', width: 170 },
+      { field: 'baranggay', headerName: 'Baranggay', width: 150 },
+      { field: 'yearLevel', headerName: 'Year Level', width: 150 },
+      { field: 'school', headerName: 'Year Level', width: 150 },
+      { field: 'approveDate', headerName: 'Date Approved', width: 150 },
+      { field: 'renewedDate', headerName: 'Date Renewed', width: 150 },
+      { field: 'Batch', headerName: 'Batch', width: 100 },
     ];
   }
   return (
     <>
-    <PrintablePage value={data} cols={columns} head={title}/>
-      <div>
-        <Datatable props={modifiedList} col={columns}/>
-      </div>
+      <PrintablePage value={modifiedList} cols={columns} head={title}/>
+      <Datatable props={modifiedList} col={columns}/>
     </>
   )
 }

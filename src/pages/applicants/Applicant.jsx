@@ -378,7 +378,7 @@ const style = {
     await GrantAccess.GRANT_ACCESS(formData)
     .then(res => {
       if(res.data.success === 1){
-        setPost(res.data.result);
+        setPost(res.data?.result);
         setEmail('')
        
         setPassword('')

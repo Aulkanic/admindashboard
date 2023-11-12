@@ -139,7 +139,7 @@ const Navbar = () => {
     React.useEffect(() =>{
       async function Fetch(){
         const res = await AdminNotify.ADMIN_NOTIF();
-        setNotif(res.data.reverse())
+        setNotif(res?.data?.reverse())
       }
       Fetch();
       const intervalId = setInterval(Fetch, 5000);
@@ -287,7 +287,7 @@ const Navbar = () => {
           formData.append('notifId',det.adnotifId)
           await SeenAdminNotify.SEEN_NOTIF(formData)
           .then((res) =>{
-            setNotif(res.data.reverse())
+            setNotif(res.data?.reverse())
           })
         }
       }

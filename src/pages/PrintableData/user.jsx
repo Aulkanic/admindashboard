@@ -1,11 +1,11 @@
-import React from 'react'
-import Datatable from '../Reports/Datatable'
+import React from 'react';
+import PrintablePage from '../Reports/printablePage';
 
 function UserList() {
   return (
     <div>
       <h1>Daily Reports</h1>
-      <Datatable />
+      <PrintablePage />
     </div>
   )
 }

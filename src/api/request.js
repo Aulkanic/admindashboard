@@ -336,3 +336,9 @@ export const DeclinedRenewal = {
 export const DailyRep = {
     REPORTS_DATE: (data) => axiosInstance.post(Endpoints.ANNUAL,data)
 }
+export const ScholarRenewallist = {
+    RENEWAL: (data) => axiosInstance.post(Endpoints.SCHOLARRENEWAL,data)
+}
+export const MYDOUsers = {
+    ALLDATA: () => axiosInstance.get(Endpoints.ALLDATA)
+}

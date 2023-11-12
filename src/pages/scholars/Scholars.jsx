@@ -8,10 +8,10 @@ import Button from '@mui/material/Button';
 import Typography from '@mui/material/Typography';
 import { DataGrid} from '@mui/x-data-grid';
 import React, {useEffect, useState} from 'react'
-import { FetchingBmccScho, FetchingBmccSchoinfo,ScholarStand ,ListofReq,UserActivity,ListAccess, GenerateRenewal,FetchRenewal,
-FetchRenewalDet,SetRenewalDetails,FetchRenewalCode,SetSchoRenewDetails,RenewedScho,DeclinedRenewal,SchoinfOld} from '../../api/request';
+import { FetchingBmccScho, FetchingBmccSchoinfo,ScholarStand ,ListofReq,UserActivity, GenerateRenewal,FetchRenewal,
+FetchRenewalDet,SetRenewalDetails,FetchRenewalCode,SetSchoRenewDetails,RenewedScho,DeclinedRenewal,SchoinfOld,
+ScholarRenewallist} from '../../api/request';
 import './scholar.css'
-import Divider from '@mui/material/Divider';
 import swal from 'sweetalert';
 import Swal from 'sweetalert2';
 import Dialog from '@mui/material/Dialog';
@@ -25,19 +25,20 @@ import Slide from '@mui/material/Slide';
 import AppBar from '@mui/material/AppBar';
 import Toolbar from '@mui/material/Toolbar';
 import IconButton from '@mui/material/IconButton';
-import { styled, createTheme } from '@mui/material';
+import { styled } from '@mui/material';
 import { Backdrop, CircularProgress } from '@mui/material';
 import dayjs from 'dayjs';
 import { DemoContainer } from '@mui/x-date-pickers/internals/demo';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { MultiInputDateTimeRangeField } from '@mui/x-date-pickers-pro/MultiInputDateTimeRangeField';
-import { useSelector } from 'react-redux';
 import Figure from 'react-bootstrap/Figure';
 import { GrUserNew } from "react-icons/gr";
 import { IoSchool } from "react-icons/io5";
+import { FcRight } from "react-icons/fc";
 import { RiPassPendingFill } from "react-icons/ri";
 import CustomNoRowsOverlay from '../Design/Norows';
+import UserIcon from '../../Images/userrandom.png'
 const localizedFormat = require('dayjs/plugin/localizedFormat');
 dayjs.extend(localizedFormat);
 
@@ -60,60 +61,11 @@ const StyledBackdrop = styled(Backdrop)(({ theme }) => ({
 const Transition = React.forwardRef(function Transition(props, ref) {
   return <Slide direction="up" ref={ref} {...props} />;
 });
-const StyledButton = styled(Button)`
-  && {
-    float: right;
-    background-color: red;
-    color:white;
-    transition: opacity 0.3s ease;
 
-    &:hover {
-      opacity: 0.8;
-    }
-  }
-`;
-const StyledButtonEdit = styled(Button)`
-  && {
-    background-color: green;
-    color:white;
-    margin-right:10px;
-    transition: opacity 0.3s ease;
-
-    &:hover {
-      opacity: 0.8;
-    }
-  }
-`;
-const StyledButtonAccess = styled(Button)`
-  && {
-    background-color: yellow;
-    color:green;
-    margin-right:10px;
-    transition: opacity 0.3s ease;
-
-    &:hover {
-      opacity: 0.8;
-    }
-  }
-`;
-const ViewButton = styled(Button)`
-  && {
-    background-color: blue;
-    color:white;
-    margin-right:10px;
-    transition: opacity 0.3s ease;
-
-    &:hover {
-      opacity: 0.8;
-    }
-  }
-`;
 
 
 const Scholars = () => {
   const [data, setData] = useState([]);
-  const { admin  } = useSelector((state) => state.login)
-  const [access,setAccess] = useState([])
   const [open, setOpen] = useState(false);
   const [open1, setOpen1] = useState(false);
   const [open2, setOpen2] = useState(false);
@@ -133,18 +85,18 @@ const Scholars = () => {
   const [schore,setSchore] = useState([])
   const [renewDet,setRenewDet] = useState([])
   const [renewScho,setRenewScho] = useState([])
-  const [fullscreenImage, setFullscreenImage] = useState(null);
+  const [fullscreenImage, setFullscreenImage] = useState([]);
   const [inf,setInf] = useState([]);
   const [screen,setScreen] = useState(0);
-  const [old,setOld] = useState([])
+  const [old,setOld] = useState([]);
+  const [active,setActive] = useState(0);
+  const [renewalScho,setRenewalscho] = useState([])
 
   const openFullscreen = (imageSrc) => {
     setFullscreenImage(imageSrc);
+    setImageModalOpen(true);
   };
 
-  const closeFullscreen = () => {
-    setFullscreenImage(null);
-  };
   const [value, setValue] = React.useState(() => [
     dayjs('2022-04-17T15:30'),
     dayjs('2022-04-21T18:30'),
@@ -190,9 +142,6 @@ const Scholars = () => {
       const scholars = await FetchingBmccScho.FETCH_SCHOLARS()
       const req = await ListofReq.FETCH_REQUIREMENTS()
       const re =  await FetchRenewal.FETCH_RENEW()
-      let acc = await ListAccess.ACCESS()
-      const empacc = acc.data.result?.filter(data => data.employeeName === admin[0].name)
-      setAccess(empacc)
       setRenew(re.data)
       const data = scholars.data.Scholars
       setData(data)
@@ -231,10 +180,14 @@ const Scholars = () => {
     const applicantNum = data.applicantNum;
     const formData = new FormData()
     formData.append('applicantNum',applicantNum)
+    formData.append('scholarCode',data.scholarCode)
     const response = await FetchingBmccSchoinfo.FETCH_SCHOLARSINFO(applicantNum);
+   
     const log = await UserActivity.USER_LOG(formData);
+    const rrn = await ScholarRenewallist.RENEWAL(formData)
     const userAct = log.data.result;
     setUserlog(userAct.reverse());
+    setRenewalscho(rrn.data)
     setSchoInf1(response.data.ScholarInf.results1[0]);
     setSchoInf2(response.data.ScholarInf.results2[0]);
     setShowBackdrop(false);
@@ -251,6 +204,7 @@ const Scholars = () => {
     formData.append('tablename',tablename)
     formData.append('scholarCode',scholarCode)
     const response = await SetSchoRenewDetails.FETCH_SCHORE(formData);
+    console.log(response)
     const re= await SchoinfOld.SCHO_OLD(scholarCode)
     setOld(re.data.inf[0])
     setRenewScho(response.data)
@@ -414,10 +368,10 @@ const Scholars = () => {
   const handleClose1 = () => setOpen1(false);
   const handleClose2 = () => setOpen2(false);
 
-  const handleRowSelectionModelChange = (newRowSelectionModel) => {
+    const handleRowSelectionModelChange = (newRowSelectionModel) => {
     setRowSelectionModel(newRowSelectionModel);
 
-  };
+    };
     const handleDialogSubmit = async () => {
       await handleButtonClick();
       setOpenDialog(false);
@@ -676,15 +630,7 @@ const Scholars = () => {
         </>
       )
     })
-    const FullscreenImagePopup = ({ imageSrc, onClose }) => {
-      return (
-        <div className="fullscreen-image-popup" onClick={onClose}>
-          <div className="fullscreen-image">
-            <img src={imageSrc.files} alt="Fullscreen Image" />
-          </div>
-        </div>
-      );
-    };
+
     const SetSchoRenewed = async(data) =>{
 
       const formData = new FormData()
@@ -706,15 +652,57 @@ const Scholars = () => {
         setShowBackdrop(false)
       })
     }
+    const documentaryDocs = renewalScho?.doc2?.map((data,index) =>{
+      if(!data){return null;}else{
+        return(
+          <div onClick={() => openFullscreen(data)} style={{cursor:'pointer'}} key={index} className='formpersonaChild3'>
+            <p style={{position:'absolute',margin:0,top:'-10px',fontWeight:'700'}}>
+              {data.requirement_Name}
+            </p>
+            <img
+            style={{height:'100%',width:'100%',objectFit:'contain'}} 
+            src={data.File} 
+            alt="" />
+          </div>
+        )}
+    })
+    const renewalDocs = renewalScho?.doc1?.map((data,index) =>{
+      if(!data){return null;}else{
+        return(
+          <div onClick={() => openFullscreen(data)} style={{cursor:'pointer'}} key={index} className='formpersonaChild3'>
+            <p style={{position:'absolute',margin:0,top:'-10px',fontWeight:'700'}}>
+              {data.reqName}
+            </p>
+            <img
+            style={{height:'100%',width:'100%',objectFit:'contain'}} 
+            src={data.files} 
+            alt="" />
+          </div>
+        )}
+    })
+    const renewalDocs1 = renewScho?.File?.map((data,index) =>{
+      if(!data){return null;}else{
+        return(
+          <div onClick={() => openFullscreen(data)} style={{cursor:'pointer'}} key={index} className='formpersonaChild4'>
+            <p style={{position:'absolute',margin:0,top:'-18px',fontWeight:'700'}}>
+              {data.reqName}
+            </p>
+            <img
+            style={{height:'100%',width:'100%',objectFit:'contain'}} 
+            src={data.files} 
+            alt="" />
+          </div>
+        )}
+    })
   return (
     <>
       <StyledBackdrop open={showBackdrop}>
           <CircularProgress color="inherit" />
       </StyledBackdrop>
       <Dialog fullScreen open={imageModalOpen} onClose={closeImageModal}>
-      <DialogTitle>{selectedImage.name}</DialogTitle>
+      <DialogTitle>{fullscreenImage.requirement_Name ||  fullscreenImage.reqName}</DialogTitle>
       <DialogContent>
-        <img src={selectedImage.image} alt="Full Image" style={{ width: '100%', height: '100%' }} />
+        <img src={fullscreenImage.File || fullscreenImage.files} alt="Full Image" style={{ width: '100%', height: '100%',objectFit:'contain' }} />
       </DialogContent>
       <DialogActions>
         <Button onClick={closeImageModal}>Close</Button>
@@ -764,142 +752,245 @@ const Scholars = () => {
             </Typography>
           </Toolbar>
         </AppBar>
-      <Box sx={{width:'98.5%',padding:'10px',height:'100%',display:'flex',backgroundColor:'whitesmoke'}}>
-         <div style={{width:'35%'}}>
-            <div style={{width:'95%',padding:'10px',height:'100%'}}>
-              <Card elevation={1}>
-            <img
-                alt="Remy Sharp"
-                src={schoinf2.profile}
-                style={{objectFit:'cover',width:'100%',height:'350px'}}
-              />
-              <Card sx={{height:'30px',position:'relative',width:'100%',display:'flex',justifyContent:'center',alignItems:'center',backgroundColor:'black',color:'white'}}
-               className='spancho'>
-                <Typography>Scholar Code: {schoinf2.scholarCode}</Typography>
-              </Card>
-              </Card>
-              <Card sx={{margin:'10px',height:'250px',overflow:'auto'}}>
-                <div style={{textAlign:'left'}}>
-                <Typography sx={{fontSize:'18px',fontWeight:'700',textAlign:'center'}}>
-                  Activity Log
-                </Typography>
-                <div>
-                {userLog?.map((data) =>{
-                  return (
-                    <>
-                    <p style={{margin:'10px 0px 5px 15px'}}>{data.actions} on {data.date}</p>
-                    <Divider />
-                    </>
-                  )
-                })}
+      <Box sx={{width:'100%',height:'100%',display:'flex',backgroundColor:'whitesmoke',flexWrap:'wrap'}}>
+      <div style={{width:'30%',backgroundColor:'#f1f3fa',display:'flex',flexDirection:'column',alignItems:'center',paddingTop:'2%'}}>
+            <Card elevation={2} style={{backgroundColor:'white',width:"75%",height:'350px',marginBottom:'50px',display:'flex',flexDirection:'column',borderRadius:'5px'}}>
+                <div style={{width:'90%'}}>
+                  <h1 style={{margin:'10px 0px 0px 30px',fontSize:'25px',borderBottom:'5px solid #f1f3fa',color:'#7F7E7D',paddingBottom:'5px'}}>
+                    Scholar Profile
+                  </h1>
                 </div>
-                </div> 
-              </Card>
-            </div>
+                <div style={{display:'flex',flexDirection:"column",justifyContent:'center',alignItems:'center',marginTop:'20px',position:'relative'}}>
+                  {schoinf2.profile ? (
+                    <>
+                    <img 
+                    style={{width:'200px',height:'200px',borderRadius:'50%',objectFit:'cover',border:'2px solid black'}}
+                    src={schoinf2.profile}
+                    alt="" />
+                    </>
+                  ) : (
+                    <>
+                    <img 
+                    style={{width:'200px',height:'200px',borderRadius:'50%',objectFit:'cover',border:'2px solid black'}}
+                    src={UserIcon} 
+                    alt="" />
+                    </>
+                  )}
+                </div>
+                <div style={{display:'flex',justifyContent:'center',alignItems:'center',marginTop:'20px'}}>
+                  <h1 style={{fontSize:'18px',margin:'0px',fontWeight:'bold'}}>
+                    {schoinf2.Name}
+                  </h1>
+                </div>
+            </Card>
+            <Card elevation={2} style={{backgroundColor:'white',width:"75%",height:'max-content'}}>
+               <div style={{width:'90%'}}>
+                  <h1 style={{margin:'10px 0px 0px 30px',fontSize:'20px',borderBottom:'5px solid #f1f3fa',color:'#7F7E7D',paddingBottom:'5px'}}>
+                    Scholar Information
+                  </h1>
+                </div>
+                <div style={{display:'flex',flexDirection:'column',padding:'15px'}}>
+                  <p><strong>Scholar Code:</strong> {schoinf2.scholarCode}</p>
+                  <p><strong>Scholarship Applied:</strong> {schoinf2.ScholarshipApplied
+                     }</p>
+                  <p><strong>Date Applied:</strong> {schoinf2.date}</p>
+                  <p><strong>Batch:</strong> {schoinf2.Batch}</p>
+                </div>
+            </Card>
          </div>
-         <div className='schodivuser'>
-            <div className='schoinfuser'>
-              <h2 style={{color:'#676',padding:'10px 0px 20px 10px'}}>Scholar Information</h2>
-              <div className='Schorenewfrm'>
-              <Form.Group as={Col}>
-                  <Form.Label > Name</Form.Label>
-                  <Form.Control
-                  type="text"  
-                  value={schoinf2.Name}
-                  disabled
-                  />
-              </Form.Group>
-              <Form.Group as={Col}>
-                  <Form.Label >Age</Form.Label>
-                  <Form.Control
-                  type="text"  
-                  value={schoinf1.age}
-                  disabled
-                  />
-              </Form.Group>
-              <Form.Group as={Col}>
-                  <Form.Label >Gender</Form.Label>
-                  <Form.Control
-                  type="text"  
-                  value={schoinf2.gender}
-                  disabled
-                  />
-              </Form.Group>
-              <Form.Group as={Col}>
-                  <Form.Label >Baranggay</Form.Label>
-                  <Form.Control
-                  type="text"  
-                  value={schoinf2.Baranggay}
-                  disabled
-                  />
-              </Form.Group>
-              <Form.Group as={Col}>
-                  <Form.Label >School Name</Form.Label>
-                  <Form.Control
-                  type="text"  
-                  value={schoinf2.school}
-                  disabled
-                  />
-              </Form.Group>
-              <Form.Group as={Col}>
-                  <Form.Label >YearLevel</Form.Label>
-                  <Form.Control
-                  type="text"  
-                  value={schoinf2.yearLevel}
-                  disabled
-                  />
-              </Form.Group>
-              <Form.Group as={Col}>
-                  <Form.Label >Grade/Year</Form.Label>
-                  <Form.Control
-                  type="text"  
-                  value={schoinf2.gradeLevel}
-                  disabled
-                  />
-              </Form.Group>
-              <Form.Group as={Col}>
-                  <Form.Label >Status</Form.Label>
-                  <Form.Control
-                  type="text"  
-                  value={schoinf2.remarks}
-                  disabled
-                  />
-              </Form.Group>
-              <Form.Group as={Col}>
-                  <Form.Label >Scholarship Applied</Form.Label>
-                  <Form.Control
-                  type="text"  
-                  value={schoinf2.ScholarshipApplied}
-                  disabled
-                  />
-              </Form.Group>
-              <Form.Group as={Col}>
-                  <Form.Label >Batch</Form.Label>
-                  <Form.Control
-                  type="text"  
-                  value={schoinf2.Batch}
-                  disabled
-                  />
-              </Form.Group>
-              <Form.Group as={Col}>
-                  <Form.Label >Date Applied</Form.Label>
-                  <Form.Control
-                  type="text"  
-                  value={schoinf1.DateApplied}
-                  disabled
-                  />
-              </Form.Group>
-              <Form.Group as={Col}>
-                  <Form.Label >Date Approved</Form.Label>
-                  <Form.Control
-                  type="text"  
-                  value={schoinf1.DateApproved}
-                  disabled
-                  />
-              </Form.Group>
-              </div>
-            </div>
-         </div>
+         <div style={{width:'70%',backgroundColor:'#f1f3fa',display:'flex',flexDirection:'column',alignItems:'center',paddingTop:'2%'}}>
+            <Card elevation={0} style={{backgroundColor:'transparent',width:'95%',height:'150px',marginBottom:'10px',padding:'15px 10px 30px 35px'}}>
+              <h1>Scholar Information</h1>
+              <p>You can see scholar information</p>
+            </Card>
+            <Card elevation={0} style={{backgroundColor:'transparent',width:'95%',height:'100%'}}>
+                <div>
+                  <button
+                  onClick={() => setActive(0)}
+                  className={active === 0 ? 'evalActivepage' : 'evalPage'}
+                  >
+                    Personal Info
+                  </button>
+                  <button
+                  style={{margin:'0px 10px 0px 10px'}}
+                  onClick={() => setActive(1)}
+                  className={active === 1 ? 'evalActivepage' : 'evalPage'}
+                  >
+                   Documents
+                  </button>
+                  <button
+                  onClick={() => setActive(2)}
+                  className={active === 2 ? 'evalActivepage' : 'evalPage'}
+                  >
+                    Renewal history
+                  </button>
+                </div>
+                <Card sx={{width:'100%',height:"maxContent",padding:'20px'}}>
+                    {
+                      active===0 && (
+                        <div className='formpersona' style={{width:'100%',height:'100%',padding:'20px'}}>
+                          <div className='formpersonaChild'>
+                            <label htmlFor="">Name</label>
+                            <input 
+                            type="text" 
+                            value={schoinf2.Name} disabled />
+                          </div>
+                          <div className='formpersonaChild'>
+                            <label htmlFor="">Barangay</label>
+                            <input 
+                            type="text" 
+                            value={schoinf2.baranggay} disabled />
+                          </div>
+                          <div className='formpersonaChild'>
+                            <label htmlFor="">Email</label>
+                            <input 
+                            type="text" 
+                            value={schoinf2.email} disabled />
+                          </div>
+                          <div className='formpersonaChild'>
+                            <label htmlFor="">Birthday</label>
+                            <input 
+                            type="text" 
+                            value={schoinf1.birthday} disabled />
+                          </div>
+                          <div className='formpersonaChild'>
+                            <label htmlFor="">Year Level</label>
+                            <input 
+                            type="text" 
+                            value={schoinf2.yearLevel} disabled />
+                          </div>
+                          <div className='formpersonaChild'>
+                            <label htmlFor="">Grade Level</label>
+                            <input 
+                            type="text" 
+                            value={schoinf1.gradeLevel} disabled />
+                          </div>
+                          <div className='formpersonaChild'>
+                            <label htmlFor="">Guardian</label>
+                            <input 
+                            type="text" 
+                            value={schoinf2.guardian} disabled />
+                          </div>
+                          <div className='formpersonaChild'>
+                            <label htmlFor="">Status</label>
+                            <input 
+                            type="text" 
+                            value={schoinf2.remarks} disabled />
+                          </div>
+                          <div className='formpersonaChild'>
+                            <label htmlFor="">Contact Number</label>
+                            <input 
+                            type="text" 
+                            value={schoinf1.contactNum} disabled />
+                          </div>
+                          <div className='formpersonaChild'>
+                            <div style={{display:'flex'}}>
+                              <div style={{display:'flex',flexDirection:'column',marginRight:'10px'}}>
+                                <label htmlFor="">Gender</label>
+                                <input 
+                                style={{width:"200px"}}
+                                type="text" 
+                                value={schoinf2.gender} disabled />
+                              </div>
+                              <div style={{display:'flex',flexDirection:'column'}}>
+                                <label htmlFor="">Age</label>
+                                <input 
+                                style={{width:"200px"}}
+                                type="text" 
+                                value={schoinf1.age} disabled />
+                              </div>
+                            </div>
+                          </div>
+                          <div className='formpersonaChild1'>
+                            <label htmlFor="">Place of Birth</label>
+                            <input 
+                            type="text" 
+                            value={schoinf1.birthPlace} disabled />
+                          </div>
+                          <div className='formpersonaChild1'>
+                            <label htmlFor="">Address</label>
+                            <input 
+                            type="text" 
+                            value={schoinf1.address} disabled />
+                          </div>
+                        </div>
+                      )
+                    }
+                    {
+                      active === 1 && (
+                        <>
+                          <div>
+                            <h1 style={{fontSize:'25px',fontWeight:'900'}}>Application:</h1>
+                            <div className='formpersona' style={{width:'100%',height:'100%',backgroundColor:'whitesmoke',padding:'5px 15px 15px 15px',marginBottom:'15px'}}>
+                              {documentaryDocs}
+                            </div>
+                            <h1 style={{fontSize:'25px',fontWeight:'900'}}>Renewal:</h1>
+                            <div className='formpersona' style={{width:'100%',height:'100%',backgroundColor:'whitesmoke',padding:'5px 15px 15px 15px',marginBottom:'15px'}}>
+                              {renewalDocs}
+                            </div>
+                          </div>
+                        </>
+                      )
+                    }
+                    {
+                      active === 2 && (
+                        <>
+                       {renewalScho?.list?.map((data,index) =>{
+                        const date = new Date(data.updated);
+                        const redate = `${date.getDate()}/${date.getMonth() + 1}/${date.getFullYear()}`
+                        return (
+                          <>
+                          <div>
+                            <p style={{margin:0}}>Renewed on {redate}</p>
+                            <p style={{margin:0}}>Details:</p>
+                            <div className='formpersona' style={{width:'100%',height:'100%',backgroundColor:'whitesmoke',padding:'5px 15px 15px 15px',marginBottom:'15px'}}>
+                            <div className='formpersonaChild2'>
+                              <label htmlFor="">Address</label>
+                              <input 
+                              type="text" 
+                              value={data.Baranggay} disabled />
+                            </div>
+                            <div className='formpersonaChild2'>
+                              <label htmlFor="">Contact Number</label>
+                              <input 
+                              type="text" 
+                              value={data.phoneNum} disabled />
+                            </div>
+                            <div className='formpersonaChild2'>
+                              <label htmlFor="">Guardian</label>
+                              <input 
+                              type="text" 
+                              value={data.guardian} disabled />
+                            </div>
+                            <div className='formpersonaChild2'>
+                              <label htmlFor="">School</label>
+                              <input 
+                              type="text" 
+                              value={data.school} disabled />
+                            </div>
+                            <div className='formpersonaChild2'>
+                              <label htmlFor="">Year Level</label>
+                              <input 
+                              type="text" 
+                              value={data.yearLevel} disabled />
+                            </div>
+                            <div className='formpersonaChild2'>
+                              <label htmlFor="">Grade Level</label>
+                              <input 
+                              type="text" 
+                              value={data.gradeLevel} disabled />
+                            </div>
+                            </div>
+                          </div>
+                          </>
+                        )
+                       })}
+                        </>
+                      )
+                    }
+                </Card>
+            </Card>
+         </div>        
       </Box>
       </Dialog>
       <Dialog
@@ -938,200 +1029,127 @@ const Scholars = () => {
             </>)}
           </Toolbar>
         </AppBar>
-      <Box sx={{width:'98.5%',padding:'10px',height:'100%',display:'flex',backgroundColor:'whitesmoke',flexDirection:'column'}}>
-      <div className='renewscho'>
-          {renewScho.details?.map((data) =>{
-           
-            return(
-              <>
-                <Form.Group as={Col}>
-                      <Form.Label className='frmlabel'>Scholar Code</Form.Label>
-                      <Form.Control
-                        type="text" 
-                        name='Name'
-                        value={data.scholarCode} 
-                      disabled
-                      />
-                </Form.Group>
-                <Form.Group as={Col}>
-                      <Form.Label className='frmlabel'>Batch</Form.Label>
-                      <Form.Control
-                        type="text" 
-                        name='Name'
-                        value={data.Batch} 
-                      disabled
-                      />
-                </Form.Group>
-                <Form.Group as={Col}>
-                      <Form.Label className='frmlabel'>Scholarship Program</Form.Label>
-                      <Form.Control
-                        type="text" 
-                        name='Name'
-                        value={data.scholarshipApplied} 
-                      disabled
-                      />
-                </Form.Group>
-                <Form.Group as={Col}>
-                      <Form.Label className='frmlabel'>Name</Form.Label>
-                      <Form.Control
-                        type="text" 
-                        name='Name'
-                        value={data.Name} 
-                      disabled
-                      />
-                </Form.Group>
-                <Form.Group as={Col}>
-                      <Form.Label className='frmlabel'>Email</Form.Label>
-                      <Form.Control
-                        type="text" 
-                        name='Name'
-                        value={data.email} 
-                      disabled
-                      />
-                </Form.Group>
-                <Form.Group as={Col}>
-                      <Form.Label className='frmlabel'>Phone Number</Form.Label>
-                      {data.phoneNum !== old.phoneNum && <p style={{margin:'0px',fontSize:'10px',fontStyle:'italic',fontWeight:'bold'}}>Old</p>}
-                      <Form.Control
-                        type="text" 
-                        name='Name'
-                        value={old.phoneNum} 
-                      disabled
-                      />
-{data.phoneNum !== old.phoneNum && <p style={{margin:'0px',fontSize:'10px',fontStyle:'italic',fontWeight:'bold'}}>New!</p>}
-                      {data.phoneNum !== old.phoneNum && <Form.Control
-                        type="text" 
-                        name='Name'
-                        value={data.phoneNum} 
-                      disabled
-                      />}
-                </Form.Group>
-                <Form.Group as={Col}>
-                      <Form.Label className='frmlabel'>School</Form.Label>
-                      {data.school !== old.school && <p style={{margin:'0px',fontSize:'10px',fontStyle:'italic',fontWeight:'bold'}}>Old</p>}
-                      <Form.Control
-                        type="text" 
-                        name='Name'
-                        value={old.school} 
-                      disabled
-                      />
-                      {data.school !== old.school && <p style={{margin:'0px',fontSize:'10px',fontStyle:'italic',fontWeight:'bold'}}>New!</p>}
-                    {data.school !== old.school && <Form.Control
-                        type="text" 
-                        name='Name'
-                        value={data.school} 
-                      disabled
-                      />}
-                </Form.Group>
-                <Form.Group as={Col}>
-                      <Form.Label className='frmlabel'>Year Level</Form.Label>
-                      {data.yearLevel !== old.yearLevel && <p style={{margin:'0px',fontSize:'10px',fontStyle:'italic',fontWeight:'bold'}}>Old</p>}
-                      <Form.Control
-                        type="text" 
-                        name='Name'
-                        value={old.yearLevel} 
-                      disabled
-                      />
-                      {data.yearLevel !== old.yearLevel && <p style={{margin:'0px',fontSize:'10px',fontStyle:'italic',fontWeight:'bold'}}>New!</p>}
-                    {data.yearLevel !== old.yearLevel && <Form.Control
-                        type="text" 
-                        name='Name'
-                        value={data.yearLevel} 
-                      disabled
-                      />}
-                </Form.Group>
-                <Form.Group as={Col}>
-                      <Form.Label className='frmlabel'>Grade/Year</Form.Label>
-                      {data.gradeLevel !== old.gradeLevel && <p style={{margin:'0px',fontSize:'10px',fontStyle:'italic',fontWeight:'bold'}}>Old</p>}
-                      <Form.Control
-                        type="text" 
-                        name='Name'
-                        value={old.gradeLevel} 
-                      disabled
-                      />
-                      {data.gradeLevel !== old.gradeLevel && <p style={{margin:'0px',fontSize:'10px',fontStyle:'italic',fontWeight:'bold'}}>New!</p>}
-                    {data.gradeLevel !== old.gradeLevel && <Form.Control
-                        type="text" 
-                        name='Name'
-                        value={data.gradeLevel} 
-                      disabled
-                      />}
-                </Form.Group>
-                <Form.Group as={Col}>
-                      <Form.Label className='frmlabel'>Guardian</Form.Label>
-                      {data.guardian !== old.guardian && <p style={{margin:'0px',fontSize:'10px',fontStyle:'italic',fontWeight:'bold'}}>Old</p>}
-                      <Form.Control
-                        type="text" 
-                        name='Name'
-                        value={old.guardian} 
-                      disabled
-                      />
-                      {data.guardian !== old.guardian && <p style={{margin:'0px',fontSize:'10px',fontStyle:'italic',fontWeight:'bold'}}>New!</p>}
-                      {data.guardian !== old.guardian && <Form.Control
-                        type="text" 
-                        name='Name'
-                        value={data.guardian} 
-                      disabled
-                      />}
-                </Form.Group>
-                <Form.Group as={Col}>
-                      <Form.Label className='frmlabel'>Baranggay</Form.Label>
-                      {data.Baranggay !== old.Baranggay && <p style={{margin:'0px',fontSize:'10px',fontStyle:'italic',fontWeight:'bold'}}>Old</p>}
-                      <Form.Control
-                        type="text" 
-                        name='Name'
-                        value={old.Baranggay} 
-                      disabled
-                      />
-                      {data.Baranggay !== old.Baranggay && <p style={{margin:'0px',fontSize:'10px',fontStyle:'italic',fontWeight:'bold'}}>New!</p>}
-                    {data.Baranggay !== old.Baranggay && <Form.Control
-                        type="text" 
-                        name='Name'
-                        value={data.school} 
-                      disabled
-                      />}
-                </Form.Group>
-                <Form.Group as={Col}>
-                      <Form.Label className='frmlabel'>Remarks</Form.Label>
-                      <Form.Control
-                        type="text" 
-                        name='Name'
-                        value={data.remarks} 
-                      disabled
-                      />
-                </Form.Group>
-              </>
-            )
-          })}
+      <Box sx={{width:'100%',padding:'10px',height:'max-content',display:'flex',backgroundColor:'whitesmoke',flexWrap:'wrap',position:'relative',flexDirection:'column'}}>
+        <h1 style={{position:'absolute',left:'25px',top:'20px',fontSize:'20px',fontWeight:'bold',lineHeight:'17.57px',color:'#043F97'}}>
+          Requirements Submitted
+        </h1>
+        <div style={{width:'100%'}}>
+        <div className='formpersona3' style={{height:'max-content',padding:'20px',backgroundColor:'white',borderRadius:'5px',paddingTop:'40px'}}>
+         {renewalDocs1}
         </div>
-        <h3>Files:</h3>
-        <div className='renewscho1'>
-          {renewScho.File?.map((data,index) =>{
-            console.log(data)
-            return(
-              <div key={index}>
-              <Form.Label className='frmlabel'>{data.reqName}</Form.Label>
-              <Col xs={6} md={4}>
-              <Figure onClick={() => openFullscreen(data)}>
-                <Figure.Image
-                  width={171}
-                  height={180}
-                  alt="171x180"
-                  src={data.files}
-                />
-              </Figure>
-              </Col>
+        </div>
+
+        <div style={{width:'100%',backgroundColor:'white',display:'flex',flexWrap:'wrap',justifyContent:'space-between',marginBottom:'50px',position:'relative'}}>
+          <h1 style={{position:'absolute',top:'-10px',fontSize:'20px',fontWeight:'bold',lineHeight:'17.57px',backgroundColor:'#043F97',color:'white',padding:'10px',borderRadius:'5px'}}>
+            OLD SCHOLAR DATA
+          </h1>
+          <div className='formpersona4' style={{height:'max-content',backgroundColor:'white',borderRadius:'5px',paddingTop:'15px'}}>
+              <div className='formpersonaChild5'>
+                  <label htmlFor="">Name</label>
+                  <input 
+                  type="text" 
+                  value={old.Name} disabled />
               </div>
-            )
-          })}
+              <div className='formpersonaChild5'>
+                  <label htmlFor="">Barangay</label>
+                  <input 
+                  type="text" 
+                  value={old.Baranggay} disabled />
+              </div>
+              <div className='formpersonaChild5'>
+                  <label htmlFor="">Batch</label>
+                  <input 
+                  type="text" 
+                  value={old.Batch} disabled />
+              </div>
+              <div className='formpersonaChild5'>
+                  <label htmlFor="">Gender</label>
+                  <input 
+                  type="text" 
+                  value={old.gender} disabled />
+              </div>
+              <div className='formpersonaChild5'>
+                  <label htmlFor="">Email</label>
+                  <input 
+                  type="text" 
+                  value={old.email} disabled />
+              </div>
+              <div className='formpersonaChild5'>
+                  <label htmlFor="">Phone Number</label>
+                  <input 
+                  type="text" 
+                  value={old.phoneNum} disabled />
+              </div>
+              <div className='formpersonaChild5'>
+                  <label htmlFor="">Year Level</label>
+                  <input 
+                  type="text" 
+                  value={old.yearLevel} disabled />
+              </div>
+              <div className='formpersonaChild5'>
+                  <label htmlFor="">Grade Level</label>
+                  <input 
+                  type="text" 
+                  value={old.gradeLevel} disabled />
+              </div>
+          </div>
+          <div style={{position:'relative',display:'flex',justifyContent:'center',alignItems:'center'}}>
+              <FcRight style={{fontSize:'65px'}}/>
+          </div>
+          <h1 style={{position:'absolute',top:'-10px',right:'26%',fontSize:'20px',fontWeight:'bold',lineHeight:'17.57px',backgroundColor:'#043F97',color:'white',padding:'10px',borderRadius:'5px'}}>
+            UPDATED SCHOLAR DATA
+          </h1>
+          <div className='formpersona4' style={{height:'max-content',backgroundColor:'white',borderRadius:'5px',paddingTop:'15px'}}>
+          <div className='formpersonaChild5'>
+                  <label htmlFor="">Name</label>
+                  <input 
+                  type="text" 
+                  value={inf.Name} disabled />
+          </div>
+              <div className='formpersonaChild5'>
+                  <label htmlFor="">Barangay</label>
+                  <input 
+                  type="text" 
+                  value={inf.Baranggay} disabled />
+              </div>
+              <div className='formpersonaChild5'>
+                  <label htmlFor="">Batch</label>
+                  <input 
+                  type="text" 
+                  value={inf.Batch} disabled />
+              </div>
+              <div className='formpersonaChild5'>
+                  <label htmlFor="">Gender</label>
+                  <input 
+                  type="text" 
+                  value={old.gender} disabled />
+              </div>
+              <div className='formpersonaChild5'>
+                  <label htmlFor="">Email</label>
+                  <input 
+                  type="text" 
+                  value={inf.email} disabled />
+              </div>
+              <div className='formpersonaChild5'>
+                  <label htmlFor="">Phone Number</label>
+                  <input 
+                  type="text" 
+                  value={inf.phoneNum} disabled />
+              </div>
+              <div className='formpersonaChild5'>
+                  <label htmlFor="">Year Level</label>
+                  <input 
+                  type="text" 
+                  value={inf.yearLevel} disabled />
+              </div>
+              <div className='formpersonaChild5'>
+                  <label htmlFor="">Grade Level</label>
+                  <input 
+                  type="text" 
+                  value={inf.gradeLevel} disabled />
+              </div>
+          </div>
         </div>
-        
-        {fullscreenImage && (
-        <FullscreenImagePopup
-          imageSrc={fullscreenImage}
-          onClose={closeFullscreen}
-        />
-      )}
       </Box>
       </Dialog>
     <Modal             
@@ -1267,8 +1285,27 @@ const Scholars = () => {
     </Card>
 
     </Box>
-    {screen === 0 && <Box sx={{ width: '100%',backgroundColor:'white',minHeight:'300px',height: 'maxContent' }}>
-        <CustomDataGrid
+    {screen === 0 && 
+    <Box sx={{ width: '100%',backgroundColor:'transparent',minHeight:'300px',height: 'maxContent' }}>
+    {data.length === 0 ? (
+        <div
+        style={{
+          position: 'absolute',
+          top: '50%',
+          left: '50%',
+          transform: 'translate(-50%, -50%)',
+          textAlign: 'center',
+        }}
+      >
+        <div style={{ marginBottom: '16px' }}>
+          <CircularProgress />
+        </div>
+        <div>
+          <p>Loading...</p>
+          <div className="loading-animation"></div>
+        </div>
+      </div>) : (<CustomDataGrid
+        style={{backgroundColor:'white'}}
         rows={data}
         columns={columns}
         getRowId={(row) => row.applicantNum}
@@ -1285,7 +1322,7 @@ const Scholars = () => {
           noRowsOverlay: CustomNoRowsOverlay,
         }}
         pageSizeOptions={[25]}
-      />
+      />)}
     </Box>}
     {screen === 1 && <Box sx={{width: '100%',backgroundColor:'white',minHeight:'300px',height: 'maxContent'}}>
         <CustomDataGrid
@@ -1363,6 +1400,8 @@ const Scholars = () => {
     }
     </>
     )}
+
+
     {page === 1 && (
       <>
       <div>

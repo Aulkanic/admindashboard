@@ -35,7 +35,7 @@ const StyledTableCell = styled(TableCell)(({ theme }) => ({
 
 
 const PrintablePage = (val) => {
-    console.log(val)
+ 
     let data = val.value ? val.value : [];
     const date = new Date();
     const options = { year: 'numeric', month: 'long', day: 'numeric' };
@@ -54,7 +54,7 @@ const PrintablePage = (val) => {
   return (
     <div id="component-to-print">
         <div style={{display:'flex',justifyContent:'left',alignItems:'left',width:'100%',flexDirection:'column'}}>
-          <div style={{display:'flex',justifyContent:'space-between',alignItems:'center',width:'100vw',marginTop:'10px',padding:'10px'}}>
+          <div style={{display:'flex',justifyContent:'space-between',alignItems:'center',marginTop:'10px',padding:'10px'}}>
           <img src={Marilao} style={{width:'100px',heigt:'100px',objectFit:'contain'}} alt="" />
           <div style={{textAlign:'center'}}>
             <p style={{margin:'0px',fontWeight:'bold',lineHeight:'16.45px',fontSize:'20px'}}>REPUBLIC OF THE PHILIPPINES</p>

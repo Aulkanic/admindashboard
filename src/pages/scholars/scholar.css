@@ -131,5 +131,81 @@
   height: 550px;
   object-fit: contain;
 }
+.formpersonaChild2 {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  flex-basis: calc(33.33% - 20px);
+  min-width: 200px;
+  max-width: calc(50% - 20px);
+  height: 50px;
+  padding: 5px;
+  margin: 5px;
+}
+.formpersonaChild2 input{
+  background-color: white;
+}
+.formpersonaChild3 {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  flex-basis: calc(33.33% - 20px);
+  min-width: 200px;
+  max-width: calc(50% - 20px);
+  height: 150px;
+  padding: 5px;
+  margin: 5px;
+  position: relative;
+}
+.formpersona3{
+  width: 100%;
+  height: max-content;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+.formpersona4{
+  width: 45%;
+  height: max-content;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  border: 5px solid whitesmoke;
+}
 
-
+.formpersonaChild4 {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  flex-basis: calc(33.33% - 20px);
+  min-width: 200px;
+  max-width: calc(50% - 20px);
+  height: 200px;
+  padding: 5px;
+  margin: 5px;
+  position: relative;
+  border-radius: 5px;
+  background-color: whitesmoke;
+}
+.formpersonaChild5 {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  flex-basis: calc(43.33% - 20px);
+  min-width: 200px;
+  max-width: calc(50% - 20px);
+  height: max-content;
+  padding: 5px;
+  margin: 5px;
+  position: relative;
+  border-radius: 5px;
+}
+.formpersonaChild4 label,.formpersonaChild5 label{
+  text-transform: uppercase;
+  font-weight: bold;
+}
+.formpersonaChild4 input,.formpersonaChild5 input{
+  padding: 10px;
+  font-weight: bold;
+  height: max-content;
+}

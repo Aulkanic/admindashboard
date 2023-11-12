@@ -48,7 +48,7 @@ const Home = () => {
     {
       field: 'Name',
       headerName: 'Name',
-      width: 250,
+      width: 300,
       editable: true,
     },
     
@@ -67,13 +67,13 @@ const Home = () => {
     {
       field: 'DateApplied',
       headerName: 'Date Applied',
-      width: 200,
+      width: 250,
       editable: false,
     },
     {
       field: 'score',
       headerName: 'Score',
-      width: 100,
+      width: 150,
       editable: false,
       renderCell: (params) =>(
         <>

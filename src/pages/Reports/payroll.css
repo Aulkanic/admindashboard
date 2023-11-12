@@ -1,6 +1,5 @@
 .payrollContent{
     padding: 5px;
-    overflow: auto;
 }
 .payrollContainer1{
     display: flex;
@@ -30,6 +29,7 @@
     }
     @page {
         margin-top: 0;
+        size: A4 landscape;
       }
       /* Hide the date and URL */
       .date, .url, .website, .footer, .url-container {

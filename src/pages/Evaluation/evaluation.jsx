@@ -715,7 +715,6 @@ const Evaluation = () => {
       </div>
 
     )})
-    console.log(applicantsInfo)
   return (
     <>
               <StyledBackdrop open={showBackdrop}>

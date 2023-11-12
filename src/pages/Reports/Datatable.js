@@ -14,26 +14,26 @@ const CustomDataGrid = styled(DataGrid)({
   });
 
 export default function Datatable(data) {
-    const rowdata = data.props;
+    const rowdata = data.props || [];
     const column = data.col;
   return (
-    <Box sx={{  width: '100%',backgroundColor:'white',minHeight:'300px',height: 400 }}>
+    <Box sx={{ backgroundColor:'white',minHeight:'300px',width:'100%',overflowX:'auto'}}>
     <CustomDataGrid
       sx={{minHeight:'300px'}}
       rows={rowdata}
       columns={column}
-      getRowId={(row) => row.userprofID}
+      getRowId={(row) => row.applicantNum}
       initialState={{
         pagination: {
           paginationModel: {
-            pageSize: 20,
+            pageSize: 10,
            },
           },
         }}
         slots={{
           noRowsOverlay: CustomNoRowsOverlay,
         }}
-      pageSizeOptions={[20,50]}
+      pageSizeOptions={[5,10,20]}
       disableRowSelectionOnClick
     /> 
     </Box>

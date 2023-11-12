@@ -2,14 +2,12 @@
 
 .scholars{
     display: flex;
-    background-color: #f1f3fa;   
-    height: 100vh;
-    overflow: auto;
+    background-color: #f1f3fa;
     .scholarsContainer{
         flex: 7;
+        width: 100%;
         background-color: #f1f3fa;  
         .top{
-            overflow: hidden;
             padding: 20px;
 
             h1{

@@ -108,7 +108,9 @@ const Endpoints = {
     BACKUPNOW:'admin/Backup',
     RESTORE:'admin/Restore',
     ADMIN_NOTIF:'admin/Notification',
-    SCHOLAROLD: 'BMCCScholar/Renew/'
+    SCHOLAROLD: 'BMCCScholar/Renew/',
+    SCHOLARRENEWAL:'BMCCScholar/RenewalScholar',
+    ALLDATA:'Reports/Alldata'
 }
 
 export default Endpoints
