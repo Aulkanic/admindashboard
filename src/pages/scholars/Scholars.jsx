@@ -632,9 +632,9 @@ const Scholars = () => {
     })
 
     const SetSchoRenewed = async(data) =>{
-
       const formData = new FormData()
       formData.append('yearLevel',data.yearLevel)
+      formData.append('applicantNum',old.applicantNum)
       formData.append('Baranggay',data.Baranggay)
       formData.append('phoneNum',data.phoneNum)
       formData.append('gradeLevel',data.gradeLevel)

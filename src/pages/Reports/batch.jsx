@@ -57,7 +57,7 @@ function Batch(filterdata){
   }
   return (
     <>
-      <PrintablePage value={modifiedList} cols={columns} head={title}/>
+      <PrintablePage for={'Data'} value={modifiedList} cols={columns} head={title}/>
       <Datatable props={modifiedList} col={columns}/>
     </>
   )

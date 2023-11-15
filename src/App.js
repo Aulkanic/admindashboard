@@ -9,7 +9,7 @@ import Users from './pages/users/Users';
 import Appointment from './pages/appointments/Appointment';
 import Scholars from './pages/scholars/Scholars';
 import Evaluation from './pages/Evaluation/evaluation';
-import UserList from './pages/PrintableData/user';
+import Payroll from './pages/Reports/payroll';
 import Rule from './pages/Rules/rule';
 import Website from './pages/Website/website';
 import News from './pages/new/New';
@@ -60,7 +60,7 @@ function App() {
                 <Route path='Announcement' element={<Announcement/>} />
                 <Route path='Website-Maintenance' element={<Website/>} />
                 <Route path='Report' element={<Report/>} />
-                <Route path='Report/User' element={<UserList/>} />
+                <Route path='Report/Payroll' element={<Payroll/>} />
                 {/* <Route path='Backups' element={<Backup/>} /> */}
           </Route>
         </Route>

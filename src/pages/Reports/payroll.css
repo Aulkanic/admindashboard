@@ -29,7 +29,7 @@
     }
     @page {
         margin-top: 0;
-        size: A4 landscape;
+        size: A3 landscape;
       }
       /* Hide the date and URL */
       .date, .url, .website, .footer, .url-container {

@@ -1,11 +1,11 @@
 import React from 'react';
-import PrintablePage from '../Reports/printablePage';
+import Payroll from '../Reports/payroll';
 
 function UserList() {
   return (
     <div>
       <h1>Daily Reports</h1>
-      <PrintablePage />
+      <Payroll/>
     </div>
   )
 }

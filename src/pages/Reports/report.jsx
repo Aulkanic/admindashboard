@@ -95,7 +95,8 @@ const batchOPT = generateYearOptions()?.map(program => ({
 const Report = () => {
   const [value, setValue] = React.useState('1');
   const [payroll,setPayroll] = useState([]);
-  const [allData,setAllData] = useState([])
+  const [allData,setAllData] = useState([]);
+  const [school,setSchool] = useState('')
   const [filteredData,setFilteredData] = useState([])
   const [show, setShow] = useState(false);
   const [schoProg,setSchoprog] = useState([]);
@@ -110,7 +111,7 @@ const Report = () => {
     baranggay:'',
     appliedDate:null,
     approvedDate:null,
-    renewedDate:null
+    renewedDate:null,
   });
 
 
@@ -137,7 +138,7 @@ const Report = () => {
 
 useEffect(() =>{
   filtered()
-},[filterCriteria,allData])
+},[filterCriteria,allData,school])
 
   const listremarks =
   filterCriteria.Status === 'Applicant' ? remarksStat1 :
@@ -167,6 +168,7 @@ useEffect(() =>{
       const itemDate = dayjs(data.date);
       const itemDate1 = dayjs(data.approveDate);
       const itemDate2 = dayjs(data.renewedDate);
+
       return (
         (filterCriteria.Status === '' || data.UserProfileStatus === filterCriteria.Status) &&
         (filterCriteria.Gender === '' || data.gender === filterCriteria.Gender) &&
@@ -175,6 +177,7 @@ useEffect(() =>{
         (filterCriteria.baranggay === '' || data.baranggay === filterCriteria.baranggay) &&
         (filterCriteria.Batch === '' || data.Batch === filterCriteria.Batch) &&
         (filterCriteria.Remarks === '' || data.Remarks === filterCriteria.Remarks) && 
+        (school === '' || data.school.toLocaleLowerCase().includes(school.toLocaleLowerCase())) && 
         (filterCriteria.appliedDate ? itemDate.isSame(filterCriteria.appliedDate, 'day') : true) && 
         (filterCriteria.approvedDate ? itemDate1.isSame(filterCriteria.approvedDate, 'day') : true) && 
         (filterCriteria.renewedDate ? itemDate2.isSame(filterCriteria.renewedDate, 'day') : true)
@@ -183,6 +186,7 @@ useEffect(() =>{
     setFilteredData(filtered);
 
   };
+
   const clearFilter = () =>{
     setFilterCriteria({
       Status: '',
@@ -197,13 +201,7 @@ useEffect(() =>{
       renewedDate:null
     });
   }
-  var dateLabel =  '';
-  if(filterCriteria.Status ==='Applicant'){
-    dateLabel = 'Filter by Application Date';
-  }
-  if(filterCriteria.Status === 'Approved'){
-    dateLabel = 'Filter by Approval Date';
-  }
+
   const handleDateChange = (data) =>{
     setFilterCriteria((prev) =>({
       ...prev,
@@ -354,7 +352,8 @@ useEffect(() =>{
                       <Button style={{backgroundColor:'white',color:'black',padding:'0px 15px 0px 15px',height:'38px',marginTop:'8px',borderRadius:'3px'}} onClick={handleShow}><img style={{width:'15px'}} src={FilterIcon} alt='' />
                       All Filters
                       </Button>
-                      <div style={{display:'flex',justifyContent:"space-between",alignItems:'center',width:'80%'}}>
+                    </div>
+                    <div style={{display:'flex',justifyContent:"space-between",alignItems:'center',width:'80%'}}>
                       <LocalizationProvider dateAdapter={AdapterDayjs}>
                         <DemoContainer components={['DatePicker']}>
                           <DatePicker
@@ -403,8 +402,15 @@ useEffect(() =>{
                           />
                         </DemoContainer>
                       </LocalizationProvider>
+                      <div>
+                        <input 
+                        type="text" 
+                        value={school}
+                        onChange={(e) =>setSchool(e.target.value)}
+                        name='school'
+                        />
                       </div>
-                    </div>
+                      </div>
                     <div>
                       <div style={{display:'flex',alignItems:'center',marginBottom:'5px'}}>
                         <Form.Group style={{marginTop:'8px',borderRadius:'3px',marginRight:'5px'}}>
