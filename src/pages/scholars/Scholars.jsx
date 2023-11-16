@@ -131,8 +131,10 @@ const Scholars = () => {
       const formData = new FormData()
       formData.append('remarks',data)
       formData.append('renewTitle',selectedRenewTitle)
+      setShowBackdrop(true);
       SetRenewalDetails.SET_RENEWINF(formData)
       .then((res) =>{
+        setShowBackdrop(false);
         setRenewDet(res.data)
       })
   }
@@ -206,7 +208,8 @@ const Scholars = () => {
     const response = await SetSchoRenewDetails.FETCH_SCHORE(formData);
     console.log(response)
     const re= await SchoinfOld.SCHO_OLD(scholarCode)
-    setOld(re.data.inf[0])
+    console.log(re)
+    setOld(re.data?.inf[0])
     setRenewScho(response.data)
     setShowBackdrop(false);
     setOpen2(true);

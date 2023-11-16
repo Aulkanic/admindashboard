@@ -353,7 +353,7 @@ useEffect(() =>{
                       All Filters
                       </Button>
                     </div>
-                    <div style={{display:'flex',justifyContent:"space-between",alignItems:'center',width:'80%'}}>
+                    <div style={{display:'flex',justifyContent:"space-between",alignItems:'center',width:'1000px'}}>
                       <LocalizationProvider dateAdapter={AdapterDayjs}>
                         <DemoContainer components={['DatePicker']}>
                           <DatePicker
@@ -402,10 +402,12 @@ useEffect(() =>{
                           />
                         </DemoContainer>
                       </LocalizationProvider>
-                      <div>
+                      <div style={{marginTop:'8px'}}>
                         <input 
+                        style={{hieght:'50px',padding:'5px',borderRadius:'5px',borderColor:'gray',width:'max-content'}}
                         type="text" 
                         value={school}
+                        placeholder='Filter by School'
                         onChange={(e) =>setSchool(e.target.value)}
                         name='school'
                         />

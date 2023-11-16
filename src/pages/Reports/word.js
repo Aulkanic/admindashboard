@@ -1,47 +1,53 @@
-export function convertToWords(number) {
-    console.log(number)
-    const units = ['', 'one', 'two', 'three', 'four', 'five', 'six', 'seven', 'eight', 'nine'];
-    const teens = ['', 'eleven', 'twelve', 'thirteen', 'fourteen', 'fifteen', 'sixteen', 'seventeen', 'eighteen', 'nineteen'];
-    const tens = ['', 'ten', 'twenty', 'thirty', 'forty', 'fifty', 'sixty', 'seventy', 'eighty', 'ninety'];
 
-    function convertChunk(chunk) {
-        if (chunk === 0) {
-            return '';
-        }
 
-        const chunkArr = chunk.toString().split('').map(Number);
-        const [hundreds, tensUnits] = chunkArr.reverse();
-        console.log(hundreds)
-        console.log(tensUnits)
-        console.log(chunkArr[0])
-        let result = '';
-        if (hundreds) {
-            result += units[hundreds] + ' hundred ';
-        }
-
-        if (tensUnits === 1) {
-            console.log(tens[chunkArr[0]] + ' ')
-            result += teens[chunkArr[0]] + ' ';
+const convertToWords = (number) => {
+    const unitsMap = [
+        '', 'One', 'two', 'three', 'four', 'five', 'six', 'seven', 'eight', 'nine', 'ten',
+        'eleven', 'twelve', 'thirteen', 'fourteen', 'fifteen', 'sixteen', 'seventeen', 'eighteen', 'nineteen',
+     ];
+    
+     const tensMap = [
+        '', '', 'twenty', 'thirty', 'forty', 'fifty', 'sixty', 'seventy', 'eighty', 'ninety',
+     ];
+    
+     const thousandsMap = [
+        '', 'thousand', 'million', 'billion', 'trillion', 'quadrillion', 'quintillion', 'sextillion',
+        'septillion', 'octillion', 'nonillion', 'decillion', 'undecillion', 'duodecillion', 'tredecillion',
+        'quattuordecillion', 'quindecillion', 'sexdecillion', 'septendecillion', 'octodecillion', 'novemdecillion',
+        'vigintillion',
+     ];
+    
+     let num = number.toString();
+     let length = num.length;
+     let words = '';
+     let group;
+    
+     for (let i = 0; i < length; i += 3) {
+        group = num.slice(i, i + 3);
+    
+        if (group[1] === '0' && group[2] === '0') {
+          words += `${unitsMap[Number(group[0])]} `;
+        } else if (group[1] === '0') {
+          words += `${unitsMap[Number(group[0])]} hundred `;
+          if (group[2] !== '0') {
+            words += `${unitsMap[Number(group[2])]} `;
+          }
+        } else if (group[1] === '1') {
+          words += `${unitsMap[Number(group[0])]} hundred `;
+          words += `${unitsMap[Number(group[2]) + 10]} `;
         } else {
-            result += tens[tensUnits] + ' ' + units[chunkArr[0]] + ' ';
+          words += `${unitsMap[Number(group[0])]} hundred `;
+          words += `${tensMap[Number(group[1])]} `;
+          if (group[2] !== '0') {
+            words += `${unitsMap[Number(group[2])]} `;
+          }
         }
-console.log(result)
-        return result.trim();
-    }
-
-    const numberStr = number.toString();
-    console.log(numberStr)
-    const chunks = [];
-    for (let i = 0; i < numberStr.length; i += 3) {
-        chunks.push(parseInt(numberStr.substring(i, i + 3), 10));
-    }
-console.log(chunks)
-    const wordsChunks = chunks.map((chunk, index) => {
-        const suffix = index > 0 ? ['', 'thousand', 'million', 'billion'][index] : '';
-        console.log(suffix)
-        return convertChunk(chunk) + ' ' + suffix;
-    });
-
-    return wordsChunks.reverse().join(' ').trim();
-  }
-  
+       console.log(length - i)
+        if (length - i >= 3) {
+          words += `${thousandsMap[Math.floor((i + 3) / 3) - 1]} `;
+        }
+     }
+    
+     return words.trim();
+};
+export default convertToWords;

@@ -10,6 +10,7 @@ function Batch(filterdata){
   const modifiedList = data?.map((item, index) => ({
     ...item,
     userNum: index + 1,
+    contactNum: `0${item.contactNum};`
   }));
   
   const title = filterdata.data ? filterdata.data.title : '';
@@ -17,12 +18,15 @@ function Batch(filterdata){
     { field: 'userNum', headerName: '#', width: 50 },
     { field: 'Name', headerName: 'Name', width: 170 },
     { field: 'gender', headerName: 'Gender', width: 100 },
-    { field: 'ScholarshipApplied', headerName: 'Scholarship Applied', width: 170 },
+    { field: 'contactNum', headerName: 'Phone Number', width: 150 },
+    { field: 'ScholarshipApplied', headerName: 'Scholarship Applied', width: 100 },
     { field: 'UserProfileStatus', headerName: 'Status', width: 130 },
     { field: 'Remarks', headerName: 'Remarks', width: 170 },
     { field: 'baranggay', headerName: 'Baranggay', width: 150 },
     { field: 'yearLevel', headerName: 'Year Level', width: 150 },
-    { field: 'Batch', headerName: 'Batch', width: 100 },
+    { field: 'school', headerName: 'School', width: 150 },
+    { field: 'date', headerName: 'Date Applied', width: 150 },
+    { field: 'Batch', headerName: 'Batch', width: 130 },
     
   ]
   if(stat === 'Applicant'){
@@ -30,11 +34,13 @@ function Batch(filterdata){
       { field: 'userNum', headerName: '#', width: 50 },
       { field: 'Name', headerName: 'Name', width: 170 },
       { field: 'gender', headerName: 'Gender', width: 100 },
+      { field: 'contactNum', headerName: 'Phone Number', width: 100 },
       { field: 'ScholarshipApplied', headerName: 'Scholarship Applied', width: 100 },
       { field: 'UserProfileStatus', headerName: 'Status', width: 130 },
       { field: 'Remarks', headerName: 'Remarks', width: 170 },
       { field: 'baranggay', headerName: 'Baranggay', width: 150 },
       { field: 'yearLevel', headerName: 'Year Level', width: 150 },
+      { field: 'school', headerName: 'School', width: 150 },
       { field: 'date', headerName: 'Date Applied', width: 150 },
       { field: 'Batch', headerName: 'Batch', width: 130 },
     ];

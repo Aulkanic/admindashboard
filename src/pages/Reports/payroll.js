@@ -224,7 +224,7 @@ function Payroll(pay){
 
   return (
     <>
-      <PrintablePage for={'Payroll'} funds={totalFunds} total={total} level={selection} value={paginateData} cols={columns} head={reportTitle} row={totalRow}/>
+      <PrintablePage for={'Payroll'} page={currentPage} funds={totalFunds} total={total} level={selection} value={paginateData} cols={columns} head={reportTitle} row={totalRow}/>
     
     <div className='payrollContent'>
       <div className='payrollContainer2'>

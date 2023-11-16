@@ -28,9 +28,9 @@ import DialogTitle from '@mui/material/DialogTitle';
 import AddIcon from '@mui/icons-material/Add';
 import Renewalicon from '../../Images/icons8-form-64.png'
 import FacebookIcon from '@mui/icons-material/Facebook';
-import YouTubeIcon from '@mui/icons-material/YouTube';
 import MailOutlineIcon from '@mui/icons-material/MailOutline';
-import CallIcon from '@mui/icons-material/Call';
+import APKicon from '../../Images/apk.png'
+import { MdInstallMobile } from "react-icons/md";
 import { useSelector } from 'react-redux'
 
 const theme = createTheme();
@@ -403,8 +403,8 @@ const Website = () => {
                       <MailOutlineIcon sx={{fontSize:'60px',color:'red'}}/>
                       <Typography>Gmail Account</Typography>
                       <TextField value={gm || colorList.gmlink} onChange={(e) =>setGM(e.target.value)}/>
-                      <CallIcon sx={{fontSize:'60px',color:'green'}}/>
-                      <Typography>Telephone/Contact Number</Typography>
+                      <img src={APKicon} style={{width:'60px',color:'green',marginTop:'7px'}}/>
+                      <Typography>Marisko App Link</Typography>
                       <TextField value={tele || colorList.telephone} onChange={(e) =>setTele(e.target.value)}/>
                     </Card>
                     </div>

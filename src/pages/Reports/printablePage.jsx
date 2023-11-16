@@ -14,7 +14,7 @@ import { FaLocationDot } from 'react-icons/fa6';
 import { TbWorldWww } from 'react-icons/tb';
 import { FiMail } from 'react-icons/fi';
 import { BsFacebook } from 'react-icons/bs';
-import { convertToWords } from './word';
+import convertToWords from './word';
 
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
     [`&.${tableCellClasses.head}`]: {
@@ -46,12 +46,13 @@ const PrintablePage = (val) => {
     const options = { year: 'numeric', month: 'long', day: 'numeric' };
     const formattedDate = date.toLocaleDateString('en-US', options);
     const [page, setPage] = React.useState(0);
-    const [rowsPerPage, setRowsPerPage] = useState(20);
+    const [rowsPerPage, setRowsPerPage] = useState(25);
     const columns = val.cols ? val.cols : []
     const title = val.head ? val.head : '';
     const fundsTotal = val.funds ? val.funds : '';
     const totalnum = val.total ? val.total : 0
     const wordTotal = convertToWords(totalnum)
+    const pageNum = val.page;
     const totalRow = val.row ? val.row : [];
     const YearLevel = val.level?.toUpperCase();
     const newColumn1 = {
@@ -123,7 +124,7 @@ const PrintablePage = (val) => {
                     {columns.map((column) => {
                       const value = row[column.field];
                       return (
-                        <TableCell sx={{fontSize:'10px'}} key={column.field} align={column.align}>
+                        <TableCell sx={{fontSize:'10px',padding:'2px'}} key={column.field} align={column.align}>
                           {column.format && typeof value === 'number'
                             ? column.format(value)
                             : value}
@@ -146,9 +147,12 @@ const PrintablePage = (val) => {
     </div>}
     {printFor === 'Payroll' && <>
     <div id="component-to-print">
-      <div>
-      <h1 style={{fontSize:'18px',margin:0,marginTop:'5px'}}>{YearLevel}</h1>
-      <h1 style={{fontSize:'18px',margin:0}}>{title}</h1>
+      <div style={{display:'flex',position:'relative'}}>
+        <div>
+        <h1 style={{fontSize:'18px',margin:0,marginTop:'5px'}}>{YearLevel}</h1>
+        <h1 style={{fontSize:'18px',margin:0}}>{title}</h1>
+        </div>
+          <p style={{position:'absolute',left:'50%'}}>Page {pageNum}</p>
       </div>
       <div style={{marginTop:'15px'}}>
         <p style={{margin:0,fontSize:'15px',marginLeft:'25px'}}>We hereby acknowledge to have received from <strong style={{textDecoration: 'underline'}}>ROWENA E. DARILAG , CASHIER III</strong>, Marilao, Bulacan the sum herein specified opposite our respective names,the same being full compensation for our service</p>
@@ -227,7 +231,7 @@ const PrintablePage = (val) => {
               <p style={{ borderBottom: '0.5px solid black', width: '200px', whiteSpace: 'nowrap', marginRight: '5px' }}></p>
               <p>(P</p>
               <p style={{ borderBottom: '0.5px solid black', width: '250px', marginLeft: '5px' }}></p>)
-              <p>pesos only</p>
+              <p>  pesos only</p>
             </div>
             <div style={{display:'flex'}}>
             <p style={{borderBottom:'0.5px solid black',width:'200px'}}></p><p>20</p><p style={{borderBottom:'0.5px solid black',width:'200px'}}></p>
