@@ -319,9 +319,10 @@ const Appointment = () => {
       CreateAppointment.CREATE_APPOINT(formData)
       .then((res) => {
         if(res.data.success === 1){
-          const list = res.data.List.data1.filter(user => user.isAppointed === 'No');
+          console.log(res.data)
+          const list = res.data.List.results.filter(user => user.isAppointed === 'No');
           setQualified(list);
-          setAppointedList(res.data.List.data2)
+          setAppointedList(res.data.List.results1)
           setErrors('')
           setRowSelectionModel([])
           counter++;
@@ -403,8 +404,8 @@ const Appointment = () => {
       formData.append('guardian',dataappinfo.guardianName)
       SetApproved.SET_APPROVE(formData)
     .then(res => {
-      setQualified(res.data.results.data1)
-      setAppointedList(res.data.results.data2)
+      setQualified(res.data.results.results)
+      setAppointedList(res.data.results.results1)
       setShowBackdrop(false);
       swal({
         title: "Success",
@@ -606,8 +607,8 @@ const Addall = async () => {
         formData.append('guardian',dataappinfo.guardianName)
         SetApproved.SET_APPROVE(formData)
       .then(res => {
-        setQualified(res.data.results.data1);
-        setAppointedList(res.data.results.data2)
+        setQualified(res.data.results.results);
+        setAppointedList(res.data.results.results1)
         counter++;
         if (counter === selectedRows.length) {
           setShowBackdrop(false);
@@ -782,9 +783,9 @@ try {
       CreateAppointment.CREATE_APPOINT(formData)
       .then((res) => {
         if(res.data.success === 1){
-          const list = res.data.List.data1.filter(user => user.isAppointed === 'No');
+          const list = res.data.List.results.filter(user => user.isAppointed === 'No');
           setQualified(list);
-          setAppointedList(res.data.List.data2)
+          setAppointedList(res.data.List.results1)
           setErrors('')
           setRowSelectionModel([])
           counter++;

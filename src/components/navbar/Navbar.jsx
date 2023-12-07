@@ -229,21 +229,16 @@ const Navbar = () => {
     .catch(err => console.log(err));
     }
 
-    function timeAgo(date) {
+    function timeAgo(dateString) {
       const timeZone = "Asia/Manila";
-
-      // Get the current time in the specified time zone
       const now = new Date().toLocaleString("en-US", { timeZone });
+      const nowDate = new Date(now);
     
-      // Convert the input date to the specified time zone
-      const timestamp = new Date(date);
-    
+      const timestamp = new Date(dateString);
       // Convert both dates to timestamps
-      const nowTimestamp = new Date(now).getTime();
-      const timestampTimestamp = new Date(timestamp).getTime();
-    
+      const nowTimestamp = nowDate.getTime();
+      const timestampTimestamp = timestamp.getTime();
       const diffInSeconds = Math.floor((nowTimestamp - timestampTimestamp) / 1000);
-
     
       if (diffInSeconds < 10) {
         return "just now";
@@ -259,7 +254,7 @@ const Navbar = () => {
         const days = Math.floor(diffInSeconds / 86400);
         return `${days} ${days === 1 ? 'day' : 'days'} ago`;
       }
-  }
+    }
   const urlLink = (link) => {
     navigate(`/${link}`)
   }

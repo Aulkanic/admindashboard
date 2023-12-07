@@ -190,8 +190,8 @@ const Scholars = () => {
     const userAct = log.data.result;
     setUserlog(userAct.reverse());
     setRenewalscho(rrn.data)
-    setSchoInf1(response.data.ScholarInf.results1[0]);
-    setSchoInf2(response.data.ScholarInf.results2[0]);
+    setSchoInf1(response.data.ScholarInf.results[0]);
+    setSchoInf2(response.data.ScholarInf.results1[0]);
     setShowBackdrop(false);
     setOpen(true);
   };
@@ -206,9 +206,7 @@ const Scholars = () => {
     formData.append('tablename',tablename)
     formData.append('scholarCode',scholarCode)
     const response = await SetSchoRenewDetails.FETCH_SCHORE(formData);
-    console.log(response)
     const re= await SchoinfOld.SCHO_OLD(scholarCode)
-    console.log(re)
     setOld(re.data?.inf[0])
     setRenewScho(response.data)
     setShowBackdrop(false);

@@ -209,8 +209,8 @@ const Applicant = () => {
       setAccess(empacc)
       setDocumentaryListed(subdoc.data.Documentary)
       setPost(response.data.results);
-      const sub = docreq.data.Requirements.results2
-      const list = docreq.data.Requirements.results1
+      const sub = docreq.data.Requirements.results1;
+      const list = docreq.data.Requirements.results;
       setDocsListed(list)
       const totalsubdiv = `${sub.length}/${list.length}`
       setReqlist(totalsubdiv)
