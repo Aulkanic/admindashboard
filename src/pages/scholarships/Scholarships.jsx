@@ -9,7 +9,11 @@ import { useState } from "react";
 import Radio from '@mui/material/Radio';
 import RadioGroup from '@mui/material/RadioGroup';
 import FormControlLabel from '@mui/material/FormControlLabel';
-import FormLabel from '@mui/material/FormLabel';
+import dayjs from 'dayjs';
+import { DemoContainer } from '@mui/x-date-pickers/internals/demo';
+import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
+import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
+import { DateField } from '@mui/x-date-pickers/DateField';
 import swal from "sweetalert";
 import { DataGrid } from '@mui/x-data-grid';
 import Avatar from '@mui/material/Avatar';
@@ -51,16 +55,28 @@ const Scholarships = () => {
     const [olddata, setOlddata] = useState([]);
     const [iconprev, setSchoprev] = useState();
     const [iconprev1, setSchoprev1] = useState();
+    const currentDate = dayjs();
+    const [startDate, setStartDate] = useState(null);
+    const [endDate, setEndDate] = useState(null);
+
 
   const handleOpen = () => {
     setOpen(true)
   };
-  const handleClose = () => setOpen(false);
+  const handleClose = () => {
+    setEndDate(null);
+    setStartDate(null)
+    setOpen(false)
+  };
   const handleOpen1 = (data) => {
     setOlddata(data)
     setOpen1(true);
   }
-  const handleClose1 = () => setOpen1(false);
+  const handleClose1 = () => {
+    setEndDate(null);
+    setStartDate(null)
+    setOpen1(false)
+  };
 
   const style = {
     position: 'absolute',
@@ -79,8 +95,16 @@ const Scholarships = () => {
       try {
         setShowBackdrop(true);
         const response = await FetchingSchoProg.FETCH_SCHOPROG()
-        
-        setSchocat(response.data.SchoCat);
+        const list = response.data.SchoCat?.map((data) =>{
+          const start = dayjs(data.startDate).format('MMMM DD, YYYY');
+          const end = dayjs(data.endDate).format('MMMM DD, YYYY');
+          return({
+            ...data,
+            startDate: start,
+            endDate: end
+          })
+        })
+        setSchocat(list);
         setShowBackdrop(false);
         
       } catch (error) {
@@ -138,16 +162,35 @@ const Scholarships = () => {
       setSchoimg(null)
       return false;
     }
-    const data = {icon,title,description,status};
+    const start = dayjs(startDate).format('YYYY-MM-DD')
+    const end = dayjs(endDate).format('YYYY-MM-DD')
+    const formData = new FormData();
+    formData.append('icon',icon)
+    formData.append('title',title)
+    formData.append('description',description)
+    formData.append('status',status)
+    formData.append('startDate',start)
+    formData.append('endDate',end)
     setOpen(false)
     setShowBackdrop(true);
-    CreateSchoProg.CREATE_SCHOPROG(data)
+    CreateSchoProg.CREATE_SCHOPROG(formData)
     .then(res => {
-      setSchocat(res.data.SchoCat)
+      const list = res.data.SchoCat?.map((data) =>{
+        const start = dayjs(data.startDate).format('MMMM DD, YYYY');
+        const end = dayjs(data.endDate).format('MMMM DD, YYYY');
+        return({
+          ...data,
+          startDate: start,
+          endDate: end
+        })
+      })
+      setSchocat(list)
       setSchodesc('')
       setSchoimg('')
       setStatusCheck('');
       setSchotitle('')
+      setStartDate(null)
+      setEndDate(null)
       setShowBackdrop(false);
       swal({
         title: "Success",
@@ -176,7 +219,8 @@ function Edit(event){
       return false;
     }
   }
-
+  const start = dayjs(startDate || olddata.startDate).format('YYYY-MM-DD')
+  const end = dayjs(endDate || olddata.endDate).format('YYYY-MM-DD')
   const schoid =  olddata.schoProgId;
   const icon = icon1 || olddata.icon;
   const title1 = titleu || olddata.name;
@@ -188,11 +232,24 @@ function Edit(event){
   formData.append('status',status1);
   formData.append('icon',icon);
   formData.append('schoid',schoid);
+  formData.append('startDate',start)
+  formData.append('endDate',end)
   setOpen1(false)
   setShowBackdrop(true);
   UpdateSchoProg.UPDATE_SCHOPROG(formData)
   .then(res => {
-    setSchocat(res.data.SchoCat)
+    const list = res.data.SchoCat?.map((data) =>{
+      const start = dayjs(data.startDate).format('MMMM DD, YYYY');
+      const end = dayjs(data.endDate).format('MMMM DD, YYYY');
+      return({
+        ...data,
+        startDate: start,
+        endDate: end
+      })
+    })
+    setSchocat(list)
+    setStartDate(null)
+    setEndDate(null)
     setShowBackdrop(false);
     swal({
       title: "Success",
@@ -261,18 +318,30 @@ const handleEditFileChange = (e) => {
       {
         field: 'name',
         headerName: 'Scholarship Name',
-        width: 270,
+        width: 250,
         editable: false,
       },
       {
         field: 'description',
         headerName: 'Description',
-        width: 520,
+        width: 200,
         editable: false,
       },
       {
         field: 'status',
         headerName: 'Status',
+        width: 100,
+        editable: false,
+      },
+      {
+        field: 'startDate',
+        headerName: 'Start Date',
+        width: 150,
+        editable: false,
+      },
+      {
+        field: 'endDate',
+        headerName: 'End Date',
         width: 150,
         editable: false,
       },
@@ -346,6 +415,46 @@ const handleEditFileChange = (e) => {
                   <div style={{width:'100%'}}>
                   <TextField fullWidth id="input-with-sx" variant="outlined" size="large"
                     onChange={(e) => setSchotitle(e.target.value)}/>
+                  </div>
+                  </Box>
+                  <Box sx={{ display: 'flex'}}>
+                  <div style={{width:'110px',display:'flex',justifyContent:'center',alignItems:'center',height:'59px',flexDirection:'column',marginRight:'5px'}}>
+                  <InputLabel sx={{color:'black',fontWeight:'bold'}}>Start-End</InputLabel>
+                  <InputLabel sx={{color:'black',fontWeight:'bold'}}>Date</InputLabel>
+                  </div> 
+                  <div style={{width:'100%',display:'felx',flexWrap:'wrap',gap:'2px'}}>
+                  <LocalizationProvider dateAdapter={AdapterDayjs}>
+                  <DemoContainer components={['DateField', 'DateField']}>
+                    <DateField
+                      label="Start Date"
+                      sx={{flex:1}}
+                      slotProps={{
+                        textField: {
+                          size: "large",
+                          error: false,
+                        },
+                      }}
+                      value={startDate}
+                      onChange={(newValue) => setStartDate(newValue)}
+                      minDate={currentDate}
+                      format="YYYY-MM-DD"
+                    />
+                    <DateField
+                      label="End Date"
+                      sx={{flex:1}}
+                      slotProps={{
+                        textField: {
+                          size: "large",
+                          error: false,
+                        },
+                      }}
+                      value={endDate}
+                      onChange={(newValue) => setEndDate(newValue)}
+                      minDate={currentDate}
+                      format="YYYY-MM-DD"
+                    />
+                  </DemoContainer>
+                </LocalizationProvider>
                   </div>
                   </Box>
                   <div style={{display: 'flex',margin:'10px 0px 10px 0px'}}>
@@ -444,6 +553,46 @@ const handleEditFileChange = (e) => {
                   <div style={{width:'100%'}}>
                   <TextField fullWidth placeholder={olddata.name} value={titleu || olddata.name} id="input-with-sx" variant="outlined" size="large"
                     onChange={(e) => setSchotitle1(e.target.value)}/>
+                  </div>
+                </Box>
+                <Box sx={{ display: 'flex'}}>
+                  <div style={{width:'110px',display:'flex',justifyContent:'center',alignItems:'center',height:'59px',flexDirection:'column',marginRight:'5px'}}>
+                  <InputLabel sx={{color:'black',fontWeight:'bold'}}>Start-End</InputLabel>
+                  <InputLabel sx={{color:'black',fontWeight:'bold'}}>Date</InputLabel>
+                  </div> 
+                  <div style={{width:'100%',display:'felx',flexWrap:'wrap',gap:'2px'}}>
+                  <LocalizationProvider dateAdapter={AdapterDayjs}>
+                  <DemoContainer components={['DateField', 'DateField']}>
+                    <DateField
+                      label="Start Date"
+                      sx={{flex:1}}
+                      slotProps={{
+                        textField: {
+                          size: "large",
+                          error: false,
+                        },
+                      }}
+                      value={startDate || dayjs(olddata.startDate)}
+                      onChange={(newValue) => setStartDate(newValue)}
+                      minDate={currentDate}
+                      format="YYYY-MM-DD"
+                    />
+                    <DateField
+                      label="End Date"
+                      sx={{flex:1}}
+                      slotProps={{
+                        textField: {
+                          size: "large",
+                          error: false,
+                        },
+                      }}
+                      value={endDate || dayjs(olddata.endDate)}
+                      onChange={(newValue) => setEndDate(newValue)}
+                      minDate={currentDate}
+                      format="YYYY-MM-DD"
+                    />
+                  </DemoContainer>
+                </LocalizationProvider>
                   </div>
                 </Box>
                 <div style={{display: 'flex',margin:'10px 0px 10px 0px'}}>

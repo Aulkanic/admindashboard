@@ -16,7 +16,9 @@ function Batch(filterdata){
   const title = filterdata.data ? filterdata.data.title : '';
   let columns=[
     { field: 'userNum', headerName: '#', width: 50 },
-    { field: 'Name', headerName: 'Name', width: 170 },
+    { field: 'Lastname', headerName: 'Last Name', width: 170 },
+    { field: 'Firstname', headerName: 'First Name', width: 170 },
+    { field: 'Middlename', headerName: 'Middle Name', width: 170 },
     { field: 'gender', headerName: 'Gender', width: 100 },
     { field: 'contactNum', headerName: 'Phone Number', width: 150 },
     { field: 'ScholarshipApplied', headerName: 'Scholarship Applied', width: 100 },
@@ -32,7 +34,9 @@ function Batch(filterdata){
   if(stat === 'Applicant'){
     columns = [
       { field: 'userNum', headerName: '#', width: 50 },
-      { field: 'Name', headerName: 'Name', width: 170 },
+      { field: 'Lastname', headerName: 'Last Name', width: 170 },
+      { field: 'Firstname', headerName: 'First Name', width: 170 },
+      { field: 'Middlename', headerName: 'Middle Name', width: 170 },
       { field: 'gender', headerName: 'Gender', width: 100 },
       { field: 'contactNum', headerName: 'Phone Number', width: 100 },
       { field: 'ScholarshipApplied', headerName: 'Scholarship Applied', width: 100 },
@@ -48,7 +52,9 @@ function Batch(filterdata){
   if(stat === 'Approved'){
     columns = [
       { field: 'userNum', headerName: '#', width: 50 },
-      { field: 'Name', headerName: 'Name', width: 170 },
+      { field: 'Lastname', headerName: 'Last Name', width: 170 },
+      { field: 'Firstname', headerName: 'First Name', width: 170 },
+      { field: 'Middlename', headerName: 'Middle Name', width: 170 },
       { field: 'gender', headerName: 'Gender', width: 100 },
       { field: 'ScholarshipApplied', headerName: 'Scholarship Applied', width: 170 },
       { field: 'UserProfileStatus', headerName: 'Status', width: 130 },
