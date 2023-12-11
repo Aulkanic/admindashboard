@@ -19,7 +19,7 @@ const Users = () => {
     {
       field: 'ScholarshipApplied',
       headerName: 'Scholarship Applied',
-      width: 200,
+      width: 100,
       editable: false,
 
     },
@@ -51,6 +51,13 @@ const Users = () => {
         );},},
 
     {
+      field: 'userType',
+      headerName: 'Type',
+      width: 150,
+      editable: true,
+    
+    },
+    {
       field: 'Name',
       headerName: 'Name',
       width: 250,
@@ -70,14 +77,21 @@ const Users = () => {
     {
       field: 'status',
       headerName: 'Status',
-      width: 200,
+      width: 100,
       editable: false,
     
     },
     {
       field: 'remarks',
       headerName: 'Remarks',
-      width: 200,
+      width: 100,
+      editable: false,
+    
+    },
+    {
+      field: 'device',
+      headerName: 'Device used',
+      width: 100,
       editable: false,
     
     },
