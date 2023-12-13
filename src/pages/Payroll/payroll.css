@@ -1,0 +1,21 @@
+.containerPay{
+    display: flex;
+}
+.bodyPay{
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+}
+.tabsbutton{
+    width: 200px;
+    background-color: white;
+    border: none;
+    padding: 10px 20px 10px 20px;
+}
+.Activetabs{
+    width: 200px;
+    background-color: white;
+    border: none;
+    padding: 10px 20px 10px 20px;
+    border-top: 5px solid blue;
+}

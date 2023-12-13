@@ -342,3 +342,6 @@ export const ScholarRenewallist = {
 export const MYDOUsers = {
     ALLDATA: () => axiosInstance.get(Endpoints.ALLDATA)
 }
+export const ProfileScholars = {
+    SCHO_PROFLIST: () => axiosInstance.get(Endpoints.FETCH_PROFILESCHOLAR)
+}

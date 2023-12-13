@@ -114,15 +114,15 @@ const Contact = () => {
       const empacc = acc.data.result?.filter(data => data.employeeName === admin[0].name)
       setAccess(empacc)
       setAccesslist(res.data.result[0])
-      setReqlist(req.data.Requirements.results1);
-      setSublist(req.data.Requirements.results2);
+      setReqlist(req.data.Requirements.results);
+      setSublist(req.data.Requirements.results1);
       setSchocat(scho.data.SchoCat);
       setShowBackdrop(false);
     }
     Fetch();
   }, []);
 
-  const mergedData = reqlist.map((requirement) => {
+  const mergedData = reqlist?.map((requirement) => {
     const { requirementID, requirementName, schoName, Status,batch,deadline,docsfor } = requirement;
 
     const submissions = submitted.filter((submission) => submission.requirement_Name === requirementName);

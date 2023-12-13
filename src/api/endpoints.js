@@ -31,6 +31,7 @@ const Endpoints = {
     SET_INTERVIEW: 'Appointment/Interview',
     FETCH_USERINFORMATION: 'Appointment/UserDetails/',
     FETCH_BMCCSCHOLAR: 'BMCCScholar/Scholars',
+    FETCH_PROFILESCHOLAR: 'BMCCScholar/ScholarsProfile',
     UPDATE_BMCCSCHOLAR: 'BMCCScholar/Schostanding',
     FETCH_BMCCSCHOLARINFO: 'BMCCScholar/SchoInfo/',
     CREATE_SCORECARD: 'Scorecard/score',

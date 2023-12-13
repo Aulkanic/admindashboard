@@ -18,7 +18,7 @@ import CampaignIcon from '@mui/icons-material/Campaign';
 import GavelIcon from '@mui/icons-material/Gavel';
 import LanguageIcon from '@mui/icons-material/Language';
 import AssessmentIcon from '@mui/icons-material/Assessment';
-import SettingsBackupRestoreIcon from '@mui/icons-material/SettingsBackupRestore';
+import { GiCash } from "react-icons/gi";
 import { useState } from 'react';
 import { useDispatch } from 'react-redux';
 import { setAuthenticated,setAdmin } from '../../Redux/loginSlice';
@@ -117,6 +117,13 @@ const Sidebar = () => {
             <li>
               <CalendarMonthIcon className='icon'/>
               <span> Appointments </span>
+            </li>
+            </Link>) : (null)}
+            {sections.includes('Appointment Management') || sections.includes('Appointment Scheduling') || sections.includes('Administrator') ? (
+            <Link to="/Payroll" style={{ textDecoration: "none" }}>
+            <li>
+              <GiCash className='icon'/>
+              <span> Payroll </span>
             </li>
             </Link>) : (null)}
 

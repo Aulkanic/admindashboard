@@ -1882,23 +1882,23 @@ try {
             <h2 style={{color:'white'}}>Select User to be Appointed</h2>
             </div>
             <DataGrid
-                      rows={Qualified}
-                      columns={columns}
-                      getRowId={(row) => row.applicantNum}
-                      scrollbarSize={10}
-                      initialState={{
-                        pagination: {
-                          paginationModel: {
-                            pageSize: 10,
-                          },
-                        },
-                      }}
-                      pageSizeOptions={[25]}
-                      checkboxSelection
-                      onRowSelectionModelChange={handleRowSelectionModelChange}
-                      rowSelectionModel={rowSelectionModel}
-                      disableRowSelectionOnClick
-                    />
+              rows={Qualified}
+              columns={columns}
+              getRowId={(row) => row.applicantNum}
+              scrollbarSize={10}
+              initialState={{
+                pagination: {
+                  paginationModel: {
+                    pageSize: 10,
+                  },
+                },
+              }}
+              pageSizeOptions={[25]}
+              checkboxSelection
+              onRowSelectionModelChange={handleRowSelectionModelChange}
+              rowSelectionModel={rowSelectionModel}
+              disableRowSelectionOnClick
+            />
             </Card>
        </div>
           <div className="applicantList">

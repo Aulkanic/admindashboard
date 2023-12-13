@@ -13,6 +13,7 @@ import Payroll from './pages/Reports/payroll';
 import Rule from './pages/Rules/rule';
 import Website from './pages/Website/website';
 import News from './pages/new/New';
+import { PayrollAppoint } from './pages/Payroll/payroll';
 import Announcement from './pages/Announcement/announcement';
 import Backup from './pages/BackupRestore/backup';
 import Report from './pages/Reports/report';
@@ -59,6 +60,7 @@ function App() {
                 <Route path='Rules' element={<Rule/>} />
                 <Route path='Announcement' element={<Announcement/>} />
                 <Route path='Website-Maintenance' element={<Website/>} />
+                <Route path='Payroll' element={<PayrollAppoint/>} />
                 <Route path='Report' element={<Report/>} />
                 <Route path='Report/Payroll' element={<Payroll/>} />
                 {/* <Route path='Backups' element={<Backup/>} /> */}
