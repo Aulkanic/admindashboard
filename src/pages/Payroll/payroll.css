@@ -11,6 +11,7 @@
     background-color: white;
     border: none;
     padding: 10px 20px 10px 20px;
+    transition: all;
 }
 .Activetabs{
     width: 200px;
@@ -18,4 +19,6 @@
     border: none;
     padding: 10px 20px 10px 20px;
     border-top: 5px solid blue;
+    color: rgb(31, 31, 245);
+    font-weight: 900;
 }

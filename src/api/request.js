@@ -345,3 +345,12 @@ export const MYDOUsers = {
 export const ProfileScholars = {
     SCHO_PROFLIST: () => axiosInstance.get(Endpoints.FETCH_PROFILESCHOLAR)
 }
+export const PayoutScholar = {
+    PAYOUT_SCHO: (data) => axiosInstance.post(Endpoints.PAYOUT_SCHO,data)
+}
+export const PayoutList = {
+    PAYOUT_LIST: () => axiosInstance.get(Endpoints.PAYOUT_LIST)
+}
+export const PayoutAttendance = {
+    ATTENDANCE: (data) => axiosInstance.post(Endpoints.PAYOUT_ATTENDANCE,data)
+}

@@ -48,7 +48,8 @@ const Users = () => {
                 src={params.value}
                 sx={{ width: 35, height: 35 }}
               />}/>
-        );},},
+        );},
+      },
 
     {
       field: 'userType',
