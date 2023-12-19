@@ -225,7 +225,7 @@ const Contact = () => {
     setShowBackdrop(true);
     NewDeadline.NEW_DEADLINE(formData)
     .then(res => {
-      setReqlist(res.data.Requirements.results1);
+      setReqlist(res.data.Requirements.results);
       setOpenDialog(false)
       setShowBackdrop(false);
       swal({
@@ -247,7 +247,7 @@ const Contact = () => {
     setShowBackdrop(true);
     DeleteReq.DELETE_REQ(formData)
     .then(res => {
-      setReqlist(res.data.Requirements.results1);
+      setReqlist(res.data.Requirements.results);
       setShowBackdrop(false);
       setOpenDialog(false)
       swal({

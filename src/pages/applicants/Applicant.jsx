@@ -13,10 +13,8 @@ import { ApplicantsRequest, FetchingApplicantsInfo, ListofSub,
           CheckingSubs, CheckingApplicants,UserScore,ListofReq,FailedUser,FetchingBmccSchoinfo
         ,Documentary,GrantAccess,ListAccess } from "../../api/request";
 import swal from "sweetalert";
-import { styled, ThemeProvider, createTheme } from '@mui/material';
+import { styled } from '@mui/material';
 import { Backdrop, CircularProgress } from '@mui/material';
-import { useContext } from "react";
-import { admininfo } from "../../App";
 import TextField from '@mui/material/TextField';
 import Breadcrumbs from '@mui/material/Breadcrumbs';
 import Dialog from '@mui/material/Dialog';
@@ -34,6 +32,7 @@ import CheckCircleOutlineRoundedIcon from '@mui/icons-material/CheckCircleOutlin
 import FormatListBulletedOutlinedIcon from '@mui/icons-material/FormatListBulletedOutlined';
 import AssignmentLateRoundedIcon from '@mui/icons-material/AssignmentLateRounded';
 import CustomNoRowsOverlay from '../Design/Norows';
+import { Image } from 'image-js';
 
 const CustomDataGrid = styled(DataGrid)({
   '& .MuiDataGrid-columnHeaders': {
@@ -48,18 +47,6 @@ const CustomDataGrid = styled(DataGrid)({
 
 });
 
-const StyledButton = styled(Button)`
-  && {
-    float: right;
-    background-color: red;
-    color:white;
-    transition: opacity 0.3s ease;
-
-    &:hover {
-      opacity: 0.8;
-    }
-  }
-`;
 const StyledButtonEdit = styled(Button)`
   && {
     background-color: green;
@@ -72,41 +59,7 @@ const StyledButtonEdit = styled(Button)`
     }
   }
 `;
-const StyledButtonAccess = styled(Button)`
-  && {
-    background-color: yellow;
-    color:white;
-    margin-right:10px;
-    transition: opacity 0.3s ease;
 
-    &:hover {
-      opacity: 0.8;
-    }
-  }
-`;
-const ViewButton = styled(Button)`
-  && {
-    background-color: blue;
-    color:white;
-    margin-right:10px;
-    transition: opacity 0.3s ease;
-
-    &:hover {
-      opacity: 0.8;
-    }
-  }
-`;
-const StyledRadioGroup = styled(RadioGroup)`
-
-  && {
-    & .MuiFormControlLabel-root {
-      margin-right: 3px;
-      display: flex;
-      flex-direction: column;
-    }
-  }
-`;
-const theme = createTheme();
 const StyledBackdrop = styled(Backdrop)(({ theme }) => ({
   zIndex: theme.zIndex.drawer + 100,
   color: '#fff',
@@ -197,7 +150,6 @@ const Applicant = () => {
     setFailedSelectionModel(newFailedSelectionModel);
   };
 
-
   useEffect(() => {
 
     async function Fetch(){
@@ -210,6 +162,7 @@ const Applicant = () => {
       setDocumentaryListed(subdoc.data.Documentary)
       setPost(response.data.results);
       const sub = docreq.data.Requirements.results1;
+      
       const list = docreq.data.Requirements.results;
       setDocsListed(list)
       const totalsubdiv = `${sub.length}/${list.length}`
@@ -231,8 +184,11 @@ const Applicant = () => {
         ListofSub.FETCH_SUB(applicantNum),
         UserScore.USER_SCORE(applicantNum)
       ]);
+
+      const imgRes = response[1].data.Document;
+
       setApplicantInfo(response[0].data.results);
-      setApplicantDocs(response[1].data.Document);
+      setApplicantDocs(imgRes);
       setUserScore(response[2].data.result)
       setSelectedInfo(data)
       setShowBackdrop(false);
@@ -780,6 +736,8 @@ const style = {
 
   ];
 
+
+  
  const docusubmitted = applicantsDocs?.map((data, index) => {
   const { requirement_Name, File,Status } = data;
   const handleStatusChange = (e) => {
@@ -811,9 +769,9 @@ const style = {
       [requirement_Name]: value || prevComments[requirement_Name] || 'Image Accepted',
     }));
   };
+
   return (
-    <>
-        <div className="Docuinfo">
+       <div className="Docuinfo">
             <Card elevation={5}>
               <div className="sublist"  key={index}>
                 <div className="actions">
@@ -821,7 +779,7 @@ const style = {
                     
                     <FormControl style={{fontSize:15}}>
                       <FormLabel id="demo-row-radio-buttons-group-label">
-                        Status:{Status}
+                        Status:{Status} <br />
                       </FormLabel>
                       <RadioGroup
                         size='small'
@@ -919,7 +877,6 @@ const style = {
               </div>
             </Card>
         </div>
-    </>
   );
 });
 
@@ -950,7 +907,6 @@ const style = {
     
         return groups;
       }, { completed: [], incomplete: [] });
-
   return (
     <>
     <StyledBackdrop open={showBackdrop}>

@@ -1128,7 +1128,7 @@ const Evaluation = () => {
                     </Link>
                   </Button>
               </Breadcrumbs>
-                {data.length === 0 ? (
+                {data.length === 0 && showBackdrop ? (
         <div
         style={{
           position: 'absolute',
