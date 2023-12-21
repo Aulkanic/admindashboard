@@ -354,3 +354,6 @@ export const PayoutList = {
 export const PayoutAttendance = {
     ATTENDANCE: (data) => axiosInstance.post(Endpoints.PAYOUT_ATTENDANCE,data)
 }
+export const CreatPayroll = {
+    CREATE: (data) => axiosInstance.post(Endpoints.CREATE_PAYROLL,data)
+}

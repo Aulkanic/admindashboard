@@ -36,6 +36,7 @@ const Endpoints = {
     PAYOUT_SCHO: 'BMCCScholar/PayoutSchedule',
     PAYOUT_LIST: 'BMCCScholar/PayoutList',
     PAYOUT_ATTENDANCE: 'BMCCScholar/PayoutAttendance',
+    CREATE_PAYROLL: 'BMCCScholar/CreatePayroll',
     FETCH_BMCCSCHOLARINFO: 'BMCCScholar/SchoInfo/',
     CREATE_SCORECARD: 'Scorecard/score',
     FETCH_SCORECARD: 'Scorecard/getScore/',
