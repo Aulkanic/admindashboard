@@ -14,7 +14,6 @@ import { FaLocationDot } from 'react-icons/fa6';
 import { TbWorldWww } from 'react-icons/tb';
 import { FiMail } from 'react-icons/fi';
 import { BsFacebook } from 'react-icons/bs';
-import convertToWords from './word';
 
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
     [`&.${tableCellClasses.head}`]: {
@@ -34,7 +33,49 @@ const StyledTableCell = styled(TableCell)(({ theme }) => ({
     borderRadius: '0', 
   };
 
+  const convertToWords = (num) => {
+    const units = ['', 'one', 'two', 'three', 'four', 'five', 'six', 'seven', 'eight', 'nine','ten'];
+    const teens = ['eleven', 'twelve', 'thirteen', 'fourteen', 'fifteen', 'sixteen', 'seventeen', 'eighteen', 'nineteen'];
+    const tens = ['', '', 'twenty', 'thirty', 'forty', 'fifty', 'sixty', 'seventy', 'eighty', 'ninety'];
 
+    if (num === 0) return 'zero';
+
+    let words = '';
+
+    if (num >= 1000000000) {
+      words += convertToWords(Math.floor(num / 1000000000)) + ' billion ';
+      num %= 1000000000;
+    }
+
+    if (num >= 1000000) {
+      words += convertToWords(Math.floor(num / 1000000)) + ' million ';
+      num %= 1000000;
+    }
+
+    if (num >= 1000) {
+      words += convertToWords(Math.floor(num / 1000)) + ' thousand ';
+      num %= 1000;
+    }
+
+    if (num >= 100) {
+      words += units[Math.floor(num / 100)] + ' hundred ';
+      num %= 100;
+    }
+
+    if (num >= 20) {
+      words += tens[Math.floor(num / 10)] + ' ';
+      num %= 10;
+    } else if (num >= 11) {
+      words += teens[num - 11] + ' ';
+      num = 0;
+    }
+
+    if (num > 0) {
+      words += units[num] + ' ';
+    }
+     console.log(words)
+    return words.trim();
+  };
 
 
 
@@ -50,7 +91,7 @@ const PrintablePage = (val) => {
     const columns = val.cols ? val.cols : []
     const title = val.head ? val.head : '';
     const fundsTotal = val.funds ? val.funds : '';
-    const totalnum = val.total ? val.total : 0
+    const totalnum = val.total ? val.total : 0;
     const wordTotal = convertToWords(totalnum)
     const pageNum = val.page;
     const totalRow = val.row ? val.row : [];
@@ -70,15 +111,23 @@ const PrintablePage = (val) => {
     };
     const modifiedList = printFor === 'Data' ? data?.map((item, index) => ({
         userNum: index + 1,
-        ...item
+        ...item,
+        Name: `${item.LastName} ${item.FirstName} ${item.MiddleName}`
     
       })) : data?.map((item, index) => ({
         userNum: index + 1,
         ...item,
+        Name: `${item.LastName} ${item.FirstName} ${item.MiddleName}`,
         paid:'',
         signature: ''
       }));
-    const payrolCol = [...columns,newColumn1,newColumn2]
+      const finalData = columns?.map((data) =>{
+        return ({
+          ...data,
+          Name: `${data.LastName} ${data.FirstName} ${data.MiddleName}`
+        })
+      })
+    const payrolCol = [...finalData,newColumn1,newColumn2]
     totalRow.paid = '';
     totalRow.signature = '';
   return (
@@ -178,11 +227,11 @@ const PrintablePage = (val) => {
           <TableBody>
             {modifiedList.map((row) => {
                 return (
-                  <TableRow sx={{fontSize:'10px'}} hover role="checkbox" tabIndex={-1} key={row.scholarCode}>
+                  <TableRow sx={{fontSize:'20px'}} hover role="checkbox" tabIndex={-1} key={row.scholarCode}>
                     {payrolCol.map((column) => {
                       const value = row[column.field];
                       return (
-                        <TableCell sx={{fontSize:'10px',border:'0.5px solid black',lineHeight:'18px',padding:0,paddingLeft:'10px'}} key={column.field} align={column.align}>
+                        <TableCell sx={{fontSize:'20px',border:'0.5px solid black',lineHeight:'24px',padding:0,paddingLeft:'10px'}} key={column.field} align={column.align}>
                           {column.format && typeof value === 'number'
                             ? column.format(value)
                             : value}
@@ -200,7 +249,7 @@ const PrintablePage = (val) => {
         {payrolCol.map((column) => {
            const newWidth = column.width + 4.395;
           return(
-          <span key={column.field} style={{ minWidth:newWidth,fontSize:'11px',fontWeight:'bold',width: newWidth,display: 'inline-block',paddingRight:'48px'}}>
+          <span key={column.field} style={{ minWidth:newWidth,fontSize:'20px',fontWeight:'bold',width: newWidth,display: 'inline-block',paddingLeft:'85px',paddingRight:'20px'}}>
             {totalRow[column.field]}
           </span>
         )})}

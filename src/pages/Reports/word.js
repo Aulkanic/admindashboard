@@ -42,7 +42,6 @@ const convertToWords = (number) => {
             words += `${unitsMap[Number(group[2])]} `;
           }
         }
-       console.log(length - i)
         if (length - i >= 3) {
           words += `${thousandsMap[Math.floor((i + 3) / 3) - 1]} `;
         }

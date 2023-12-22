@@ -29,7 +29,6 @@ const tableContainerStyle = {
 };
 
 function Payroll(pay){
-
   const [payroll,setPayroll] = useState([])
   const [selection,setSelection] = useState('')
   const [month,setMonth] = useState('1st');
@@ -37,6 +36,7 @@ function Payroll(pay){
   const postsPerPage = 25;
   const indexOfLastPost = currentPage * postsPerPage;
   const indexOfFirstPost = indexOfLastPost - postsPerPage;
+  const [sortOrder, setSortOrder] = useState('asc');
 
 
   const handlePrint = () => {
@@ -77,9 +77,21 @@ function Payroll(pay){
 
   const columns = month === '1st' ? ([
     { field: 'userNum', headerName: '#', width: 70,  align: 'left', },
-    { field: 'Name', 
-    headerName: 'Name(Scholarship Benefeciary)', 
-    width: 250,  
+    { field: 'LastName', 
+    headerName: 'LastName', 
+    width: 150,  
+    align: 'left',
+    height: 'maxContent', 
+  },
+    { field: 'FirstName', 
+    headerName: 'FirstName', 
+    width: 150,  
+    align: 'left',
+    height: 'maxContent', 
+  },
+    { field: 'MiddleName', 
+    headerName: 'MiddleName', 
+    width: 150,  
     align: 'left',
     height: 'maxContent', 
   },
@@ -214,17 +226,145 @@ function Payroll(pay){
     ...item
 
   }));
-  const paginateData = modifiedList && modifiedList?.slice(indexOfFirstPost, indexOfLastPost);
+  let paginateData = modifiedList && modifiedList?.slice(indexOfFirstPost, indexOfLastPost);
   const date = new Date()
   const year = date.getFullYear()
   const titlef = month === '1st' ? `JANUARY-JULY ${year}/1ST BATCH` : `AUGUST-DECEMBER ${year}/2ND BATCH`
   const reportTitle = titlef;
   const total = pay.data?.TotalAmount
   const totalFunds = convertToPesos(pay.data?.TotalAmount);
+  const columns1 = month === '1st' ? ([
+    { field: 'userNum', headerName: '#', width: 70,  align: 'left', },
+    { field: 'Name', 
+    headerName: 'Name', 
+    width: 150,  
+    align: 'left',
+    height: 'maxContent', 
+  },
+    { field: 'InclusiveDate', headerName: 'Inclusive Date', width: 170,  align: 'left', },
+    {
+      field: 'January',
+      headerName: 'January',
+      width: 100,
+      format: (value) => convertToPesos(value),
+      align: 'left',
+    },
+    {
+      field: 'February',
+      headerName: 'February',
+      width: 100,
+      format: (value) => convertToPesos(value),
+      align: 'left',
+    },
+    {
+      field: 'March',
+      headerName: 'March',
+      width: 100,
+      format: (value) => convertToPesos(value),
+      align: 'left',
+    },
+    {
+      field: 'April',
+      headerName: 'April',
+      width: 100,
+      format: (value) => convertToPesos(value),
+      align: 'left',
+    },
+    {
+      field: 'May',
+      headerName: 'May',
+      width: 100,
+      format: (value) => convertToPesos(value),
+      align: 'left',
+    },
+    {
+      field: 'AmountDue1',
+      headerName: 'Amount Due',
+      width: 130,
+      format: (value) => convertToPesos(value),
+      align: 'left',
+    },
+  ]) : ([
+    { field: 'userNum', headerName: '#', width: 70,  align: 'left', },
+    { field: 'Name', 
+    headerName: 'Name(Scholarship Benefeciary)', 
+    width: 250,  
+    align: 'left',
+    height: 'maxContent', 
+  },
+    { field: 'InclusiveDate', headerName: 'Inclusive Date', width: 170,  align: 'left', },
+    {
+      field: 'August',
+      headerName: 'August',
+      width: 100,
+      format: (value) => convertToPesos(value),
+      align: 'left',
+    },
+    {
+      field: 'September',
+      headerName: 'September',
+      width: 100,
+      format: (value) => convertToPesos(value),
+      align: 'left',
+    },
+    {
+      field: 'October',
+      headerName: 'October',
+      width: 100,
+      format: (value) => convertToPesos(value),
+      align: 'left',
+    },
+    {
+      field: 'November',
+      headerName: 'November',
+      width: 100,
+      format: (value) => convertToPesos(value),
+      align: 'left',
+    },
+    {
+      field: 'December',
+      headerName: 'December',
+      width: 100,
+      format: (value) => convertToPesos(value),
+      align: 'left',
+    },
+    {
+      field: 'AmountDue2',
+      headerName: 'Amount Due',
+      width: 130,
+      format: (value) => convertToPesos(value),
+      align: 'left',
+    },
+  ]);
+  const sortByProperty = (arr, property, order) => {
+    const sortOrder = order === 'desc' ? -1 : 1;
 
+    return [...arr].sort((a, b) => {
+      const aValue = a[property];
+      const bValue = b[property];
+
+      if (aValue < bValue) {
+        return -1 * sortOrder;
+      }
+      if (aValue > bValue) {
+        return 1 * sortOrder;
+      }
+      return 0;
+    });
+  };
+
+  const handleSort = () => {
+    const newSortOrder = sortOrder === 'asc' ? 'desc' : 'asc';
+    setSortOrder(newSortOrder);
+
+    // Sort the data based on the current property and order
+    const sortedData = sortByProperty(modifiedList, 'LastName', newSortOrder);
+    paginateData = sortedData
+  };
+  
   return (
     <>
-      <PrintablePage for={'Payroll'} page={currentPage} funds={totalFunds} total={total} level={selection} value={paginateData} cols={columns} head={reportTitle} row={totalRow}/>
+      <PrintablePage for={'Payroll'} page={currentPage} funds={totalFunds} total={total} level={selection} value={paginateData} cols={columns1} head={reportTitle} row={totalRow}/>
     
     <div className='payrollContent'>
       <div className='payrollContainer2'>
@@ -258,6 +398,7 @@ function Payroll(pay){
       <h1 style={{fontSize:'20px'}}><strong>Total Scholarship Funds as of {year}:</strong> {totalFunds}</h1>
 
       <div className='payrollTable'>
+      <button onClick={handleSort}>Sort by LastName {sortOrder === 'asc' ? '↑' : '↓'}</button>
       <Paper sx={{ width: '100%',height:'maxContent',borderRadius:'0px',padding:'15px' }}>
       <TableContainer sx={tableContainerStyle}>
         <Table stickyHeader>
@@ -309,7 +450,7 @@ function Payroll(pay){
         currentPage={currentPage}
         setCurrentPage={setCurrentPage}
       />
-    </Paper>
+      </Paper>
       </div>
     </div>
     </>

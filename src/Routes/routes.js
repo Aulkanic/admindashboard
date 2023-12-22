@@ -1,0 +1,21 @@
+export const RouteUrl = {
+    HOME:'/',
+    LOGIN:'/Login',
+    DASHBOARD:'/Dashboard/Home',
+    EMPLOYEES:'/Dashboard/Staff',
+    SCHOLARSHIP:'/Dashboard/Scholarship-Program',
+    SCORE_CARD:'/Dashboard/Scorecard',
+    REQUIREMENTS:'/Dashboard/Requirements',
+    USER_ACCOUNT:'/Dashboard/UserAccounts',
+    EVALUATION:'/Dashboard/Evaluation',
+    APPLICATION: '/Dashboard/Application',
+    APPOINTMENT:'/Dashboard/Appointment',
+    PAYROLL:'/Dashboard/Payroll',
+    SCHOLARS:'/Dashboard/Scholars',
+    MYDO_WEB:'/Dashboard/MYDO_Website',
+    ANNOUNCEMENT:'/Dashboard/Announcement',
+    RULES:'/Dashboard/Rules',
+    NEWS:'/Dashboard/News',
+    REPORTS:'/Dashboard/Reports',
+
+}
