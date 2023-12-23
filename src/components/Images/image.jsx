@@ -13,7 +13,7 @@ export const LazyImage = ({images,alt}) => {
   }
   return (
     <div className='w-full h-full' style={containerStyle}>
-        <img className='aspect-square' src={images} alt={alt} loading='lazy' onLoad={handleImageLoad} />
+        <img className='object-fill' src={images} alt={alt} loading='lazy' onLoad={handleImageLoad} />
     </div>
   )
 }

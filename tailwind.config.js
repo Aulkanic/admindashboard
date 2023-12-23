@@ -9,6 +9,7 @@ module.exports = {
     extend: {
       colors: {
         vividOrange: "#FF7A00",
+        blueish: "#2F96DB",
       },
       backgroundImage:{
         linearColor: "linear-gradient(180deg, #ED2B00, #03019B)",

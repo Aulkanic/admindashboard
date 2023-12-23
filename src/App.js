@@ -21,14 +21,8 @@ function App() {
   };
   const router = createBrowserRouter([
     {
-      path:RouteUrl.HOME,
-      element: <Public />,
-      children:[
-         {
-          path: RouteUrl.LOGIN,
-          element: <Login />
-         }
-      ]
+      path:RouteUrl.LOGIN,
+      element: <Login />,
     },
     {
       path: RouteUrl.HOME,
