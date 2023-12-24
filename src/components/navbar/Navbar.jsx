@@ -1,8 +1,5 @@
 import './navbar.scss';
-import * as React from 'react';
-import SearchIcon from '@mui/icons-material/Search';
-import Menu from '@mui/material/Menu';
-import MenuItem from '@mui/material/MenuItem';
+import React, { useState } from 'react'
 import Fade from '@mui/material/Fade';
 import Button from '@mui/material/Button';
 import { styled } from '@mui/material/styles';
@@ -20,40 +17,11 @@ import { CircularProgress } from '@mui/material';
 import { useDispatch } from 'react-redux';
 import { setAdmin, setAuthenticated } from "../../Redux/loginSlice";
 import swal from 'sweetalert';
-import { useNavigate } from 'react-router-dom';
-import Popover from '@mui/material/Popover';
-import NotificationsRoundedIcon from '@mui/icons-material/NotificationsRounded';
-const moment = require('moment-timezone');
+import { useNavigate } from 'react-router-dom'
+import { Notifications } from '../PopOver/notification';
+import { Profile } from '../PopOver/profile';
+import { Password } from '../InputFields/password';
 
-
-const StyledBadge = styled(Badge)(({ theme }) => ({
-  '& .MuiBadge-badge': {
-    backgroundColor: '#44b700',
-    color: '#44b700',
-    boxShadow: `0 0 0 2px ${theme.palette.background.paper}`,
-    '&::after': {
-      position: 'absolute',
-      top: 0,
-      left: 0,
-      width: '100%',
-      height: '100%',
-      borderRadius: '50%',
-      animation: 'ripple 1.2s infinite ease-in-out',
-      border: '1px solid currentColor',
-      content: '""',
-    },
-  },
-  '@keyframes ripple': {
-    '0%': {
-      transform: 'scale(.8)',
-      opacity: 1,
-    },
-    '100%': {
-      transform: 'scale(2.4)',
-      opacity: 0,
-    },
-  },
-}));
 const style = {
   position: 'absolute',
   top: '50%',
@@ -75,47 +43,58 @@ const Navbar = () => {
   const { admin  } = useSelector((state) => state.login)
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  const [anchorEl, setAnchorEl] = React.useState(null);
+  const [anchorEl, setAnchorEl] = useState(null);
+  const [anchorEl1, setAnchorEl1] = useState(null);
   const open = Boolean(anchorEl);
-  const [openprof, setOpenProf] = React.useState(false);
-  const [openaccs, setOpenAccs] = React.useState(false);
-  const [oldpass,setOldpass] = React.useState([]);
-  const [password,setPassword] = React.useState('');
-  const [repass,setRepass] = React.useState('');
-  const [adminprof,setProfile] = React.useState('');
-  const [preview, setPreview] = React.useState();
-  const [showBackdrop, setShowBackdrop] = React.useState(false);
-  const [anchorEl1, setAnchorEl1] = React.useState(null);
-  const [notif,setNotif] = React.useState([])
+  const open1 = Boolean(anchorEl1);
+  const [openprof, setOpenProf] = useState(false);
+  const [openaccs, setOpenAccs] = useState(false);
+  const [password,setPassword] = useState({
+    old:{value:[],isView:false},
+    new:{value:[],isView:false},
+    repeat:{value:[],isView:false}
+  });
+  const [adminprof,setProfile] = useState('');
+  const [preview, setPreview] = useState();
+  const [showBackdrop, setShowBackdrop] = useState(false);
+  const [notif,setNotif] = useState([]);
 
   const handleClick1 = (event) => {
-    console.log(event)
     setAnchorEl1(event.currentTarget);
   };
-
-  const handleClose3 = () => {
-    setAnchorEl1(null);
-  };
-
-  const open1 = Boolean(anchorEl1);
-  const id = open1 ? 'simple-popover' : undefined;
-
-  const handleOpen1 = () => {
-    handleClose()
-    setOpenProf(true)
-  };
-  const handleClose1 = () => setOpenProf(false);
-  const handleOpen2 = () => {
-    handleClose()
-    setOpenAccs(true)
-  };
-  const handleClose2 = () => setOpenAccs(false);
   const handleClick = (event) => {
     setAnchorEl(event.currentTarget);
   };
   const handleClose = async() => {
     setAnchorEl(null);
   };
+  const handleClose1 = () => setOpenProf(false);
+  const handleClose2 = () => setOpenAccs(false);
+  const handleClose3 = () => {
+    setAnchorEl1(null);
+  };
+  const handleOpen1 = () => {
+    handleClose()
+    setOpenProf(true)
+  };
+  const handleOpen2 = () => {
+    handleClose()
+    setOpenAccs(true)
+  };
+
+  const handleInputChange = (field, value) =>{
+      setPassword((prev) =>({
+        ...prev,
+        [field]:{ ...prev[field],value}
+      }))
+  }
+  const handleTogglePasswordVisibility = (field) =>{
+    setPassword((prev) =>({
+      ...prev,
+      [field]: {...prev[field],isView: !prev[field].isView}
+    }))
+  }
+
   const handleCloselogout = async() => {
     const formData = new FormData();
     formData.append('id',admin[0].id)
@@ -148,27 +127,26 @@ const Navbar = () => {
       };
     },[])
   const UpdatePasswordUser = () =>{
-    if(!password || !repass){
+    if(!password.new || !password.repeat){
       swal("Error","Please provide necessary information first",'warning')
       return
     }
-    if(!oldpass){
+    if(!password.old){
       swal("Error","Please provide necessary information first",'warning')
       return
     }
-    if(password != repass){
+    if(password.new != password.repeat){
       swal("Error","New Password did not match",'warning')
       return
     }
     setShowBackdrop(true)
     const formData = new FormData();
-    formData.append('currentpassword',oldpass);
-    formData.append('password',password);
+    formData.append('currentpassword',password.old);
+    formData.append('password',password.new);
     formData.append('id',admin[0].id)
     UpdatePassword.UPDATE_PASS(formData)
     .then(res => {
       if(res.data.success === 0){
-        setShowBackdrop(false)
         swal({
           title: "Error",
           text: res.data.message,
@@ -177,7 +155,6 @@ const Navbar = () => {
         });
         
       }else{
-        setShowBackdrop(false)
         swal({
           title: "Success",
           text: res.data.message,
@@ -287,7 +264,25 @@ const Navbar = () => {
         }
       }
   }
-
+  const notifContent = () =>{
+    return(<Box sx={{ p: 2,height:'400px',width:'350px' }}>
+    {notif ? (<>
+      <div>
+        <div style={{display:'flex',justifyContent:'space-between',alignItems:'center',borderBottom:'2px solid black'}}>
+          <p style={{margin:'0px'}}>Notifications</p>
+          <Button onClick={readAll} sx={{fontSize:'12px',textTransform:'none'}}>Clear All</Button>
+        </div>
+        <ul className="notification-list">
+        {notification}
+        </ul>
+      </div>
+    </>) : (<>
+     <div>
+      No Notification
+    </div>             
+    </>)}
+    </Box>)
+  }
   return (
     <>
       <StyledBackdrop open={showBackdrop}>
@@ -344,137 +339,54 @@ const Navbar = () => {
               Change Password
             </Typography>
             <div>
-            <TextField
-              id="outlined-controlled"
-              label="Current Password"
-              value={oldpass}
-              fullWidth
-              type='password'
-              onChange={(event) => {
-                setOldpass(event.target.value);
-              }}
-            />
-            <TextField
-            sx={{margin:'10px 0px 10px 0px'}}
-              id="outlined-controlled"
-              label="New Password"
-              value={password}
-              type='password'
-              fullWidth
-              onChange={(event) => {
-                setPassword(event.target.value);
-              }}
-            />
-              <TextField
-              id="outlined-controlled"
-              label="Confirm Password"
-              value={repass}
-              type='password'
-              sx={{marginBottom:'10px'}}
-              fullWidth
-              onChange={(event) => {
-                setRepass(event.target.value);
-              }}
-            />
+              <Password
+                value={password.old.value}
+                label={'Old Password'}
+                onChange={(e) =>handleInputChange('old',e.target.value)}
+                onClick={() =>handleTogglePasswordVisibility('old')}
+                show={password.old.isView}
+              />
+              <Password
+                value={password.new.value}
+                label={'Current Password'}
+                onChange={(e) =>handleInputChange('new',e.target.value)}
+                onClick={() =>handleTogglePasswordVisibility('new')}
+                show={password.new.isView}
+              />
+              <Password
+                value={password.repeat.value}
+                label={'Current Password'}
+                onChange={(e) =>handleInputChange('repeat',e.target.value)}
+                onClick={() =>handleTogglePasswordVisibility('repeat')}
+                show={password.repeat.isView}
+              />
             </div>
             <Button onClick={UpdatePasswordUser} variant="contained" endIcon={<SaveIcon />}>
-        Send
-      </Button>
+              Send
+            </Button>
           </Box>
         </Fade>
       </Modal>
-    <div className='navbar1'>
-      <div className='wrapper1'>
-
-        <div style={{margin:'0px 35px 0px 15px'}}>
-        <Badge 
-        badgeContent={notif?.filter((data) => data.remarks === 'unread').length} 
-        color="error"
-        sx={{
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-            borderRadius: '50%',
-            width: '25px',
-            height: '20px',
-            cursor:'pointer'
-          }}
-        onClick={handleClick1}
-          >
-          <NotificationsRoundedIcon 
-                sx={{color:'white',fontSize:'35px'}}
-                onClick={handleClick1}
-          />
-        </Badge>
-        <Popover
-          id={id}
-          open={open1}
-          anchorReference="anchorPosition"
-          anchorEl={anchorEl1}
-          onClose={handleClose3}
-          anchorOrigin={{
-            vertical: 'bottom',
-            horizontal: 'left',
-          }}
-    
-          anchorPosition={{ top: 60, left: 1100 }}
-        >
-          <Box sx={{ p: 2,height:'400px',width:'350px' }}>
-            {notif ? (<>
-              <div>
-                <div style={{display:'flex',justifyContent:'space-between',alignItems:'center',borderBottom:'2px solid black'}}>
-                  <p style={{margin:'0px'}}>Notifications</p>
-                  <Button onClick={readAll} sx={{fontSize:'12px',textTransform:'none'}}>Clear All</Button>
-                </div>
-                <ul className="notification-list">
-                {notification}
-                </ul>
-              </div>
-            </>) : (<>
-             <div>
-              No Notification
-            </div>             
-            </>)}
-          </Box>
-        </Popover>
-        </div>
-        <div className='items'>
-            <div>
-            <Typography sx={{color:'white',fontSize:'15px'}}>{admin[0].name}({admin[0].jobDescription})</Typography>
-            </div>
-          <div className="item">
-          <Button
-        id="fade-button"
-        aria-controls={open ? 'fade-menu' : undefined}
-        aria-haspopup="true"
-        aria-expanded={open ? 'true' : undefined}
-        onClick={handleClick}
-      >
-     <StyledBadge
-        overlap="circular"
-        anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
-        variant="dot"
-      >
-        <Avatar alt="Remy Sharp" src={admin[0].profile} />
-      </StyledBadge>
-      </Button>
-        </div>
-          <Menu
-            id="fade-menu"
-            MenuListProps={{
-              'aria-labelledby': 'fade-button',
-            }}
+    <div className='w-full flex h-[10%] bg-blueish'>
+      <div className='w-full flex justify-end items-center gap-4 p-8'>
+          <Profile
+            profileImg={admin[0].profile}
             anchorEl={anchorEl}
+            handleClick={handleClick}
             open={open}
-            onClose={handleClose}
-            TransitionComponent={Fade}
-          >
-            <MenuItem onClick={handleOpen1}>Profile</MenuItem>
-            <MenuItem onClick={handleOpen2}>Password</MenuItem>
-            <MenuItem onClick={handleCloselogout}>Logout</MenuItem>
-          </Menu>
-        </div>
-
+            handleClose={handleClose}
+            handleProfile={handleOpen1}
+            handlePassword={handleOpen2}
+            handleLogout={handleCloselogout}
+          />
+          <Notifications
+            length={notif?.filter((data) => data.remarks === 'unread').length}
+            onClickIcon={handleClick1}
+            content={notifContent}
+            onClose={handleClose3}
+            isOpen={open1}
+            anchorEl={open1}
+          />
       </div>
     </div>
       </>

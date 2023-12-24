@@ -5,7 +5,7 @@ import _ from 'lodash';
 import { useSelector } from 'react-redux';
 
 const Public = () => {
-  const admin = useSelector((state) => state.admin)
+  const admin = useSelector((state) => state.login)
   return !_.isNil(admin?.admin) ? (
     <Navigate to={RouteUrl.DASHBOARD} replace />
   ) : (

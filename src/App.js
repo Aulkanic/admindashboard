@@ -22,7 +22,10 @@ function App() {
   const router = createBrowserRouter([
     {
       path:RouteUrl.LOGIN,
-      element: <Login />,
+      element: <Public />,
+      children: [
+        {path: RouteUrl.LOGIN, element: <Login />}
+      ]
     },
     {
       path: RouteUrl.HOME,

@@ -14,13 +14,14 @@ const HandleSubmit = async (email, password, setLoadingCallback,dispatch,navigat
     setLoadingCallback(true);
     const res = await login.ADMIN_LOGIN({ email, password });
 
-    if (res.data.message === 'Success') {
+    if (res.data.success === 1) {
       const inf = [res.data.userDetails, res.data.sectionId];
       localStorage.setItem('AdminisOnline', true);
       dispatch(setAuthenticated(true));
       dispatch(setAdmin(inf));
-      navigate(RouteUrl.DASHBOARD);
       showToast('Login Success', 'success');
+      console.log(RouteUrl.DASHBOARD)
+      navigate(RouteUrl.DASHBOARD);
     } else {
       showToast(`${res.data.message}`, 'error');
       navigate(RouteUrl.LOGIN);

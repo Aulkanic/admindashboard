@@ -9,8 +9,10 @@ import {
     useGridSelector,
   } from '@mui/x-data-grid';
 import MuiPagination from '@mui/material/Pagination';
-import LinearProgress from '@mui/material/LinearProgress';
 import PaginationItem from '@mui/material/PaginationItem';
+import { LoadingOverlay } from './Overlay';
+import { EmptyRow } from './EmptyRow';
+import { Box } from '@mui/material';
 
 
   function Pagination({ page, onPageChange, className }) {
@@ -44,19 +46,38 @@ import PaginationItem from '@mui/material/PaginationItem';
   }
 
 export const CustomDatagrid = ({loading,row,rowId,columns}) => {
+  console.log(row)
   return (
-    <div>
+    <Box className='w-full'
+     sx={{
+        height: '400px',
+        padding: '4px',
+        width: '100%',
+        '& .super-app-theme--header': {
+          backgroundColor: '#2F96DB',
+          borderBottom: '1px solid rgba(255, 7, 0, 0.9)',
+          borderRadius:0 ,
+          color:'white',
+        },
+        '& .css-1iyq7zh-MuiDataGrid-columnHeaders': {
+          borderRadius:0  
+        },
+      }}
+    >
         <DataGrid
+            className='overflow-x-auto w-full bg-white'
             loading={loading}
             slots={{
             toolbar: CustomToolbar,
             pagination: CustomPagination,
-            loadingOverlay: LinearProgress,
+            loadingOverlay: LoadingOverlay,
+            noRowsOverlay: EmptyRow
             }}
             rows={row}
             columns={columns}
             getRowId={(row) => row[rowId]}
         />  
-    </div>
+    </Box>
   )
 }
+
