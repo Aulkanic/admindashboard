@@ -10,7 +10,8 @@ const Private = () => {
    const dispatch = useDispatch()
    const navigate = useNavigate()
    const admin = useSelector((state) => state.login)
-  return  _.isNil(admin?.admin) ? (<Navigate replace to={RouteUrl.LOGIN} />) : (
+   console.log(admin)
+  return  (admin.admin.length === 0) ? (<Navigate replace to={RouteUrl.LOGIN} />) : (
     <div className='flex'>
       <Sidebar />
       <div className='w-full overflow-x-hidden flex flex-col flex-wrap'>

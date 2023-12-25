@@ -6,7 +6,7 @@ import { useSelector } from 'react-redux';
 
 const Public = () => {
   const admin = useSelector((state) => state.login)
-  return !_.isNil(admin?.admin) ? (
+  return (admin.admin.length > 0) ? (
     <Navigate to={RouteUrl.DASHBOARD} replace />
   ) : (
     <Outlet />

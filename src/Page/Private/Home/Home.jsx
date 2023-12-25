@@ -5,6 +5,8 @@ import TotalAppli from '../../../Images/4531669.png'
 import TotalPending from '../../../Images/Blocked-Transparent-File.png'
 import { CustomDatagrid } from '../../../components/DataGrid/CustomDatagrid'
 import { MYDOUsers } from '../../../api/request'
+import { RouteUrl } from '../../../Routes/routes'
+
 
 const columns = [
   {
@@ -19,7 +21,7 @@ const columns = [
     field: 'email',
     headerClassName: 'super-app-theme--header',
     headerName: 'Email',
-    width: 250,
+    width: 200,
     editable: false,
   },
   {
@@ -33,14 +35,14 @@ const columns = [
     field: 'date',
     headerClassName: 'super-app-theme--header',
     headerName: 'Date Applied',
-    width: 250,
+    width: 150,
     editable: false,
   },
   {
     field: 'score',
     headerClassName: 'super-app-theme--header',
     headerName: 'Score',
-    width: 100,
+    width: 120,
     editable: false,
     renderCell: (params) =>(
       <>
@@ -90,20 +92,24 @@ export const Home = () => {
         img={TotalScho}
         title={'45'}
         content={'Total Scholar'}
+        link={RouteUrl.SCHOLARS}
         />
         <CustomCard
         img={TotalAppli}
         title={'45'}
-        content={'Total Scholar'}
+        content={'Total Applicants'}
+        link={RouteUrl.APPLICATION}
         />
         <CustomCard
         img={TotalPending}
         title={'45'}
-        content={'Total Scholar'}
+        content={'Total Pending Renewal'}
+        link={RouteUrl.SCHOLARS}
         />
       </div>
       <div className='p-4'>
         <CustomDatagrid
+          title={'Recent Applicants'}
           loading={loading}
           row={user.applicants}
           columns={columns}

@@ -370,7 +370,7 @@ const Navbar = () => {
     <div className='w-full flex h-[10%] bg-blueish'>
       <div className='w-full flex justify-end items-center gap-4 p-8'>
           <Profile
-            profileImg={admin[0].profile}
+            profileImg={admin[0]?.profile}
             anchorEl={anchorEl}
             handleClick={handleClick}
             open={open}

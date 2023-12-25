@@ -13,6 +13,7 @@ import PaginationItem from '@mui/material/PaginationItem';
 import { LoadingOverlay } from './Overlay';
 import { EmptyRow } from './EmptyRow';
 import { Box } from '@mui/material';
+import { CustomHeading } from '../H1/h1';
 
 
   function Pagination({ page, onPageChange, className }) {
@@ -45,12 +46,13 @@ import { Box } from '@mui/material';
     );
   }
 
-export const CustomDatagrid = ({loading,row,rowId,columns}) => {
-  console.log(row)
+export const CustomDatagrid = ({loading,row,rowId,columns,title}) => {
   return (
     <Box className='w-full'
      sx={{
-        height: '400px',
+        minHeight: '400px',
+        height:'400px',
+        maxHeight:'maxContent',
         padding: '4px',
         width: '100%',
         '& .super-app-theme--header': {
@@ -64,6 +66,9 @@ export const CustomDatagrid = ({loading,row,rowId,columns}) => {
         },
       }}
     >
+      <CustomHeading  
+       title={title}
+      />
         <DataGrid
             className='overflow-x-auto w-full bg-white'
             loading={loading}
