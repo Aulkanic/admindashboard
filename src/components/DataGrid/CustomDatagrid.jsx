@@ -15,11 +15,9 @@ import { EmptyRow } from './EmptyRow';
 import { Box } from '@mui/material';
 import { CustomHeading } from '../H1/h1';
 
-
   function Pagination({ page, onPageChange, className }) {
     const apiRef = useGridApiContext();
     const pageCount = useGridSelector(apiRef, gridPageCountSelector);
-  
     return (
       <MuiPagination
         color="primary"
@@ -47,30 +45,34 @@ import { CustomHeading } from '../H1/h1';
   }
 
 export const CustomDatagrid = ({loading,row,rowId,columns,title}) => {
+  console.log(row.length)
   return (
-    <Box className='w-full'
+    <Box 
      sx={{
-        minHeight: '400px',
-        height:'400px',
-        maxHeight:'maxContent',
         padding: '4px',
         width: '100%',
+        height: row.length === 0 ? '400px' : 'auto',
         '& .super-app-theme--header': {
           backgroundColor: '#2F96DB',
           borderBottom: '1px solid rgba(255, 7, 0, 0.9)',
           borderRadius:0 ,
           color:'white',
+          fontWeight:900
         },
         '& .css-1iyq7zh-MuiDataGrid-columnHeaders': {
           borderRadius:0  
         },
+        '& .css-t89xny-MuiDataGrid-columnHeaderTitle': {
+          fontWeight:600
+        },
+        
       }}
     >
       <CustomHeading  
        title={title}
       />
         <DataGrid
-            className='overflow-x-auto w-full bg-white'
+            className='min-h-96 w-full bg-white'
             loading={loading}
             slots={{
             toolbar: CustomToolbar,
@@ -80,6 +82,11 @@ export const CustomDatagrid = ({loading,row,rowId,columns,title}) => {
             }}
             rows={row}
             columns={columns}
+            initialState={{
+              ...row.initialState,
+              pagination: { paginationModel: { pageSize: 25 } },
+            }}
+            pageSizeOptions={[5, 10, 25]}
             getRowId={(row) => row[rowId]}
         />  
     </Box>

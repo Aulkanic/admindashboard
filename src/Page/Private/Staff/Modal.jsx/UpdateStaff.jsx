@@ -1,6 +1,8 @@
 import React from 'react'
 import CustomFields from '../../../../components/InputFields/CustomFields'
 import { CustomSelect } from '../../../../components/InputFields/CustomSelect'
+import { CustomRadio } from '../../../../components/InputFields/CustomRadio'
+
 export const UpdateStaff = ({data,handleInput,handleSelect,onSubmit,options}) => {
     const menu  = options?.filter(data => data.role !== 'Administrator')
     .map((option) => {
@@ -9,7 +11,7 @@ export const UpdateStaff = ({data,handleInput,handleSelect,onSubmit,options}) =>
     label: `${option.role}(${option.total})`,
     name:'jobDes'
     })})
-
+    
   return (
     <form onSubmit={onSubmit} class="p-4 flex flex-col gap-4 md:p-5">
     <div className='flex flex-col gap-2'>
@@ -19,7 +21,7 @@ export const UpdateStaff = ({data,handleInput,handleSelect,onSubmit,options}) =>
         onChange={handleInput}
         name={"username"}      
         readOnly={true}
-        defaultValue={data.oldData[0].username}
+        defaultValue={data.oldData.name}
       />
       <CustomFields
         label={'Staff Email'}
@@ -27,13 +29,21 @@ export const UpdateStaff = ({data,handleInput,handleSelect,onSubmit,options}) =>
         placeholder={'Enter Staff Email...'}
         onChange={handleInput}
         name={"username"}  
-        defaultValue={data.oldData[0].email}
+        defaultValue={data.oldData.email}
+      />
+      <CustomRadio
+        name={'status'}
+        label={'Status'}
+        options={[{label:"Active",value:"Active"},{label:"In Active",value:"Inactive"}]}
+        onChange={handleInput}
+        value={data.newData.status}
+        isRow={true}
       />
       <CustomSelect
         label={'Select Role'}
         options={menu}
         placeholder={'Select Staff Role...'}
-        value={data.newData.jobDes || data.oldData[0].jobDes}
+        value={data.newData.jobDes || data.oldData.jobDes}
         onChange={handleSelect}       
       />
     </div>

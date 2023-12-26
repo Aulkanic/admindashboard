@@ -4,3 +4,6 @@
 @import 'tailwindcss/utilities';
 
 /* Your custom styles go here */
+.css-jflozn-MuiFormControlLabel-root .MuiFormControlLabel-label{
+    font-size: 14px;
+}

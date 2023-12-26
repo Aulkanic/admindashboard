@@ -1,7 +1,7 @@
 import { AddBMCC } from "../../../../api/request";
 import swal from "sweetalert";
 
-export default function AddBmcc({setErrors,setOpen,setBmcc,setCreateStaff,setLoading,data}) {
+export default function AddBmcc({setErrors,handleModalOpenClose,setBmcc,setCreateStaff,setLoading,data}) {
     if(data.email === '' || data.username === '' || data.jobDes === ''){
         swal({
           text: 'Please Provide necessary Information',
@@ -26,7 +26,7 @@ export default function AddBmcc({setErrors,setOpen,setBmcc,setCreateStaff,setLoa
       formData.append('email', data.email);
       formData.append('name', data.username);
       formData.append('jobdes', data.jobDes);
-      setOpen(false);
+      handleModalOpenClose('CreateOpen',false);
       setLoading(true);
       setErrors('')
       AddBMCC.ADD_BMCC(formData)

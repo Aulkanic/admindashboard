@@ -19,7 +19,7 @@ export const CreateStaff = ({data,handleInput,handleSelect,onSubmit,options}) =>
         value={data.username}
         id={'Create'}
         placeholder={'Enter Staff Name...'}
-        onChange={handleInput()}
+        onChange={handleInput}
         name={"username"}      
       />
       <CustomFields
