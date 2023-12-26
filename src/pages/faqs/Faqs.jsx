@@ -204,8 +204,6 @@ const CustomDataGrid = styled(DataGrid)({
     setUpJobdes(selected);
   };
 
-
-
   const handleClose1 = () => setOpen1(false);
   useEffect(() =>{
         async function Fetch(){
