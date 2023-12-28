@@ -1,7 +1,8 @@
-import React from 'react'
+import swal from "sweetalert";
+import { EmployeeAccess } from "../../../../api/request";
 
-export default function Authorization() {
-    if(!selectedModules || !jobDes || !jobDes.value){
+export default function Authorization({setSelectedRole,selectedRole,setOfficials,officials,setLoading}) {
+    if(!selectedRole.checked || !selectedRole.value){
         swal({
           title: "Warning",
           text: "Please select necessary details!",
@@ -10,14 +11,15 @@ export default function Authorization() {
         });
         return
       }
-        const labels = selectedModules.map((option) => option).join(',');
+        const labels = selectedRole.checked.map((option) => option).join(',');
         const formData = new FormData();
         formData.append('accessList',labels)
-        formData.append('role',jobDes.value)
-        setShowBackdrop(true);
+        formData.append('role',selectedRole.value)
+        setLoading(true);
         EmployeeAccess.EMP_ACCESS(formData)
         .then(res => {
           if(res.data.success === 0){
+            setLoading(false);
             swal({
               title: "Warning",
               text: res.data.message,
@@ -25,16 +27,23 @@ export default function Authorization() {
               button: "OK",
             });
           }else{
-            setAccessEmp(res.data.result)
-            setShowBackdrop(false);
+            setOfficials({
+              ...officials,
+              List:[...officials.List,...res.data.result]
+            })
+            setLoading(false);
             swal({
               title: "Success",
               text: "Done Successfully!",
               icon: "success",
               button: "OK",
             });
-           setJobdes('')
-           setSelectedModules([[]])
+            setSelectedRole({
+              ...selectedRole,
+                value:'',
+                list:[],
+                checked:[]
+            })
           }
     
         }

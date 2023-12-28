@@ -1,6 +1,7 @@
-import React from 'react'
+import Swal from "sweetalert2";
+import { UpdateEmployeeAccess } from "../../../../api/request";
 
-export default function DeleteAuth() {
+export default function DeleteAuth({setLoading,data,list,officials,setOfficials,setSelectedRole,selectedRole}) {
     try {  
         Swal.fire({
           title: 'Are you sure?',
@@ -21,13 +22,20 @@ export default function DeleteAuth() {
             const formData = new FormData();
             formData.append('accessList',resultObject)
             formData.append('role',data.role)
-            setShowBackdrop(true);
+            setLoading(true);
             UpdateEmployeeAccess.EMP_UPTDACCESS(formData)
             .then(res => {
-              setJobdes('')
-              setSelectedModules([[]])
-              setAccessEmp(res.data.result)
-              setShowBackdrop(false);
+              setOfficials({
+                ...officials,
+                List:[...officials.List,...res.data.result]
+              })
+              setSelectedRole({
+                ...selectedRole,
+                  value:'',
+                  list:[],
+                  checked:[]
+              })
+              setLoading(false);
               Swal.fire(
                 'Deleted!',
                 'The selected role has been deleted from staff.',

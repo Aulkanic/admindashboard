@@ -7,16 +7,25 @@ import { CustomModal } from '../../components/Modal/CustomModal';
 import { CustomDatagrid } from '../../components/DataGrid/CustomDatagrid';
 import { CustomDialog } from '../../components/Dialog/CustomDialog';
 import CustomButton from '../../components/Buttons/button';
-import { CreateStaff } from '../../Page/Private/Staff/Modal.jsx/CreateStaff';
-import { UpdateStaff } from '../../Page/Private/Staff/Modal.jsx/UpdateStaff';
-import { ManageStaff } from '../../Page/Private/Staff/Modal.jsx/ManageStaff';
+import { CreateStaff } from '../../Page/Private/Staff/Modals/CreateStaff';
+import { UpdateStaff } from '../../Page/Private/Staff/Modals/UpdateStaff';
+import { ManageStaff } from '../../Page/Private/Staff/Modals/ManageStaff';
 import AddBmcc from '../../Page/Private/Staff/Action/AddBmcc';
 import { CustomHeading } from '../../components/H1/h1';
+import AddMYDORole from '../../Page/Private/Staff/Action/AddRole';
+import Authorization from '../../Page/Private/Staff/Action/Authorization';
+import DeleteAuth from '../../Page/Private/Staff/Action/DeleteAuth';
+import UpdateBmcc from '../../Page/Private/Staff/Action/UpdateBmcc';
 
 
 const Faqs = () => {
   const { admin  } = useSelector((state) => state.login)
   const [loading, setLoading] = useState(false);
+  const [selectedRole,setSelectedRole] = useState({
+    value:'',
+    list:[],
+    checked:[]
+  })
   const [createStaff,setCreateStaff] = useState({
     username: '',
     email: '',
@@ -41,17 +50,13 @@ const Faqs = () => {
     UpdateOpen:false,
     ManageOpen:false
   })
+  const [addRole,setAddRole] = useState([])
   const [bmcc,setBmcc] = useState([]);
   const [actlog,setActlog] = useState([]);
   const [roles, setRoles] = useState([]);
-  const [open1, setOpen1] = useState(false);
-  const [open2, setOpen2] = useState(false);
   const [errors, setErrors] = useState({});
   const [activeState,setActiveState] = useState('log');
   const [websection,setWebsection] = useState([])
-  const [selectedModules, setSelectedModules] = useState([]);
-  const [selectedModules1, setSelectedModules1] = useState([]);
-  const [isrole,setIsRole] = useState([])
 
 
   const handleClick = () => {
@@ -63,7 +68,7 @@ const Faqs = () => {
       field: 'name',
       headerClassName: 'super-app-theme--header',
       headerName: 'Staff Name',
-      width: 300,
+      width: 320,
       editable: false,
     },
     {
@@ -161,7 +166,6 @@ const Faqs = () => {
       ),
     },
   ];
-  const handleOpen2 = () => setOpen2(true);
   const handleInputChange = (event) =>{
      const { name,value,id } = event.target;
      if(id === 'Create'){
@@ -180,7 +184,15 @@ const Faqs = () => {
     const { name,value,id } = data;
     if(id === 'Create'){
       setCreateStaff({...createStaff,[name]: value})
-     }else{
+     }else if(id === 'Manage'){
+       const listed = officials.List?.filter(data => data.role === value)
+       setSelectedRole({
+        ...selectedRole,
+        value: value,
+        list: listed[0].accessList
+       })
+     }
+     else{
       setUpdateStaff((prev) =>({
         ...prev,
         newData:{
@@ -189,6 +201,19 @@ const Faqs = () => {
         }
       }))
      }
+  }
+  const handleChecked = (data) =>{
+    if(selectedRole.checked.includes(data)){
+      setSelectedRole({
+        ...selectedRole,
+        checked: selectedRole.checked.filter((id) => id !== data)
+      })
+    }else{
+      setSelectedRole({
+        ...selectedRole,
+        checked: [...selectedRole.checked, data]
+      })
+    }
   }
   const handleModalOpenClose = (modalType,value,isData) =>{
     setModals({
@@ -240,37 +265,13 @@ const Faqs = () => {
   };
 
 
-const handleModuleCheckboxChange = (moduleId) => {
-
-  if (selectedModules.includes(moduleId)) {
-    setSelectedModules(selectedModules.filter((id) => id !== moduleId));
+const handleCheckboxChange = (moduleId) => {
+  if (addRole.includes(moduleId)) {
+    setAddRole(addRole.filter((id) => id !== moduleId));
   } else {
-    setSelectedModules([...selectedModules, moduleId]);
+    setAddRole([...addRole, moduleId]);
   }
 };
-const handleModuleCheckboxChange1 = (moduleId) => {
-
-  if (selectedModules1.includes(moduleId)) {
-    setSelectedModules1(selectedModules1.filter((id) => id !== moduleId));
-  } else {
-    setSelectedModules1([...selectedModules1, moduleId]);
-  }
-};
-const weblist = websection.map((data,index) => {
-  return(
-    <>
-  {isrole.includes(data.name) ? null : (<label key={index}>
-    <input
-      type="checkbox"
-      className='checkaccess'
-      value={data.id}
-      checked={selectedModules.includes(data.name) || isrole.includes(data.name)}
-      onChange={() => handleModuleCheckboxChange(data.name)}
-    />
-    {data.name}
-  </label>)}
-  </>)
-})
   return (
     <>
     <CustomModal
@@ -279,7 +280,7 @@ const weblist = websection.map((data,index) => {
     onClose={() =>handleModalOpenClose('CreateOpen',false)}
     content={<CreateStaff
     data={createStaff}
-    options={roles}
+    options={officials}
     onSubmit={handleAddBmcc}
     handleInput={handleInputChange}
     handleSelect={handleOptionChange}
@@ -291,8 +292,8 @@ const weblist = websection.map((data,index) => {
     onClose={() =>handleModalOpenClose('UpdateOpen',false)}
     content={<UpdateStaff
     data={updateStaff}
-    options={roles}
-    onSubmit={handleAddBmcc}
+    options={officials}
+    onSubmit={() => UpdateBmcc({updateStaff,setLoading,setBmcc,setModals,modals,setBmcc})}
     handleInput={handleInputChange}
     handleSelect={handleOptionChange}
       />}
@@ -300,7 +301,22 @@ const weblist = websection.map((data,index) => {
     <CustomDialog
       open={modals.ManageOpen}
       title={'Manage Roles'}
-      onClose={() =>handleModalOpenClose('ManageOpen',false)}
+      handleClose={() =>handleModalOpenClose('ManageOpen',false)}
+      content={<ManageStaff 
+      officials={officials}
+      AddMYDORoles={() =>AddMYDORole({addRole,setOfficials,officials,setLoading})}
+      handleSelect={handleOptionChange}
+      selectedRole={selectedRole}
+      webSection={websection}
+      handleChecked={handleChecked}
+      handleCheckboxChange={handleCheckboxChange}
+      addRole={addRole}
+      setLoading={setLoading}
+      setOfficials={setOfficials}
+      setSelectedRole={setSelectedRole}
+      Authorization={() =>Authorization({setSelectedRole,selectedRole,setOfficials,officials,setLoading})}
+      />}
+
     />
     <div className="w-full">
       <div className="top">
@@ -316,7 +332,7 @@ const weblist = websection.map((data,index) => {
                   color={'blue'}
                 />
                 <CustomButton
-                  onClick={handleOpen2}
+                  onClick={() =>handleModalOpenClose('ManageOpen',true)}
                   label={'Manage staffs'}
                   color={'blue'}
                 />
@@ -355,13 +371,11 @@ const weblist = websection.map((data,index) => {
                 rowId={'activityLog'}
               />
             </div>
-          </div>
-          }
+          </div>}
         </div>
     </div>
     </div>
     </>
   )
 }
-
 export default Faqs

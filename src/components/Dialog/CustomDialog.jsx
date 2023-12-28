@@ -12,6 +12,7 @@ const Transition = React.forwardRef(function Transition(props, ref) {
   });
 
 export const CustomDialog = ({open,handleClose,content,title}) => {
+  console.log(handleClose)
   return (
   <Dialog
     fullScreen

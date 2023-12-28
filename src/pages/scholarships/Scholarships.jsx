@@ -18,7 +18,6 @@ import swal from "sweetalert";
 import { DataGrid } from '@mui/x-data-grid';
 import Avatar from '@mui/material/Avatar';
 import Card from '@mui/material/Card';
-import CardContent from '@mui/material/CardContent';
 import '../Button style/button.css'
 import { styled } from '@mui/material';
 import { Backdrop, CircularProgress } from '@mui/material';
@@ -361,7 +360,6 @@ const handleEditFileChange = (e) => {
   <StyledBackdrop open={showBackdrop}>
     <CircularProgress color="inherit" />
   </StyledBackdrop>
-{/* Modal for Add button */}
       <Modal
         open={open}
         onClose={handleClose}
@@ -641,9 +639,9 @@ const handleEditFileChange = (e) => {
       </Box>
       </Modal>
     <div className="scholarships">
-        <Sidebar/>
+  
     <div className="scholarshipsContainer">
-        <Navbar/>
+     
         <div className="top">
                 <div style={{width:'100%',display:'flex',justifyContent:'space-between',alignItems:'center',padding:'10px 10px 0px 10px'}}>
                 <p className="scorecardh">Scholarships Program 

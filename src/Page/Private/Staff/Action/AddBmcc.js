@@ -1,8 +1,8 @@
 import { AddBMCC } from "../../../../api/request";
 import swal from "sweetalert";
 
-export default function AddBmcc({setErrors,handleModalOpenClose,setBmcc,setCreateStaff,setLoading,data}) {
-    if(data.email === '' || data.username === '' || data.jobDes === ''){
+export default function AddBmcc({setErrors,handleModalOpenClose,setBmcc,setCreateStaff,setLoading,createStaff}) {
+    if(createStaff.email === '' || createStaff.username === '' || createStaff.jobDes === ''){
         swal({
           text: 'Please Provide necessary Information',
           timer: 2000,
@@ -13,7 +13,7 @@ export default function AddBmcc({setErrors,handleModalOpenClose,setBmcc,setCreat
       }
       const errors = {};
     
-    if (!/^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$/.test(data.email)) {
+    if (!/^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$/.test(createStaff.email)) {
          errors.email = "Email is invalid";
       }
     
@@ -22,10 +22,11 @@ export default function AddBmcc({setErrors,handleModalOpenClose,setBmcc,setCreat
         console.log(errors)
         return;
       }
+
       const formData = new FormData();
-      formData.append('email', data.email);
-      formData.append('name', data.username);
-      formData.append('jobdes', data.jobDes);
+      formData.append('email', createStaff.email);
+      formData.append('name', createStaff.username);
+      formData.append('jobdes', createStaff.jobDes);
       handleModalOpenClose('CreateOpen',false);
       setLoading(true);
       setErrors('')
