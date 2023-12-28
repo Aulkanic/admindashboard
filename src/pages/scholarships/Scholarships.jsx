@@ -641,7 +641,6 @@ const handleEditFileChange = (e) => {
     <div className="scholarships">
   
     <div className="scholarshipsContainer">
-     
         <div className="top">
                 <div style={{width:'100%',display:'flex',justifyContent:'space-between',alignItems:'center',padding:'10px 10px 0px 10px'}}>
                 <p className="scorecardh">Scholarships Program 
