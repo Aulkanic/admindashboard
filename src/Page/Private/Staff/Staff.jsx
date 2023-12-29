@@ -2,7 +2,11 @@ import React, {useEffect, useState} from 'react'
 import { FetchingBMCC,Activitylog,WebSection,BmccRoles } from '../../../api/request';
 import Avatar from '@mui/material/Avatar';
 import Chip from '@mui/material/Chip';
-import { useSelector } from 'react-redux';
+import { CiEdit } from "react-icons/ci";
+import { MdOutlineManageAccounts } from "react-icons/md";
+import { MdOutlineManageHistory } from "react-icons/md";
+import { FaUserCog } from "react-icons/fa";
+import { FaUserPlus } from "react-icons/fa";
 import { CustomModal } from '../../../components/Modal/CustomModal';
 import { CustomDatagrid } from '../../../components/DataGrid/CustomDatagrid';
 import { CustomDialog } from '../../../components/Dialog/CustomDialog';
@@ -17,7 +21,6 @@ import Authorization from './Action/Authorization';
 import UpdateBmcc from './Action/UpdateBmcc';
 
 export const Staff = () => {
-  const { admin  } = useSelector((state) => state.login)
   const [loading, setLoading] = useState(false);
   const [selectedRole,setSelectedRole] = useState({
     value:'',
@@ -51,7 +54,6 @@ export const Staff = () => {
   const [addRole,setAddRole] = useState([])
   const [bmcc,setBmcc] = useState([]);
   const [actlog,setActlog] = useState([]);
-  const [roles, setRoles] = useState([]);
   const [errors, setErrors] = useState({});
   const [activeState,setActiveState] = useState('log');
   const [websection,setWebsection] = useState([])
@@ -160,6 +162,8 @@ export const Staff = () => {
           onClick={() =>handleModalOpenClose('UpdateOpen',true,params.row)}
           color={'blue'}
           label={'Edit Details'}
+          icon={<CiEdit className='text-lg' />}
+          iconPosition={'start'}
         />
       ),
     },
@@ -327,17 +331,23 @@ export const Staff = () => {
               <div className='flex gap-4'>
                 <CustomButton
                   onClick={handleClick}
-                  label={activeState === 'admin' ? 'Manage Employee' : 'View Activity Log'}
+                  label={'View Activity Log'}
+                  icon={<MdOutlineManageHistory />}
+                  iconPosition={'start'}
                   color={'blue'}
                 />
                 <CustomButton
                   onClick={() =>handleModalOpenClose('ManageOpen',true)}
                   label={'Manage staffs'}
+                  icon={<FaUserCog />}
+                  iconPosition={'start'}
                   color={'blue'}
                 />
                 <CustomButton
                   onClick={() =>handleModalOpenClose('CreateOpen',true)}
                   label={'Add staffs'}
+                  icon={<FaUserPlus />}
+                  iconPosition={'start'}
                   color={'blue'}
                 />
               </div>
@@ -358,7 +368,9 @@ export const Staff = () => {
               <CustomHeading title={'Activity Log'} />
               <CustomButton
                 onClick={handleClick}
-                label={activeState === 'admin' ? 'Manage Employee' : 'View Activity Log'}
+                label={'Manage Employee'}
+                icon={<MdOutlineManageAccounts />}
+                iconPosition={'start'}
                 color={'blue'}
               />
             </div>

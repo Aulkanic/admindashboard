@@ -7,6 +7,7 @@ import CustomButton from '../../../components/Buttons/button';
 import HandleSubmit from './Actions/login';
 import { useDispatch } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
+import { CiLogin } from "react-icons/ci";
 
 export const Login = () => {
     const dispatch = useDispatch();
@@ -55,12 +56,14 @@ export const Login = () => {
                     show={showPassword}
                     />
                 </div>
-                <div>
+                <div className='flex justify-end items-end'>
                     <CustomButton
                      label={'Signin'}
                      color={'blue'}
                      loading={loading}
                      onClick={handleLogin}
+                     icon={<CiLogin />}
+                     iconPosition={'end'}
                      loadingLabel={'Signing...'}
                     />
                 </div>

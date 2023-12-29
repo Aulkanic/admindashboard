@@ -3,6 +3,9 @@ import { CustomHeading } from "../../../../components/H1/h1";
 import CustomButton from "../../../../components/Buttons/button";
 import { CustomSelect } from "../../../../components/InputFields/CustomSelect";
 import DeleteAuth from "../Action/DeleteAuth";
+import { IoMdAddCircleOutline } from "react-icons/io";
+import { TiCancel } from "react-icons/ti";
+import { FaRegSave } from "react-icons/fa";
 
 export const ManageStaff = ({
   officials,
@@ -202,6 +205,8 @@ export const ManageStaff = ({
                     <CustomButton
                     label={"Add Staff"}
                     onClick={() => setBtnstaff(true)}
+                    icon={<IoMdAddCircleOutline />}
+                    iconPosition={'start'}
                     color={"blue"}
                     />
 
@@ -231,14 +236,18 @@ export const ManageStaff = ({
                     </div>
                     <div className="flex justify-end items-end gap-4">
                         <CustomButton
-                        label={"Add Staff"}
-                        onClick={AddMYDORoles}
-                        color={"blue"}
-                        />
-                        <CustomButton
                         label={"Close"}
                         onClick={() => setBtnstaff(false)}
+                        icon={<TiCancel />}
+                        iconPosition={'start'}
                         color={"red"}
+                        />
+                        <CustomButton
+                        label={"Add Staff"}
+                        onClick={AddMYDORoles}
+                        icon={<IoMdAddCircleOutline />}
+                        iconPosition={'start'}
+                        color={"green"}
                         />
                     </div>
 
@@ -269,11 +278,13 @@ export const ManageStaff = ({
             <div className="w-full flex flex-wrap gap-2">
                 {weblist}
             </div>
-            <div className="flex justify-end items-end">
+            <div className="flex justify-end items-end pr-4">
                <CustomButton
                 label={"Save Role Access"}
                 onClick={Authorization}
-                color={"blue"}
+                color={"green"}
+                icon={<FaRegSave />}
+                iconPosition={'start'}
                 />
             </div>
         </div>

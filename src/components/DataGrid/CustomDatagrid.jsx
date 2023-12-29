@@ -45,7 +45,6 @@ import { CustomHeading } from '../H1/h1';
   }
 
 export const CustomDatagrid = ({loading,row,rowId,columns,title}) => {
-  console.log(row.length)
   return (
     <Box 
      sx={{
