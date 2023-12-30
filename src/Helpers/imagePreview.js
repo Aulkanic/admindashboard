@@ -1,11 +1,14 @@
 import React, { useEffect } from 'react';
 
 export default function ImagePreview({ icon }) {
+   console.log(!(icon instanceof File))
   useEffect(() => {
     if (!icon) {
       return () => {}; // No cleanup needed if there is no icon
     }
-
+    if(!(icon instanceof File)){
+      return <img className='object-contain w-full h-full' src={icon} alt="Preview" />
+    }
     const url = URL.createObjectURL(icon);
 
     // Cleanup function to revoke the object URL when the component unmounts

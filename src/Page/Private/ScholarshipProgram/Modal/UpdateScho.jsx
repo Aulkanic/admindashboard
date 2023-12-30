@@ -1,136 +1,110 @@
 import React from 'react'
+import Noimg from '../../../../Images/noImg.png'
+import CustomButton from '../../../../components/Buttons/button';
+import CustomFields from '../../../../components/InputFields/CustomFields';
+import { CustomFile } from '../../../../components/InputFields/CustomFile';
+import { CustomDate } from '../../../../components/InputFields/CustomDate';
+import { CustomRadio } from '../../../../components/InputFields/CustomRadio';
+import { CustomTextArea } from '../../../../components/InputFields/CustomTextArea';
+import ImagePreview from '../../../../Helpers/imagePreview';
+import { IoAddSharp } from "react-icons/io5";
+import { TiCancel } from "react-icons/ti";
 
-export const UpdateScho = () => {
+export const UpdateScho = ({
+  data,
+  handleFileChange,
+  handleInputChange,
+  handleRadioChange,
+  handleClose,
+  Create,
+  loading,
+  setUpdateScho
+}) => {
   return (
-    <Box sx={style}>
-    <div style={{margin:5,width:'100%',height:'30px',display:'flex',alignItems:'center',justifyContent:'space-between'}}>
-         <div>
-             <Typography sx={{fontSize:22,fontWeight:700,color:'#043F97',fontFamily:'Roboto Serif',lineHeight:'27px'}}>
-             Edit Scholarship Program details
-             </Typography>
-             <Typography sx={{fontSize:14,fontWeight:400,color:'#000000',fontFamily:'Roboto Serif',lineHeight:'16px'}}>
-             Fill up the necessary details.
-             </Typography>
-           </div>
-           <div style={{width:'50px',marginRight:'15px',height:'50px',marginTop:'-35px'}}>
-           <button style={{height:'100%',backgroundColor:'red',color:'white',padding:'0px',width:'100%',border:'none',borderRadius:'5px'}} onClick={handleClose1}>
-             <MdClear style={{fontSize:'30px',fontWeight:'700'}}/>
-           </button>
-           </div>
+    <form className='flex flex-col gap-4 p-4'>
+    <div className='flex gap-4 p-4'> 
+        <div className='w-full h-full'>
+            <div className='w-full h-48 border-1 border-black relative rounded-md'>
+            {!(data.newData.icon instanceof File) ? (
+               <img src={data.newData.icon} className='object-contain w-full h-full' />
+            ) : (
+                <ImagePreview icon={data.newData.icon} />
+            )}
+            </div>
+            <div className='mt-4'>
+            <label className='block mb-2 text-sm font-medium text-gray-900' htmlFor="icon">Scholarship Logo</label>
+            <CustomFile 
+                onChange={handleFileChange}
+                name={'icon'}
+                label={''}
+            />
+            </div>
+        </div>
+        <div className='w-full flex flex-col flex-wrap gap-4 pl-2'>
+            <CustomFields
+            label={'Scholarship Name'}
+            value={data.newData.title}
+            defaultValue={data.oldData.name}
+            id={'Update'}
+            name={'title'}
+            onChange={handleInputChange}
+            />
+            <div className='flex gap-2'>
+            <CustomDate
+             type={'date'}
+             label={"Start Date"}
+             value={data.newData.startDate}
+             onChange={(value) => setUpdateScho(prev =>({...prev,newData:{...prev.newData,startDate:value}}))}
+             disablePast={true}
+            />
+            <CustomDate
+             type={'date'}
+             label={"End Date"}
+             value={data.newData.endDate}
+             onChange={(value) => setUpdateScho(prev =>({...prev,newData:{...prev.newData,endDate:value}}))}
+             disablePast={true}
+            />
+            </div>
+            <div className='border-2 border-gray-300 rounded-lg p-2'>
+            <CustomRadio
+            isRow={true}
+            label={'Status'}
+            id={'Update'}
+            name={'status'}
+            value={data.newData.status || data.oldData.status}
+            onChange={(e) =>handleRadioChange(e,'Update')}
+            options={[{label:"Open",value:"Open"},{label:"Under Evaluation",value:"Under Evaluation"},{label:"Paused",value:"Paused"}]}
+            />
+            </div>
+        </div>
+    </div> 
+    <div className='p-4'>
+        <h3>Description:</h3>
+        <CustomTextArea
+            content={data.newData.description}
+            onChange={(value) => setUpdateScho(prev =>({...prev,newData:{...prev.newData,description:value}}))}
+        />
     </div>
-       <div style={{width:'100%',height:'80%',display:'flex',marginTop:'20px'}}>
-       <div style={{width:'40%',height:'100%'}}>
-         <div style={{border:'2px solid #dcdcdc',height:'300px',display:'flex',borderRadius:'5px',justifyContent:'center',alignItems:'center'}}>
-           {icon1 ? (
-             (<img style={{width: '100%',minHeight:'150px',objectFit:'cover',height:'100%'}} className='previmg' src={iconprev1} alt=''/>)
-           ) : (
-           <img style={{width: '100%',minHeight:'150px',objectFit:'cover',height:'100%'}} className='previmg' src={olddata.icon} alt=""/>
-           )}
-         </div>
-             <Button sx={{padding:'10px 0px 10px 0px',width:'100%'}}>
-             <TextField sx={{backgroundColor:'whitesmoke',border:'none',width:'100%'}}
-             type='file' accept=".jpg, .jpeg, .png" id="input-with-sx" label="" variant="outlined" fullWidth
-             onChange={handleEditFileChange}/>
-             </Button>
-           <div style={{display:'flex',justifyContent:'center',alignItems:'center'}}>
-           <Typography sx={{fontSize:'20px',fontWeight:'bold'}}>Scholarship Logo</Typography>
-           </div>
-       </div>             
-       <Card sx={{width:'55%',marginLeft:'10px',height:'100%'}} elevation={0}>
-           <div style={{width:'100%'}}>
-           <Box sx={{ display: 'flex'}}>
-             <div style={{width:'110px',display:'flex',justifyContent:'center',alignItems:'center',height:'59px',flexDirection:'column',marginRight:'5px'}}>
-             <InputLabel sx={{color:'black',fontWeight:'bold'}}>Scholarship</InputLabel>
-             <InputLabel sx={{color:'black',fontWeight:'bold'}}>Name</InputLabel>
-             </div> 
-             <div style={{width:'100%'}}>
-             <TextField fullWidth placeholder={olddata.name} value={titleu || olddata.name} id="input-with-sx" variant="outlined" size="large"
-               onChange={(e) => setSchotitle1(e.target.value)}/>
-             </div>
-           </Box>
-           <Box sx={{ display: 'flex'}}>
-             <div style={{width:'110px',display:'flex',justifyContent:'center',alignItems:'center',height:'59px',flexDirection:'column',marginRight:'5px'}}>
-             <InputLabel sx={{color:'black',fontWeight:'bold'}}>Start-End</InputLabel>
-             <InputLabel sx={{color:'black',fontWeight:'bold'}}>Date</InputLabel>
-             </div> 
-             <div style={{width:'100%',display:'felx',flexWrap:'wrap',gap:'2px'}}>
-             <LocalizationProvider dateAdapter={AdapterDayjs}>
-             <DemoContainer components={['DateField', 'DateField']}>
-               <DateField
-                 label="Start Date"
-                 sx={{flex:1}}
-                 slotProps={{
-                   textField: {
-                     size: "large",
-                     error: false,
-                   },
-                 }}
-                 value={startDate || dayjs(olddata.startDate)}
-                 onChange={(newValue) => setStartDate(newValue)}
-                 minDate={currentDate}
-                 format="YYYY-MM-DD"
-               />
-               <DateField
-                 label="End Date"
-                 sx={{flex:1}}
-                 slotProps={{
-                   textField: {
-                     size: "large",
-                     error: false,
-                   },
-                 }}
-                 value={endDate || dayjs(olddata.endDate)}
-                 onChange={(newValue) => setEndDate(newValue)}
-                 minDate={currentDate}
-                 format="YYYY-MM-DD"
-               />
-             </DemoContainer>
-           </LocalizationProvider>
-             </div>
-           </Box>
-           <div style={{display: 'flex',margin:'10px 0px 10px 0px'}}>
-             <div style={{width:'110px',display:'flex',justifyContent:'center',alignItems:'center',marginRight:'5px'}}>
-             <InputLabel sx={{color:'black',fontWeight:'bold'}}>Status</InputLabel>
-             </div>
-             <div style={{border:'2px solid #dcdcdc',width:'100%',paddingLeft:'20px',borderRadius:'5px',height:'58px',paddingTop:'6px'}}>
-             <RadioGroup
-                 row
-                 sx={{width:'100%'}}
-                 aria-labelledby="demo-row-radio-buttons-group-label"
-                 name="row-radio-buttons-group"
-                 defaultValue={olddata.status}
-                 value={statusu || olddata.status}
-                 onChange={(e) =>{
-                 const stat = e.target.value;
-                   setStatusCheck1(stat);
-                 }}  
-               >
-           
-             <FormControlLabel value="Open" control={<Radio />} label="Open"/>
-             <FormControlLabel value="Under Evaluation" control={<Radio />} label="Under Evaluation" sx={{margin:'0px 50px 0px 50px'}}/>
-             <FormControlLabel value="Paused" control={<Radio />} label="Paused"/>
-             </RadioGroup>
-             </div>
-           </div>
-           <div style={{ display: 'flex'}}>
-             <div style={{width:'110px',display:'flex',justifyContent:'center',alignItems:'center',height:'59px',flexDirection:'column',marginRight:'5px'}}>
-             <InputLabel sx={{color:'black',fontWeight:'bold'}}>Description</InputLabel>
-             </div> 
-             <div  style={{width:'100%'}}>
-             <TextField multiline
-             onChange={(e) => setSchodesc1(e.target.value)}
-             placeholder={olddata.description}
-             value={descriptionu || olddata.description}
-               rows={9} fullWidth id="input-with-sx" variant="outlined" />
-             </div>
-           </div>
-           </div>
-       </Card>
-       </div>
-       <div style={{display:'flex',justifyContent:'flex-end',alignItems:'flex-end'}}>
-           <button style={{marginRight:'10px'}} onClick={handleClose1} className="btnofficials2">Cancel</button>
-           <button className="btnofficials1" onClick={Edit}>Save</button>
-       </div>
-    </Box>
+    <div className='flex justify-end items-end gap-4 p-4'>
+        <CustomButton
+          label={'Cancel'}
+          type={'button'}
+          onClick={handleClose}
+          loading={loading}
+          icon={<TiCancel />}
+          iconPosition={'start'}
+          color={'red'}
+        />
+        <CustomButton
+          type={'submit'}
+          label={'Save'}
+          onClick={Create}
+          loading={loading}
+          icon={<IoAddSharp />}
+          iconPosition={'end'}
+          color={'green'}
+        />
+    </div>          
+    </form>
   )
 }

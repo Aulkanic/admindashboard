@@ -1,5 +1,4 @@
-import Navbar from '../../components/navbar/Navbar';
-import Sidebar from '../../components/sidebar/Sidebar';
+
 import './about.scss';
 import './req_score.css';
 import { FetchingSchoProg } from '../../api/request';
@@ -21,6 +20,9 @@ import { Backdrop, CircularProgress } from '@mui/material';
 import React from 'react';
 import { MdClear } from "react-icons/md";
 import { useSelector } from 'react-redux';
+import CustomButton from '../../components/Buttons/button';
+import { CustomSelect } from '../../components/InputFields/CustomSelect';
+import { CustomHeading } from '../../components/H1/h1';
 
 const theme = createTheme();
 const StyledBackdrop = styled(Backdrop)`
@@ -467,28 +469,16 @@ export const About = () => {
       <CircularProgress color="inherit" />
     </StyledBackdrop>
     <div className="about">
-        <Sidebar/>
-        <div className="aboutContainer">
-        <Navbar/>
-        <div className="top">
-          <p className="scorecardh">Score Card</p>
-          <FormControl sx={{backgroundColor:'white'}} fullWidth>
-            <InputLabel id="demo-simple-select-label">Choose Scholarship Program...</InputLabel>
-            <Select
-              labelId="demo-simple-select-label"
-              id="demo-simple-select"
-              value={schoname}
-              label="Choose Scholarship Program..."
-              onChange={handleChange}
-            >
-              {schoprog?.map((data,index) =>{
-                return(
-                  <MenuItem key={index}  value={data.name}>{data.name}</MenuItem>
-                )
-              })}
-            </Select>
-          </FormControl>
-          <Tabs
+        <div className="w-full p-4">
+          <CustomHeading title={'Score Card'} />
+          <CustomSelect
+            options={schoprog?.map((data,index)=>{
+              return({label:data.name,value:data.id})
+            })}
+            value={schoname}
+          />
+
+          {/* <Tabs
             value={value}
             onChange={handleTabChange}
             textColor="secondary"
@@ -499,28 +489,25 @@ export const About = () => {
             <Tab value="2" label="Score Card" />
           </Tabs>
           {value === '1' && 
-         <Card sx={{padding:'10px',backgroundColor:'transparent'}} elevation={0}>
+          <Card sx={{padding:'10px',backgroundColor:'transparent'}} elevation={0}>
             <div className="frmcontainer">
             {FormTemplate}
             </div>
             <button className="btnofficials" style={{float:'right'}} onClick={AddQuestions}>Add Questions</button>
           </Card> }   
           {value === '2' && 
-         <Card sx={{padding:'10px',backgroundColor:'transparent',fontSize:'14px'}} elevation={0}>
+          <Card sx={{padding:'10px',backgroundColor:'transparent',fontSize:'14px'}} elevation={0}>
           <p className='pscorehead'>These instructions pertain to the Score Card designed for the Scholarship Application Form.</p>
           <p className='pscoreinst'>1.Assign a score to each question, where the score is represented as a percentage. </p>
           <p className='pscoreinst'>2.Ensure that the total value for all questions equals 100% when the scores for each question are added together.</p>
           <p className='pscoreinst'>3.Each choice within a question must have a value between 0 and 100%. </p>
           <p className='pscoreinst'>4.The choices should be represented as a percentage of the total question score.</p>
           <p className='pscoreinst'>5.Use the following formula to calculate the score for a selected choice: (Percentage of Selected Choice / 100) * Specific Question's Value.</p>
-           
+            
               {ScoreTemplate}
-               <button className="btnofficials" style={{float:'right',marginBottom:'10px'}} onClick={SaveScore}>Set Score</button>
-         </Card> }       
-        </div>
-        </div>
-
-         
+                <button className="btnofficials" style={{float:'right',marginBottom:'10px'}} onClick={SaveScore}>Set Score</button>
+          </Card> }        */}
+        </div>  
     </div>
     </>
   )

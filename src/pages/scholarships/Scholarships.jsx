@@ -6,8 +6,6 @@ import { useState } from "react";
 import dayjs from 'dayjs';
 import Avatar from '@mui/material/Avatar';
 import '../Button style/button.css'
-import { styled } from '@mui/material';
-import { Backdrop } from '@mui/material';
 import { CustomHeading } from "../../components/H1/h1";
 import CustomButton from "../../components/Buttons/button";
 import { CustomDatagrid } from "../../components/DataGrid/CustomDatagrid";
@@ -15,6 +13,7 @@ import { CreateScho } from "../../Page/Private/ScholarshipProgram/Modal/CreateSc
 import { CustomModal } from "../../components/Modal/CustomModal";
 import { IoAddSharp } from "react-icons/io5";
 import { CiEdit } from "react-icons/ci";
+import { UpdateScho } from "../../Page/Private/ScholarshipProgram/Modal/UpdateScho";
 
 const Scholarships = () => {
     const [schocat, setSchocat] = useState([]);
@@ -177,12 +176,30 @@ const Scholarships = () => {
       }
     }
     const handleModalOpen = (name,value,data) =>{
-      setModals({
-        ...modals,
-        [name]:value
-      })
       if(data){
-        setUpdateScho({...updateScho,oldData: data})
+        const startDate = dayjs(data.startDate)
+        const endDate = dayjs(data.endDate)
+        setUpdateScho(prev =>
+        ({
+          ...prev,
+          newData: {
+            title:data.name,
+            description:data.description,
+            status:data.status,
+            startDate:startDate,
+            endDate:endDate,
+            icon:data.icon
+          }
+        }))
+        setModals(prev =>({
+          ...prev,
+          [name]:value
+        }))
+      }else{
+        setModals(prev =>({
+          ...prev,
+          [name]:value
+        }))
       }
     }
 
@@ -200,7 +217,18 @@ const Scholarships = () => {
       setCreateScho={setCreateScho}
       />}
     />
-
+    <CustomModal
+      title={'Edit Scholarship Program details'}
+      open={modals.EditOpen}
+      onClose={() => setModals({...modals,EditOpen:false})}
+      content={<UpdateScho
+      data={updateScho}
+      handleFileChange={handleFileChange}
+      handleInputChange={handleInputChange}
+      handleRadioChange={handleRadioChange}
+      setUpdateScho={setUpdateScho}
+      />}
+    />
     <div className="w-full">
         <div className="w-full p-4 flex flex-col gap-4">
           <div className="flex justify-between items-center">
