@@ -88,24 +88,15 @@ export const CreateScho = ({
             handleChange={(value) =>setCreateScho({...data,description:value})}
         />
     </div>
-    <div className='flex justify-end items-end gap-4 p-4'>
-        <CustomButton
-          label={'Cancel'}
-          type={'button'}
-          onClick={handleClose}
-          loading={loading}
-          icon={<TiCancel />}
-          iconPosition={'start'}
-          color={'red'}
-        />
+    <div className='flex justify-end items-end p-4'>
         <CustomButton
           type={'submit'}
           label={'Create'}
           onClick={Create}
           loading={loading}
           icon={<IoAddSharp />}
-          iconPosition={'end'}
-          color={'green'}
+          iconPosition={'start'}
+          color={'blue'}
         />
     </div>          
     </form>

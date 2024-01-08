@@ -32,6 +32,8 @@ import { styled } from '@mui/material';
 import { Backdrop, CircularProgress } from '@mui/material';
 import CustomNoRowsOverlay from '../Design/Norows';
 import UserIcon from '../../Images/userrandom.png'
+import { CustomHeading } from '../../components/H1/h1';
+import CustomFields from '../../components/InputFields/CustomFields';
 
 const CustomDataGrid = styled(DataGrid)({
   '& .MuiDataGrid-columnHeaders': {
@@ -717,10 +719,7 @@ const Evaluation = () => {
     )})
   return (
     <>
-              <StyledBackdrop open={showBackdrop}>
-                <CircularProgress color="inherit" />
-              </StyledBackdrop>
-      <Dialog open={openDialog} onClose={handleCloseDialog}>
+    <Dialog open={openDialog} onClose={handleCloseDialog}>
         <DialogTitle>Login to Grant Access</DialogTitle>
         <DialogContent>
           <DialogContentText>
@@ -753,7 +752,7 @@ const Evaluation = () => {
           <button className='btnofficials1' onClick={handleCloseDialog}>Cancel</button>
           <button className="btnofficials" onClick={Access}>Submit</button>
         </DialogActions>
-      </Dialog>
+    </Dialog>
     <Dialog
         fullScreen
         open={open}
@@ -1033,206 +1032,183 @@ const Evaluation = () => {
          </div>
       </Box>
     </Dialog>
-    <div style={{width:'100%'}}>
-           <div className="scholars">
-        <Sidebar/>
-        <div className="scholarsContainer" style={{backgroundColor:'#f1f3fa'}}>
-            <Navbar/>
-            <Card sx={{width:'97%',margin:'10px',padding:'10px',display:'flex',justifyContent:'flex-end',flexDirection:'column',alignItems:'flex-end'}} elevation={0}>
-            <div className='evaluationcon'>
-              <div style={{width:'100%',height: 100,display:'flex',justifyContent:'space-between',padding:10}}>
-                  <div style={{width:'30%',display:'flex',flexDirection:'column',justifyContent:'space-between',height:'100%'}}>
-                  <p className="scorecardh">Registered Applicants</p>
-                  </div>
-                  <div style={{marginRight:5,height:'100%'}}>
-                    <div style={{display:'flex',flexDirection:'column',height:'100%',width:'100%',alignItems:'center'}}>
-                      <div style={{width:'100%',alignItems:'center',justifyContent:'center',display:'flex',margin:10}}>
-                    <TextField
-                        id="outlined-number"
-                        label="Passing Score"
-                        type="number"
-                        size='small'
-                        placeholder={passSlot.passingscore}
-                        sx={{width:'30%',marginRight:5}}
-                        value={passscore}
-                        onChange={(e) => setPassscore(e.target.value)}
-                        InputLabelProps={{
-                          shrink: true,
-                        }}
-                      />
-                    <TextField
-                        id="outlined-number"
-                        label="Available Slot"
-                        placeholder={passSlot.slots}
-                        type="number"
-                        size='small'
-                        sx={{width:'30%'}}
-                        onChange={(e) =>setSlots(e.target.value)}
-                        value={slots}
-                        InputLabelProps={{
-                          shrink: true,
-                        }}
-                      />
-                      </div>
-                      <div>
-                      {isButtonVisible && <button className="btnofficials" onClick={ScoreSlot}>Save Changes</button>}
-                      </div>
-                    </div>
-                  </div>
-              </div>
-              <Box sx={{ height: 'maxContent', width: '100%',marginTop:"10px" }}>
-              <Breadcrumbs sx={{backgroundColor:'#0047a4',marginBottom:'0px'}} aria-label="breadcrumb">
-                  <Button onClick={() => setActiveState('All')}>
-                    <Link
-                      underline="none"
-                      sx={{
-                        color: 'white' ,
-                        borderBottom: activeState === 'All' ? '5px solid white' : 'none',
-                        transition:'all 0.3s ease-in-out',
-                        display:'flex',
-                        alignItems:'center'
-                      }}
-                    >
-                      <FormatListBulletedOutlinedIcon sx={{marginRight:'5px'}} fontSize='inherit' />
-                      All({data.length})
-                    </Link>
-                  </Button>
-                  <Button onClick={() => setActiveState('Passed')}>
-                    <Link
-                      underline="none"
-                      sx={{
-                        color: 'white',
-                        borderBottom: activeState === 'Passed' ? '5px solid white' : 'none',
-                        transition:'all 0.3s ease-in-out',
-                        display:'flex',
-                        alignItems:'center'
-                      }}
-                    >
-                      <CheckCircleIcon sx={{marginRight:'5px'}} fontSize="inherit" />
-                      Passed({Passed.length})
-                    </Link>
-                  </Button>
-                  <Button onClick={() => setActiveState('Failed')}>
-                    <Link
-                      underline="none"
-                      sx={{
-                        color:'white',
-                        borderBottom: activeState === 'Failed' ? '5px solid white' : 'none',
-                        transition:'all 0.3s ease-in-out',
-                        display:'flex',
-                        alignItems:'center'
-                      }}
-                    >
-                      <CancelIcon sx={{marginRight:'5px'}} fontSize="inherit" />
-                      Failed({Failed.length})
-                    </Link>
-                  </Button>
-              </Breadcrumbs>
-                {data.length === 0 && showBackdrop ? (
-        <div
-        style={{
-          position: 'absolute',
-          top: '50%',
-          left: '50%',
-          transform: 'translate(-50%, -50%)',
-          textAlign: 'center',
-        }}
-      >
-        <div style={{ marginBottom: '16px' }}>
-          <CircularProgress />
-        </div>
-        <div>
-          <p>Loading...</p>
-          <div className="loading-animation"></div>
-        </div>
-      </div>) : (<Card sx={{height:'500px',borderRadius:'0px'}}>
-                    {activeState === 'All' && (
-                  <CustomDataGrid
-                    rows={data}
-                    columns={columns}
-                    getRowId={(row) => row.applicantNum}
-                    scrollbarSize={10}
-                    initialState={{
-                      pagination: {
-                        paginationModel: {
-                          pageSize: 5,
-                        },
-                      },
-                    }}
-                    sx={{minHeight:'300px',border:'none',borderRadius:'0px'}}
-                    slots={{
-                      noRowsOverlay: CustomNoRowsOverlay,
-                    }}
-                    pageSizeOptions={[25]}
-                    disableRowSelectionOnClick
+    <div className='p-4'>
+      <div className=''>
+        <div className='flex justify-between items-center'>
+            <CustomHeading
+            title={'Registered Applicants'}
+            />
+            <div style={{marginRight:5,height:'100%'}}>
+              <div style={{display:'flex',flexDirection:'column',height:'100%',width:'100%',alignItems:'center'}}>
+                <div className='flex justify-center items-center gap-4'>
+                  <CustomFields
+                    label={'Passing Score'}
+                    value={passscore}
+                    placeholder={passSlot.passingscore}
+                    onChange={(e) => setPassscore(e.target.value)}
                   />
-                )}
-                  {activeState === 'Passed' && (
-                    <CustomDataGrid
-                      rows={Passed}
-                      columns={passedColumn}
-                      getRowId={(row) => row.applicantNum}
-                      scrollbarSize={10}
-                      initialState={{
-                        pagination: {
-                          paginationModel: {
-                            pageSize: 5,
-                          },
-                        },
-                      }}
-                      sx={{minHeight:'300px',border:'none',borderRadius:'0px'}}
-                      slots={{
-                        noRowsOverlay: CustomNoRowsOverlay,
-                      }}
-                      pageSizeOptions={[25]}
-                      checkboxSelection
-                      onRowSelectionModelChange={handleRowSelectionModelChange}
-                      rowSelectionModel={rowSelectionModel}
-                      disableRowSelectionOnClick
-                    />
-                  )}
-                  {activeState === 'Failed' && (
-                    <CustomDataGrid
-                      rows={Failed}
-                      columns={failedColumn}
-                      getRowId={(row) => row.applicantNum}
-                      scrollbarSize={10}
-                      initialState={{
-                        pagination: {
-                          paginationModel: {
-                            pageSize: 5,
-                          },
-                        },
-                      }}
-                      sx={{minHeight:'300px',border:'none',borderRadius:'0px'}}
-                      slots={{
-                        noRowsOverlay: CustomNoRowsOverlay,
-                      }}
-                      pageSizeOptions={[25]}
-                      checkboxSelection
-                      onRowSelectionModelChange={handleFailedSelectionModelChange}
-                      rowSelectionModel={failedSelectionModel}
-                      disableRowSelectionOnClick
-                    />
-                  )}
-                </Card>)}
-              </Box>
-              
+                  <CustomFields
+                    label={'Available Slot'}
+                    placeholder={passSlot.slots}
+                    onChange={(e) =>setSlots(e.target.value)}
+                    value={slots}
+                  />
+                </div>
+                <div>
+                {isButtonVisible && <button className="btnofficials" onClick={ScoreSlot}>Save Changes</button>}
+                </div>
+              </div>
             </div>
-            {activeState === 'Passed' && <div sx={{width:'90%',margin:'10px',display:'flex',justifyContent:'flex-end',flexDirection:'column',alignItems:'flex-end'}}>
-              <button className='btnofficials' onClick={Addall} >ADD ALL SELECTED TO APPLICANT LIST</button>
-            </div>}
-            {activeState === 'Failed' && <div sx={{width:'90%',margin:'10px',display:'flex',justifyContent:'flex-end',flexDirection:'column',alignItems:'flex-end'}}>
-                  <Checkbox
-                    checked={checked}
-                    onChange={handleChangeCheckbox}
-                    inputProps={{ 'aria-label': 'controlled' }}
-                  /><span>Sent Notification</span>
-                <button className='btnofficials2' onClick={FailedAll} style={{margin:'10px'}} >SET FAILED THE SELECTED USERS</button>
-            </div>}
-            </Card>
         </div>
-    </div>
+        <Box sx={{ height: 'maxContent', width: '100%',marginTop:"10px" }}>
+        <Breadcrumbs sx={{backgroundColor:'#0047a4',marginBottom:'0px'}} aria-label="breadcrumb">
+            <Button onClick={() => setActiveState('All')}>
+              <Link
+                underline="none"
+                sx={{
+                  color: 'white' ,
+                  borderBottom: activeState === 'All' ? '5px solid white' : 'none',
+                  transition:'all 0.3s ease-in-out',
+                  display:'flex',
+                  alignItems:'center'
+                }}
+              >
+                <FormatListBulletedOutlinedIcon sx={{marginRight:'5px'}} fontSize='inherit' />
+                All({data.length})
+              </Link>
+            </Button>
+            <Button onClick={() => setActiveState('Passed')}>
+              <Link
+                underline="none"
+                sx={{
+                  color: 'white',
+                  borderBottom: activeState === 'Passed' ? '5px solid white' : 'none',
+                  transition:'all 0.3s ease-in-out',
+                  display:'flex',
+                  alignItems:'center'
+                }}
+              >
+                <CheckCircleIcon sx={{marginRight:'5px'}} fontSize="inherit" />
+                Passed({Passed.length})
+              </Link>
+            </Button>
+            <Button onClick={() => setActiveState('Failed')}>
+              <Link
+                underline="none"
+                sx={{
+                  color:'white',
+                  borderBottom: activeState === 'Failed' ? '5px solid white' : 'none',
+                  transition:'all 0.3s ease-in-out',
+                  display:'flex',
+                  alignItems:'center'
+                }}
+              >
+                <CancelIcon sx={{marginRight:'5px'}} fontSize="inherit" />
+                Failed({Failed.length})
+              </Link>
+            </Button>
+        </Breadcrumbs>
+          {data.length === 0 && showBackdrop ? (
+  <div
+  style={{
+    position: 'absolute',
+    top: '50%',
+    left: '50%',
+    transform: 'translate(-50%, -50%)',
+    textAlign: 'center',
+  }}
+>
+  <div style={{ marginBottom: '16px' }}>
+    <CircularProgress />
+  </div>
+  <div>
+    <p>Loading...</p>
+    <div className="loading-animation"></div>
+  </div>
+</div>) : (<Card sx={{height:'500px',borderRadius:'0px'}}>
+              {activeState === 'All' && (
+            <CustomDataGrid
+              rows={data}
+              columns={columns}
+              getRowId={(row) => row.applicantNum}
+              scrollbarSize={10}
+              initialState={{
+                pagination: {
+                  paginationModel: {
+                    pageSize: 5,
+                  },
+                },
+              }}
+              sx={{minHeight:'300px',border:'none',borderRadius:'0px'}}
+              slots={{
+                noRowsOverlay: CustomNoRowsOverlay,
+              }}
+              pageSizeOptions={[25]}
+              disableRowSelectionOnClick
+            />
+          )}
+            {activeState === 'Passed' && (
+              <CustomDataGrid
+                rows={Passed}
+                columns={passedColumn}
+                getRowId={(row) => row.applicantNum}
+                scrollbarSize={10}
+                initialState={{
+                  pagination: {
+                    paginationModel: {
+                      pageSize: 5,
+                    },
+                  },
+                }}
+                sx={{minHeight:'300px',border:'none',borderRadius:'0px'}}
+                slots={{
+                  noRowsOverlay: CustomNoRowsOverlay,
+                }}
+                pageSizeOptions={[25]}
+                checkboxSelection
+                onRowSelectionModelChange={handleRowSelectionModelChange}
+                rowSelectionModel={rowSelectionModel}
+                disableRowSelectionOnClick
+              />
+            )}
+            {activeState === 'Failed' && (
+              <CustomDataGrid
+                rows={Failed}
+                columns={failedColumn}
+                getRowId={(row) => row.applicantNum}
+                scrollbarSize={10}
+                initialState={{
+                  pagination: {
+                    paginationModel: {
+                      pageSize: 5,
+                    },
+                  },
+                }}
+                sx={{minHeight:'300px',border:'none',borderRadius:'0px'}}
+                slots={{
+                  noRowsOverlay: CustomNoRowsOverlay,
+                }}
+                pageSizeOptions={[25]}
+                checkboxSelection
+                onRowSelectionModelChange={handleFailedSelectionModelChange}
+                rowSelectionModel={failedSelectionModel}
+                disableRowSelectionOnClick
+              />
+            )}
+          </Card>)}
+        </Box>    
+      </div>
+      {activeState === 'Passed' && <div sx={{width:'90%',margin:'10px',display:'flex',justifyContent:'flex-end',flexDirection:'column',alignItems:'flex-end'}}>
+        <button className='btnofficials' onClick={Addall} >ADD ALL SELECTED TO APPLICANT LIST</button>
+      </div>}
+      {activeState === 'Failed' && <div sx={{width:'90%',margin:'10px',display:'flex',justifyContent:'flex-end',flexDirection:'column',alignItems:'flex-end'}}>
+            <Checkbox
+              checked={checked}
+              onChange={handleChangeCheckbox}
+              inputProps={{ 'aria-label': 'controlled' }}
+            /><span>Sent Notification</span>
+          <button className='btnofficials2' onClick={FailedAll} style={{margin:'10px'}} >SET FAILED THE SELECTED USERS</button>
+      </div>} 
     </div>
     </>
   )

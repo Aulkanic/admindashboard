@@ -15,11 +15,11 @@ export const UpdateScho = ({
   handleFileChange,
   handleInputChange,
   handleRadioChange,
-  handleClose,
   Create,
   loading,
   setUpdateScho
 }) => {
+
   return (
     <form className='flex flex-col gap-4 p-4'>
     <div className='flex gap-4 p-4'> 
@@ -87,22 +87,13 @@ export const UpdateScho = ({
     </div>
     <div className='flex justify-end items-end gap-4 p-4'>
         <CustomButton
-          label={'Cancel'}
-          type={'button'}
-          onClick={handleClose}
-          loading={loading}
-          icon={<TiCancel />}
-          iconPosition={'start'}
-          color={'red'}
-        />
-        <CustomButton
           type={'submit'}
           label={'Save'}
           onClick={Create}
           loading={loading}
           icon={<IoAddSharp />}
-          iconPosition={'end'}
-          color={'green'}
+          iconPosition={'start'}
+          color={'blue'}
         />
     </div>          
     </form>

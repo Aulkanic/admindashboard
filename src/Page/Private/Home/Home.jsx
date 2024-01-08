@@ -28,14 +28,14 @@ const columns = [
     field: 'ScholarshipApplied',
     headerClassName: 'super-app-theme--header',
     headerName: 'Scholarship Applied',
-    width: 250,
+    width: 205,
     editable: true,
   },
   {
     field: 'date',
     headerClassName: 'super-app-theme--header',
     headerName: 'Date Applied',
-    width: 150,
+    width: 200,
     editable: false,
   },
   {
@@ -46,7 +46,7 @@ const columns = [
     editable: false,
     renderCell: (params) =>(
       <>
-      <p style={{margin:'0px'}}>{params.row.score}/100</p>
+      <p style={{margin:'0px'}}>{params.row.total}/100</p>
       </>
     ),
   },
@@ -88,24 +88,30 @@ export const Home = () => {
   return (
     <div className='w-full'>
       <div className='w-full flex flex-wrap gap-4 p-4'>
+        <div className='flex-1'>
         <CustomCard
         img={TotalScho}
         title={'45'}
         content={'Total Scholar'}
         link={RouteUrl.SCHOLARS}
         />
+        </div>
+        <div className='flex-1'>
         <CustomCard
         img={TotalAppli}
         title={'45'}
         content={'Total Applicants'}
         link={RouteUrl.APPLICATION}
         />
+        </div>
+        <div className='flex-1'>
         <CustomCard
         img={TotalPending}
         title={'45'}
         content={'Total Pending Renewal'}
         link={RouteUrl.SCHOLARS}
         />
+        </div>
       </div>
       <div className='p-4'>
         <CustomDatagrid

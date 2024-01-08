@@ -67,9 +67,12 @@ export const CustomDatagrid = ({loading,row,rowId,columns,title}) => {
         
       }}
     >
+      <div className='mb-2'>
       <CustomHeading  
        title={title}
       />
+      </div>
+
         <DataGrid
             className='min-h-96 w-full bg-white'
             loading={loading}

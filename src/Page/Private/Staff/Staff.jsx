@@ -104,12 +104,12 @@ export const Staff = () => {
         
         let chipColor = 'error'; 
         let status = 'Offline';
-        let color = 'rgba(229, 226, 226, 1)';
+        let color = 'rgb(159 18 57)';
         let font = 'black'
         if (isOnline === 'True') {
           chipColor = 'primary'; 
           status = 'Online';
-          color = 'rgba(0, 255, 10, 1)';
+          color = 'rgb(22 101 52)';
           font = 'white'
         }
         return (
@@ -128,14 +128,14 @@ export const Staff = () => {
       field: 'name',
       headerClassName: 'super-app-theme--header',
       headerName: 'Staff Name',
-      width: 200,
+      width: 210,
       editable: false,
     },
     {
       field: 'email',
       headerClassName: 'super-app-theme--header',
       headerName: 'Staff Email',
-      width: 150,
+      width: 230,
       editable: false,
     },
     {
@@ -156,7 +156,7 @@ export const Staff = () => {
       field: 'insert',
       headerClassName: 'super-app-theme--header',
       headerName: 'Action',
-      width: 250,
+      width: 165,
       renderCell: (params) => (
         <CustomButton
           onClick={() =>handleModalOpenClose('UpdateOpen',true,params.row)}
@@ -352,7 +352,7 @@ export const Staff = () => {
                 />
               </div>
             </div>
-            <div>
+            <div className='w-max'>
               <CustomDatagrid
                 loading={loading}
                 row={bmcc}

@@ -90,7 +90,7 @@ export const ScholarProg = () => {
       field: 'description',
       headerClassName: 'super-app-theme--header',
       headerName: 'Description',
-      width: 200,
+      width: 235,
       editable: false,
     },
     {
@@ -118,7 +118,7 @@ export const ScholarProg = () => {
       field: 'insert',
       headerClassName: 'super-app-theme--header',
       headerName: 'Actions',
-      width: 200,
+      width: 170,
       renderCell: (params) => (
         <CustomButton
           label={'Edit Details'}
