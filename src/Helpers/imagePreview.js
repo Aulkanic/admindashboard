@@ -1,7 +1,6 @@
 import React, { useEffect } from 'react';
 
 export default function ImagePreview({ icon }) {
-   console.log(!(icon instanceof File))
   useEffect(() => {
     if (!icon) {
       return () => {}; // No cleanup needed if there is no icon

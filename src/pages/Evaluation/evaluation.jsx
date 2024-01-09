@@ -1,39 +1,28 @@
 import React, { useEffect, useState } from 'react'
 import './evaluation.css'
-import Sidebar from '../../components/sidebar/Sidebar'
-import Navbar from '../../components/navbar/Navbar'
 import { DataGrid,} from '@mui/x-data-grid';
-import { Tabs, Tab, Box,Card,Button,Chip } from "@mui/material";  
+import { Box,Card,Button,Chip } from "@mui/material";  
 import { ApplicantsRequest, FetchingApplicantsInfo, ListofSub,
    USERFRM_ID,SetApplicant,FailedUser,FetchingBmccSchoinfo,
-      UpdatePassSlots,FetchPassSlots,DecrePassSlots,GrantAccess,ListAccess } from "../../api/request";
-import TextField from '@mui/material/TextField';
+      UpdatePassSlots,FetchPassSlots,DecrePassSlots,ListAccess } from "../../api/request";
 import swal from 'sweetalert';
-import Typography from '@mui/material/Typography';
 import Breadcrumbs from '@mui/material/Breadcrumbs';
-import Dialog from '@mui/material/Dialog';
-import DialogActions from '@mui/material/DialogActions';
-import DialogContent from '@mui/material/DialogContent';
-import DialogContentText from '@mui/material/DialogContentText';
-import DialogTitle from '@mui/material/DialogTitle';
 import CheckCircleIcon from '@mui/icons-material/CheckCircle';
 import CancelIcon from '@mui/icons-material/Cancel';
 import FormatListBulletedOutlinedIcon from '@mui/icons-material/FormatListBulletedOutlined';
 import { useContext } from "react";
 import { admininfo } from "../../App";
-import CloseIcon from '@mui/icons-material/Close';
 import Slide from '@mui/material/Slide';
-import AppBar from '@mui/material/AppBar';
-import Toolbar from '@mui/material/Toolbar';
-import IconButton from '@mui/material/IconButton';
 import Link from '@mui/material/Link';
 import Checkbox from '@mui/material/Checkbox';
 import { styled } from '@mui/material';
 import { Backdrop, CircularProgress } from '@mui/material';
 import CustomNoRowsOverlay from '../Design/Norows';
-import UserIcon from '../../Images/userrandom.png'
 import { CustomHeading } from '../../components/H1/h1';
 import CustomFields from '../../components/InputFields/CustomFields';
+import GrantUserAccess from '../../container/Access/access';
+import { CustomDialog } from '../../components/Dialog/CustomDialog';
+import ApplicantDetails from '../../Page/Private/Evaluation/Modals/userInfo';
 
 const CustomDataGrid = styled(DataGrid)({
   '& .MuiDataGrid-columnHeaders': {
@@ -48,24 +37,24 @@ const CustomDataGrid = styled(DataGrid)({
 
 });
 
-const StyledBackdrop = styled(Backdrop)(({ theme }) => ({
-  zIndex: theme.zIndex.drawer + 50,
-  color: '#fff',
-}));
-const Transition = React.forwardRef(function Transition(props, ref) {
-  return <Slide direction="up" ref={ref} {...props} />;
-});
 
 const Evaluation = () => {
     const { user } = useContext(admininfo);
     const [showBackdrop, setShowBackdrop] = useState(false);
     const [data, setData] = useState([]);
-    const [email,setEmail] = useState('');
-    const [password,setPassword] = useState('')
+    const [applicants,setApplicants] = useState({
+      passed:[],
+      failed:[]
+    })
+    const [selectedUser,setSelectedUser] = useState({
+      applicantNum:'',
+      personalInfo:[],
+      familyInfo:[],
+      form:[]
+    })
     const [userscore,setUserScore] = useState([]);
     const [applicantsInfo, setApplicantInfo] = useState([]);
     const [access,setAccess] = useState([])
-    const [tabValue, setTabValue] = useState('one');
     const [open, setOpen] = useState(false);
     const handleOpen = () => setOpen(true);
     const handleClose = () => setOpen(false);
@@ -82,11 +71,6 @@ const Evaluation = () => {
     const [who,setWho] = useState('');
     const [isSend,setIsSend] = useState('No')
     const [checked, setChecked] = React.useState(false);
-    const [active,setActive] = useState(0);
-
-    const handleChange = (event, newValue) => {
-      setTabValue(newValue);
-    };
 
     const handleChangeCheckbox = (event) => {
       const check = event.target.checked
@@ -112,7 +96,10 @@ const Evaluation = () => {
           let acc = await ListAccess.ACCESS()
           const empacc = acc.data.result?.filter(data => data.employeeName === user.name)
           setAccess(empacc)
-          setData(ForEva);
+          setApplicants({
+            passed: ForEva?.filter(data => data.score >= passSlot.passingscore) || [],
+            failed: ForEva?.filter(data => data.score < passSlot.passingscore) || []
+          })
           setPassSlot(pass.data.result[0])
         }
         Fetch();
@@ -660,378 +647,23 @@ const Evaluation = () => {
           }
         }
     }
-    const Access = async() =>{
-      const formData = new FormData();
-      formData.append('email',email);
-      formData.append('password',password);
-      formData.append('applicantNum',who)
-      setOpenDialog(false)
-      setShowBackdrop(true);
-      await GrantAccess.GRANT_ACCESS(formData)
-      .then(res => {
-        if(res.data.success === 1){
-          const ForEva = res.data.result?.filter(user => user.status === 'For Evaluation')
-          setData(ForEva);
-          setEmail('')
-          setPassword('')
-          setShowBackdrop(false);
-          swal({
-            text: res.data.message,
-            timer: 2000,
-            buttons: false,
-            icon: 'success',
-          });
-        }else{
-          setShowBackdrop(false);
-          swal({
-            text: res.data.message,
-            timer: 2000,
-            buttons: false,
-            icon: 'error',
-          });
-        }
 
-        }
-         )
-        .catch(err => console.log(err));
-      
-    }
-    
-    const Passed = data && data.length > 0
-    ? data.filter(user => user.score >= passSlot.passingscore)
-    : '';
-    const Failed = data && data.length > 0
-    ? data.filter(user => user.score < passSlot.passingscore)
-    : '';
-
-    const userfrmeval = userscore?.map((data,index) =>{
-      return(
-      <div className='frmlistq' key={index}>
-      <Chip sx={{width:'60px',position:'absolute',left:0,top:10}} label={data.score} color="primary" />
-      <div style={{}}>
-        <p style={{margin:'0px',fontSize:'20px',fontWeight:'700',backgroundColor:'#f1f3fa',padding:'10px',width:'100%',borderRadius:'10px'}}>
-          <strong>{index + 1}.</strong> {data.question} 
-        </p>
-        <p style={{margin:'0px',fontSize:'18px',marginTop:'10px',marginLeft:'20px',fontStyle:'italic'}}>- {data.answer}</p>
-      </div>
-      </div>
-
-    )})
   return (
     <>
-    <Dialog open={openDialog} onClose={handleCloseDialog}>
-        <DialogTitle>Login to Grant Access</DialogTitle>
-        <DialogContent>
-          <DialogContentText>
-            This will use for the special case scenario if the Admin, Employee or Mayor wants an applicants with a failed score to be passed
-          </DialogContentText>
-          <TextField
-            autoFocus
-            margin="dense"
-            id="name"
-            value={email}
-            onChange={(e) =>setEmail(e.target.value)}
-            label="Email Address"
-            type="email"
-            fullWidth
-            variant="standard"
-          />
-          <TextField
-            autoFocus
-            margin="dense"
-            id="name"
-            value={password}
-            onChange={(e) =>setPassword(e.target.value)}
-            label="Password"
-            type="password"
-            fullWidth
-            variant="standard"
-          />
-        </DialogContent>
-        <DialogActions>
-          <button className='btnofficials1' onClick={handleCloseDialog}>Cancel</button>
-          <button className="btnofficials" onClick={Access}>Submit</button>
-        </DialogActions>
-    </Dialog>
-    <Dialog
-        fullScreen
-        open={open}
-        onClose={handleClose}
-        TransitionComponent={Transition}
-      >
-        <AppBar sx={{ position: 'relative' }}>
-          <Toolbar>
-            <IconButton
-              edge="start"
-              color="inherit"
-              onClick={handleClose}
-              aria-label="close"
-            >
-              <CloseIcon />
-            </IconButton>
-            <Typography sx={{ ml: 2, flex: 1 }} variant="h6" component="div">
-              Applicant Information
-            </Typography>
-          </Toolbar>
-        </AppBar>
-      <Box sx={{width:'100%',height:'100%',display:'flex',backgroundColor:'whitesmoke',flexWrap:'wrap'}}>
-         <div style={{width:'30%',backgroundColor:'#f1f3fa',display:'flex',flexDirection:'column',alignItems:'center',paddingTop:'2%'}}>
-            <Card elevation={2} style={{backgroundColor:'white',width:"75%",height:'350px',marginBottom:'50px',display:'flex',flexDirection:'column',borderRadius:'5px'}}>
-                <div style={{width:'90%'}}>
-                  <h1 style={{margin:'10px 0px 0px 30px',fontSize:'25px',borderBottom:'5px solid #f1f3fa',color:'#7F7E7D',paddingBottom:'5px'}}>
-                    Applicant Profile
-                  </h1>
-                </div>
-                <div style={{display:'flex',flexDirection:"column",justifyContent:'center',alignItems:'center',marginTop:'20px',position:'relative'}}>
-                  {applicantsInfo.profile ? (
-                    <>
-                    <img 
-                    style={{width:'200px',height:'200px',borderRadius:'50%',objectFit:'cover',border:'2px solid black'}}
-                    src={applicantsInfo.profile}
-                    alt="" />
-                    </>
-                  ) : (
-                    <>
-                    <img 
-                    style={{width:'200px',height:'200px',borderRadius:'50%',objectFit:'cover',border:'2px solid black'}}
-                    src={UserIcon} 
-                    alt="" />
-                    </>
-                  )}
-                </div>
-                <div style={{display:'flex',justifyContent:'center',alignItems:'center',marginTop:'20px'}}>
-                  <h1 style={{fontSize:'18px',margin:'0px',fontWeight:'bold'}}>
-                    {applicantsInfo.Name}
-                  </h1>
-                </div>
-            </Card>
-            <Card elevation={2} style={{backgroundColor:'white',width:"75%",height:'max-content'}}>
-               <div style={{width:'90%'}}>
-                  <h1 style={{margin:'10px 0px 0px 30px',fontSize:'20px',borderBottom:'5px solid #f1f3fa',color:'#7F7E7D',paddingBottom:'5px'}}>
-                    Applicant Information
-                  </h1>
-                </div>
-                <div style={{display:'flex',flexDirection:'column',padding:'15px'}}>
-                  <p><strong>Applicant Code:</strong> {applicantsInfo.Name}</p>
-                  <p><strong>Scholarship Applied:</strong> {applicantsInfo.ScholarshipApplied
-                     }</p>
-                  <p><strong>Date Applied:</strong> {applicantsInfo.date}</p>
-                  <p><strong>Batch:</strong> {applicantsInfo.Batch}</p>
-                </div>
-            </Card>
-         </div>
-         <div style={{width:'70%',backgroundColor:'#f1f3fa',display:'flex',flexDirection:'column',alignItems:'center',paddingTop:'2%'}}>
-            <Card elevation={0} style={{backgroundColor:'transparent',width:'95%',height:'150px',marginBottom:'20px',padding:'15px 10px 30px 35px'}}>
-              <h1>Applicant Information</h1>
-              <p>You can see applicant information</p>
-            </Card>
-            <Card elevation={0} style={{backgroundColor:'transparent',width:'95%',height:'100%'}}>
-                <div>
-                  <button
-                  onClick={() => setActive(0)}
-                  className={active === 0 ? 'evalActivepage' : 'evalPage'}
-                  >
-                    Personal Info
-                  </button>
-                  <button
-                  style={{margin:'0px 10px 0px 10px'}}
-                  onClick={() => setActive(1)}
-                  className={active === 1 ? 'evalActivepage' : 'evalPage'}
-                  >
-                   Parents Info
-                  </button>
-                  <button
-                  onClick={() => setActive(2)}
-                  className={active === 2 ? 'evalActivepage' : 'evalPage'}
-                  >
-                    Application Form
-                  </button>
-                </div>
-                <Card sx={{width:'100%',height:"maxContent",padding:'20px'}}>
-                    {
-                      active===0 && (
-                        <div className='formpersona' style={{width:'100%',height:'100%',padding:'20px'}}>
-                          <div className='formpersonaChild'>
-                            <label htmlFor="">Name</label>
-                            <input 
-                            type="text" 
-                            value={applicantsInfo.Name} disabled />
-                          </div>
-                          <div className='formpersonaChild'>
-                            <label htmlFor="">Barangay</label>
-                            <input 
-                            type="text" 
-                            value={applicantsInfo.baranggay} disabled />
-                          </div>
-                          <div className='formpersonaChild'>
-                            <label htmlFor="">Email</label>
-                            <input 
-                            type="text" 
-                            value={applicantsInfo.email} disabled />
-                          </div>
-                          <div className='formpersonaChild'>
-                            <label htmlFor="">Birthday</label>
-                            <input 
-                            type="text" 
-                            value={applicantsInfo.birthday} disabled />
-                          </div>
-                          <div className='formpersonaChild'>
-                            <label htmlFor="">Contact Number</label>
-                            <input 
-                            type="text" 
-                            value={applicantsInfo.contactNum} disabled />
-                          </div>
-                          <div className='formpersonaChild'>
-                            <div style={{display:'flex'}}>
-                              <div style={{display:'flex',flexDirection:'column',marginRight:'10px'}}>
-                                <label htmlFor="">Gender</label>
-                                <input 
-                                style={{width:"200px"}}
-                                type="text" 
-                                value={applicantsInfo.gender} disabled />
-                              </div>
-                              <div style={{display:'flex',flexDirection:'column'}}>
-                                <label htmlFor="">Age</label>
-                                <input 
-                                style={{width:"200px"}}
-                                type="text" 
-                                value={applicantsInfo.age} disabled />
-                              </div>
-                            </div>
-                          </div>
-                          <div className='formpersonaChild1'>
-                            <label htmlFor="">Place of Birth</label>
-                            <input 
-                            type="text" 
-                            value={applicantsInfo.birthPlace} disabled />
-                          </div>
-                          <div className='formpersonaChild1'>
-                            <label htmlFor="">Address</label>
-                            <input 
-                            type="text" 
-                            value={applicantsInfo.address} disabled />
-                          </div>
-                        </div>
-                      )
-                    }
-                    {
-                      active === 1 && (
-                        <>
-                        <div className='famcon'>
-                          <div>
-                          <h1 style={{margin:'0px',fontSize:'25px',fontWeight:'bold'}}>Father Information</h1>
-                          <div className='fdetails'>
-                            <div>
-                              <label htmlFor="">Full Name</label>
-                              <input 
-                              type="text" 
-                              value={applicantsInfo.fatherName} disabled />
-                            </div>
-                            <div>
-                              <label htmlFor="">Highest Educational Attaintment</label>
-                              <input 
-                              type="text" 
-                              value={applicantsInfo.fatherEducation} disabled />
-                            </div>
-                            <div>
-                              <label htmlFor="">Occupation</label>
-                              <input 
-                              type="text" 
-                              value={applicantsInfo.fatherOccupation} disabled />
-                            </div>
-                          </div>
-                          </div>
-                          <div>
-                          <h1 style={{margin:'0px',fontSize:'25px',fontWeight:'bold'}}>Mother Information</h1>
-                          <div className='fdetails'>
-                            <div>
-                              <label htmlFor="">Full Name</label>
-                              <input 
-                              type="text" 
-                              value={applicantsInfo.motherName} disabled />
-                            </div>
-                            <div>
-                              <label htmlFor="">Highest Educational Attaintment</label>
-                              <input 
-                              type="text" 
-                              value={applicantsInfo.motherEducation} disabled />
-                            </div>
-                            <div>
-                              <label htmlFor="">Occupation</label>
-                              <input 
-                              type="text" 
-                              value={applicantsInfo.motherOccupation} disabled />
-                            </div>
-                          </div>
-                          </div>
-                          <div style={{height:'max-content'}}>
-                          <h1 style={{margin:'0px',fontSize:'25px',fontWeight:'bold'}}>Guardian Information</h1>
-                          <div className='fdetails'>
-                            <div>
-                              <label htmlFor="">Full Name</label>
-                              <input 
-                              type="text" 
-                              value={applicantsInfo.guardianName} disabled />
-                            </div>
-                            <div>
-                              <label htmlFor="">Relationship</label>
-                              <input 
-                              type="text" 
-                              value={applicantsInfo.relationship} disabled />
-                            </div>
-                            <div>
-                              <label htmlFor="">Address</label>
-                              <input 
-                              type="text" 
-                              value={applicantsInfo.guardianAddress} disabled />
-                            </div>
-                            <div>
-                              <label htmlFor="">Contact Number</label>
-                              <input 
-                              type="text" 
-                              value={applicantsInfo.guardianContact} disabled />
-                            </div>
-                          </div>
-                          </div>
-                          <div style={{height:'max-content'}}>
-                          <h1 style={{margin:'0px',fontSize:'25px',fontWeight:'bold'}}>List of Siblings</h1>
-                          {siblings.length > 0 ? (<div className='fdetails'>
-                            {siblings?.map((data,index) =>{
-                              return(
-                                <div key={index}>
-                                <label htmlFor="">Full Name</label>
-                                <input 
-                                type="text" 
-                                value={data.siblingName} disabled />
-                              </div>
-                              )
-                            })}
+    <GrantUserAccess
+      open={openDialog}
+      onClose={handleCloseDialog}
+      user={who}
+    />
+    <CustomDialog
+      open={open}
+      handleClose={handleClose}
+      title={'Applicant Information'}
+      content={<ApplicantDetails
+      userDetails={applicantsInfo}
+      />}
+    />
 
-                          </div>) : (
-                            <p style={{fontSize:'20px',fontWeight:'500',fontStyle:'italic',marginTop:'20px',marginLeft:'20px'}}>Only Child.</p>
-                          )}
-                          </div>
-                        </div>
-                        </>
-                      )
-                    }
-                    {
-                      active === 2 && (
-                        <>
-                        <div>
-                          <h1 style={{fontSize:'27px',fontWeight:'bold',marginBottom:'15px'}}>
-                            Total Score: {applicantsInfo.score}/100
-                          </h1>
-                         {userfrmeval}
-                        </div>
-                        </>
-                      )
-                    }
-                </Card>
-            </Card>
-         </div>
-      </Box>
-    </Dialog>
     <div className='p-4'>
       <div className=''>
         <div className='flex justify-between items-center'>
@@ -1089,7 +721,7 @@ const Evaluation = () => {
                 }}
               >
                 <CheckCircleIcon sx={{marginRight:'5px'}} fontSize="inherit" />
-                Passed({Passed.length})
+                Passed({applicants.passed.length})
               </Link>
             </Button>
             <Button onClick={() => setActiveState('Failed')}>
@@ -1104,7 +736,7 @@ const Evaluation = () => {
                 }}
               >
                 <CancelIcon sx={{marginRight:'5px'}} fontSize="inherit" />
-                Failed({Failed.length})
+                Failed({applicants.failed.length})
               </Link>
             </Button>
         </Breadcrumbs>
@@ -1149,7 +781,7 @@ const Evaluation = () => {
           )}
             {activeState === 'Passed' && (
               <CustomDataGrid
-                rows={Passed}
+                rows={applicants.passed}
                 columns={passedColumn}
                 getRowId={(row) => row.applicantNum}
                 scrollbarSize={10}
@@ -1173,7 +805,7 @@ const Evaluation = () => {
             )}
             {activeState === 'Failed' && (
               <CustomDataGrid
-                rows={Failed}
+                rows={applicants.failed}
                 columns={failedColumn}
                 getRowId={(row) => row.applicantNum}
                 scrollbarSize={10}
