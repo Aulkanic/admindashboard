@@ -44,7 +44,7 @@ import { CustomHeading } from '../H1/h1';
     );
   }
 
-export const CustomDatagrid = ({loading,row,rowId,columns,title}) => {
+export const CustomDatagrid = ({loading,row,rowId,columns,title,handleRowSelectionModelChange,rowSelectionModel}) => {
   return (
     <Box 
      sx={{
@@ -72,7 +72,6 @@ export const CustomDatagrid = ({loading,row,rowId,columns,title}) => {
        title={title}
       />
       </div>
-
         <DataGrid
             className='min-h-96 w-full bg-white'
             loading={loading}
@@ -90,6 +89,8 @@ export const CustomDatagrid = ({loading,row,rowId,columns,title}) => {
             }}
             pageSizeOptions={[5, 10, 25]}
             getRowId={(row) => row[rowId]}
+            onRowSelectionModelChange={handleRowSelectionModelChange}
+            rowSelectionModel={rowSelectionModel}
         />  
     </Box>
   )

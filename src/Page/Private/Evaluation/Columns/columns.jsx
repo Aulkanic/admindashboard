@@ -1,36 +1,37 @@
 import React from 'react'
 
-function Cols() {
+const Cols = (handleModalOpen,passSlot,setFirsttoSecStat,failed) =>{
+  let colList;
  return colList = {
     columns:[
-        {field: 'SchoIarshipApplied',headerName: 'Scholarship Applied',
+        {field: 'SchoIarshipApplied',headerName: 'Scholarship Applied',headerClassName: 'super-app-theme--header',
           width: 250,editable: false,
         },
-        {field: 'Name',headerName: 'Name',
+        {field: 'Name',headerName: 'Name',headerClassName: 'super-app-theme--header',
           width: 250,editable: false,
         },
-        {field: 'DateApplied',headerName: 'Date Applied',
+        {field: 'DateApplied',headerName: 'Date Applied',headerClassName: 'super-app-theme--header',
           width: 150,editable: false,
         },
-        {field: 'status',headerName: 'Status',
+        {field: 'status',headerName: 'Status',headerClassName: 'super-app-theme--header',
           width: 100,editable: false,
         },
-        {field: 'stat',headerName: 'Score',
+        {field: 'stat',headerName: 'Score',headerClassName: 'super-app-theme--header',
           width: 90,editable: false,
           renderCell: (params) =>(
             <p>{params.row.score}/100</p>
           ),
         },
-        {field: 'insert',headerName: 'Actions',
+        {field: 'insert',headerName: 'Actions',headerClassName: 'super-app-theme--header',
           width: 100,renderCell: (params) => (
                 <div>
                 <button 
-                onClick={() => view(params.row)}>View Details</button>
+                onClick={() =>handleModalOpen('detail',true)}>View Details</button>
                 </div>
         ),
         },
-        {field: 'score',headerName: 'Details',
-           width: 250,renderCell: (params) => {
+        {field: 'score',headerName: 'Details',headerClassName: 'super-app-theme--header',
+           width: 220,renderCell: (params) => {
               let status
               if(params.value >= passSlot.passingscore){
                 status = 'Passed'
@@ -47,7 +48,7 @@ function Cols() {
                 </button>}
                 {status === 'Failed' && (<>
                     {params.row.grantedAccess === '' || !params.row.grantedAccess ? (<button className='btnofficials1'  
-                onClick={() =>handleOpenDialog(params.row)}>
+                onClick={() =>handleModalOpen('access',true)}>
                     Access</button>) : (
                 <button className="btnofficials"
                     onClick={() => setFirsttoSecStat(params.row)}>
@@ -67,6 +68,7 @@ function Cols() {
         {
           field: 'SchoIarshipApplied',
           headerName: 'Scholarship Applied',
+          headerClassName: 'super-app-theme--header',
           width: 250,
           editable: false,
         },
@@ -79,18 +81,21 @@ function Cols() {
         {
           field: 'DateApplied',
           headerName: 'Date Applied',
+          headerClassName: 'super-app-theme--header',
           width: 150,
           editable: false,
         },
         {
           field: 'status',
           headerName: 'Status',
+          headerClassName: 'super-app-theme--header',
           width: 100,
           editable: false,
         },
         {
           field: 'stat',
           headerName: 'Score',
+          headerClassName: 'super-app-theme--header',
           width: 90,
           editable: false,
           renderCell: (params) =>(
@@ -102,12 +107,13 @@ function Cols() {
         {
             field: 'insert',
             headerName: 'Actions',
+            headerClassName: 'super-app-theme--header',
             width: 100,
             renderCell: (params) => (
                 <>
                 <div style={{display:'flex',flexDirection:'column',height:'100%',width:'100%',justifyContent:'center',alignItems:'center'}}>
                 <button className='myButton'
-                onClick={() => view(params.row)}>View Details</button>
+                onClick={() =>handleModalOpen('detail',true)}>View Details</button>
                 </div>
               </>
             ),
@@ -115,6 +121,7 @@ function Cols() {
           {
             field: 'score',
             headerName: 'Details',
+            headerClassName: 'super-app-theme--header',
             width: 250,
             renderCell: (params) => {
               return(
@@ -134,30 +141,35 @@ function Cols() {
         {
           field: 'SchoIarshipApplied',
           headerName: 'Scholarship Applied',
+          headerClassName: 'super-app-theme--header',
           width: 250,
           editable: false,
         },
         {
           field: 'Name',
           headerName: 'Name',
+          headerClassName: 'super-app-theme--header',
           width: 250,
           editable: false,
         },
         {
           field: 'DateApplied',
           headerName: 'Date Applied',
+          headerClassName: 'super-app-theme--header',
           width: 150,
           editable: false,
         },
         {
           field: 'status',
           headerName: 'Status',
+          headerClassName: 'super-app-theme--header',
           width: 100,
           editable: false,
         },
         {
           field: 'stat',
           headerName: 'Score',
+          headerClassName: 'super-app-theme--header',
           width: 90,
           editable: false,
           renderCell: (params) =>(
@@ -169,12 +181,13 @@ function Cols() {
         {
             field: 'insert',
             headerName: 'Actions',
+            headerClassName: 'super-app-theme--header',
             width: 100,
             renderCell: (params) => (
                 <>
                 <div style={{display:'flex',flexDirection:'column',height:'100%',width:'100%',justifyContent:'center',alignItems:'center'}}>
                 <button className='btnofficials1'
-                onClick={() => view(params.row)}>View Details</button>
+                onClick={() =>handleModalOpen('detail',true)}>View Details</button>
                 </div>
               </>
             ),
@@ -182,6 +195,7 @@ function Cols() {
           {
             field: 'grantedAccess',
             headerName: 'Details',
+            headerClassName: 'super-app-theme--header',
             width: 250,
             renderCell: (params) => {
               console.log(params.row)
@@ -189,7 +203,7 @@ function Cols() {
                 <>
                 <div style={{width:"100%",display:'flex',height:'100%',justifyContent:'center',alignItems:'center'}}>
               {params.row.grantedAccess === '' || !params.row.grantedAccess ? (<button className='btnofficials1'
-              onClick={() =>handleOpenDialog(params.row)}>
+              onClick={() =>handleModalOpen('access',true)}>
                 Access</button>) : (<button className="btnofficials" 
               onClick={() => setFirsttoSecStat(params.row)}>
                 Add to Applicants List

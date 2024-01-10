@@ -1191,9 +1191,8 @@ const Scholars = () => {
       </Box>
     </Modal>
     <div className="scholars">
-        <Sidebar/>
         <div className="scholarsContainer">
-            <Navbar/>
+
             <div className="top">
             
     <p className="scorecardh">Scholars</p>

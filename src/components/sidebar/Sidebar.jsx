@@ -1,4 +1,3 @@
-import './sidebar.scss';
 import DashboardIcon from '@mui/icons-material/Dashboard';
 import SchoolIcon from '@mui/icons-material/School';
 import AccountBoxIcon from '@mui/icons-material/AccountBox';
@@ -84,7 +83,8 @@ const Sidebar = () => {
         <ul className={clsx(show.dashboard ? 'flex flex-col gap-2 flex-wrap z-50' : 'hidden')}>
           {links.filter(data => data.section === 'dashboard').map((data,index) =>{
             return(
-              <li key={index} onClick={() =>handleClick(data)} className='w-full cursor-pointer truncate flex gap-2 hover:bg-white text-white hover:text-black hover:font-bold p-2 rounded-md transition ease-in-out delay-50'>
+              <li key={index} onClick={() =>handleClick(data)} 
+              className='w-full cursor-pointer truncate flex gap-2 hover:bg-white text-white hover:text-black hover:font-bold p-2 rounded-md transition ease-in-out delay-50'>
                 {data.icon} {data.name}
               </li>
             )
@@ -101,7 +101,8 @@ const Sidebar = () => {
         <ul className={clsx(show.manage ? 'flex flex-col gap-2 flex-wrap z-50' : 'hidden')}>
           {links.filter(data => data.section === 'manage').map((data,index) =>{
             return(
-              <li key={index} onClick={() =>handleClick(data)} className='w-full cursor-pointer truncate flex gap-2 hover:bg-white text-white hover:text-black hover:font-bold p-2 rounded-md transition ease-in-out delay-50'>
+              <li key={index} onClick={() =>handleClick(data)} 
+              className='w-full cursor-pointer truncate flex gap-2 hover:bg-white text-white hover:text-black hover:font-bold p-2 rounded-md transition ease-in-out delay-50'>
                 {data.icon} {data.name}
               </li>
             )
