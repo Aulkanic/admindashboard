@@ -28,6 +28,7 @@ const Evaluation = () => {
     const { user } = useContext(admininfo);
     const [showBackdrop, setShowBackdrop] = useState(false);
     const [data, setData] = useState([]);
+    const [loading,setLoading] = useState(false)
     const [applicants,setApplicants] = useState({
       all:[],
       passed:[],
@@ -81,6 +82,7 @@ const Evaluation = () => {
     useEffect(() => {
 
         async function Fetch(){
+          setLoading(true)
           const response = await ApplicantsRequest.ALL_APPLICANTS();
           const pass = await FetchPassSlots.FETCH_PASSSLOTS()
           const ForEva = response.data.results?.filter(user => user.status === 'For Evaluation')
@@ -93,6 +95,7 @@ const Evaluation = () => {
             failed: ForEva?.filter(data => data.score < passSlot.passingscore) || []
           })
           setPassSlot(pass.data.result[0])
+          setLoading(false)
         }
         Fetch();
       }, []);
@@ -473,7 +476,7 @@ const Evaluation = () => {
             </div>
         </div>
         <Box>
-        <Breadcrumbs className='mb-4 bg-blue-800 px-4 py-2 rounded-t-md mt-2' aria-label="breadcrumb">
+        <Breadcrumbs className='px-4 py-2 mt-2' aria-label="breadcrumb">
           {breadcrumbList.map((data,idx) =>(
             <button 
              className={clsx('', {
@@ -483,7 +486,7 @@ const Evaluation = () => {
              key={idx} onClick={() => setActiveState(data.id)}>
              <Link
                underline="none"
-               className={clsx('text-white flex items-center gap-2',{'text-xl': activeState === data.id})}
+               className={clsx('text-black flex items-center gap-2',{'text-xl': activeState === data.id})}
              >
                {data.icon}
               {data.label}({data.data})
@@ -491,19 +494,21 @@ const Evaluation = () => {
            </button>           
           ))}
         </Breadcrumbs>
-              {activeState === 0 && (
+        <div className='w-max'>
+            {activeState === 0 && (
                 <CustomDatagrid
                   row={applicants.all}
                   columns={columns}
                   rowId={'applicantNum'}
+                  loading={loading}
                 />
-
-          )}
+            )}
             {activeState === 1 && (
                 <CustomDatagrid
                   row={applicants.all}
                   columns={passedColumn}
                   rowId={'applicantNum'}
+                  loading={loading}
                   handleRowSelectionModelChange={handleRowSelectionModelChange}
                   rowSelectionModel={rowSelectionModel}
                 />
@@ -512,11 +517,13 @@ const Evaluation = () => {
                 <CustomDatagrid
                 row={applicants.all}
                 columns={failedColumn}
+                loading={loading}
                 rowId={'applicantNum'}
                 handleRowSelectionModelChange={handleFailedSelectionModelChange}
                 rowSelectionModel={failedSelectionModel}
               />
             )}
+        </div>
         </Box>    
       </div>
       {activeState === 'Passed' && <div sx={{width:'90%',margin:'10px',display:'flex',justifyContent:'flex-end',flexDirection:'column',alignItems:'flex-end'}}>

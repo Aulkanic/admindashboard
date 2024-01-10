@@ -12,7 +12,7 @@ const id = open ? 'simple-popover' : undefined;
         badgeContent={length} 
         color="error"
         onClick={onClickIcon}
-        className='text-5xl text-white cursor-pointer'
+        className='text-4xl text-white cursor-pointer'
         >
           <IoNotificationsCircleSharp />
         </Badge>

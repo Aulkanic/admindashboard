@@ -1,17 +1,14 @@
-import './navbar.scss';
 import React, { useState } from 'react'
 import Fade from '@mui/material/Fade';
 import Button from '@mui/material/Button';
 import { styled } from '@mui/material/styles';
 import { UpdatePassword, UpdateProfile,LogoutAdmin,AdminNotify,SeenAdminNotify } from '../../api/request';
-import Badge from '@mui/material/Badge';
 import Avatar from '@mui/material/Avatar';
 import Backdrop from '@mui/material/Backdrop';
 import Box from '@mui/material/Box';
 import Modal from '@mui/material/Modal';
 import Typography from '@mui/material/Typography';
 import SaveIcon from '@mui/icons-material/Save';
-import TextField from '@mui/material/TextField';
 import { useSelector } from "react-redux";
 import { CircularProgress } from '@mui/material';
 import { useDispatch } from 'react-redux';
@@ -367,23 +364,22 @@ const Navbar = () => {
           </Box>
         </Fade>
       </Modal>
-    <div className='w-full flex h-[103.5px] bg-blueish'>
+    <div className='w-full flex h-[96px] bg-blueish'>
       <div className='w-full flex justify-end items-center gap-4 p-8'>
-        <div className='w-1/2'>
-        <label for="search" class="mb-2 text-sm font-medium text-gray-900 sr-only dark:text-white">Search</label>
-        <div class="relative">
-            <div class="absolute inset-y-0 start-0 flex items-center ps-3 pointer-events-none">
-                <svg class="w-4 h-4 text-gray-500 dark:text-gray-400" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 20 20">
-                    <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m19 19-4-4m0-7A7 7 0 1 1 1 8a7 7 0 0 1 14 0Z"/>
-                </svg>
-            </div>
-            <input type="search" id="search" class="block w-full p-4 ps-10 text-sm text-gray-900 border border-gray-300 rounded-lg bg-gray-50 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-             placeholder="Search" required/>
-            <button type="submit" class="text-white absolute end-2.5 bottom-2.5 bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-4 py-2 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">Search</button>
-        </div>
-        </div>
+        <div className='w-1/2 h-max flex'>
+          <div className="relative w-full flex justify-between ">
+              <div className="absolute inset-y-0 start-0 flex items-center ps-3 pointer-events-none">
+                  <svg className="w-4 h-4 text-gray-500 dark:text-gray-400" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 20 20">
+                      <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m19 19-4-4m0-7A7 7 0 1 1 1 8a7 7 0 0 1 14 0Z"/>
+                  </svg>
 
-        <div className='w-full flex justify-end items-center gap-4'>
+              </div>
+              <input type="search" id="search" className=" block w-full px-8 py-3 h-max text-sm text-gray-900 border border-gray-300 rounded-lg bg-gray-50 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+               placeholder="Search" required/>
+              <button type="submit" className="text-white absolute end-2 bottom-2 bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-4 py-2 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">Search</button>
+          </div>
+        </div>
+        <div className='w-full flex justify-end items-center'>
         <h2 className='font-bold text-white truncate text-xl'>{admin[0]?.name}</h2>
           <Profile
             profileImg={admin[0]?.profile}

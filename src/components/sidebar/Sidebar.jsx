@@ -59,17 +59,17 @@ const Sidebar = () => {
   };
 
   return (
-    <div className='bg-blueish min-h-screen h-max max-h-full relative hidden md:flex flex-col justify-top items-center w-[300px] pt-2'>
-      <div className='w-full flex items-center pr-8 mb-4 border-b-2 border-white'>
-        <div className='w-16 h-16 m-4 rounded-lg bg-white'> 
+    <div className='bg-blueish min-h-screen h-max max-h-full relative hidden md:flex flex-col justify-top items-center w-[300px]'>
+      <div className='w-full flex items-center pr-8 mb-2 border-b-2 border-white h-max'>
+        <div className='w-12 h-12 m-4 rounded-lg bg-white'> 
           <LazyImage
             images={MYDO}
           />
         </div>
         <div>
-          <p className='font-semibold truncate text-white'>Marilao Youth</p>
-          <p className='font-semibold text-white'>Development</p>
-          <p className='font-semibold text-white'>Office</p>
+          <p className='font-semibold text-sm truncate text-white'>Marilao Youth</p>
+          <p className='font-semibold text-sm text-white'>Development</p>
+          <p className='font-semibold text-sm text-white'>Office</p>
         </div>
       </div>
       <div className='w-11/12 flex flex-col gap-4 pb-8 px-4'> 
@@ -79,12 +79,12 @@ const Sidebar = () => {
             <p className='font-bold text-lg text-white'>Dashboard</p>
             {show.dashboard ? <MdKeyboardArrowUp className='text-white' size={25} /> : <MdKeyboardArrowDown className='text-white' size={25} />}
           </div>
-          <hr />
+          <hr className='bg-white border-white mb-2'/>
         <ul className={clsx(show.dashboard ? 'flex flex-col gap-2 flex-wrap z-50' : 'hidden')}>
           {links.filter(data => data.section === 'dashboard').map((data,index) =>{
             return(
               <li key={index} onClick={() =>handleClick(data)} 
-              className='w-full cursor-pointer truncate flex gap-2 hover:bg-white text-white hover:text-black hover:font-bold p-2 rounded-md transition ease-in-out delay-50'>
+              className='w-full cursor-pointer truncate flex gap-2 hover:bg-blue-800 text-white hover:font-semibold p-2 rounded-md transition ease-in-out delay-50'>
                 {data.icon} {data.name}
               </li>
             )
@@ -97,7 +97,7 @@ const Sidebar = () => {
           <p className='font-bold text-lg text-white'>Management</p>
           {show.manage ? <MdKeyboardArrowUp className='text-white' size={25} /> : <MdKeyboardArrowDown className='text-white' size={25} />}
         </div>
-        <hr />
+        <hr className='bg-white border-white mb-2'/>
         <ul className={clsx(show.manage ? 'flex flex-col gap-2 flex-wrap z-50' : 'hidden')}>
           {links.filter(data => data.section === 'manage').map((data,index) =>{
             return(
@@ -115,7 +115,7 @@ const Sidebar = () => {
           <p className='font-bold text-lg text-white'>Maintenance</p>
           {show.maintenance ? <MdKeyboardArrowUp className='text-white' size={25} /> : <MdKeyboardArrowDown className='text-white' size={25} />}
         </div>
-        <hr />
+        <hr className='bg-white border-white mb-2'/>
         <ul className={clsx(show.maintenance ? 'flex flex-col gap-2 flex-wrap z-50' : 'hidden')}>
           {links.filter(data => data.section === 'maintenance').map((data,index) =>{
             return(

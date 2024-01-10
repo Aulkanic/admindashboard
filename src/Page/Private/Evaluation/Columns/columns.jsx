@@ -1,5 +1,6 @@
 import React from 'react'
 
+
 const Cols = (handleModalOpen,passSlot,setFirsttoSecStat,failed) =>{
   let colList;
  return colList = {
@@ -23,15 +24,18 @@ const Cols = (handleModalOpen,passSlot,setFirsttoSecStat,failed) =>{
           ),
         },
         {field: 'insert',headerName: 'Actions',headerClassName: 'super-app-theme--header',
-          width: 100,renderCell: (params) => (
+          width: 150,renderCell: (params) => (
                 <div>
-                <button 
-                onClick={() =>handleModalOpen('detail',true)}>View Details</button>
+                  <button className="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-4 py-2 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
+                  onClick={() =>handleModalOpen('detail',true)}
+                  >
+                    View Detail
+                  </button>
                 </div>
         ),
         },
         {field: 'score',headerName: 'Details',headerClassName: 'super-app-theme--header',
-           width: 220,renderCell: (params) => {
+           width: 200,renderCell: (params) => {
               let status
               if(params.value >= passSlot.passingscore){
                 status = 'Passed'
@@ -42,26 +46,28 @@ const Cols = (handleModalOpen,passSlot,setFirsttoSecStat,failed) =>{
               return(
                 <div>
                 {status === 'Passed' && 
-                <button className="btnofficials"
+                <button className="text-white bg-green-700 hover:bg-green-800 focus:ring-4 focus:outline-none focus:ring-green-300 font-medium rounded-lg text-sm px-4 py-2 dark:bg-green-600 dark:hover:bg-green-700 dark:focus:ring-green-800"
                 onClick={() => setFirsttoSecStat(params.row)}>
-                    Add to Applicants List
+                Add to Applicants List
                 </button>}
                 {status === 'Failed' && (<>
-                    {params.row.grantedAccess === '' || !params.row.grantedAccess ? (<button className='btnofficials1'  
+                {params.row.grantedAccess === '' || !params.row.grantedAccess ? (
+                <button className="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-4 py-2 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"  
                 onClick={() =>handleModalOpen('access',true)}>
-                    Access</button>) : (
-                <button className="btnofficials"
-                    onClick={() => setFirsttoSecStat(params.row)}>
-                    Add to Applicants List
-                    </button>)}
-                    <button className='btnofficials2' style={{marginLeft:'10px'}}
-                    onClick={() => failed(params.row)}>
-                    Failed
+                Access
+                </button>) : (
+                <button className="text-white bg-green-700 hover:bg-green-800 focus:ring-4 focus:outline-none focus:ring-green-300 font-medium rounded-lg text-sm px-4 py-2 dark:bg-green-600 dark:hover:bg-green-700 dark:focus:ring-green-800"
+                onClick={() => setFirsttoSecStat(params.row)}>
+                Add to Applicants List
+                </button>)}
+                <button className="text-white bg-red-700 hover:bg-red-800 focus:ring-4 focus:outline-none focus:ring-red-300 font-medium rounded-lg text-sm px-4 py-2 dark:bg-red-600 dark:hover:bg-red-700 dark:focus:ring-red-800"
+                onClick={() => failed(params.row)}>
+                Failed
                 </button>
                     </>)}
                 </div>)
             },
-          },
+        },
     
       ],
     passedColumn:[
@@ -75,6 +81,7 @@ const Cols = (handleModalOpen,passSlot,setFirsttoSecStat,failed) =>{
         {
           field: 'Name',
           headerName: 'Name',
+          headerClassName: 'super-app-theme--header',
           width: 250,
           editable: false,
         },
@@ -108,33 +115,34 @@ const Cols = (handleModalOpen,passSlot,setFirsttoSecStat,failed) =>{
             field: 'insert',
             headerName: 'Actions',
             headerClassName: 'super-app-theme--header',
-            width: 100,
-            renderCell: (params) => (
+            width: 150,
+            renderCell: () => (
                 <>
-                <div style={{display:'flex',flexDirection:'column',height:'100%',width:'100%',justifyContent:'center',alignItems:'center'}}>
-                <button className='myButton'
-                onClick={() =>handleModalOpen('detail',true)}>View Details</button>
+                <div>
+                <button className="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-4 py-2 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
+                  onClick={() =>handleModalOpen('detail',true)}
+                  >
+                    View Detail
+                  </button>
                 </div>
               </>
             ),
+        },
+        {
+          field: 'score',
+          headerName: 'Details',
+          headerClassName: 'super-app-theme--header',
+          width: 200,
+          renderCell: (params) => {
+            return(
+            <div>
+            <button className="text-white bg-green-700 hover:bg-green-800 focus:ring-4 focus:outline-none focus:ring-green-300 font-medium rounded-lg text-sm px-4 py-2 dark:bg-green-600 dark:hover:bg-green-700 dark:focus:ring-green-800"
+            onClick={() => setFirsttoSecStat(params.row)}>
+            Add to Applicants List
+            </button>
+            </div>)
           },
-          {
-            field: 'score',
-            headerName: 'Details',
-            headerClassName: 'super-app-theme--header',
-            width: 250,
-            renderCell: (params) => {
-              return(
-                <>
-                <div style={{width:"100%",display:'flex',flexDirection:'column',height:'100%',justifyContent:'center',alignItems:'center'}}>
-              <button className="btnofficials"
-              onClick={() => setFirsttoSecStat(params.row)}>
-                Add to Applicants List
-                </button>
-              </div>
-              </>)
-            },
-          },
+        },
     
       ],
     failedColumn:[
@@ -182,40 +190,46 @@ const Cols = (handleModalOpen,passSlot,setFirsttoSecStat,failed) =>{
             field: 'insert',
             headerName: 'Actions',
             headerClassName: 'super-app-theme--header',
-            width: 100,
-            renderCell: (params) => (
-                <>
-                <div style={{display:'flex',flexDirection:'column',height:'100%',width:'100%',justifyContent:'center',alignItems:'center'}}>
-                <button className='btnofficials1'
-                onClick={() =>handleModalOpen('detail',true)}>View Details</button>
+            width: 150,
+            renderCell: () => (
+                <div>
+                <button className="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-4 py-2 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
+                  onClick={() =>handleModalOpen('detail',true)}
+                  >
+                    View Detail
+                  </button>
                 </div>
-              </>
             ),
+        },
+        {
+          field: 'grantedAccess',
+          headerName: 'Details',
+          headerClassName: 'super-app-theme--header',
+          width: 200,
+          renderCell: (params) => {
+            console.log(params.row)
+            return(
+              <>
+              <div>
+            {params.row.grantedAccess === '' || !params.row.grantedAccess ? (
+            <button cclassName="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-4 py-2 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
+            onClick={() =>handleModalOpen('access',true)}>
+            Access
+            </button>
+            ) : (
+            <button className="text-white bg-green-700 hover:bg-green-800 focus:ring-4 focus:outline-none focus:ring-green-300 font-medium rounded-lg text-sm px-4 py-2 dark:bg-green-600 dark:hover:bg-green-700 dark:focus:ring-green-800"
+            onClick={() => setFirsttoSecStat(params.row)}>
+            Add to Applicants List
+            </button>
+            )}
+            <button className="text-white bg-red-700 hover:bg-red-800 focus:ring-4 focus:outline-none focus:ring-red-300 font-medium rounded-lg text-sm px-4 py-2 dark:bg-red-600 dark:hover:bg-red-700 dark:focus:ring-red-800"
+            onClick={() => failed(params.row)}>
+            Failed
+            </button>
+            </div>
+            </>)
           },
-          {
-            field: 'grantedAccess',
-            headerName: 'Details',
-            headerClassName: 'super-app-theme--header',
-            width: 250,
-            renderCell: (params) => {
-              console.log(params.row)
-              return(
-                <>
-                <div style={{width:"100%",display:'flex',height:'100%',justifyContent:'center',alignItems:'center'}}>
-              {params.row.grantedAccess === '' || !params.row.grantedAccess ? (<button className='btnofficials1'
-              onClick={() =>handleModalOpen('access',true)}>
-                Access</button>) : (<button className="btnofficials" 
-              onClick={() => setFirsttoSecStat(params.row)}>
-                Add to Applicants List
-                </button>)}
-                <button className='btnofficials2' style={{marginLeft:'5px'}}
-              onClick={() => failed(params.row)}>
-                Failed
-                </button>
-              </div>
-              </>)
-            },
-          },
+        },
     
     ]}
 }
