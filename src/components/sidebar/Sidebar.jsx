@@ -172,6 +172,12 @@ const Sidebar = () => {
               <span> Reports </span>
             </li>
             </Link>) : (null)}
+            <Link to='/Scan' style={{ textDecoration: 'none'}}>
+            <li>
+              <AssessmentIcon className='icon'/>
+              <span> Scan </span>
+            </li>
+            </Link>
             {/* {sections.includes('Administrator') ? (
             <Link to='/Backups' style={{ textDecoration: 'none'}}>
             <li>

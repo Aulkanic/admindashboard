@@ -16,6 +16,7 @@ import News from './pages/new/New';
 import { PayrollAppoint } from './pages/Payroll/payroll';
 import Announcement from './pages/Announcement/announcement';
 import Backup from './pages/BackupRestore/backup';
+import Scan from './pages/scan/scan';
 import Report from './pages/Reports/report';
 import { BrowserRouter, Routes, Route,} from "react-router-dom";
 import Single from './pages/single/Single';
@@ -63,6 +64,7 @@ function App() {
                 <Route path='Payroll' element={<PayrollAppoint/>} />
                 <Route path='Report' element={<Report/>} />
                 <Route path='Report/Payroll' element={<Payroll/>} />
+                <Route path='Scan' element={<Scan/>} />
                 {/* <Route path='Backups' element={<Backup/>} /> */}
           </Route>
         </Route>
