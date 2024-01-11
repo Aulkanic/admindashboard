@@ -115,7 +115,8 @@ const Endpoints = {
     ADMIN_NOTIF:'admin/Notification',
     SCHOLAROLD: 'BMCCScholar/Renew/',
     SCHOLARRENEWAL:'BMCCScholar/RenewalScholar',
-    ALLDATA:'Reports/Alldata'
+    ALLDATA:'Reports/Alldata',
+    USERINF: 'userProf/Information/'
 }
 
 export default Endpoints

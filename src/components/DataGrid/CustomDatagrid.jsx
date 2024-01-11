@@ -75,6 +75,7 @@ export const CustomDatagrid = ({loading,row,rowId,columns,title,handleRowSelecti
         <DataGrid
             className='min-h-96 w-full bg-white'
             loading={loading}
+            autoHeight
             slots={{
             toolbar: CustomToolbar,
             pagination: CustomPagination,
@@ -85,12 +86,14 @@ export const CustomDatagrid = ({loading,row,rowId,columns,title,handleRowSelecti
             columns={columns}
             initialState={{
               ...row.initialState,
-              pagination: { paginationModel: { pageSize: 25 } },
+              pagination: { paginationModel: { pageSize: 10 } },
             }}
+            sx={{ '--DataGrid-overlayHeight': '300px' }}
             pageSizeOptions={[5, 10, 25]}
             getRowId={(row) => row[rowId]}
             onRowSelectionModelChange={handleRowSelectionModelChange}
             rowSelectionModel={rowSelectionModel}
+            disableExtendRowFullWidth
         />  
     </Box>
   )

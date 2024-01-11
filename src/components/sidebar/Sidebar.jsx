@@ -102,7 +102,7 @@ const Sidebar = () => {
           {links.filter(data => data.section === 'manage').map((data,index) =>{
             return(
               <li key={index} onClick={() =>handleClick(data)} 
-              className='w-full cursor-pointer truncate flex gap-2 hover:bg-white text-white hover:text-black hover:font-bold p-2 rounded-md transition ease-in-out delay-50'>
+              className='w-full cursor-pointer truncate flex gap-2 hover:bg-blue-800 text-white hover:font-semibold p-2 rounded-md transition ease-in-out delay-50'>
                 {data.icon} {data.name}
               </li>
             )
@@ -119,7 +119,8 @@ const Sidebar = () => {
         <ul className={clsx(show.maintenance ? 'flex flex-col gap-2 flex-wrap z-50' : 'hidden')}>
           {links.filter(data => data.section === 'maintenance').map((data,index) =>{
             return(
-              <li key={index} onClick={() =>handleClick(data)} className='w-full cursor-pointer truncate flex gap-2 hover:bg-white text-white hover:text-black hover:font-bold p-2 rounded-md transition ease-in-out delay-50'>
+              <li key={index} onClick={() =>handleClick(data)} 
+              className='w-full cursor-pointer truncate flex gap-2 hover:bg-blue-800 text-white hover:font-semibold p-2 rounded-md transition ease-in-out delay-50'>
                 {data.icon} {data.name}
               </li>
             )

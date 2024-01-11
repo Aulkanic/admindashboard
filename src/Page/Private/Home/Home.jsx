@@ -13,7 +13,8 @@ const columns = [
     field: 'Name',
     headerClassName: 'super-app-theme--header',
     headerName: 'Name',
-    width: 300,
+    flex: 1,
+    minWidth: 300,
     editable: true,
   },
   
@@ -21,28 +22,32 @@ const columns = [
     field: 'email',
     headerClassName: 'super-app-theme--header',
     headerName: 'Email',
-    width: 200,
+    flex: 0.5,
+    minWidth: 200,
     editable: false,
   },
   {
     field: 'ScholarshipApplied',
     headerClassName: 'super-app-theme--header',
     headerName: 'Scholarship Applied',
-    width: 205,
+    flex: 1,
+    minWidth: 200,
     editable: true,
   },
   {
     field: 'date',
     headerClassName: 'super-app-theme--header',
     headerName: 'Date Applied',
-    width: 200,
+    flex: 1,
+    minWidth: 200,
     editable: false,
   },
   {
     field: 'score',
     headerClassName: 'super-app-theme--header',
     headerName: 'Score',
-    width: 120,
+    flex: 1,
+    minWidth: 120,
     editable: false,
     renderCell: (params) =>(
       <>
@@ -54,11 +59,10 @@ const columns = [
     field: 'UserProfileStatus',
     headerClassName: 'super-app-theme--header',
     headerName: 'Status',
-    width: 150,
+    flex: 0.3,
+    minWidth: 150,
     editable: true,
   },
-
-
 ];
 
 export const Home = () => {
@@ -84,6 +88,7 @@ export const Home = () => {
       setLoading(false)
      }
      Fetch()
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   },[])
   return (
     <div className='w-full'>
@@ -113,7 +118,7 @@ export const Home = () => {
         />
         </div>
       </div>
-      <div className='p-4'>
+      <div className='p-4 w-full'>
         <CustomDatagrid
           title={'Recent Applicants'}
           loading={loading}

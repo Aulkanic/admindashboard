@@ -118,7 +118,7 @@ export const ScholarProg = () => {
       field: 'insert',
       headerClassName: 'super-app-theme--header',
       headerName: 'Actions',
-      width: 170,
+      width: 150,
       renderCell: (params) => (
         <CustomButton
           label={'Edit Details'}
@@ -239,12 +239,14 @@ return (
           />
         </div>
         <div className="w-full">
+          <div className="w-max">
           <CustomDatagrid
             loading={loading}
             columns={columns}
             row={schocat}
             rowId={'schoProgId'}
           />
+          </div>
         </div>
       </div>
   </div>

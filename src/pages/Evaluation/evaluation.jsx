@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react'
-import { Box,Card } from "@mui/material";  
+import { Box } from "@mui/material";  
 import { ApplicantsRequest, FetchingApplicantsInfo, ListofSub,
    USERFRM_ID,SetApplicant,FailedUser,FetchingBmccSchoinfo,
       UpdatePassSlots,FetchPassSlots,DecrePassSlots,ListAccess } from "../../api/request";
@@ -9,7 +9,6 @@ import { useContext } from "react";
 import { admininfo } from "../../App";
 import Link from '@mui/material/Link';
 import Checkbox from '@mui/material/Checkbox';
-import { Backdrop, CircularProgress } from '@mui/material';
 import { CustomHeading } from '../../components/H1/h1';
 import CustomFields from '../../components/InputFields/CustomFields';
 import GrantUserAccess from '../../container/Access/access';
@@ -34,16 +33,11 @@ const Evaluation = () => {
       passed:[],
       failed:[]
     })
-    const [selectedUser,setSelectedUser] = useState({
-      applicantNum:'',
-      personalInfo:[],
-      familyInfo:[],
-      form:[]
-    })
     const [modal,setModal] = useState({
       detail: false,
       access:false
     })
+    const [applicantNumber,setApplicantNumber] = useState(null)
     const [userscore,setUserScore] = useState([]);
     const [applicantsInfo, setApplicantInfo] = useState([]);
     const [access,setAccess] = useState([])
@@ -75,12 +69,8 @@ const Evaluation = () => {
       }
 
     };
-    const handleOpenDialog = (data) => {
-      setOpenDialog(true);
-      setWho(data.applicantNum)
-    }
-    useEffect(() => {
 
+    useEffect(() => {
         async function Fetch(){
           setLoading(true)
           const response = await ApplicantsRequest.ALL_APPLICANTS();
@@ -91,39 +81,20 @@ const Evaluation = () => {
           setAccess(empacc)
           setApplicants({
             all: ForEva,
-            passed: ForEva?.filter(data => data.score >= passSlot.passingscore) || [],
-            failed: ForEva?.filter(data => data.score < passSlot.passingscore) || []
+            passed: ForEva.filter(data => data.score >= passSlot.passingscore) || [],
+            failed: ForEva.filter(data => data.score < passSlot.passingscore) || []
           })
           setPassSlot(pass.data.result[0])
           setLoading(false)
         }
         Fetch();
+      // eslint-disable-next-line react-hooks/exhaustive-deps
       }, []);
       useEffect(() => {
         setIsButtonVisible(passscore !== '' || slots !== '');
       }, [passscore,slots]);
     
-      const view = async (data) => {
-        const applicantNum = data.applicantNum;
-        const formData = new FormData();
-        formData.append('applicantNum',applicantNum)
-        try {
-          setShowBackdrop(true);
-          const response = await Promise.all([
-            FetchingApplicantsInfo.FETCH_INFO(applicantNum),
-            ListofSub.FETCH_SUB(applicantNum),
-            USERFRM_ID.FORMUSR(applicantNum)
-          ]);
-          setSiblings(response[0].data.siblings)
-          setApplicantInfo(response[0].data.results[0]);
-          setUserScore(response[2].data)
-          setShowBackdrop(false);
-          handleOpen()
-        } catch (error) {
-          console.error('Error fetching data:', error);
-        }
-    
-      }
+
       const failed = async(data) =>{
         const res = await FetchingBmccSchoinfo.FETCH_SCHOLARSINFO(data.applicantNum);
         const schoapplied = res.data.ScholarInf.results1[0].SchoIarshipApplied;
@@ -416,7 +387,10 @@ const Evaluation = () => {
           }
         }
     }
-    const handleOpenModal = (name,value) =>{
+    const handleOpenModal = (name,value,data) =>{
+      if(data){
+        setApplicantNumber(data)
+      }
       setModal((prev) =>({...prev,[name]:value}))
     }
     const { columns, passedColumn, failedColumn } = Cols(handleOpenModal,passSlot);
@@ -425,20 +399,20 @@ const Evaluation = () => {
       {id:1,label:'Passed',icon:<IoMdCheckmark />,data:applicants.passed.length},
       {id:2,label:'Failed',icon:<LiaTimesSolid />,data:applicants.failed.length},
     ]
-
+console.log(applicantNumber)
   return (
     <>
     <GrantUserAccess
-      open={openDialog}
+      open={modal.access}
       onClose={handleCloseDialog}
       user={who}
     />
     <CustomDialog
-      open={open}
-      handleClose={handleClose}
+      open={modal.detail}
+      handleClose={() => {handleOpenModal('detail',false)}}
       title={'Applicant Information'}
       content={<ApplicantDetails
-      userDetails={applicantsInfo}
+      userDetails={applicantNumber}
       />}
     />
 
@@ -494,35 +468,37 @@ const Evaluation = () => {
            </button>           
           ))}
         </Breadcrumbs>
-        <div className='w-max'>
-            {activeState === 0 && (
-                <CustomDatagrid
-                  row={applicants.all}
-                  columns={columns}
-                  rowId={'applicantNum'}
+        <div className='w-full flex flex-wrap'>
+          <div className='w-full'>
+              {activeState === 0 && (
+                  <CustomDatagrid
+                    row={applicants.all}
+                    columns={columns}
+                    rowId={'applicantNum'}
+                    loading={loading}
+                  />
+              )}
+              {activeState === 1 && (
+                  <CustomDatagrid
+                    row={applicants.passed}
+                    columns={passedColumn}
+                    rowId={'applicantNum'}
+                    loading={loading}
+                    handleRowSelectionModelChange={handleRowSelectionModelChange}
+                    rowSelectionModel={rowSelectionModel}
+                  />
+              )}
+              {activeState === 2 && (
+                  <CustomDatagrid
+                  row={applicants.failed}
+                  columns={failedColumn}
                   loading={loading}
-                />
-            )}
-            {activeState === 1 && (
-                <CustomDatagrid
-                  row={applicants.all}
-                  columns={passedColumn}
                   rowId={'applicantNum'}
-                  loading={loading}
-                  handleRowSelectionModelChange={handleRowSelectionModelChange}
-                  rowSelectionModel={rowSelectionModel}
+                  handleRowSelectionModelChange={handleFailedSelectionModelChange}
+                  rowSelectionModel={failedSelectionModel}
                 />
-            )}
-            {activeState === 2 && (
-                <CustomDatagrid
-                row={applicants.all}
-                columns={failedColumn}
-                loading={loading}
-                rowId={'applicantNum'}
-                handleRowSelectionModelChange={handleFailedSelectionModelChange}
-                rowSelectionModel={failedSelectionModel}
-              />
-            )}
+              )}
+          </div>
         </div>
         </Box>    
       </div>

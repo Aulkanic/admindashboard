@@ -2,32 +2,31 @@ import React from 'react'
 
 
 const Cols = (handleModalOpen,passSlot,setFirsttoSecStat,failed) =>{
-  let colList;
- return colList = {
+ return {
     columns:[
         {field: 'SchoIarshipApplied',headerName: 'Scholarship Applied',headerClassName: 'super-app-theme--header',
-          width: 250,editable: false,
+        flex: 1,minWidth: 150,editable: false,
         },
         {field: 'Name',headerName: 'Name',headerClassName: 'super-app-theme--header',
-          width: 250,editable: false,
+        flex: 1,minWidth: 200,editable: false,
         },
         {field: 'DateApplied',headerName: 'Date Applied',headerClassName: 'super-app-theme--header',
-          width: 150,editable: false,
+        flex: 1,minWidth: 180,editable: false,
         },
         {field: 'status',headerName: 'Status',headerClassName: 'super-app-theme--header',
-          width: 100,editable: false,
+        flex: 1,minWidth: 150,editable: false,
         },
         {field: 'stat',headerName: 'Score',headerClassName: 'super-app-theme--header',
-          width: 90,editable: false,
+        flex: 1,minWidth: 90,editable: false,
           renderCell: (params) =>(
             <p>{params.row.score}/100</p>
           ),
         },
         {field: 'insert',headerName: 'Actions',headerClassName: 'super-app-theme--header',
-          width: 150,renderCell: (params) => (
+        flex: 1,minWidth: 150,renderCell: (params) => (
                 <div>
                   <button className="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-4 py-2 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
-                  onClick={() =>handleModalOpen('detail',true)}
+                  onClick={() =>handleModalOpen('detail',true,params.row)}
                   >
                     View Detail
                   </button>
@@ -35,7 +34,7 @@ const Cols = (handleModalOpen,passSlot,setFirsttoSecStat,failed) =>{
         ),
         },
         {field: 'score',headerName: 'Details',headerClassName: 'super-app-theme--header',
-           width: 200,renderCell: (params) => {
+        flex: 1,minWidth: 200,renderCell: (params) => {
               let status
               if(params.value >= passSlot.passingscore){
                 status = 'Passed'
@@ -75,35 +74,35 @@ const Cols = (handleModalOpen,passSlot,setFirsttoSecStat,failed) =>{
           field: 'SchoIarshipApplied',
           headerName: 'Scholarship Applied',
           headerClassName: 'super-app-theme--header',
-          width: 250,
+          flex: 1,minWidth: 200,
           editable: false,
         },
         {
           field: 'Name',
           headerName: 'Name',
           headerClassName: 'super-app-theme--header',
-          width: 250,
+          flex: 1,minWidth: 200,
           editable: false,
         },
         {
           field: 'DateApplied',
           headerName: 'Date Applied',
           headerClassName: 'super-app-theme--header',
-          width: 150,
+          flex: 1,minWidth: 150,
           editable: false,
         },
         {
           field: 'status',
           headerName: 'Status',
           headerClassName: 'super-app-theme--header',
-          width: 100,
+          flex: 1,minWidth: 100,
           editable: false,
         },
         {
           field: 'stat',
           headerName: 'Score',
           headerClassName: 'super-app-theme--header',
-          width: 90,
+          flex: 1,minWidth: 90,
           editable: false,
           renderCell: (params) =>(
             <>
@@ -115,7 +114,7 @@ const Cols = (handleModalOpen,passSlot,setFirsttoSecStat,failed) =>{
             field: 'insert',
             headerName: 'Actions',
             headerClassName: 'super-app-theme--header',
-            width: 150,
+            flex: 1,minWidth: 150,
             renderCell: () => (
                 <>
                 <div>
@@ -132,7 +131,7 @@ const Cols = (handleModalOpen,passSlot,setFirsttoSecStat,failed) =>{
           field: 'score',
           headerName: 'Details',
           headerClassName: 'super-app-theme--header',
-          width: 200,
+          flex: 1,minWidth: 200,
           renderCell: (params) => {
             return(
             <div>
@@ -150,35 +149,35 @@ const Cols = (handleModalOpen,passSlot,setFirsttoSecStat,failed) =>{
           field: 'SchoIarshipApplied',
           headerName: 'Scholarship Applied',
           headerClassName: 'super-app-theme--header',
-          width: 250,
+          flex: 1,minWidth: 200,
           editable: false,
         },
         {
           field: 'Name',
           headerName: 'Name',
           headerClassName: 'super-app-theme--header',
-          width: 250,
+          flex: 1,minWidth: 200,
           editable: false,
         },
         {
           field: 'DateApplied',
           headerName: 'Date Applied',
           headerClassName: 'super-app-theme--header',
-          width: 150,
+          flex: 1,minWidth: 150,
           editable: false,
         },
         {
           field: 'status',
           headerName: 'Status',
           headerClassName: 'super-app-theme--header',
-          width: 100,
+          flex: 1,minWidth: 100,
           editable: false,
         },
         {
           field: 'stat',
           headerName: 'Score',
           headerClassName: 'super-app-theme--header',
-          width: 90,
+          flex: 1,minWidth: 90,
           editable: false,
           renderCell: (params) =>(
             <>
@@ -190,7 +189,7 @@ const Cols = (handleModalOpen,passSlot,setFirsttoSecStat,failed) =>{
             field: 'insert',
             headerName: 'Actions',
             headerClassName: 'super-app-theme--header',
-            width: 150,
+            flex: 1,minWidth: 150,
             renderCell: () => (
                 <div>
                 <button className="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-4 py-2 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
@@ -205,14 +204,12 @@ const Cols = (handleModalOpen,passSlot,setFirsttoSecStat,failed) =>{
           field: 'grantedAccess',
           headerName: 'Details',
           headerClassName: 'super-app-theme--header',
-          width: 200,
+          flex: 1,minWidth: 200,
           renderCell: (params) => {
-            console.log(params.row)
             return(
-              <>
-              <div>
+            <div className='flex gap-2'>
             {params.row.grantedAccess === '' || !params.row.grantedAccess ? (
-            <button cclassName="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-4 py-2 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
+            <button className="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-4 py-2 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
             onClick={() =>handleModalOpen('access',true)}>
             Access
             </button>
@@ -226,8 +223,7 @@ const Cols = (handleModalOpen,passSlot,setFirsttoSecStat,failed) =>{
             onClick={() => failed(params.row)}>
             Failed
             </button>
-            </div>
-            </>)
+            </div>)
           },
         },
     

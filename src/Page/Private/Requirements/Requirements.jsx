@@ -104,7 +104,7 @@ export const Requirements = () => {
     field: 'insert',
     headerName: 'Actions',
     headerClassName: 'super-app-theme--header',
-    width: 260,
+    width: 250,
     renderCell: (params) => {
       return(
         <div className='flex gap-2'>
@@ -178,12 +178,14 @@ export const Requirements = () => {
         />
       </div>
       <div className='w-full'>
+        <div className='w-max'>
         <CustomDatagrid
           loading={loading}
           row={mergedData}
           columns={columns}
           rowId={'requirementID'}
         />
+        </div>
       </div>
     </div>
   </div>

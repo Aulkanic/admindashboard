@@ -132,7 +132,7 @@ const Navbar = () => {
       swal("Error","Please provide necessary information first",'warning')
       return
     }
-    if(password.new != password.repeat){
+    if(password.new !== password.repeat){
       swal("Error","New Password did not match",'warning')
       return
     }
@@ -252,7 +252,7 @@ const Navbar = () => {
       }else{
         for(let i = 0;i < unreadNotif.length; i++){
           const det = unreadNotif[i];
-          const formData = new FormData;
+          const formData = new FormData();
           formData.append('notifId',det.adnotifId)
           await SeenAdminNotify.SEEN_NOTIF(formData)
           .then((res) =>{

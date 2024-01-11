@@ -54,7 +54,6 @@ export const Staff = () => {
   const [addRole,setAddRole] = useState([])
   const [bmcc,setBmcc] = useState([]);
   const [actlog,setActlog] = useState([]);
-  const [errors, setErrors] = useState({});
   const [activeState,setActiveState] = useState('log');
   const [websection,setWebsection] = useState([])
 
@@ -68,28 +67,32 @@ export const Staff = () => {
       field: 'name',
       headerClassName: 'super-app-theme--header',
       headerName: 'Staff Name',
-      width: 320,
+      flex: 1,
+      minWidth: 320,
       editable: false,
     },
     {
       field: 'action',
       headerClassName: 'super-app-theme--header',
       headerName: 'Action',
-      width: 350,
+      flex: 1,
+      minWidth: 300,
       editable: false,
     },
     {
       field: 'applicantNum',
       headerClassName: 'super-app-theme--header',
       headerName: 'Applicant Code',
-      width: 250,
+      flex: 1,
+      minWidth: 200,
       editable: false,
     },
     {
       field: 'date',
       headerClassName: 'super-app-theme--header',
       headerName: 'When',
-      width: 250,
+      flex: 1,
+      minWidth: 230,
       editable: false,
     }
   ];
@@ -98,16 +101,14 @@ export const Staff = () => {
       field: 'profile',
       headerClassName: 'super-app-theme--header',
       headerName: 'Active Status',
-      width: 200,
+      flex: 1,
+      minWidth: 200,
       renderCell: (params) => {
         const isOnline = params.row.isOnline;
-        
-        let chipColor = 'error'; 
         let status = 'Offline';
         let color = 'rgb(159 18 57)';
         let font = 'black'
-        if (isOnline === 'True') {
-          chipColor = 'primary'; 
+        if (isOnline === 'True') { 
           status = 'Online';
           color = 'rgb(22 101 52)';
           font = 'white'
@@ -128,35 +129,40 @@ export const Staff = () => {
       field: 'name',
       headerClassName: 'super-app-theme--header',
       headerName: 'Staff Name',
-      width: 210,
+      flex: 1,
+      minWidth: 200,
       editable: false,
     },
     {
       field: 'email',
       headerClassName: 'super-app-theme--header',
       headerName: 'Staff Email',
-      width: 230,
+      flex: 1,
+      minWidth: 200,
       editable: false,
     },
     {
       field: 'jobDescription',
       headerClassName: 'super-app-theme--header',
       headerName: 'Role',
-      width: 170,
+      flex: 1,
+      minWidth: 170,
       editable: false,
     },
     {
       field: 'status',
       headerClassName: 'super-app-theme--header',
       headerName: 'Account Status',
-      width: 200,
+      flex: 1,
+      minWidth: 150,
       editable: false,
     },
     {
       field: 'insert',
       headerClassName: 'super-app-theme--header',
       headerName: 'Action',
-      width: 165,
+      flex: 1,
+      minWidth: 200,
       renderCell: (params) => (
         <CustomButton
           onClick={() =>handleModalOpenClose('UpdateOpen',true,params.row)}
@@ -260,11 +266,11 @@ export const Staff = () => {
           setLoading(false)
         }
         Fetch();
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   },[])
 
   const handleAddBmcc = () => {
     AddBmcc({
-      setErrors,
       handleModalOpenClose,
       setBmcc,
       setCreateStaff,
@@ -296,7 +302,7 @@ export const Staff = () => {
     content={<UpdateStaff
     data={updateStaff}
     options={officials}
-    onSubmit={() => UpdateBmcc({updateStaff,setLoading,setBmcc,setModals,modals,setBmcc})}
+    onSubmit={() => UpdateBmcc({updateStaff,setLoading,setBmcc,setModals,modals})}
     handleInput={handleInputChange}
     handleSelect={handleOptionChange}
       />}
@@ -352,7 +358,7 @@ export const Staff = () => {
                 />
               </div>
             </div>
-            <div className='w-max'>
+            <div className='w-full'>
               <CustomDatagrid
                 loading={loading}
                 row={bmcc}
@@ -374,7 +380,7 @@ export const Staff = () => {
                 color={'blue'}
               />
             </div>
-            <div>
+            <div className='w-full'>
               <CustomDatagrid
                 loading={loading}
                 row={actlog}

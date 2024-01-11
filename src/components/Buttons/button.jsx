@@ -10,7 +10,7 @@ const CustomButton = ({label,addClass,loading,onClick,disabled,color,loadingLabe
       onClick={onClick}
       className={clsx(
           addClass,
-          'transition-all cursor-pointer w-max text-white inline-flex items-center focus:ring-4 focus:outline-none font-medium rounded-md text-sm px-5 py-2 text-center',
+          'transition-all cursor-pointer w-max text-white inline-flex items-center focus:ring-4 focus:outline-none font-medium rounded-md text-sm px-3 py-2 text-center',
           {
             'bg-blue-700 hover:bg-blue-800 focus:ring-blue-300': color === 'blue',
             'bg-green-700 hover:bg-green-800 focus:ring-green-300': color === 'green',
