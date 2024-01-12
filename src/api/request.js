@@ -357,3 +357,6 @@ export const PayoutAttendance = {
 export const CreatPayroll = {
     CREATE: (data) => axiosInstance.post(Endpoints.CREATE_PAYROLL,data)
 }
+export const ScanFile = {
+    SCANFILE: (data) => axiosInstance.post(Endpoints.SCAN, data)
+}
