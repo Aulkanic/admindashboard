@@ -156,7 +156,7 @@ const Navbar = () => {
       swal("Error","Please provide necessary information first",'warning')
       return
     }
-    if(password != repass){
+    if(password !== repass){
       swal("Error","New Password did not match",'warning')
       return
     }
