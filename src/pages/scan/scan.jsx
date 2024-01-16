@@ -22,7 +22,7 @@ export default function Scan() {
   ])
   const [scannedData,setScannedData] = useState({
     lastName:'',firstName:'',middleName:'',schoID:'',age:'',gender:'',
-    houseNum:'',birthdate:'',baranggay:'',contactNum:'',email:'',
+    houseNum:'',birthdate:'',baranggay:'',contactNum:'',email:'',placeBirth:'',
     prevSchool:'',schoAddress:'',yearLevel:'',gradeLevel:'',course:'',
     fatherLastName:'',fatherFirstName:'',fatherMiddleName:"",fatherOccu:'',fatherEduc:'',
     motherLastName:'',motherFirstName:'',motherMiddleName:"",motherOcc:'',motherEduc:'',
@@ -62,74 +62,68 @@ export default function Scan() {
       swal("Please upload all the required documents")
       return
     }
+    if(!Object.values(qaFile).every(v=> v!== null)){
+      swal('No Q&A File Uploaded')
+      return
+    }
     const formData = new FormData();
-    Object.entries(first).forEach(([key,value])=>{
-      formData.append(`${key}`, value)
-    })
+    formData.append('Personal',first[0].Personal.value)
+    formData.append('Educational',first[1].Educational.value)
+    formData.append('Family',first[2].Family.value)
+    formData.append('Guardian',first[3].Guardian.value)
+    formData.append('Siblings',first[4].Siblings.value)
+    formData.append('Q&A',qaFile.file)
     await ScanFile.SCANFILE(formData)
     .then((res) =>{
       const apiData = res.data;
-      const mapping = {
-        // Personal section
-        'First Name': 'firstName',
-        'Middle Name': 'middleName',
-        'Last Name': 'lastName',
-        'Age': 'age',
-        'Gender': 'gender',
-        'House No/ Street': 'houseNum',
-        'Birth Date': 'birthdate',
-        'Barangay': 'baranggay',
-        'Mobile Number': 'contactNum',
-        'Email': 'email',
-        "scholarship Type":'schoID',
-      
-        // Educational section
-        'Last School Attended': 'prevSchool',
-        'School Address': 'schoAddress',
-        'Year Level': 'yearLevel',
-        'Grade/ Year': 'gradeLevel',
-      
-        // Family section
-        "Father’s First Name": 'fatherFirstName',
-        "Father’s Middle Name": 'fatherMiddleName',
-        "Father’s Last Name": 'fatherLastName',
-        'Highest Educational Attainment': 'fatherEduc',
-        'Occupation': 'fatherOccu',
-        "Mother’s First Name": 'motherFirstName',
-        "Mother’s Middle Name": 'motherMiddleName',
-        "Mother’s Last Name": 'motherLastName',
-        // eslint-disable-next-line no-dupe-keys
-        'Highest Educational Attainment': 'motherEduc',
-        // eslint-disable-next-line no-dupe-keys
-        'Occupation': 'motherOcc',
-      
-        // Guardian section
-        'Guardian First Name': 'guardianFirstName',
-        'Guardian Middle Name': 'guardianMiddleName',
-        'Guardian Last Name': 'guardianLastName',
-        'Guardian Address': 'guardianAddr',
-        'Relationship with Guardian': 'relationship',
-        // eslint-disable-next-line no-dupe-keys
-        'Mobile Number': 'guardianContact',
-      
-        // Siblings section
-        // eslint-disable-next-line no-dupe-keys
-        'First Name': 'siblings[0].firstName',  // assuming siblings is an array
-      
-        // Q&A section (assuming you want to store the answers in your state)
-        'How long?': 'qaHowLong',
-        'Type of house Ownership?': 'qaHouseOwnership',
-      };
-      const processedData = Object.keys(mapping).reduce((acc, apiKey) => {
-        const stateKey = mapping[apiKey];
-        console.log(stateKey)
-        const section = apiData[apiKey.split(' ')[0]]; // Extracting the section name from the key
-        const apiValue = section?.find(item => Object.keys(item)[0] === apiKey)?.[apiKey] || '';
-        acc[stateKey] = apiValue;
-        return acc;
-      }, {});
-      console.log(processedData)
-      setScannedData(prev => ({ ...prev, ...processedData }));
+      const personal = apiData.Personal;
+      const Educational = apiData.Educational;
+      const Family = apiData.Family;
+      const Guardian = apiData.Guardian;
+      const Siblings = apiData.Siblings;
+      console.log('personal',personal)
+      console.log('Educational',Educational)
+      console.log('Family',Family)
+      console.log('Guardian',Guardian)
+      console.log('Siblings',Siblings)
+
+      setScannedData((prev) =>({
+        ...prev,
+        schoID: personal[0]['scholarship Type'],
+        firstName: personal[1]['First Name'],
+        lastName: personal[3]['Last Name'],
+        middleName: personal[2]['Middle Name'],
+        gender: personal[6]['Gender'],
+        age: personal[5]['Age'],
+        birthDate: personal[7]['Birth Date'],
+        placeBirth: personal[8]['Birth Place'],
+        houseNum: personal[9]['House No/ Street'],
+        baranggay: personal[11]['Barangay'],
+        contactNum: personal[10]['Mobile Number'],
+        email: personal[14]['Email'],
+        prevSchool: Educational[0]['Last School Attended'],
+        schoAddress: Educational[1]['school Address'],
+        yearLevel: Educational[2]['Year Level'],
+        gradeLevel: Educational[3]['Grade/ Year'],
+        course: Educational[4]['Course'],
+        fatherFirstName: Family[0]['Father’s First Name'],
+        fatherLastName: Family[2]['Father’s Last Name'],
+        fatherMiddleName: Family[1]['Father’s Middle Name'],
+        fatherEduc: Family[3]['Father’s Highest Educational Attainment'],
+        fatherOccu: Family[4]['Father’s Occupation'],
+        motherFirstName: Family[5]['Mother’s First Name'],
+        motherLastName: Family[7]['Mother’s Last Name'],
+        motherMiddleName: Family[6]['Mother’s Middle Name'],
+        motherEduc: Family[8]['Mother’s Highest Educational Attainment'],
+        motherOcc: Family[9]['Mother’s Occupation'] ,
+        guardianFirstName: Guardian[0]['Guardian First Name'],
+        guardianLastName: Guardian[2]['Guardian Last Name'],
+        guardianMiddleName: Guardian[1]['Guardian Middle Name'],
+        relationship: Guardian[4]['Relationship with Guardian'],
+        guardianContact: Guardian[5]['Mobile Number'],
+        guardianAddr: Guardian[3]['Guardian Address'],
+        siblings: Siblings
+      }))
     })
   }
   const handleChangeActive = (name,value) =>{
@@ -156,11 +150,11 @@ export default function Scan() {
       setQAFile((prev) =>({
         ...prev,
         [name]: files[0],
-        previewURL:(URL.createObjectURL(files[0]))
+        preview:(URL.createObjectURL(files[0]))
       }))
     }
   }
-
+console.log(scannedData)
   return (
     <>
     <div style={{display:'flex',flexWrap:'wrap',width:'100%'}}>
@@ -204,7 +198,7 @@ export default function Scan() {
                       return(
                         <div style={{width:'40%',display:'flex',flexDirection:'column'}} key={idx}>
                         {array.preview && 
-                        <img style={{height:'150px',objectFit:'fill',cursor:'pointer'}}
+                        <img style={{width:'150px',height:'150px',objectFit:'fill',cursor:'pointer'}}
                          onClick={() =>{viewPrev(array.preview)}}
                          src={array.preview} alt='No preview' />}
                         <label style={{display:'flex',flexDirection:'column',backgroundColor:'gray',width:'100%',padding:'4px',borderRadius:'4px',color:'white'}}
@@ -224,7 +218,7 @@ export default function Scan() {
                       src={qaFile.preview} alt='No preview' />}
                     <label style={{display:'flex',flexDirection:'column',margin:4,flex:1,backgroundColor:'gray',width:'max-content',padding:'4px',borderRadius:'4px',color:'white'}}
                     htmlFor="">Q&A
-                    <input onChange={handleInputChange}
+                    <input name='file' onChange={handleInputChange}
                      accept=".jpg, .jpeg, .png" type="file" />
                     </label>
                   </div>
@@ -270,7 +264,8 @@ export default function Scan() {
                       <TextField style={{flex:1}} id="standard-basic" aria-readonly label="Contact Number:"onChange={handleInputChange} name='contactNum' value={scannedData.contactNum} variant="standard" />
                       </div>
                       <div  style={{display:'flex',flexWrap:'nowrap',width:'100%',gap:2,marginBottom:'8px'}}>
-                      <TextField style={{flex:1,}} id="standard-basic" aria-readonly label="Email:" onChange={handleInputChange} name='email'  value={scannedData.email} variant="standard" />
+                      <TextField style={{flex:1,}} id="standard-basic" aria-readonly label="Place of Birth:" onChange={handleInputChange} name='placeBirth'  value={scannedData.placeBirth} variant="standard" />
+                       <TextField style={{flex:1,}} id="standard-basic" aria-readonly label="Email:" onChange={handleInputChange} name='email'  value={scannedData.email} variant="standard" />
                       </div>
                       <h3>Educational Information</h3>
                       <div  style={{display:'flex',flexWrap:'nowrap',width:'100%',gap:2,marginBottom:'8px'}}>
