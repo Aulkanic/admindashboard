@@ -27,7 +27,7 @@ export default function Scan() {
     fatherLastName:'',fatherFirstName:'',fatherMiddleName:"",fatherOccu:'',fatherEduc:'',
     motherLastName:'',motherFirstName:'',motherMiddleName:"",motherOcc:'',motherEduc:'',
     guardianLastName:'',guardianFirstName:'',guardianMiddleName:'',relationship:'',guardianContact:'',guardianAddr:'',
-    siblings:[]
+    siblings:[],form:[]
   })
   const [qaFile,setQAFile] = useState({
     file:null,
@@ -81,6 +81,7 @@ export default function Scan() {
       const Family = apiData.Family;
       const Guardian = apiData.Guardian;
       const Siblings = apiData.Siblings;
+      const qA = apiData['Q&A'];
       console.log('personal',personal)
       console.log('Educational',Educational)
       console.log('Family',Family)
@@ -89,20 +90,20 @@ export default function Scan() {
 
       setScannedData((prev) =>({
         ...prev,
-        schoID: personal[0]['scholarship Type'],
+        schoID: personal[0]['Scholarship Type'],
         firstName: personal[1]['First Name'],
         lastName: personal[3]['Last Name'],
         middleName: personal[2]['Middle Name'],
         gender: personal[6]['Gender'],
         age: personal[5]['Age'],
-        birthDate: personal[7]['Birth Date'],
+        birthdate: personal[7]['Birth Date'],
         placeBirth: personal[8]['Birth Place'],
         houseNum: personal[9]['House No/ Street'],
         baranggay: personal[11]['Barangay'],
         contactNum: personal[10]['Mobile Number'],
         email: personal[14]['Email'],
         prevSchool: Educational[0]['Last School Attended'],
-        schoAddress: Educational[1]['school Address'],
+        schoAddress: Educational[1]['School Address'],
         yearLevel: Educational[2]['Year Level'],
         gradeLevel: Educational[3]['Grade/ Year'],
         course: Educational[4]['Course'],
@@ -122,7 +123,8 @@ export default function Scan() {
         relationship: Guardian[4]['Relationship with Guardian'],
         guardianContact: Guardian[5]['Mobile Number'],
         guardianAddr: Guardian[3]['Guardian Address'],
-        siblings: Siblings
+        siblings: Siblings,
+        form: qA
       }))
     })
   }
@@ -154,7 +156,48 @@ export default function Scan() {
       }))
     }
   }
-console.log(scannedData)
+  const handleSiblingsChange = (index, key, value) => {
+    setScannedData(prevState => {
+      const updatedSiblings = [...prevState.siblings];
+
+      if (index === -1) {
+        // Add new sibling
+        updatedSiblings.push({ [key]: value });
+      } else {
+        // Update existing sibling
+        updatedSiblings[index][key] = value;
+      }
+
+      return {
+        ...prevState,
+        siblings: updatedSiblings
+      };
+    });
+  };
+
+  const handleAddSibling = () => {
+    setScannedData(prev =>({
+      ...prev,
+      siblings:[...prev.siblings,{
+        'First Name': '',
+        'Middle Name': '',
+        'Last Name': ''
+      }]
+    }))
+// You can set the initial values as needed
+  };
+
+  const handleRemoveSibling = (index) => {
+    setScannedData(prevState => {
+      const updatedSiblings = [...prevState.siblings];
+      updatedSiblings.splice(index, 1);
+
+      return {
+        ...prevState,
+        siblings: updatedSiblings
+      };
+    })
+  }
   return (
     <>
     <div style={{display:'flex',flexWrap:'wrap',width:'100%'}}>
@@ -312,16 +355,37 @@ console.log(scannedData)
                       <TextField style={{flex:1}}  id="standard-basic" aria-readonly label="Address:" onChange={handleInputChange} name='guardianAddr' value={scannedData.guardianAddr} variant="standard" />
                       </div>
                       <h3>Siblings</h3>
-                      <div style={{display:'flex',flexWrap:'nowrap',width:'100%',gap:2,marginBottom:'8px'}}>
-                      <TextField style={{flex:1}} id="standard-basic" aria-readonly label="Lastname:" value={'Michael'} variant="standard" />
-                      <TextField style={{flex:1}}  id="standard-basic" aria-readonly label="Firstname:" value={'Michael'} variant="standard" />
-                      <TextField style={{flex:1}}  id="standard-basic" aria-readonly label="Middlename:" value={'Michael'} variant="standard" />
+                      {scannedData.siblings?.map((data,idx) =>{
+                        return(
+                      <div key={idx} style={{display:'flex',flexWrap:'nowrap',width:'100%',gap:2,marginBottom:'8px'}}>
+                      <TextField style={{flex:1}} id="standard-basic" label="Lastname:" onChange={(e) => handleSiblingsChange(idx, 'Last Name', e.target.value)} value={data['Last Name']} variant="standard" />
+                      <TextField style={{flex:1}}  id="standard-basic" label="Firstname:" onChange={(e) => handleSiblingsChange(idx, 'First Name', e.target.value)} value={data['First Name']} variant="standard" />
+                      <TextField style={{flex:1}}  id="standard-basic" label="Middlename:" onChange={(e) => handleSiblingsChange(idx, 'Middle Name', e.target.value)} value={data['Middle Name']} variant="standard" />
+                       <button type='button' onClick={() => handleRemoveSibling(idx)}>Remove</button>
                       </div>
+                        )
+                      })}
+                       <button type='button' onClick={handleAddSibling}>Add Sibling</button>
+
                     </form>
                   </div>}
                   {active.part === 1 && 
                   <div>
-                  
+                    <ul>
+                    {scannedData.form?.map((data,idx) =>{
+                      return(
+                        <li key={idx}>
+                          <p style={{margin:0,whiteSpace:'nowrap'}}>{data['Questions']} <span style={{margin:0,fontStyle:'italic',textDecoration:'underline'}}>Answer: {data['Answer']}</span></p>
+                          <ul>
+                            {data['choices'].map((val,idy) =>{
+                              return <li key={idy}>{val}</li>
+                            })}
+                          </ul>
+                        </li>
+                      )
+                    })}
+                    </ul>
+
                   </div>}
                 </div>
               </div>
