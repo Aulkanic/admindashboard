@@ -116,7 +116,11 @@ const Endpoints = {
     SCHOLAROLD: 'BMCCScholar/Renew/',
     SCHOLARRENEWAL:'BMCCScholar/RenewalScholar',
     ALLDATA:'Reports/Alldata',
-    SCAN:'personalinfo/file'
+    SCAN:'personalinfo/file',
+    CREATE_PAYOUT: 'payout/create',
+    LIST_PAYOUT: 'payout/list',
+    BATCH_PERACADEMIC:'payout/Batch/',
+    CREATE_PAYBATCH: 'payout/create/Batch'
 }
 
 export default Endpoints

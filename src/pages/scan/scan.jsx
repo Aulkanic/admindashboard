@@ -388,6 +388,9 @@ export default function Scan() {
 
                   </div>}
                 </div>
+                <button>
+                  Submit Details
+                </button>
               </div>
             </div>
            </div>}

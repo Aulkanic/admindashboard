@@ -360,3 +360,15 @@ export const CreatPayroll = {
 export const ScanFile = {
     SCANFILE: (data) => axiosInstance.post(Endpoints.SCAN, data)
 }
+export const CreatePay = {
+    CREATE: (data) => axiosInstance.post(Endpoints.CREATE_PAYOUT,data)
+}
+export const ListOfAcademicYearPay = {
+    LISTOFPYM:()=>axiosInstance.get(Endpoints.LIST_PAYOUT)
+}
+export const BatchPerAcademicYear = {
+    LISTBPAY:(data) => axiosInstance.get(Endpoints.BATCH_PERACADEMIC+data)
+}
+export const CreatePayBatch = {
+    CREATE: (data) => axiosInstance.post(Endpoints.CREATE_PAYBATCH,data)
+}

@@ -15,12 +15,17 @@ import {
     useGridApiContext,
     useGridSelector,
   } from '@mui/x-data-grid';
-import { ProfileScholars,PayoutScholar,PayoutList,PayoutAttendance } from '../../api/request';
+import { ProfileScholars,PayoutScholar,PayoutList,PayoutAttendance, CreatePay, ListOfAcademicYearPay, BatchPerAcademicYear, Payrollreports, CreatePayBatch } from '../../api/request';
 import { DemoContainer } from '@mui/x-date-pickers/internals/demo';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { TimePicker } from '@mui/x-date-pickers/TimePicker';
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
+import Box from '@mui/material/Box';
+import Tab from '@mui/material/Tab';
+import TabContext from '@mui/lab/TabContext';
+import TabList from '@mui/lab/TabList';
+import TabPanel from '@mui/lab/TabPanel';
 import MuiPagination from '@mui/material/Pagination';
 import LinearProgress from '@mui/material/LinearProgress';
 import LoadingButton from '@mui/lab/LoadingButton';
@@ -28,6 +33,7 @@ import SaveIcon from '@mui/icons-material/Save';
 import PaginationItem from '@mui/material/PaginationItem';
 import TextField from '@mui/material/TextField';
 import swal from 'sweetalert';
+import { CustomModal } from '../../components/modal/customModal';
 
 function Pagination({ page, onPageChange, className }) {
     const apiRef = useGridApiContext();
@@ -121,10 +127,15 @@ const columns = [
     );
   }
 export const PayrollAppoint = () => {
-    const [tabs,setTabs] = useState(0);
+    const [tabs,setTabs] = useState('1');
+    const [openModal,setOpenModal] = useState({
+      frmAca:false,
+      frmBatch: false
+    })
+    const [totalData,setTotalData] = useState([])
+    const [tblPaylist,setTblPayList] = useState([])
     const [loading,setLoading] = useState(false);
     const [submitting,setSubmitting]= useState(false)
-    const [miniTabs,setMiniTabs] = useState(0);
     const [schedDet,setSchedDate] = useState({
         cashier: '',
         date : '',
@@ -134,9 +145,21 @@ export const PayrollAppoint = () => {
         Reminder: '',
         scholars: []
     })
-    const [cashier,setCashier] = useState('')
     const [scholarList,setScholarList] = useState([])
     const [payoutList,setPayoutList] = useState([])
+    const [payDet,setPayDet] = useState({
+      tbName:'',
+      academicYear:'',
+    })
+    const [payBatch,setPayBatch] = useState({
+      batch:'',
+      payId:'',
+      totalFunds:0,
+      TotalBeneficiaries:0,
+      inclusiveMonth:'',
+      academicYear:'',
+      cashierNumber:0
+    })
 
 
     useEffect(() =>{
@@ -144,8 +167,13 @@ export const PayrollAppoint = () => {
             setLoading(true)
             let res = await ProfileScholars.SCHO_PROFLIST()
             let res1 = await PayoutList.PAYOUT_LIST()
+            let res2 = await ListOfAcademicYearPay.LISTOFPYM()
+            let res3 = await Payrollreports.PAYROLL()
+            console.log(res3)
+            setTblPayList(res2.data)
             const data = res.data
             setPayoutList(res1.data)
+            setTotalData(res3.data)
             setScholarList(data)
             setLoading(false)
         }
@@ -310,167 +338,164 @@ export const PayrollAppoint = () => {
       },
     
     ];
+    const handleChange = (event, newValue) => {
+      setTabs(newValue);
+    };
+    const handleModalOpen = (field,value,data) =>{
+      setOpenModal(prev =>({
+        ...prev,
+        [field]: value
+      }))
+      if(data){
+        setPayBatch((prev) =>({
+          ...prev,
+          payId: data.paytblId,
+          academicYear: data.academicYear,
+          totalFunds:totalData.TotalAmount,
+          TotalBeneficiaries: totalData.TotalBeneficiaries
+        }))
+      }
+    }
+    const handleCreatePay = async(e) =>{
+      e.preventDefault()
+      if(Object.values(payDet).every(data => data === '')){
+        alert('Please fill all fields')
+        return
+      }
+      const formData = new FormData();
+      formData.append('tbName',payDet.tbName)
+      formData.append('academicYear',payDet.academicYear)
+      const res = await CreatePay.CREATE(formData)
+      if(res.status === 200){
+        alert("Successfully Created Payment")
+        setTblPayList(res.data)
+      }
+    };
+    const handleInputPayBatchChange = (e) =>{
+      const { name,value } = e.target
+      setPayBatch((prev)=>({...prev,[name]:value}))
+    }
+    const handleCreatPayBatch = async(e) =>{
+      e.preventDefault()
+      if(Object.values(payBatch).every(data => data === '')){
+        alert('Please Fill All Fields')
+        return
+      }
+      const formData = new FormData()
+      formData.append('payId',payBatch.payId)
+      formData.append('batch',payBatch.batch)
+      formData.append('totalFunds',payBatch.totalFunds)
+      formData.append('totalBeneficiaries',payBatch.TotalBeneficiaries)
+      formData.append('inclusiveMonth',payBatch.inclusiveMonth)
+      formData.append('academicYear',payBatch.academicYear)
+      formData.append('cashierNumber',payBatch.cashierNumber)
+      const res = await CreatePayBatch.CREATE(formData)
+      if(res.data){
+        setTblPayList(res.data)
+      }
+    }
+console.log(payBatch)
   return (
+    <>
+    <CustomModal
+      open={openModal.frmAca}
+      handleClose={(prev) =>{setOpenModal({...prev,frmAca:false})}}
+      title={'Create Payout'}
+      content={
+      <form onSubmit={handleCreatePay} style={{display:'flex',justifyContent:'center',flexDirection:'column',gap:'10px'}} action="">
+        <div style={{display:'flex',gap:10,width:'100%',justifyContent:'center',flexWrap:'wrap',flexDirection:'column'}}>
+          <TextField onChange={(e) =>{setPayDet({...payDet,tbName:e.target.value})}} value={payDet.tbName} id="outlined-basic" label="Title" variant="outlined" />
+          <TextField onChange={(e) =>{setPayDet({...payDet,academicYear:e.target.value})}} value={payDet.academicYear} id="outlined-basic" label="Academic Year" variant="outlined" />
+        </div>
+        <button type='submit'>
+          Create
+        </button>
+      </form>}
+    />
+      <CustomModal
+      open={openModal.frmBatch}
+      handleClose={(prev) =>{setOpenModal({...prev,frmAca:false})}}
+      title={'Create Batch'}
+      content={
+      <form onSubmit={handleCreatPayBatch} style={{display:'flex',justifyContent:'center',flexDirection:'column',gap:'10px'}} action="">
+        <div style={{display:'flex',gap:10,width:'100%',justifyContent:'center',flexWrap:'wrap',flexDirection:'column'}}>
+          <TextField onChange={handleInputPayBatchChange} name='batch' value={payBatch.batch} id="outlined-basic" label="Batch title" variant="outlined" />
+          <TextField onChange={handleInputPayBatchChange} name='inclusiveMonth' value={payBatch.inclusiveMonth} id="outlined-basic" label="Inclusive Month" variant="outlined" />
+          <TextField type='number' onChange={handleInputPayBatchChange} name='cashierNumber' value={payBatch.cashierNumber} id="outlined-basic" label="Number of Cashier" variant="outlined" />
+
+          <TextField disabled value={totalData.TotalAmount} id="outlined-basic" label="Total Funds" variant="outlined" />
+          <TextField disabled value={totalData.TotalBeneficiaries} id="outlined-basic" label="Total Benefeciaries" variant="outlined" />
+        </div>
+        <button type='submit'>
+          Create
+        </button>
+      </form>
+    }
+    />
     <div className='containerPay'>
         <div style={{width:'15%'}}>
           <Sidebar />
         </div>
         <div className='bodyPay'>
            <Navbar />
+           <TabContext value={tabs}>
             <div style={{flex:1,display:'flex',flexDirection:'column'}}>
-                <div style={{padding:'10px 0px 0px 0px',display:'flex'}}>
-                    <button className={tabs === 0 ? 'Activetabs' : 'tabsbutton'}
-                    onClick={(e) =>setTabs(0)}>
-                      Payroll Schedule
-                    </button>
-                    <button className={tabs === 1 ? 'Activetabs' : 'tabsbutton'}
-                    onClick={(e) =>setTabs(1)}>
-                      Attendance
-                    </button>
-                </div>
+                <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
+                  <TabList onChange={handleChange} aria-label="lab API tabs example">
+                    <Tab label="Create Payout" value="1" />
+                    <Tab label="Manage" value="2" />
+                    <Tab label="Payee List" value="3" />
+                  </TabList>
+                </Box>
                 <div>
-                    {tabs === 0 && 
+                <TabPanel value="1">
                     <div style={{backgroundColor:'white',width:'100%'}}>
-                       <div style={{padding:'10px'}}>
-                        <h1 style={{fontSize:'25px',margin:0}}>Payroll Information:</h1>
-                        <div style={{display:'flex',flexWrap:'wrap',gap:'10px',justifyContent:'top',alignItems:'center',padding:'0px 80px 0px 0px'}}>
-                            <div style={{flex:1,paddingTop:'8px',display:'flex',flexDirection:'column',gap:'10px',marginTop:'10px'}}>
-                                <TextField
-                                  label="Location"
-                                  id="outlined-size-small"
-                                  value={schedDet.Location}
-                                  onChange={(e) => setSchedDate({...schedDet, Location: e.target.value})}
-                                  size="small"
-                                />
-                                <Select
-                                    value={cashierList.find((option) => option.value === schedDet.cashier)}
-                                    fullWidth
-                                    styles={{height:'100%'}}
-                                    onChange={handleOptionChange}
-                                    placeholder="Select Cashier"
-                                    isSearchable={false}
-                                    options={cashierList}
-                                />
-                                <TextField
-                                  label="Reminders:"
-                                  multiline
-                                  maxRows={5}
-                                  id="outlined-size-small"
-                                  value={schedDet.Reminder}
-                                  onChange={(e) => setSchedDate({...schedDet, Reminder: e.target.value})}
-                                 
-                                />
-                            </div>
-                            <div style={{width:'30%'}}>
-                            <LocalizationProvider dateAdapter={AdapterDayjs}>
-                                <DemoContainer components={['TimePicker', 'TimePicker', 'DatePicker']}>
-                                    <div style={{display:'flex',gap:'10px',flexDirection:'column'}}>
-                                    <DatePicker
-                                    slotProps={{
-                                        textField: {
-                                            size: "small",
-                                            error: false,
-                                        },
-                                        }}
-                                    label="Date"
-                                    value={schedDet.date}
-                                    onChange={(newValue) => setSchedDate({...schedDet ,date : new Date(newValue)})}
-                                    />
-                                    <TimePicker
-                                    slotProps={{
-                                    textField: {
-                                        size: "small",
-                                        error: false,
-                                    },
-                                    }}
-                                    label="Start Time"
-                                    value={schedDet.timeStart}
-                                    onChange={(newValue) => setSchedDate({...schedDet ,timeStart : new Date(newValue)})}
-                                    />
-                                    <TimePicker
-                                    slotProps={{
-                                        textField: {
-                                            size: "small",
-                                            error: false,
-                                        },
-                                        }}
-                                    label="End Time"
-                                    value={schedDet.timeEnd}
-                                    onChange={(newValue) => setSchedDate({...schedDet ,timeEnd : new Date(newValue)})}
-                                    />
-                                    </div>
-
-                                </DemoContainer>
-                            </LocalizationProvider>
-                            </div>
-                        </div>
-                       </div>
-                       <div style={{padding:'10px'}}>
-                        <h1 style={{fontSize:'25px'}}>Select Scholars:</h1>
-                       <DataGrid
-                        loading={loading}
-                        slots={{
-                        toolbar: CustomToolbar,
-                        pagination: CustomPagination,
-                        loadingOverlay: LinearProgress,
-                        }}
-                        rows={scholarList}
-                        columns={columns}
-                        getRowId={(row) => row.scholarCode}
-                        checkboxSelection
-                        onRowSelectionModelChange={handleRowSelectionModelChange}
-                        rowSelectionModel={schedDet.scholars}
-                        disableRowSelectionOnClick
-                        />                        
-                       </div>
-                       <div style={{width:'100%',display:'flex',justifyContent:'flex-end',alignItems:'flex-end',paddingRight:'40px',paddingBottom:'40px'}}>
-                       <LoadingButton
-                          onClick={handleSetAppoint}
-                          loading={submitting}
-                          loadingPosition="start"
-                          startIcon={<SaveIcon />}
-                          variant="contained"
-                          sx={{textTransform:'none'}}
-                        >
-                          {submitting ? 'Submitting' : 'Set Appointment'}
-                        </LoadingButton>
-                       </div>
-                    </div>}
-                    {tabs === 1 && 
-                    <div style={{width:'100%',backgroundColor:'white'}}>
-                      <div style={{width:'50%',padding:'20px 10px 0px 30px'}}>
-                          <Select
-                              value={cashierList.find((option) => option.value === cashier)}
-                              fullWidth
-                              styles={{height:'100%'}}
-                              onChange={(data) =>setCashier(data.value)}
-                              placeholder="Select Cashier"
-                              isSearchable={false}
-                              options={cashierList}
-                          />
+                      <div style={{display:'flex',alignItems:'center',justifyContent:'space-between',marginBottom:'15px'}}>
+                        <button onClick={() => {handleModalOpen('frmAca',true)}}>Create Payout Now!</button>
                       </div>
-                      <div style={{padding:'10px'}}>
-                        <h1 style={{fontSize:'25px'}}> Scholars:</h1>
-                       <DataGrid
-                        loading={loading}
-                        slots={{
-                        toolbar: CustomToolbar,
-                        pagination: CustomPagination,
-                        loadingOverlay: LinearProgress,
-                        }}
-                        rows={payoutList}
-                        columns={columns1}
-                        getRowId={(row) => row.scholarCode}
-                        checkboxSelection
-                        onRowSelectionModelChange={handleRowSelectionModelChange}
-                        rowSelectionModel={schedDet.scholars}
-                        disableRowSelectionOnClick
-                        />                        
-                       </div>
-                    </div>}
+                      <div>
+                        {tblPaylist?.map((data,idx) =>{
+                          return(
+                            <div key={idx} style={{border:'2px solid black',borderRadius:'5px',padding:'8px',width:'45%'}}>
+                              <div style={{display:'flex',justifyContent:'space-between'}}>
+                              <h2>{data.tblName + ': ' + data.academicYear}</h2>
+                              <button>{data.status === 1 ? 'Ongoing' : 'Closed'}</button>
+                              </div>
+
+                              <div>
+                              {data.Batchlist.length > 0 && data.Batchlist?.map((val,idy) =>{
+                                return(
+                                  <div key={idy}>
+                                    <h4>{val.batch}</h4>
+                                  </div>
+                                )
+                              })}
+                              <div style={{width:'250px',border:'2px solid black',height:'50px',justifyContent:'center',alignItems:'center',display:'flex',padding:'4px',borderRadius:'6px'}}>
+                                 <p style={{margin:0,cursor:'pointer'}} onClick={() => {handleModalOpen('frmBatch',true,data)}}>+Add Batch </p>
+                              </div>
+                              </div>
+
+                            </div>
+                          )
+                        })}
+                      </div>
+                    </div>
+                </TabPanel>
+                <TabPanel value="2">
+                    <div style={{width:'100%',backgroundColor:'white'}}>
+                      <div style={{border:'2px solid black',width:'400px'}}>
+                        <h4>Financial Assistance 2024</h4>
+                        <p>Status : Ongoing</p>
+                        <p>Date: 03/24/2025 - 04/01/2025</p>
+                        
+                      </div>
+                    </div>
+                </TabPanel>
                 </div>
             </div>
+            </TabContext>
         </div>
     </div>
+    </>
   )
 }
