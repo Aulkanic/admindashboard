@@ -394,6 +394,9 @@ export const PayrollAppoint = () => {
         setTblPayList(res.data)
       }
     }
+    const handleManageBatch = () =>{
+      setTabs('2')
+    }
 console.log(payBatch)
   return (
     <>
@@ -455,6 +458,7 @@ console.log(payBatch)
                       </div>
                       <div>
                         {tblPaylist?.map((data,idx) =>{
+                          console.log(data)
                           return(
                             <div key={idx} style={{border:'2px solid black',borderRadius:'5px',padding:'8px',width:'45%'}}>
                               <div style={{display:'flex',justifyContent:'space-between'}}>
@@ -462,15 +466,18 @@ console.log(payBatch)
                               <button>{data.status === 1 ? 'Ongoing' : 'Closed'}</button>
                               </div>
 
-                              <div>
+                              <div style={{display:'flex',flexWrap:'wrap',gap:'4px',marginTop:'6px',alignItems:'center'}}>
                               {data.Batchlist.length > 0 && data.Batchlist?.map((val,idy) =>{
                                 return(
-                                  <div key={idy}>
+                                  <div onClick={handleManageBatch}
+                                  key={idy} style={{width:'250px',border:'2px solid black',borderRadius:'6px',padding:'4px'}}>
                                     <h4>{val.batch}</h4>
+                                    <p style={{margin:0}}>{val.inclusiveMonth}</p>
+                                    <p style={{margin:0}}>Funds:	&#8369;{val.totalFunds}</p>
                                   </div>
                                 )
                               })}
-                              <div style={{width:'250px',border:'2px solid black',height:'50px',justifyContent:'center',alignItems:'center',display:'flex',padding:'4px',borderRadius:'6px'}}>
+                              <div style={{width:'150px',border:'2px solid black',height:'50px',justifyContent:'center',alignItems:'center',display:'flex',padding:'4px',borderRadius:'6px'}}>
                                  <p style={{margin:0,cursor:'pointer'}} onClick={() => {handleModalOpen('frmBatch',true,data)}}>+Add Batch </p>
                               </div>
                               </div>
