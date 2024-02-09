@@ -120,7 +120,9 @@ const Endpoints = {
     CREATE_PAYOUT: 'payout/create',
     LIST_PAYOUT: 'payout/list',
     BATCH_PERACADEMIC:'payout/Batch/',
-    CREATE_PAYBATCH: 'payout/create/Batch'
+    CREATE_PAYBATCH: 'payout/create/Batch',
+    CREATE_PAYAPPOINT: 'payout/appoint/create',
+    LIST_APPOINTPAY:'payout/appoint/lists'
 }
 
 export default Endpoints

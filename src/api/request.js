@@ -372,3 +372,9 @@ export const BatchPerAcademicYear = {
 export const CreatePayBatch = {
     CREATE: (data) => axiosInstance.post(Endpoints.CREATE_PAYBATCH,data)
 }
+export const CreatePayAppointment = {
+    CREATE: (data) => axiosInstance.post(Endpoints.CREATE_PAYAPPOINT,data)
+}
+export const ListofAppointmentinBatch = {
+    LISTED: (data) => axiosInstance.post(Endpoints.LIST_APPOINTPAY,data)
+}

@@ -15,7 +15,7 @@ import {
     useGridApiContext,
     useGridSelector,
   } from '@mui/x-data-grid';
-import { ProfileScholars,PayoutScholar,PayoutList,PayoutAttendance, CreatePay, ListOfAcademicYearPay, BatchPerAcademicYear, Payrollreports, CreatePayBatch } from '../../api/request';
+import { ProfileScholars,PayoutScholar,PayoutList,PayoutAttendance, CreatePay, ListOfAcademicYearPay, BatchPerAcademicYear, Payrollreports, CreatePayBatch, CreatePayAppointment, ListofAppointmentinBatch } from '../../api/request';
 import { DemoContainer } from '@mui/x-date-pickers/internals/demo';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
@@ -27,13 +27,15 @@ import TabContext from '@mui/lab/TabContext';
 import TabList from '@mui/lab/TabList';
 import TabPanel from '@mui/lab/TabPanel';
 import MuiPagination from '@mui/material/Pagination';
-import LinearProgress from '@mui/material/LinearProgress';
-import LoadingButton from '@mui/lab/LoadingButton';
-import SaveIcon from '@mui/icons-material/Save';
+import dayjs from 'dayjs';
+import { DateField } from '@mui/x-date-pickers/DateField';
+import Tabs, { tabsClasses } from '@mui/material/Tabs';
+import { TimeField } from '@mui/x-date-pickers/TimeField';
 import PaginationItem from '@mui/material/PaginationItem';
 import TextField from '@mui/material/TextField';
 import swal from 'sweetalert';
 import { CustomModal } from '../../components/modal/customModal';
+import { useSelector } from "react-redux";
 
 function Pagination({ page, onPageChange, className }) {
     const apiRef = useGridApiContext();
@@ -68,33 +70,27 @@ const cashierList = [
 ]
 const columns = [
    {
-     field: 'ScholarshipApplied',
-     headerName: 'Scholarship Applied',
-     width: 150,
-     editable: false,
-   },
-   {
-     field: 'lastName',
+     field: 'lname',
      headerName: 'LastName',
-     width: 150,
+     width: 100,
      editable: false,
    },
    {
-     field: 'firstName',
+     field: 'fname',
      headerName: 'FirstName',
-     width: 150,
+     width: 100,
      editable: false,
    },
    {
-     field: 'middleName',
+     field: 'mname',
      headerName: 'MiddleName',
-     width: 150,
+     width: 100,
      editable: false,
    },
    {
      field: 'yearLevel',
      headerName: 'Year Level',
-     width: 120,
+     width: 150,
      editable: false,
    },
    {
@@ -104,17 +100,11 @@ const columns = [
      editable: false,
    },
    {
-     field: 'remarks',
-     headerName: 'Status',
-     width: 130,
+     field: 'total',
+     headerName: 'Benefits',
+     width: 100,
      editable: false,
 
-   },
-   {
-     field: 'batch',
-     headerName: 'Batch',
-     width: 80,
-     editable: false,
    },
 
  ];
@@ -127,6 +117,7 @@ const columns = [
     );
   }
 export const PayrollAppoint = () => {
+    const { admin  } = useSelector((state) => state.login)
     const [tabs,setTabs] = useState('1');
     const [openModal,setOpenModal] = useState({
       frmAca:false,
@@ -134,8 +125,12 @@ export const PayrollAppoint = () => {
     })
     const [totalData,setTotalData] = useState([])
     const [tblPaylist,setTblPayList] = useState([])
+    const [selectedPay,setSelectedPay] = useState([]);
+    const [listPayScho,setPayScholist] = useState([])
     const [loading,setLoading] = useState(false);
-    const [submitting,setSubmitting]= useState(false)
+    const [submitting,setSubmitting]= useState(false);
+    const [dateTabs,setDateTabs] = useState('')
+    const [rowSelectionModel, setRowSelectionModel] = React.useState([]);
     const [schedDet,setSchedDate] = useState({
         cashier: '',
         date : '',
@@ -160,23 +155,33 @@ export const PayrollAppoint = () => {
       academicYear:'',
       cashierNumber:0
     })
+    const [paySched,setPaySched] = useState({
+      date:null,
+      location:'',
+      reminder:'',
+      cashier:'',
+      selectedScho:[],
+      academicYear:'',
+      timeStart:null,
+      timeEnd:null,
+      title:''
+    })
 
-
+    async function Fetch(){
+        setLoading(true)
+        let res = await ProfileScholars.SCHO_PROFLIST()
+        let res1 = await PayoutList.PAYOUT_LIST()
+        let res2 = await ListOfAcademicYearPay.LISTOFPYM()
+        let res3 = await Payrollreports.PAYROLL()
+        console.log(res3)
+        setTblPayList(res2.data)
+        const data = res.data
+        setPayoutList(res1.data)
+        setTotalData(res3.data)
+        setScholarList(data)
+        setLoading(false)
+    }
     useEffect(() =>{
-        async function Fetch(){
-            setLoading(true)
-            let res = await ProfileScholars.SCHO_PROFLIST()
-            let res1 = await PayoutList.PAYOUT_LIST()
-            let res2 = await ListOfAcademicYearPay.LISTOFPYM()
-            let res3 = await Payrollreports.PAYROLL()
-            console.log(res3)
-            setTblPayList(res2.data)
-            const data = res.data
-            setPayoutList(res1.data)
-            setTotalData(res3.data)
-            setScholarList(data)
-            setLoading(false)
-        }
         Fetch()
     },[])
     const handleOptionChange = (data) => {
@@ -188,7 +193,12 @@ export const PayrollAppoint = () => {
       
       };
     const handleRowSelectionModelChange = (newRowSelectionModel) => {
-        setSchedDate({...schedDet ,scholars : newRowSelectionModel});
+      const selectedIDs = new Set(newRowSelectionModel);
+      const selectedRowData = selectedPay?.Batchlist?.payeeData.filter((row) =>
+        selectedIDs.has(row.schoid.toString())
+      );
+      setRowSelectionModel(newRowSelectionModel)
+        setPaySched(prev=>({...prev,'selectedScho': selectedRowData})) 
     };
     const handleSetAppoint = async() =>{
       if(!schedDet.cashier || !schedDet.date || !schedDet.timeStart || !schedDet.timeEnd ||!schedDet.Location || !schedDet.Reminder){
@@ -338,9 +348,37 @@ export const PayrollAppoint = () => {
       },
     
     ];
-    const handleChange = (event, newValue) => {
+    const handleChange = async(event, newValue) => {
+      if(newValue === '2'){
+        if(!selectedPay || selectedPay.length === 0){
+          alert('Please select Payout Acadmicyear to manage first')
+          setTabs('1')
+          return
+        }else{
+          setTabs(newValue)
+        }
+      }else if(newValue === '3'){
+        if(!selectedPay || selectedPay.length === 0){
+          alert('Please select Payout Acadmicyear to manage first')
+          setTabs('1')
+          return
+        }else{
+          const formData = new FormData();
+          formData.append('academicYear',selectedPay.academicYear)
+          formData.append('batch',selectedPay.Batchlist.batch)
+          const res = await ListofAppointmentinBatch.LISTED(formData)
+          console.log(res)
+          if(res.data){
+            setPayScholist(res.data)
+          }
+          setTabs(newValue)
+        }         
+      }
       setTabs(newValue);
     };
+    const datehandleChange = async(event,newValue) =>{
+      
+    }
     const handleModalOpen = (field,value,data) =>{
       setOpenModal(prev =>({
         ...prev,
@@ -368,7 +406,7 @@ export const PayrollAppoint = () => {
       const res = await CreatePay.CREATE(formData)
       if(res.status === 200){
         alert("Successfully Created Payment")
-        setTblPayList(res.data)
+        Fetch()
       }
     };
     const handleInputPayBatchChange = (e) =>{
@@ -389,15 +427,54 @@ export const PayrollAppoint = () => {
       formData.append('inclusiveMonth',payBatch.inclusiveMonth)
       formData.append('academicYear',payBatch.academicYear)
       formData.append('cashierNumber',payBatch.cashierNumber)
+      if(totalData.All.length === 0){
+        return  alert('No Fund Available in the System')
+      }
+      for(let i =0;i < totalData.All.length;i++){
+       formData.append(`scholarList[${i}]`,JSON.stringify(totalData.All[i]))
+      }
+    
       const res = await CreatePayBatch.CREATE(formData)
       if(res.data){
-        setTblPayList(res.data)
+        Fetch()
       }
     }
-    const handleManageBatch = () =>{
+    const handleManageBatch = (data,val) =>{
       setTabs('2')
+      const filterBatch = data.Batchlist.filter(data => data.batch === val.batch)
+      const batchDet = {
+        ...data,
+        Batchlist: filterBatch[0]
     }
-console.log(payBatch)
+      setSelectedPay(batchDet)
+    }
+    const handlePayAppoint = async() =>{
+      const formData = new FormData();
+      const formattedDate = paySched.date?.toISOString().slice(0, 10);
+      const formattedTimeStart = paySched.timeStart ? new Date(paySched.timeStart) : null;
+      const formattedTimeEnd = paySched.timeEnd ? new Date(paySched.timeEnd) : null;
+      formData.append('location',paySched.location)
+      formData.append('reminder',paySched.reminder)
+      formData.append('date',formattedDate)
+      formData.append('academicYear',selectedPay.academicYear)
+      formData.append('timeStart',formattedTimeStart)
+      formData.append('timeEnd',formattedTimeEnd)
+      formData.append('admin',admin[0].name)
+      formData.append('batch',selectedPay.Batchlist.batch)
+      formData.append('title',paySched.title)
+      formData.append('schoList',JSON.stringify(paySched.selectedScho))
+      formData.append('cashier',paySched.cashier)
+      const formDataObject = {};
+      formData.forEach((value, key) => {
+        formDataObject[key] = value;
+      });
+      await CreatePayAppointment.CREATE(formData)
+      .then((res) =>{
+        alert('Appointed Success')
+        Fetch()
+      })
+    }
+    console.log(selectedPay)
   return (
     <>
     <CustomModal
@@ -458,7 +535,6 @@ console.log(payBatch)
                       </div>
                       <div>
                         {tblPaylist?.map((data,idx) =>{
-                          console.log(data)
                           return(
                             <div key={idx} style={{border:'2px solid black',borderRadius:'5px',padding:'8px',width:'45%'}}>
                               <div style={{display:'flex',justifyContent:'space-between'}}>
@@ -469,7 +545,7 @@ console.log(payBatch)
                               <div style={{display:'flex',flexWrap:'wrap',gap:'4px',marginTop:'6px',alignItems:'center'}}>
                               {data.Batchlist.length > 0 && data.Batchlist?.map((val,idy) =>{
                                 return(
-                                  <div onClick={handleManageBatch}
+                                  <div onClick={() =>handleManageBatch(data,val)}
                                   key={idy} style={{width:'250px',border:'2px solid black',borderRadius:'6px',padding:'4px'}}>
                                     <h4>{val.batch}</h4>
                                     <p style={{margin:0}}>{val.inclusiveMonth}</p>
@@ -490,11 +566,125 @@ console.log(payBatch)
                 </TabPanel>
                 <TabPanel value="2">
                     <div style={{width:'100%',backgroundColor:'white'}}>
-                      <div style={{border:'2px solid black',width:'400px'}}>
-                        <h4>Financial Assistance 2024</h4>
-                        <p>Status : Ongoing</p>
-                        <p>Date: 03/24/2025 - 04/01/2025</p>
-                        
+                      <div style={{display:'flex',justifyContent:'space-between',alignItems:'center'}}>
+                        <div>
+                        <h2>{selectedPay?.tblName}</h2>
+                        <h3>{selectedPay?.academicYear} - {selectedPay?.Batchlist?.batch}</h3>
+                        </div>
+                        <button onClick={handlePayAppoint}>
+                          Create Appointment!
+                        </button>
+                      </div>
+                    </div>
+                    <div style={{display:'flex',gap:'10px'}}>
+                       <form style={{display:'flex',flexDirection:'column',flex:1}} action="">
+                        <div style={{display:'flex',flexDirection:'column'}}>
+                        <h2 style={{margin:0,marginBottom:'24px'}}>Appointment Details</h2>
+                        <TextField size='small' sx={{marginBottom:'8px'}} onChange={(e) =>{setPaySched(prev =>({...prev,title:e.target.value}))}} value={paySched.title} id="outlined-basic" label="Title" variant="outlined" />
+                        <LocalizationProvider dateAdapter={AdapterDayjs}>
+                          <DemoContainer components={['DateField', 'TimeField', 'DateTimeField']}>
+                              <DateField 
+                              slotProps={{
+                                textField: {
+                                  size: "small",
+                                  error: false,
+                                },
+                              }}
+                              label='Date:'
+                              value={paySched.date} 
+                              onChange={(val) =>{setPaySched(prev =>({...prev,date:dayjs(val)}))}} />
+                            <TimeField
+                              slotProps={{
+                                textField: {
+                                  size: "small",
+                                  error: false,
+                                },
+                              }}
+                              label="Start Time:"
+                              value={paySched.timeStart}
+                              onChange={(newValue) => {setPaySched(prev => ({...prev,timeStart:dayjs(newValue)}))}}
+                            />
+                            <TimeField
+                              slotProps={{
+                                textField: {
+                                  size: "small",
+                                  error: false,
+                                },
+                              }}
+                              label="End Time:"
+                              value={paySched.timeEnd}
+                              onChange={(newValue) => {setPaySched(prev => ({...prev,timeEnd:dayjs(newValue)}))}}
+                            />
+                          </DemoContainer>
+                        </LocalizationProvider>
+
+                        </div>
+                        <div style={{display:'flex',flexDirection:'column',gap:'24px',marginTop:'24px'}}>
+                        <TextField size='small' onChange={(e) =>{setPaySched(prev =>({...prev,location:e.target.value}))}} value={paySched.location} id="outlined-basic" label="Location" variant="outlined" />
+                        <TextField size='small' onChange={(e) =>{setPaySched(prev =>({...prev,reminder:e.target.value}))}} value={paySched.reminder} id="outlined-basic" label="Reminder" variant="outlined" />
+                       <div styles={{width:'100%',height:'100px'}}>
+                          <label htmlFor="">Select Cashier</label>
+                        <Select
+                          className="basic-single"
+                          classNamePrefix="select"
+                          styles={{width:'100%',height:'100px'}}
+                          name="color"
+                          onChange={(value) =>{setPaySched(prev=>({...prev,cashier:value.value}))}}
+                          options={selectedPay?.Batchlist?.cashierData?.map(data =>({
+                            label:data.cashierName,
+                            value:data.cashierName
+                          })) || []}
+                        />
+                        </div>
+                        </div>
+
+
+                       </form>
+                       <div style={{width:'max-content'}}>
+                        <h2>Select scholars</h2>
+                       <DataGrid
+                          rows={selectedPay?.Batchlist?.payeeData ?? []}
+                          columns={columns}
+                          getRowId={(row) => row.schoid}
+                          initialState={{
+                            pagination: {
+                              paginationModel: {
+                                pageSize: 5,
+                              },
+                            },
+                          }}
+                          pageSizeOptions={[5]}
+                          checkboxSelection
+                          onRowSelectionModelChange={handleRowSelectionModelChange}
+                          rowSelectionModel={rowSelectionModel}
+                          disableRowSelectionOnClick
+                        />                        
+                       </div>
+                    </div>
+                    
+                </TabPanel>
+                <TabPanel value='3'>
+                    <div>
+                      <div style={{width:'100%',backgroundColor:'lightblue'}}>
+                      <Tabs
+                        value={dateTabs}
+                        onChange={handleChange}
+                        variant="scrollable"
+                        scrollButtons
+                        aria-label="visible arrows tabs example"
+                        sx={{
+                          [`& .${tabsClasses.scrollButtons}`]: {
+                            '&.Mui-disabled': { opacity: 0.3 },
+                          },
+                        }}
+                      >
+                        {listPayScho.length > 0 && listPayScho.map((data,idx) =>{
+                          const date = new Date(data.appointement_date).toLocaleDateString();
+                          return(
+                            <Tab label={date} />
+                          )
+                        })}
+                      </Tabs>                                                                     
                       </div>
                     </div>
                 </TabPanel>
