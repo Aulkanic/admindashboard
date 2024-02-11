@@ -122,7 +122,10 @@ const Endpoints = {
     BATCH_PERACADEMIC:'payout/Batch/',
     CREATE_PAYBATCH: 'payout/create/Batch',
     CREATE_PAYAPPOINT: 'payout/appoint/create',
-    LIST_APPOINTPAY:'payout/appoint/lists'
+    LIST_APPOINTPAY:'payout/appoint/lists',
+    GET_BYDATE:'payout/appoint/getByDate',
+    RECEIVED_ALLOWANCE:'payout/received',
+    RESCHED_PAY:'payout/resched'
 }
 
 export default Endpoints

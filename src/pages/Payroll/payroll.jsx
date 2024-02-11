@@ -7,15 +7,9 @@ import Chip from '@mui/material/Chip';
 import DoneIcon from '@mui/icons-material/Done';
 import { MdClear } from "react-icons/md";
 import {
-    DataGrid,
-    GridToolbarContainer,
-    GridToolbarFilterButton,
-    gridPageCountSelector,
-    GridPagination,
-    useGridApiContext,
-    useGridSelector,
+    DataGrid, gridClasses,
   } from '@mui/x-data-grid';
-import { ProfileScholars,PayoutScholar,PayoutList,PayoutAttendance, CreatePay, ListOfAcademicYearPay, BatchPerAcademicYear, Payrollreports, CreatePayBatch, CreatePayAppointment, ListofAppointmentinBatch } from '../../api/request';
+import { ProfileScholars,PayoutScholar,PayoutList,PayoutAttendance, CreatePay, ListOfAcademicYearPay, BatchPerAcademicYear, Payrollreports, CreatePayBatch, CreatePayAppointment, ListofAppointmentinBatch, GetbyDate, SchoReceivedPay, ReschedPayScho } from '../../api/request';
 import { DemoContainer } from '@mui/x-date-pickers/internals/demo';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
@@ -36,97 +30,31 @@ import TextField from '@mui/material/TextField';
 import swal from 'sweetalert';
 import { CustomModal } from '../../components/modal/customModal';
 import { useSelector } from "react-redux";
+import createFormData from '../../utility/formData';
 
-function Pagination({ page, onPageChange, className }) {
-    const apiRef = useGridApiContext();
-    const pageCount = useGridSelector(apiRef, gridPageCountSelector);
+
+  const currencyFormat = (num) => {
+    const formatter = new Intl.NumberFormat('en-US', {
+      style: 'currency',
+      currency: 'PHP',
+    });
   
-    return (
-      <MuiPagination
-        color="primary"
-        className={className}
-        variant="outlined"
-        shape="rounded"
-        count={pageCount}
-        page={page + 1}
-        renderItem={(props2) => <PaginationItem {...props2} disableRipple />}
-        onChange={(event, newPage) => {
-          onPageChange(event, newPage - 1);
-        }}
-      />
-    );
-  }
-  
-function CustomPagination(props) {
-    return <GridPagination ActionsComponent={Pagination} {...props} />;
-  }
-
-const cashierList = [
-    {name:'cashier',label:'Cashier 1',value:'Cashier 1'},
-    {name:'cashier',label:'Cashier 2',value:'Cashier 2'},
-    {name:'cashier',label:'Cashier 3',value:'Cashier 3'},
-    {name:'cashier',label:'Cashier 4',value:'Cashier 4'},
-    {name:'cashier',label:'Cashier 5',value:'Cashier 5'}
-]
-const columns = [
-   {
-     field: 'lname',
-     headerName: 'LastName',
-     width: 100,
-     editable: false,
-   },
-   {
-     field: 'fname',
-     headerName: 'FirstName',
-     width: 100,
-     editable: false,
-   },
-   {
-     field: 'mname',
-     headerName: 'MiddleName',
-     width: 100,
-     editable: false,
-   },
-   {
-     field: 'yearLevel',
-     headerName: 'Year Level',
-     width: 150,
-     editable: false,
-   },
-   {
-     field: 'baranggay',
-     headerName: 'Baranggay',
-     width: 150,
-     editable: false,
-   },
-   {
-     field: 'total',
-     headerName: 'Benefits',
-     width: 100,
-     editable: false,
-
-   },
-
- ];
-
- function CustomToolbar() {
-    return (
-      <GridToolbarContainer>
-        <GridToolbarFilterButton />
-      </GridToolbarContainer>
-    );
-  }
+    return formatter.format(num);
+  };
 export const PayrollAppoint = () => {
     const { admin  } = useSelector((state) => state.login)
     const [tabs,setTabs] = useState('1');
     const [openModal,setOpenModal] = useState({
       frmAca:false,
-      frmBatch: false
+      frmBatch: false,
+      guardianDet:false
     })
     const [totalData,setTotalData] = useState([])
     const [tblPaylist,setTblPayList] = useState([])
     const [selectedPay,setSelectedPay] = useState([]);
-    const [listPayScho,setPayScholist] = useState([])
+    const [listPayScho,setPayScholist] = useState([]);
+    const [listOFSchoApp,setListOfSchoApp] = useState([]);
+    const [guardian,setGuardian] = useState([])
     const [loading,setLoading] = useState(false);
     const [submitting,setSubmitting]= useState(false);
     const [dateTabs,setDateTabs] = useState('')
@@ -165,6 +93,13 @@ export const PayrollAppoint = () => {
       timeStart:null,
       timeEnd:null,
       title:''
+    })
+    const [receivePay,setReceivedPay] = useState({
+      scholarid:'',
+      academicYear:'',
+      batch:'',
+      total:'',
+      payid:''
     })
 
     async function Fetch(){
@@ -279,75 +214,7 @@ export const PayrollAppoint = () => {
           setPayoutList(res.data)
         })
     }
-    const columns1 = [
-      {
-        field: 'lastName',
-        headerName: 'LastName',
-        width: 150,
-        editable: false,
-      },
-      {
-        field: 'firstName',
-        headerName: 'FirstName',
-        width: 150,
-        editable: false,
-      },
-      {
-        field: 'middleName',
-        headerName: 'MiddleName',
-        width: 150,
-        editable: false,
-      },
-      {
-        field: 'date',
-        headerName: 'Date',
-        width: 120,
-        editable: false,
-      },
-      {
-        field: 'timeStart',
-        headerName: 'Time',
-        width: 200,
-        editable: false,
-        renderCell: (params) => {
-          const data = params.row
-          return(
-          <>
-          <p style={{margin:'0px'}}>{data.timeStart}-{data.timeEnd}</p>
-          </>
-        )},
-      },
-      {
-        field: 'cashier',
-        headerName: 'Cashier',
-        width: 130,
-        editable: false,
-    
-      },
-      {
-        field: 'Attended',
-        headerName: 'Attendance',
-        width: 250,
-        renderCell: (params) => {
-          const isAttend = params.row.Attended; 
-          return (
-            <>
-            {isAttend === 'yes' ? <Chip
-            label="Attended"
-            color="success"
-            icon={<DoneIcon />}
-              /> : <Chip
-              label="Not Attended"
-              onClick={() =>handleAttendanceChange(params.row)}
-              color="error"
-              icon={<MdClear />}
-            />}            
-            </>
 
-          );},
-      },
-    
-    ];
     const handleChange = async(event, newValue) => {
       if(newValue === '2'){
         if(!selectedPay || selectedPay.length === 0){
@@ -377,9 +244,21 @@ export const PayrollAppoint = () => {
       setTabs(newValue);
     };
     const datehandleChange = async(event,newValue) =>{
-      
+      const selectedDate = new Date(listPayScho[newValue]?.appointement_date);
+      const formData = new FormData();
+      const offsetInMinutes = selectedDate.getTimezoneOffset();
+      const adjustedDate = new Date(selectedDate.getTime() - (offsetInMinutes * 60000));
+      const formattedDate = adjustedDate.toISOString().slice(0, 10);
+      formData.append('academicYear',selectedPay.academicYear)
+      formData.append('batch',selectedPay.Batchlist.batch)
+      formData.append('date',formattedDate)
+      const res = await GetbyDate.FILTER(formData)
+      if(res.data){
+        setListOfSchoApp(res.data)
+      }
     }
     const handleModalOpen = (field,value,data) =>{
+      console.log(data)
       setOpenModal(prev =>({
         ...prev,
         [field]: value
@@ -389,7 +268,7 @@ export const PayrollAppoint = () => {
           ...prev,
           payId: data.paytblId,
           academicYear: data.academicYear,
-          totalFunds:totalData.TotalAmount,
+          totalFunds:totalData.TotalFunds,
           TotalBeneficiaries: totalData.TotalBeneficiaries
         }))
       }
@@ -474,7 +353,177 @@ export const PayrollAppoint = () => {
         Fetch()
       })
     }
-    console.log(selectedPay)
+    const columns = [
+      {
+        field: 'lname',
+        headerName: 'LastName',
+        width: 100,
+        editable: false,
+      },
+      {
+        field: 'fname',
+        headerName: 'FirstName',
+        width: 100,
+        editable: false,
+      },
+      {
+        field: 'mname',
+        headerName: 'MiddleName',
+        width: 100,
+        editable: false,
+      },
+      {
+        field: 'yearLevel',
+        headerName: 'Year Level',
+        width: 100,
+        editable: false,
+      },
+      {
+        field: 'baranggay',
+        headerName: 'Baranggay',
+        width: 100,
+        editable: false,
+      },
+      {
+        field: 'total',
+        headerName: 'Benefits',
+        width: 100,
+        editable: false,
+        renderCell: (params) =>(
+         <p style={{margin:0}}>{currencyFormat(params.value)}</p>
+       )
+      },
+      {
+       field: 'status',
+       headerName: 'Status',
+       width: 100,
+       editable: false,
+       renderCell: (params) =>(
+         <p style={{margin:0}}>{params.value}</p>
+       )
+     },
+   
+    ];
+   const columns1 = [
+     {
+       field: 'lname',
+       headerName: 'LastName',
+       width: 100,
+       editable: false,
+     },
+     {
+       field: 'fname',
+       headerName: 'FirstName',
+       width: 100,
+       editable: false,
+     },
+     {
+       field: 'mname',
+       headerName: 'MiddleName',
+       width: 100,
+       editable: false,
+     },
+     {
+       field: 'yearLevel',
+       headerName: 'Year Level',
+       width: 100,
+       editable: false,
+     },
+     {
+       field: 'baranggay',
+       headerName: 'Baranggay',
+       width: 100,
+       editable: false,
+     },
+     {
+       field: 'actions',
+       headerName: 'Time',
+       width: 120,
+       editable: false,
+       renderCell: (params) => (
+         <>
+         <div style={{display:'flex',flexDirection:'column',height:'100%',width:'100%',justifyContent:'center',alignItems:'center'}}>
+         <p style={{margin:0}}>{new Date(params.row.timeStart).toLocaleTimeString()}-{new Date(params.row.timeEnd).toLocaleTimeString()}</p>
+         </div>
+       </>
+     ),
+     },
+     {
+       field: 'cashierId',
+       headerName: 'Cashier',
+       width: 100,
+       editable: false,
+     },
+     {
+       field: 'total',
+       headerName: 'Benefits',
+       width: 100,
+       editable: false,
+       renderCell: (params) =>(
+         <p style={{margin:0}}>{currencyFormat(params.value)}</p>
+       )
+     },
+     {
+       field: 'receiverId',
+       headerName: 'Receiver',
+       width: 100,
+       editable: false,
+       renderCell: (params) =>(
+         <>
+         {params.value ? <button onClick={() => {handleGuardianDetailView(params.row)}}>Guardian</button> : <button>Student</button>}
+         </>
+       )
+     },
+     {
+       field: 'action',
+       headerName: 'Actions',
+       width: 200,
+       editable: false,
+       renderCell: (params) =>(
+         <div style={{display:'flex',gap:4}}>
+           <button onClick={() =>{setPayeeReceived(params.row)}}>Received</button>
+           <button onClick={() =>{ReappointPayee(params.row)}}>Re-appoint</button>
+         </div>
+       )
+     },
+   
+   ];
+   const handleGuardianDetailView = (data) =>{
+    setOpenModal(prev =>({
+      ...prev,
+      guardianDet: true
+    }))
+    setGuardian(data)
+   }
+   const setPayeeReceived = async(data) =>{
+    console.log(data)
+    setReceivedPay(prev =>({
+      ...prev,
+      payid:data.payId,
+      total:Number(data.total),
+      scholarid:data.schoid,
+      batch:data.batch,
+      academicYear:selectedPay.academicYear
+    }))
+    const formData = createFormData(receivePay)
+    const res = await SchoReceivedPay.RECEIVE(formData)
+    if(res.data){
+      Fetch()
+    }
+   };
+   const ReappointPayee = async(data) =>{
+      const details ={
+        scholarid:data.schoid,
+        batch:data.batch,
+        academicYear:selectedPay.academicYear  
+      }
+      const formData = createFormData(details)
+      const res = await ReschedPayScho.RESCHED(formData);
+      if(res.data){
+        Fetch()
+      }
+   };
+   console.log(tblPaylist)
   return (
     <>
     <CustomModal
@@ -492,7 +541,7 @@ export const PayrollAppoint = () => {
         </button>
       </form>}
     />
-      <CustomModal
+    <CustomModal
       open={openModal.frmBatch}
       handleClose={(prev) =>{setOpenModal({...prev,frmAca:false})}}
       title={'Create Batch'}
@@ -503,13 +552,26 @@ export const PayrollAppoint = () => {
           <TextField onChange={handleInputPayBatchChange} name='inclusiveMonth' value={payBatch.inclusiveMonth} id="outlined-basic" label="Inclusive Month" variant="outlined" />
           <TextField type='number' onChange={handleInputPayBatchChange} name='cashierNumber' value={payBatch.cashierNumber} id="outlined-basic" label="Number of Cashier" variant="outlined" />
 
-          <TextField disabled value={totalData.TotalAmount} id="outlined-basic" label="Total Funds" variant="outlined" />
-          <TextField disabled value={totalData.TotalBeneficiaries} id="outlined-basic" label="Total Benefeciaries" variant="outlined" />
+          <TextField disabled value={payBatch.totalFunds} id="outlined-basic" label="Total Funds" variant="outlined" />
+          <TextField disabled value={payBatch.TotalBeneficiaries} id="outlined-basic" label="Total Benefeciaries" variant="outlined" />
         </div>
         <button type='submit'>
           Create
         </button>
       </form>
+    }
+    />
+    <CustomModal
+      open={openModal.guardianDet}
+      handleClose={(prev) =>{setOpenModal({...prev,guardianDet:false})}}
+      title={'Guardian Details'}
+      content={
+      <div>
+        <p>Name: {guardian.receiverfname} {guardian.receivermname} {guardian.receiverlname}</p>
+        <p>Relationship to Guardian: {guardian.relationship}</p>
+        <p>Address: {guardian.address}</p>
+        <p>Contact Number: {guardian.contactNum}</p>
+      </div>
     }
     />
     <div className='containerPay'>
@@ -653,6 +715,12 @@ export const PayrollAppoint = () => {
                               },
                             },
                           }}
+                          getRowHeight={() => 'auto'}
+                          sx={{
+                            [`& .${gridClasses.cell}`]: {
+                              py: 1,
+                            },
+                          }}
                           pageSizeOptions={[5]}
                           checkboxSelection
                           onRowSelectionModelChange={handleRowSelectionModelChange}
@@ -668,7 +736,7 @@ export const PayrollAppoint = () => {
                       <div style={{width:'100%',backgroundColor:'lightblue'}}>
                       <Tabs
                         value={dateTabs}
-                        onChange={handleChange}
+                        onChange={datehandleChange}
                         variant="scrollable"
                         scrollButtons
                         aria-label="visible arrows tabs example"
@@ -681,10 +749,34 @@ export const PayrollAppoint = () => {
                         {listPayScho.length > 0 && listPayScho.map((data,idx) =>{
                           const date = new Date(data.appointement_date).toLocaleDateString();
                           return(
-                            <Tab label={date} />
+                            <Tab key={idx} label={date} />
                           )
                         })}
-                      </Tabs>                                                                     
+                      </Tabs>   
+                      <div>
+                      <DataGrid
+                          rows={listOFSchoApp ?? []}
+                          columns={columns1}
+                          getRowId={(row) => row.scholarCode}
+                          initialState={{
+                            pagination: {
+                              paginationModel: {
+                                pageSize: 5,
+                              },
+                            },
+                          }}
+                          pageSizeOptions={[5]}
+                          getRowHeight={() => 'auto'}
+                          sx={{
+                            [`& .${gridClasses.cell}`]: {
+                              py: 1,
+                            },
+                          }}
+                          checkboxSelection
+                          disableRowSelectionOnClick
+                        />                            
+                      </div>
+                                                              
                       </div>
                     </div>
                 </TabPanel>

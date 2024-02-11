@@ -378,3 +378,12 @@ export const CreatePayAppointment = {
 export const ListofAppointmentinBatch = {
     LISTED: (data) => axiosInstance.post(Endpoints.LIST_APPOINTPAY,data)
 }
+export const GetbyDate = {
+    FILTER:(data) => axiosInstance.post(Endpoints.GET_BYDATE,data)
+}
+export const SchoReceivedPay = {
+    RECEIVE:(data) => axiosInstance.post(Endpoints.RECEIVED_ALLOWANCE,data)
+}
+export const ReschedPayScho = {
+    RESCHED:(data) => axiosInstance.post(Endpoints.RESCHED_PAY,data)
+}
