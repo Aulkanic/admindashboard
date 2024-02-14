@@ -387,3 +387,9 @@ export const SchoReceivedPay = {
 export const ReschedPayScho = {
     RESCHED:(data) => axiosInstance.post(Endpoints.RESCHED_PAY,data)
 }
+export const GenerateRenewalAcademicYear ={
+    CREATE: (data) => axiosInstance.post(Endpoints.CREATE_ACARENEWAL,data)
+}
+export const ListOfRenewal = {
+    FETCH:() => axiosInstance.get(Endpoints.RENEWALACADEMIC)
+}

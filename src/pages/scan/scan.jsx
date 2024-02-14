@@ -225,7 +225,7 @@ export default function Scan() {
           {active.tabs === 1 && 
           <div style={{width:'100%',padding:'10px'}}>
             <button onClick={() =>{handleChangeActive('tabs',0)}}
-              style={{border:'none',display:'flex',alignItems:'center',margin:'4px'}}>
+             style={{backgroundColor:'#2f96db',border:'none',padding:'4px 8px',borderRadius:'4px',color:'white',width:'max-content',display:'flex',alignItems:'center'}}>
             <IoIosArrowBack />
             <p style={{margin:0}}> Go Back</p>
             </button>
@@ -268,7 +268,7 @@ export default function Scan() {
                 </div>
                 <div style={{display:'flex',justifyContent:'center',margin:'10px 0px 10px 0px'}}>
                 <button onClick={startScanning}
-                style={{whiteSpace:'nowrap',borderRadius:'4px',border:'none',backgroundColor:'blue',color:'white',padding:'4px 10px'}}
+                style={{backgroundColor:'#2f96db',border:'none',padding:'4px 8px',borderRadius:'4px',color:'white'}}
                 >Start Scanning!</button>
                 </div>
               </div>
@@ -365,7 +365,8 @@ export default function Scan() {
                       </div>
                         )
                       })}
-                       <button type='button' onClick={handleAddSibling}>Add Sibling</button>
+                       <button style={{backgroundColor:'#2f96db',border:'none',padding:'4px 8px',borderRadius:'4px',color:'white'}}
+                       type='button' onClick={handleAddSibling}>Add Sibling</button>
 
                     </form>
                   </div>}
@@ -388,7 +389,8 @@ export default function Scan() {
 
                   </div>}
                 </div>
-                <button>
+                <button style={{backgroundColor:'#2f96db',border:'none',padding:'4px 8px',borderRadius:'4px',color:'white'}}
+                >
                   Submit Details
                 </button>
               </div>

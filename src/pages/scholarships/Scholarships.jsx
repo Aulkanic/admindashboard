@@ -3,7 +3,7 @@ import Sidebar from "../../components/sidebar/Sidebar"
 import "./scholarships.scss"
 import { Box, Modal,Button,TextField, Typography, InputLabel} from "@mui/material"; 
 import './scholarship.css'
-import { FetchingSchoProg, CreateSchoProg, UpdateSchoProg } from "../../api/request";
+import { FetchingSchoProg, CreateSchoProg, UpdateSchoProg, GenerateRenewalAcademicYear, ListOfRenewal } from "../../api/request";
 import { useEffect } from "react";
 import { useState } from "react";
 import Radio from '@mui/material/Radio';
@@ -11,19 +11,31 @@ import RadioGroup from '@mui/material/RadioGroup';
 import FormControlLabel from '@mui/material/FormControlLabel';
 import dayjs from 'dayjs';
 import { DemoContainer } from '@mui/x-date-pickers/internals/demo';
+import Tabs, { tabsClasses } from '@mui/material/Tabs';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { DateField } from '@mui/x-date-pickers/DateField';
 import swal from "sweetalert";
-import { DataGrid } from '@mui/x-data-grid';
+import {
+  DataGrid, gridClasses,
+} from '@mui/x-data-grid';
 import Avatar from '@mui/material/Avatar';
 import Card from '@mui/material/Card';
-import CardContent from '@mui/material/CardContent';
+import Tab from '@mui/material/Tab';
+import TabContext from '@mui/lab/TabContext';
+import TabList from '@mui/lab/TabList';
+import TabPanel from '@mui/lab/TabPanel';
 import '../Button style/button.css'
 import { styled } from '@mui/material';
 import { Backdrop, CircularProgress } from '@mui/material';
 import CustomNoRowsOverlay from "../Design/Norows";
 import { MdClear } from "react-icons/md";
+import MenuItem from '@mui/material/MenuItem';
+import FormControl from '@mui/material/FormControl';
+import Select from '@mui/material/Select';
+import { academicOptions } from "../../utility/academicOptions";
+import { CustomModal } from '../../components/modal/customModal';
+import createFormData from "../../utility/formData";
 
 const StyledBackdrop = styled(Backdrop)(({ theme }) => ({
   zIndex: theme.zIndex.drawer + 50,
@@ -46,6 +58,7 @@ const Scholarships = () => {
     const [open1, setOpen1] = useState(false);
     const [icon, setSchoimg] = useState(null);
     const [title, setSchotitle] = useState('');
+    const [academicYear,setAcademicYear] = useState('')
     const [description, setSchodesc] = useState('');
     const [status, setStatusCheck] = useState('');
     const [icon1, setSchoimg1] = useState(null);
@@ -58,7 +71,21 @@ const Scholarships = () => {
     const currentDate = dayjs();
     const [startDate, setStartDate] = useState(null);
     const [endDate, setEndDate] = useState(null);
+    const [selectedTabs,setSelectedTabs] = useState('')
+    const [value, setValue] = useState('1');
+    const [openModal,setOpenModal] = useState(false)
+    const [renewFrm,setRenewFrm] = useState({
+      academicYear:'',
+      title:'',
+      dateStart:'',
+      dateEnd:'',
+      status:''
+    })
+    const [listAcademicRenewal,setListAcademicRenewal] = useState([])
 
+    const handleChange = (event, newValue) => {
+      setValue(newValue);
+    };
 
   const handleOpen = () => {
     setOpen(true)
@@ -95,9 +122,11 @@ const Scholarships = () => {
       try {
         setShowBackdrop(true);
         const response = await FetchingSchoProg.FETCH_SCHOPROG()
+        const res = await ListOfRenewal.FETCH()
         const list = response.data.SchoCat?.map((data) =>{
           const start = dayjs(data.startDate).format('MMMM DD, YYYY');
           const end = dayjs(data.endDate).format('MMMM DD, YYYY');
+
           return({
             ...data,
             startDate: start,
@@ -105,6 +134,7 @@ const Scholarships = () => {
           })
         })
         setSchocat(list);
+        setListAcademicRenewal(res.data)
         setShowBackdrop(false);
         
       } catch (error) {
@@ -232,6 +262,7 @@ function Edit(event){
   formData.append('status',status1);
   formData.append('icon',icon);
   formData.append('schoid',schoid);
+  formData.append('academicYear',academicYear || olddata.academicYear)
   formData.append('startDate',start)
   formData.append('endDate',end)
   setOpen1(false)
@@ -301,61 +332,133 @@ const handleEditFileChange = (e) => {
     }
   }
 };
+const handleCreateRenewal = async(e) =>{
+  e.preventDefault();
+  const formData = createFormData(renewFrm)
+  const res =await GenerateRenewalAcademicYear.CREATE(formData)
+  if(res.data){
+    alert('Created Success')
+  }
+}
+const handleChangeTabsAca = (event,data) =>{
+  setSelectedTabs(data)
+}
 
-    const columns = [
-      {
-        field: 'icon',
-        headerName: 'Program Logo',
-        width: 150, 
-        renderCell: (params) => {     
-          return (
-                <Avatar
-                  alt="No Image"
-                  src={params.value}
-                  sx={{ width: 35, height: 35 }}
-                />
-          );},},
-      {
-        field: 'name',
-        headerName: 'Scholarship Name',
-        width: 250,
-        editable: false,
-      },
-      {
-        field: 'description',
-        headerName: 'Description',
-        width: 200,
-        editable: false,
-      },
-      {
-        field: 'status',
-        headerName: 'Status',
-        width: 100,
-        editable: false,
-      },
-      {
-        field: 'startDate',
-        headerName: 'Start Date',
-        width: 150,
-        editable: false,
-      },
-      {
-        field: 'endDate',
-        headerName: 'End Date',
-        width: 150,
-        editable: false,
-      },
-      {
-        field: 'insert',
-        headerName: 'Actions',
-        width: 150,
-        renderCell: (params) => (
-          <button className="btnofficials1" onClick={() => handleOpen1(params.row)}>
-            Edit Details
-          </button>
-        ),
-      },
-    ];
+
+const columns = [
+  {
+    field: 'icon',
+    headerName: 'Program Logo',
+    width: 150, 
+    renderCell: (params) => {     
+      return (
+            <Avatar
+              alt="No Image"
+              src={params.value}
+              sx={{ width: 35, height: 35 }}
+            />
+      );},},
+  {
+    field: 'name',
+    headerName: 'Scholarship Name',
+    width: 250,
+    editable: false,
+  },
+  {
+    field: 'description',
+    headerName: 'Description',
+    width: 200,
+    editable: false,
+  },
+  {
+    field: 'status',
+    headerName: 'Status',
+    width: 100,
+    editable: false,
+  },
+  {
+    field: 'startDate',
+    headerName: 'Start Date',
+    width: 150,
+    editable: false,
+  },
+  {
+    field: 'endDate',
+    headerName: 'End Date',
+    width: 150,
+    editable: false,
+  },
+  {
+    field: 'academicYear',
+    headerName: 'Academic Year',
+    width: 150,
+    editable: false,
+  },
+  {
+    field: 'insert',
+    headerName: 'Actions',
+    width: 150,
+    renderCell: (params) => (
+      <button className="btnofficials1" onClick={() => handleOpen1(params.row)}>
+        Edit Details
+      </button>
+    ),
+  },
+];
+const columns1 =[
+  {
+    field: 'Name',
+    headerName: 'Name',
+    width: 150,
+    renderCell: (params) => (
+      <p>
+        {params.row.profile[0].Name}
+      </p>
+    ),
+  },
+  {
+    field: 'Scho',
+    headerName: 'Scholarship',
+    width: 150,
+    renderCell: (params) => (
+      <p>
+        {params.row.profile[0].ScholarshipApplied}
+      </p>
+    ),
+  },
+  {
+    field: 'acad',
+    headerName: 'Academic Year',
+    width: 150,
+    renderCell: (params) => (
+      <p>
+        {params.row.profile[0].academicYear}
+      </p>
+    ),
+  },
+  {
+    field: 'yearLevel',
+    headerName: 'Year Level',
+    width: 150,
+    renderCell: (params) => (
+      <p>
+        {params.row.profile[0].yearLevel}
+      </p>
+    ),
+  },
+  {
+    field: 'gradeLevel',
+    headerName: 'Grade Level',
+    width: 150,
+    renderCell: (params) => (
+      <p>
+        {params.row.profile[0].gradeLevel}
+      </p>
+    ),
+  },
+]
+  const rowData= listAcademicRenewal[selectedTabs];
+  console.log(rowData)
   return (
     <>
   <StyledBackdrop open={showBackdrop}>
@@ -406,7 +509,7 @@ const handleEditFileChange = (e) => {
                 </div>
               </div>
               <Card sx={{width:'55%',marginLeft:'10px',height:'100%'}} elevation={0}>
-                <div style={{width:'100%'}}>
+                <div style={{width:'100%',display:'flex',flexDirection:'column',gap:'10px'}}>
                   <Box sx={{ display: 'flex'}}>
                   <div style={{width:'110px',display:'flex',justifyContent:'center',alignItems:'center',height:'59px',flexDirection:'column',marginRight:'5px'}}>
                   <InputLabel sx={{color:'black',fontWeight:'bold'}}>Scholarship</InputLabel>
@@ -417,7 +520,7 @@ const handleEditFileChange = (e) => {
                     onChange={(e) => setSchotitle(e.target.value)}/>
                   </div>
                   </Box>
-                  <Box sx={{ display: 'flex'}}>
+                  <Box sx={{ display: 'flex',flexWrap:'nowrap'}}>
                   <div style={{width:'110px',display:'flex',justifyContent:'center',alignItems:'center',height:'59px',flexDirection:'column',marginRight:'5px'}}>
                   <InputLabel sx={{color:'black',fontWeight:'bold'}}>Start-End</InputLabel>
                   <InputLabel sx={{color:'black',fontWeight:'bold'}}>Date</InputLabel>
@@ -456,6 +559,16 @@ const handleEditFileChange = (e) => {
                   </DemoContainer>
                 </LocalizationProvider>
                   </div>
+                  </Box>
+                  <Box sx={{ display: 'flex',flexWrap:'nowrap'}}>
+                    <div style={{width:'110px',display:'flex',justifyContent:'center',alignItems:'center',height:'59px',flexDirection:'column',marginRight:'5px'}}>
+                    <InputLabel sx={{color:'black',fontWeight:'bold'}}>Academic</InputLabel>
+                    <InputLabel sx={{color:'black',fontWeight:'bold'}}>Year</InputLabel>
+                    </div> 
+                    <div style={{width:'100%'}}>
+                    <TextField fullWidth id="input-with-sx" variant="outlined" size="large"
+                      onChange={(e) => setAcademicYear(e.target.value)}/>
+                    </div>
                   </Box>
                   <div style={{display: 'flex',margin:'10px 0px 10px 0px'}}>
                   <div style={{width:'110px',display:'flex',justifyContent:'center',alignItems:'center',marginRight:'5px'}}>
@@ -544,7 +657,7 @@ const handleEditFileChange = (e) => {
                 </div>
             </div>             
             <Card sx={{width:'55%',marginLeft:'10px',height:'100%'}} elevation={0}>
-                <div style={{width:'100%'}}>
+                <div style={{width:'100%',display:'flex',flexDirection:'column',gap:10}}>
                 <Box sx={{ display: 'flex'}}>
                   <div style={{width:'110px',display:'flex',justifyContent:'center',alignItems:'center',height:'59px',flexDirection:'column',marginRight:'5px'}}>
                   <InputLabel sx={{color:'black',fontWeight:'bold'}}>Scholarship</InputLabel>
@@ -595,6 +708,16 @@ const handleEditFileChange = (e) => {
                 </LocalizationProvider>
                   </div>
                 </Box>
+                <Box sx={{ display: 'flex',flexWrap:'nowrap'}}>
+                    <div style={{width:'110px',display:'flex',justifyContent:'center',alignItems:'center',height:'59px',flexDirection:'column',marginRight:'5px'}}>
+                    <InputLabel sx={{color:'black',fontWeight:'bold'}}>Academic</InputLabel>
+                    <InputLabel sx={{color:'black',fontWeight:'bold'}}>Year</InputLabel>
+                    </div> 
+                    <div style={{width:'100%'}}>
+                    <TextField fullWidth id="input-with-sx" value={academicYear || olddata.academicYear} variant="outlined" size="large"
+                      onChange={(e) => setAcademicYear(e.target.value)}/>
+                    </div>
+                  </Box>
                 <div style={{display: 'flex',margin:'10px 0px 10px 0px'}}>
                   <div style={{width:'110px',display:'flex',justifyContent:'center',alignItems:'center',marginRight:'5px'}}>
                   <InputLabel sx={{color:'black',fontWeight:'bold'}}>Status</InputLabel>
@@ -640,12 +763,93 @@ const handleEditFileChange = (e) => {
             </div>
       </Box>
       </Modal>
+      <CustomModal
+      open={openModal}
+      handleClose={() => setOpenModal(false)}
+      title={'Create Payout'}
+      content={
+        <form action="" style={{display:'flex',gap:'14px',flexWrap:'wrap',flexDirection:'column'}}>
+        <div style={{display:'flex',alignItems:'center',gap:'10px',flexDirection:'column'}}>
+        <TextField  onChange={(e) => {setRenewFrm(prev =>({...prev,title:e.target.value}))}}
+        fullWidth sx={{marginTop:'6px',flex:1}} size="small" id="outlined-basic" label="Program Name" variant="outlined"/>
+        <LocalizationProvider dateAdapter={AdapterDayjs}>
+          <DemoContainer sx={{flex:1,width:'100%'}} components={['DateField', 'DateField']}>
+            <DateField
+              slotProps={{
+                textField: {
+                  size: "small",
+                  error: false,
+                },
+
+              }}
+              sx={{width:'100%'}}
+              label="Start Date"
+              onChange={(val) =>{setRenewFrm(prev =>({...prev,dateStart:dayjs(val)}))}}
+              format="MM-DD-YYYY"
+            />
+            <DateField
+              slotProps={{
+                textField: {
+                  size: "small",
+                  error: false,
+                },
+              }}
+              sx={{width:'100%'}}
+              label="End Date"
+              onChange={(val) =>{setRenewFrm(prev =>({...prev,dateEnd:dayjs(val)}))}}
+              format="MM-DD-YYYY"
+            />
+          </DemoContainer>
+        </LocalizationProvider>
+        </div>
+        <div style={{display:'flex',gap:10}}>
+        <FormControl fullWidth>
+          <InputLabel id="demo-simple-select-label">Academic Year</InputLabel>
+          <Select
+            labelId="demo-simple-select-label"
+            id="demo-simple-select"
+            label="Academic Year"
+            size='small'
+            onChange={(e) => {setRenewFrm(prev =>({...prev,academicYear:e.target.value}))}}
+          >
+            {academicOptions()?.map(items => <MenuItem value={items}>{items}</MenuItem>)}
+          </Select>
+        </FormControl>
+        <FormControl fullWidth>
+          <InputLabel id="demo-simple-select-label">Status</InputLabel>
+          <Select
+            labelId="demo-simple-select-label"
+            id="demo-simple-select"
+            label="Status"
+            size='small'
+            onChange={(e) => {setRenewFrm(prev =>({...prev,status:e.target.value}))}}
+          >
+           <MenuItem value={'Ongoing'}>Ongoing</MenuItem>
+           <MenuItem value={'End'}>End</MenuItem>
+           <MenuItem value={'Paused'}>Paused</MenuItem>
+          </Select>
+        </FormControl>
+        </div>
+        <button onClick={handleCreateRenewal}>
+          Submit
+        </button>
+      </form>}
+    />
     <div className="scholarships">
         <Sidebar/>
     <div className="scholarshipsContainer">
         <Navbar/>
-        <div className="top">
-                <div style={{width:'100%',display:'flex',justifyContent:'space-between',alignItems:'center',padding:'10px 10px 0px 10px'}}>
+        <div>
+        <Box sx={{ width: '100%', typography: 'body1' }}>
+      <TabContext value={value}>
+        <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
+          <TabList onChange={handleChange} aria-label="lab API tabs example">
+            <Tab label="Scholarship Application" value="1" />
+            <Tab label="Renewal Application" value="2" />
+          </TabList>
+        </Box>
+        <TabPanel value="1">
+        <div style={{width:'100%',display:'flex',justifyContent:'space-between',alignItems:'center',padding:'10px 10px 0px 10px'}}>
                 <p className="scorecardh">Scholarships Program 
                 </p>
                 <button className='btnofficials1' onClick={handleOpen}>Add</button>
@@ -669,7 +873,125 @@ const handleEditFileChange = (e) => {
                   pageSizeOptions={[25]}  
                   disableRowSelectionOnClick
                 />
-                </div>
+                </div>         
+        </TabPanel>
+        <TabPanel value="2">
+          <div>
+       
+            <div>
+            <h2>Renewal Application</h2>
+            <button onClick={() => {setOpenModal(true)}}>Create Renewal</button>
+            </div>
+            <div>
+            <Tabs
+              variant="scrollable"
+              value={selectedTabs}
+              onChange={handleChangeTabsAca}
+              scrollButtons
+              aria-label="visible arrows tabs example"
+              sx={{
+                [`& .${tabsClasses.scrollButtons}`]: {
+                  '&.Mui-disabled': { opacity: 0.3 },
+                },
+              }}
+            >
+              {listAcademicRenewal.length > 0 && listAcademicRenewal.map((data,idx) =>{
+                return(
+                  <Tab key={idx} label={data.AcademicYear} />
+                )
+              })}
+            </Tabs>                
+            </div>
+            <form action="" style={{display:'flex',gap:'14px',flexWrap:'wrap',flexDirection:'column'}}>
+              <div style={{display:'flex',alignItems:'center',gap:'10px'}}>
+              <TextField sx={{marginTop:'6px',flex:1}} value={rowData?.title} size="small" id="outlined-basic" label="Program Name" variant="outlined"/>
+              <LocalizationProvider dateAdapter={AdapterDayjs}>
+                <DemoContainer sx={{flex:1}} components={['DateField', 'DateField']}>
+                  <DateField
+                    slotProps={{
+                      textField: {
+                        size: "small",
+                        error: false,
+                      },
+
+                    }}
+                    sx={{width:'100%'}}
+                    label="Start Date"
+                    defaultValue={dayjs.utc(rowData?.dateStart)}
+                    format="MM-DD-YYYY"
+                  />
+                  <DateField
+                    slotProps={{
+                      textField: {
+                        size: "small",
+                        error: false,
+                      },
+                    }}
+                    sx={{width:'100%'}}
+                    label="End Date"
+                    defaultValue={dayjs.utc(rowData?.dateEnd)}
+                    format="MM-DD-YYYY"
+                  />
+                </DemoContainer>
+              </LocalizationProvider>
+              </div>
+              <div style={{display:'flex',gap:10}}>
+              <FormControl fullWidth>
+                <InputLabel id="demo-simple-select-label">Academic Year</InputLabel>
+                <Select
+                  labelId="demo-simple-select-label"
+                  id="demo-simple-select"
+                  label="Academic Year"
+                  size='small'
+                  onChange={handleChange}
+                >
+                  {academicOptions()?.map(items => <MenuItem value={items}>{items}</MenuItem>)}
+                </Select>
+              </FormControl>
+              <FormControl fullWidth>
+                <InputLabel id="demo-simple-select-label">Status</InputLabel>
+                <Select
+                  labelId="demo-simple-select-label"
+                  id="demo-simple-select"
+                  label="Status"
+                  size='small'
+                  onChange={handleChange}
+                >
+                 <MenuItem value={'Ongoing'}>Ongoing</MenuItem>
+                 <MenuItem value={'End'}>End</MenuItem>
+                 <MenuItem value={'Paused'}>Paused</MenuItem>
+                </Select>
+              </FormControl>
+              </div>
+            </form>
+            <div>
+            <DataGrid
+                          rows={rowData?.Scholars ?? []}
+                          columns={columns1}
+                          getRowId={(row) => row.scholarCode}
+                          initialState={{
+                            pagination: {
+                              paginationModel: {
+                                pageSize: 5,
+                              },
+                            },
+                          }}
+                          pageSizeOptions={[5]}
+                          getRowHeight={() => 'auto'}
+                          sx={{
+                            [`& .${gridClasses.cell}`]: {
+                              py: 1,
+                            },
+                          }}
+                          checkboxSelection
+                          disableRowSelectionOnClick
+                        />               
+            </div>
+          </div>
+        </TabPanel>
+      </TabContext>
+    </Box>         
+
           </div>
         </div>
     </div>

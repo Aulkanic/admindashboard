@@ -13,14 +13,11 @@ import { ProfileScholars,PayoutScholar,PayoutList,PayoutAttendance, CreatePay, L
 import { DemoContainer } from '@mui/x-date-pickers/internals/demo';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
-import { TimePicker } from '@mui/x-date-pickers/TimePicker';
-import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 import Box from '@mui/material/Box';
 import Tab from '@mui/material/Tab';
 import TabContext from '@mui/lab/TabContext';
 import TabList from '@mui/lab/TabList';
 import TabPanel from '@mui/lab/TabPanel';
-import MuiPagination from '@mui/material/Pagination';
 import dayjs from 'dayjs';
 import { DateField } from '@mui/x-date-pickers/DateField';
 import Tabs, { tabsClasses } from '@mui/material/Tabs';
@@ -108,6 +105,7 @@ export const PayrollAppoint = () => {
         let res1 = await PayoutList.PAYOUT_LIST()
         let res2 = await ListOfAcademicYearPay.LISTOFPYM()
         let res3 = await Payrollreports.PAYROLL()
+    
         console.log(res3)
         setTblPayList(res2.data)
         const data = res.data
@@ -330,8 +328,8 @@ export const PayrollAppoint = () => {
     const handlePayAppoint = async() =>{
       const formData = new FormData();
       const formattedDate = paySched.date?.toISOString().slice(0, 10);
-      const formattedTimeStart = paySched.timeStart ? new Date(paySched.timeStart) : null;
-      const formattedTimeEnd = paySched.timeEnd ? new Date(paySched.timeEnd) : null;
+      const formattedTimeStart = paySched.timeStart ? new Date(paySched.timeStart).toLocaleString() : null;
+      const formattedTimeEnd = paySched.timeEnd ? new Date(paySched.timeEnd).toLocaleString() : null;
       formData.append('location',paySched.location)
       formData.append('reminder',paySched.reminder)
       formData.append('date',formattedDate)
@@ -347,6 +345,7 @@ export const PayrollAppoint = () => {
       formData.forEach((value, key) => {
         formDataObject[key] = value;
       });
+      console.log(formDataObject)
       await CreatePayAppointment.CREATE(formData)
       .then((res) =>{
         alert('Appointed Success')
@@ -470,7 +469,8 @@ export const PayrollAppoint = () => {
        editable: false,
        renderCell: (params) =>(
          <>
-         {params.value ? <button onClick={() => {handleGuardianDetailView(params.row)}}>Guardian</button> : <button>Student</button>}
+         {params.value ? <button style={{backgroundColor:'#2f96db',border:'none',padding:'4px 8px',borderRadius:'4px',color:'white'}}
+          onClick={() => {handleGuardianDetailView(params.row)}}>Guardian</button> : <button style={{backgroundColor:'#2f96db',border:'none',padding:'4px 8px',borderRadius:'4px',color:'white'}}>Student</button>}
          </>
        )
      },
@@ -479,12 +479,18 @@ export const PayrollAppoint = () => {
        headerName: 'Actions',
        width: 200,
        editable: false,
-       renderCell: (params) =>(
-         <div style={{display:'flex',gap:4}}>
-           <button onClick={() =>{setPayeeReceived(params.row)}}>Received</button>
-           <button onClick={() =>{ReappointPayee(params.row)}}>Re-appoint</button>
-         </div>
-       )
+       renderCell: (params) =>{
+        console.log(params.row)
+       return(
+        <div style={{display:'flex',gap:4}}>
+          {Boolean(params.row.isReceived.data[0]) ? (<p style={{margin:0}}>Received At: {new Date(params.row.receivedAt).toLocaleDateString()}</p>): <>
+          <button style={{backgroundColor:'#2f96db',border:'none',padding:'4px 8px',borderRadius:'4px',color:'white'}}
+           onClick={() =>{setPayeeReceived(params.row)}}>Set Received</button>
+          <button style={{backgroundColor:'#2f96db',border:'none',padding:'4px 8px',borderRadius:'4px',color:'white'}}
+           onClick={() =>{ReappointPayee(params.row)}}>Re-appoint</button>
+          </>}
+        </div>
+       )}
      },
    
    ];
@@ -497,33 +503,34 @@ export const PayrollAppoint = () => {
    }
    const setPayeeReceived = async(data) =>{
     console.log(data)
-    setReceivedPay(prev =>({
-      ...prev,
+    const details = {
       payid:data.payId,
       total:Number(data.total),
-      scholarid:data.schoid,
-      batch:data.batch,
+      scholarid:data.scholarCode,
+      batch:selectedPay.Batchlist.batch,
       academicYear:selectedPay.academicYear
-    }))
-    const formData = createFormData(receivePay)
+    }
+    console.log(details)
+    const formData = createFormData(details)
     const res = await SchoReceivedPay.RECEIVE(formData)
     if(res.data){
       Fetch()
     }
    };
    const ReappointPayee = async(data) =>{
+    console.log(data)
       const details ={
-        scholarid:data.schoid,
-        batch:data.batch,
+        scholarid:data.scholarCode,
+        batch:selectedPay.Batchlist.batch,
         academicYear:selectedPay.academicYear  
       }
+      console.log(details)
       const formData = createFormData(details)
       const res = await ReschedPayScho.RESCHED(formData);
       if(res.data){
         Fetch()
       }
    };
-   console.log(tblPaylist)
   return (
     <>
     <CustomModal
@@ -536,7 +543,8 @@ export const PayrollAppoint = () => {
           <TextField onChange={(e) =>{setPayDet({...payDet,tbName:e.target.value})}} value={payDet.tbName} id="outlined-basic" label="Title" variant="outlined" />
           <TextField onChange={(e) =>{setPayDet({...payDet,academicYear:e.target.value})}} value={payDet.academicYear} id="outlined-basic" label="Academic Year" variant="outlined" />
         </div>
-        <button type='submit'>
+        <button style={{backgroundColor:'#2f96db',border:'none',padding:'4px 8px',borderRadius:'4px',color:'white'}}
+        type='submit'>
           Create
         </button>
       </form>}
@@ -555,7 +563,8 @@ export const PayrollAppoint = () => {
           <TextField disabled value={payBatch.totalFunds} id="outlined-basic" label="Total Funds" variant="outlined" />
           <TextField disabled value={payBatch.TotalBeneficiaries} id="outlined-basic" label="Total Benefeciaries" variant="outlined" />
         </div>
-        <button type='submit'>
+        <button style={{backgroundColor:'#2f96db',border:'none',padding:'4px 8px',borderRadius:'4px',color:'white'}}
+        type='submit'>
           Create
         </button>
       </form>
@@ -585,7 +594,7 @@ export const PayrollAppoint = () => {
                 <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
                   <TabList onChange={handleChange} aria-label="lab API tabs example">
                     <Tab label="Create Payout" value="1" />
-                    <Tab label="Manage" value="2" />
+                    <Tab label="APPOINTMENT" value="2" />
                     <Tab label="Payee List" value="3" />
                   </TabList>
                 </Box>
@@ -593,29 +602,31 @@ export const PayrollAppoint = () => {
                 <TabPanel value="1">
                     <div style={{backgroundColor:'white',width:'100%'}}>
                       <div style={{display:'flex',alignItems:'center',justifyContent:'space-between',marginBottom:'15px'}}>
-                        <button onClick={() => {handleModalOpen('frmAca',true)}}>Create Payout Now!</button>
+                        <button style={{backgroundColor:'#2f96db',border:'none',padding:'4px 8px',borderRadius:'4px',color:'white'}}
+                         onClick={() => {handleModalOpen('frmAca',true)}}>Create Payout Now!</button>
                       </div>
                       <div>
                         {tblPaylist?.map((data,idx) =>{
                           return(
-                            <div key={idx} style={{border:'2px solid black',borderRadius:'5px',padding:'8px',width:'45%'}}>
+                            <div key={idx} style={{borderRadius:'5px',padding:'8px',width:'45%',backgroundColor:'#2f96db'}}>
                               <div style={{display:'flex',justifyContent:'space-between'}}>
-                              <h2>{data.tblName + ': ' + data.academicYear}</h2>
-                              <button>{data.status === 1 ? 'Ongoing' : 'Closed'}</button>
+                              <h2 style={{fontWeight:'700',color:'white'}}>{data.tblName + ': ' + data.academicYear}</h2>
                               </div>
 
                               <div style={{display:'flex',flexWrap:'wrap',gap:'4px',marginTop:'6px',alignItems:'center'}}>
                               {data.Batchlist.length > 0 && data.Batchlist?.map((val,idy) =>{
                                 return(
                                   <div onClick={() =>handleManageBatch(data,val)}
-                                  key={idy} style={{width:'250px',border:'2px solid black',borderRadius:'6px',padding:'4px'}}>
+                                  key={idy} style={{width:'250px',borderRadius:'6px',padding:'8px',backgroundColor:'white',cursor:'pointer',color:'#0768a8'}}>
                                     <h4>{val.batch}</h4>
                                     <p style={{margin:0}}>{val.inclusiveMonth}</p>
-                                    <p style={{margin:0}}>Funds:	&#8369;{val.totalFunds}</p>
+                                    <p style={{margin:0}}>Funds: {currencyFormat(val.totalFunds)}</p>
+                                    <p style={{margin:0}}>Remaining: {currencyFormat(val.remainingFunds)}</p>
+                                    <p style={{margin:0}}>Distributed: {currencyFormat(val.distributedFunds)}</p>
                                   </div>
                                 )
                               })}
-                              <div style={{width:'150px',border:'2px solid black',height:'50px',justifyContent:'center',alignItems:'center',display:'flex',padding:'4px',borderRadius:'6px'}}>
+                              <div style={{width:'150px',height:'50px',justifyContent:'center',alignItems:'center',display:'flex',borderRadius:'6px',padding:'8px',backgroundColor:'white',cursor:'pointer',color:'#0768a8'}}>
                                  <p style={{margin:0,cursor:'pointer'}} onClick={() => {handleModalOpen('frmBatch',true,data)}}>+Add Batch </p>
                               </div>
                               </div>
@@ -633,7 +644,8 @@ export const PayrollAppoint = () => {
                         <h2>{selectedPay?.tblName}</h2>
                         <h3>{selectedPay?.academicYear} - {selectedPay?.Batchlist?.batch}</h3>
                         </div>
-                        <button onClick={handlePayAppoint}>
+                        <button style={{backgroundColor:'#2f96db',border:'none',padding:'4px 8px',borderRadius:'4px',color:'white'}}
+                        onClick={handlePayAppoint}>
                           Create Appointment!
                         </button>
                       </div>
@@ -705,7 +717,7 @@ export const PayrollAppoint = () => {
                        <div style={{width:'max-content'}}>
                         <h2>Select scholars</h2>
                        <DataGrid
-                          rows={selectedPay?.Batchlist?.payeeData ?? []}
+                          rows={selectedPay?.Batchlist?.payeeData.filter(data => data.status !== 'Appointed') ?? []}
                           columns={columns}
                           getRowId={(row) => row.schoid}
                           initialState={{
@@ -733,7 +745,7 @@ export const PayrollAppoint = () => {
                 </TabPanel>
                 <TabPanel value='3'>
                     <div>
-                      <div style={{width:'100%',backgroundColor:'lightblue'}}>
+                      <div style={{width:'100%',}}>
                       <Tabs
                         value={dateTabs}
                         onChange={datehandleChange}
@@ -755,7 +767,7 @@ export const PayrollAppoint = () => {
                       </Tabs>   
                       <div>
                       <DataGrid
-                          rows={listOFSchoApp ?? []}
+                          rows={listOFSchoApp.filter(item => item.batch === selectedPay.Batchlist.batch) ?? []}
                           columns={columns1}
                           getRowId={(row) => row.scholarCode}
                           initialState={{

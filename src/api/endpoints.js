@@ -125,7 +125,9 @@ const Endpoints = {
     LIST_APPOINTPAY:'payout/appoint/lists',
     GET_BYDATE:'payout/appoint/getByDate',
     RECEIVED_ALLOWANCE:'payout/received',
-    RESCHED_PAY:'payout/resched'
+    RESCHED_PAY:'payout/resched',
+    CREATE_ACARENEWAL: 'RenewalForm/academicRenewal',
+    RENEWALACADEMIC:'RenewalForm/All'
 }
 
 export default Endpoints
