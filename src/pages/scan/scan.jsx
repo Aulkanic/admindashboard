@@ -1,16 +1,19 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { IoIosArrowBack } from "react-icons/io";
 import TextField from '@mui/material/TextField';
-import { ScanFile } from '../../api/request';
+import { AllScanned, SaveScanData, ScanFile } from '../../api/request';
 import swal from 'sweetalert';
 import Sidebar from '../../components/sidebar/Sidebar';
 import Navbar from '../../components/navbar/Navbar';
 import { GrLinkNext } from "react-icons/gr";
 import Swal from 'sweetalert2';
+import {
+  DataGrid, gridClasses,
+} from '@mui/x-data-grid';
 
 export default function Scan() {
   const [active,setActive] = useState({
-    tabs:1,
+    tabs:0,
     part:0
   })
   const [first,setFirst] = useState([
@@ -29,6 +32,14 @@ export default function Scan() {
     guardianLastName:'',guardianFirstName:'',guardianMiddleName:'',relationship:'',guardianContact:'',guardianAddr:'',
     siblings:[],form:[]
   })
+  const [list,setList] = useState([])
+  async function Fecth(){
+    const res = await AllScanned.GET();
+    setList(res.data)
+  }
+  useEffect(() =>{
+    Fecth()
+  },[list])
   const [qaFile,setQAFile] = useState({
     file:null,
     preview:null
@@ -90,33 +101,33 @@ export default function Scan() {
 
       setScannedData((prev) =>({
         ...prev,
-        schoID: personal[0]['Scholarship Type'],
+        schoID: personal[0]['scholarship Type'],
         firstName: personal[1]['First Name'],
         lastName: personal[3]['Last Name'],
         middleName: personal[2]['Middle Name'],
-        gender: personal[6]['Gender'],
-        age: personal[5]['Age'],
-        birthdate: personal[7]['Birth Date'],
-        placeBirth: personal[8]['Birth Place'],
-        houseNum: personal[9]['House No/ Street'],
-        baranggay: personal[11]['Barangay'],
-        contactNum: personal[10]['Mobile Number'],
-        email: personal[14]['Email'],
-        prevSchool: Educational[0]['Last School Attended'],
-        schoAddress: Educational[1]['School Address'],
+        gender: personal[5]['Gender'],
+        age: personal[4]['Age'],
+        birthdate: personal[6]['Birth Date'],
+        placeBirth: personal[7]['Birth Place'],
+        houseNum: personal[8]['House No/ Street'],
+        baranggay: personal[10]['Barangay'],
+        contactNum: personal[9]['Mobile Number'],
+        email: personal[13]['Email'],
+        prevSchool: Educational[0]['Last school Attended'],
+        schoAddress: Educational[1]['school Address'],
         yearLevel: Educational[2]['Year Level'],
         gradeLevel: Educational[3]['Grade/ Year'],
         course: Educational[4]['Course'],
-        fatherFirstName: Family[0]['Father’s First Name'],
-        fatherLastName: Family[2]['Father’s Last Name'],
-        fatherMiddleName: Family[1]['Father’s Middle Name'],
-        fatherEduc: Family[3]['Father’s Highest Educational Attainment'],
-        fatherOccu: Family[4]['Father’s Occupation'],
-        motherFirstName: Family[5]['Mother’s First Name'],
-        motherLastName: Family[7]['Mother’s Last Name'],
-        motherMiddleName: Family[6]['Mother’s Middle Name'],
-        motherEduc: Family[8]['Mother’s Highest Educational Attainment'],
-        motherOcc: Family[9]['Mother’s Occupation'] ,
+        fatherFirstName: Family[0][`Father's First Name`],
+        fatherLastName: Family[2][`Father's Last Name`],
+        fatherMiddleName: Family[1][`Father's Middle Name`],
+        fatherEduc: Family[3][`Highest Educational Attainment`],
+        fatherOccu: Family[4]['Occupation'],
+        motherFirstName: Family[5][`Mother's First Name`],
+        motherLastName: Family[7][`Mother's Last Name`],
+        motherMiddleName: Family[6][`Mother's Middle Name`],
+        motherEduc: Family[8]['Highest Educational Attainment'],
+        motherOcc: Family[9]['Occupation'] ,
         guardianFirstName: Guardian[0]['Guardian First Name'],
         guardianLastName: Guardian[2]['Guardian Last Name'],
         guardianMiddleName: Guardian[1]['Guardian Middle Name'],
@@ -198,6 +209,96 @@ export default function Scan() {
       };
     })
   }
+  const handleSaveScan = async() =>{
+    const address = `${scannedData.houseNum},${scannedData.baranggay} Marilao, Bulacan`
+    const formData = new FormData();
+    formData.append('schoType',scannedData.schoID);
+    formData.append('fname',scannedData.firstName);
+    formData.append('lname',scannedData.lastName);
+    formData.append('mname',scannedData.middleName);
+    formData.append('age',scannedData.age);
+    formData.append('gender', scannedData.gender);
+    formData.append('birthDate',scannedData.birthdate);
+    formData.append('birthPlace',scannedData.placeBirth);
+    formData.append('address',address);
+    formData.append('baranggay',scannedData.baranggay);
+    formData.append('prevScho',scannedData.prevSchool);
+    formData.append('schoAddr',scannedData.schoAddress);
+    formData.append('yearLevel',scannedData.yearLevel);
+    formData.append('gradeLevel',scannedData.gradeLevel);
+    formData.append('course',scannedData.course);
+    formData.append('gfFname',scannedData.fatherFirstName);
+    formData.append('gfLname',scannedData.fatherLastName)
+    formData.append('gfMname',scannedData.fatherMiddleName);
+    formData.append('gfEduc',scannedData.fatherEduc)
+    formData.append('gfOccu',scannedData.fatherOccu);
+    formData.append('gmFname',scannedData.motherFirstName);
+    formData.append('gmLname',scannedData.motherLastName)
+    formData.append('gmMname',scannedData.motherMiddleName);
+    formData.append('gmEduc',scannedData.motherEduc)
+    formData.append('gmOccu',scannedData.motherOcc);
+    formData.append('gFname',scannedData.guardianFirstName);
+    formData.append('gLname',scannedData.guardianLastName);
+    formData.append('gMname',scannedData.guardianMiddleName);
+    formData.append('gAddr',scannedData.guardianAddr);
+    formData.append('relationship',scannedData.relationship);
+    formData.append('gContactnum',scannedData.guardianContact);
+    formData.append('siblings',JSON.stringify(scannedData.siblings));
+    formData.append('contactNum',scannedData.contactNum)
+    formData.append('form',JSON.stringify(scannedData.form))
+    const res = await SaveScanData.SAVE(formData)
+    if(res.data){
+      alert('Submitted Successfully')
+    }
+  }
+  const columns = [
+    {
+      field: 'lname',
+      headerName: 'LastName',
+      width: 100,
+      editable: false,
+    },
+    {
+      field: 'fname',
+      headerName: 'FirstName',
+      width: 100,
+      editable: false,
+    },
+    {
+      field: 'mname',
+      headerName: 'MiddleName',
+      width: 100,
+      editable: false,
+    },
+    {
+      field: 'yearLevel',
+      headerName: 'Year Level',
+      width: 100,
+      editable: false,
+    },
+    {
+      field: 'baranggay',
+      headerName: 'Baranggay',
+      width: 150,
+      editable: false,
+    },
+    {
+      field: 'schoType',
+      headerName: 'Scholarship Applied',
+      width: 200,
+      editable: false,
+    },
+    {
+      field: 'date',
+      headerName: 'Date Applied',
+      width: 200,
+      editable: false,
+      renderCell:(params) =>(
+        <p>{new Date(params.value).toLocaleDateString()}</p>
+      )
+    },
+ 
+  ];
   return (
     <>
     <div style={{display:'flex',flexWrap:'wrap',width:'100%'}}>
@@ -389,13 +490,45 @@ export default function Scan() {
 
                   </div>}
                 </div>
-                <button style={{backgroundColor:'#2f96db',border:'none',padding:'4px 8px',borderRadius:'4px',color:'white'}}
+                <button onClick={handleSaveScan}
+                style={{backgroundColor:'#2f96db',border:'none',padding:'4px 8px',borderRadius:'4px',color:'white'}}
                 >
                   Submit Details
                 </button>
               </div>
             </div>
            </div>}
+           {active.tabs === 2 && 
+           <div style={{width:'100%',display:'flex',flexDirection:'column',padding:'20px',gap:20}}>
+            <button onClick={() =>{handleChangeActive('tabs',0)}}
+             style={{backgroundColor:'#2f96db',border:'none',padding:'4px 8px',borderRadius:'4px',color:'white',width:'max-content',display:'flex',alignItems:'center'}}>
+            <IoIosArrowBack />
+            <p style={{margin:0}}> Go Back</p>
+            </button>
+            <div style={{width:'100%',justifyContent:'center',alignItems:'top'}}>
+            <DataGrid
+              rows={list ?? []}
+              columns={columns}
+              getRowId={(row) => row.id}
+              initialState={{
+                pagination: {
+                  paginationModel: {
+                    pageSize: 5,
+                  },
+                },
+              }}
+              getRowHeight={() => 'auto'}
+              sx={{
+                [`& .${gridClasses.cell}`]: {
+                  py: 1,
+                },
+              }}
+              pageSizeOptions={[5]}
+              checkboxSelection
+              disableRowSelectionOnClick
+            />                        
+            </div>
+            </div>}
           </div>
 
       </div>

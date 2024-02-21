@@ -393,3 +393,9 @@ export const GenerateRenewalAcademicYear ={
 export const ListOfRenewal = {
     FETCH:() => axiosInstance.get(Endpoints.RENEWALACADEMIC)
 }
+export const SaveScanData ={
+    SAVE:(data) => axiosInstance.post(Endpoints.SAVESCAN,data)
+}
+export const AllScanned ={
+    GET:() => axiosInstance.get(Endpoints.ALLSCAN)
+}

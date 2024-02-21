@@ -3,13 +3,10 @@ import Navbar from '../../components/navbar/Navbar';
 import Sidebar from '../../components/sidebar/Sidebar';
 import './payroll.css'
 import Select from 'react-select';
-import Chip from '@mui/material/Chip';
-import DoneIcon from '@mui/icons-material/Done';
-import { MdClear } from "react-icons/md";
 import {
     DataGrid, gridClasses,
   } from '@mui/x-data-grid';
-import { ProfileScholars,PayoutScholar,PayoutList,PayoutAttendance, CreatePay, ListOfAcademicYearPay, BatchPerAcademicYear, Payrollreports, CreatePayBatch, CreatePayAppointment, ListofAppointmentinBatch, GetbyDate, SchoReceivedPay, ReschedPayScho } from '../../api/request';
+import { ProfileScholars,PayoutList, CreatePay, ListOfAcademicYearPay, Payrollreports, CreatePayBatch, CreatePayAppointment, ListofAppointmentinBatch, GetbyDate, SchoReceivedPay, ReschedPayScho } from '../../api/request';
 import { DemoContainer } from '@mui/x-date-pickers/internals/demo';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
@@ -22,9 +19,7 @@ import dayjs from 'dayjs';
 import { DateField } from '@mui/x-date-pickers/DateField';
 import Tabs, { tabsClasses } from '@mui/material/Tabs';
 import { TimeField } from '@mui/x-date-pickers/TimeField';
-import PaginationItem from '@mui/material/PaginationItem';
 import TextField from '@mui/material/TextField';
-import swal from 'sweetalert';
 import { CustomModal } from '../../components/modal/customModal';
 import { useSelector } from "react-redux";
 import createFormData from '../../utility/formData';
@@ -53,18 +48,8 @@ export const PayrollAppoint = () => {
     const [listOFSchoApp,setListOfSchoApp] = useState([]);
     const [guardian,setGuardian] = useState([])
     const [loading,setLoading] = useState(false);
-    const [submitting,setSubmitting]= useState(false);
     const [dateTabs,setDateTabs] = useState('')
     const [rowSelectionModel, setRowSelectionModel] = React.useState([]);
-    const [schedDet,setSchedDate] = useState({
-        cashier: '',
-        date : '',
-        timeStart : '',
-        timeEnd : '',
-        Location: '',
-        Reminder: '',
-        scholars: []
-    })
     const [scholarList,setScholarList] = useState([])
     const [payoutList,setPayoutList] = useState([])
     const [payDet,setPayDet] = useState({
@@ -91,13 +76,7 @@ export const PayrollAppoint = () => {
       timeEnd:null,
       title:''
     })
-    const [receivePay,setReceivedPay] = useState({
-      scholarid:'',
-      academicYear:'',
-      batch:'',
-      total:'',
-      payid:''
-    })
+
 
     async function Fetch(){
         setLoading(true)
@@ -117,14 +96,6 @@ export const PayrollAppoint = () => {
     useEffect(() =>{
         Fetch()
     },[])
-    const handleOptionChange = (data) => {
-        const { name, value } = data;   
-        setSchedDate((prevCriteria) => ({
-          ...prevCriteria,
-          [name]: value,
-        }));
-      
-      };
     const handleRowSelectionModelChange = (newRowSelectionModel) => {
       const selectedIDs = new Set(newRowSelectionModel);
       const selectedRowData = selectedPay?.Batchlist?.payeeData.filter((row) =>
@@ -133,85 +104,6 @@ export const PayrollAppoint = () => {
       setRowSelectionModel(newRowSelectionModel)
         setPaySched(prev=>({...prev,'selectedScho': selectedRowData})) 
     };
-    const handleSetAppoint = async() =>{
-      if(!schedDet.cashier || !schedDet.date || !schedDet.timeStart || !schedDet.timeEnd ||!schedDet.Location || !schedDet.Reminder){
-        swal({
-          text: 'Please fill up all details',
-          timer: 2000,
-          buttons: false,
-          icon: "warning",
-        })
-        return
-      }
-      if(schedDet.scholars.length === 0){
-        swal({
-          text: 'Select scholars first',
-          timer: 2000,
-          buttons: false,
-          icon: "warning",
-        })
-        return       
-      }
-      try {
-        setSubmitting(true)
-        const selectedRows = schedDet.scholars.map((selectedRow) =>
-        scholarList.find((row) => row.scholarCode === selectedRow)
-        );
-        let counter = 0;
-        for(let i =0;i < selectedRows.length; i++){
-          const details = selectedRows[i];
-          console.log("Details ",details);
-          const formData = new FormData();
-          formData.append('cashier',schedDet.cashier)
-          formData.append('timeStart',schedDet.timeStart.toLocaleTimeString([],{hour: '2-digit',minute: '2-digit'}))
-          formData.append('timeEnd',schedDet.timeEnd.toLocaleTimeString([],{hour: '2-digit',minute: '2-digit'}))
-          formData.append('date',schedDet.date.toLocaleDateString())
-          formData.append('Location',schedDet.Location)
-          formData.append('Reminder',schedDet.Reminder)
-          formData.append('scholarCode',details.scholarCode)
-          formData.append('firstName',details.firstName)
-          formData.append('lastName',details.lastName)
-          formData.append('middleName',details.middleName)
-          formData.append('applicantNum',details.applicantNum)
-          formData.append('email',details.email)
-          await PayoutScholar.PAYOUT_SCHO(formData)
-          .then((res)=>{
-            setScholarList(res.data)
-            counter += 1;
-            if(counter === schedDet.scholars.length){
-              setSchedDate({
-                cashier: '',
-                date : '',
-                timeStart : '',
-                timeEnd : '',
-                Location: '',
-                Reminder: '',
-                scholars: []
-            })
-            setSubmitting(false)
-              swal({
-                text: 'Successfully Appointed',
-                timer: 2000,
-                buttons: false,
-                icon: "success",
-              })
-              return     
-            }
-          })
-        }
-      } catch (error) {
-        console.log(error)
-        return
-      }
-    };
-    const handleAttendanceChange = async(data) =>{
-        const formData = new FormData();
-        formData.append('scholarCode',data.scholarCode);
-        await PayoutAttendance.ATTENDANCE(formData)
-        .then((res) =>{
-          setPayoutList(res.data)
-        })
-    }
 
     const handleChange = async(event, newValue) => {
       if(newValue === '2'){
@@ -256,7 +148,6 @@ export const PayrollAppoint = () => {
       }
     }
     const handleModalOpen = (field,value,data) =>{
-      console.log(data)
       setOpenModal(prev =>({
         ...prev,
         [field]: value

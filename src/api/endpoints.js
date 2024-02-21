@@ -10,6 +10,8 @@ const Endpoints = {
     FETCH_ADMIN:"admin/login",
     LOGIN_USER:"user/login",
     FETCH_APPLICANTSINFO: 'personalinfo/ApplicantFdetails/',
+    SAVESCAN:'personalinfo/SaveData',
+    ALLSCAN: 'personalinfo/AllScan',
     FETCH_SUBMITTED: 'requirements/',
     CHECK_SUBMITTED: 'requirements/Check',
     CHECK_APPLICANTS: 'requirements/CheckApplicants',

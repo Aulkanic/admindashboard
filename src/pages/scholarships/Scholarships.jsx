@@ -74,12 +74,22 @@ const Scholarships = () => {
     const [selectedTabs,setSelectedTabs] = useState('')
     const [value, setValue] = useState('1');
     const [openModal,setOpenModal] = useState(false)
+    const [inputValue, setInputValue] = useState('');
     const [renewFrm,setRenewFrm] = useState({
       academicYear:'',
       title:'',
       dateStart:'',
       dateEnd:'',
-      status:''
+      status:'',
+      requirements:[]
+    })
+    const [oldData,setOldData] = useState({
+      title:'',
+      dateStart:'',
+      dateEnd:'',
+      status:'',
+      scholars:[],
+      requirements:[]
     })
     const [listAcademicRenewal,setListAcademicRenewal] = useState([])
 
@@ -116,31 +126,31 @@ const Scholarships = () => {
     padding:'50px 10px 10px 20px',
     borderRadius:'5px'
   };
-  
-  useEffect(() => {
-    async function fetchData() {
-      try {
-        setShowBackdrop(true);
-        const response = await FetchingSchoProg.FETCH_SCHOPROG()
-        const res = await ListOfRenewal.FETCH()
-        const list = response.data.SchoCat?.map((data) =>{
-          const start = dayjs(data.startDate).format('MMMM DD, YYYY');
-          const end = dayjs(data.endDate).format('MMMM DD, YYYY');
+  async function fetchData() {
+    try {
+      setShowBackdrop(true);
+      const response = await FetchingSchoProg.FETCH_SCHOPROG()
+      const res = await ListOfRenewal.FETCH()
+      const list = response.data.SchoCat?.map((data) =>{
+        const start = dayjs(data.startDate).format('MMMM DD, YYYY');
+        const end = dayjs(data.endDate).format('MMMM DD, YYYY');
 
-          return({
-            ...data,
-            startDate: start,
-            endDate: end
-          })
+        return({
+          ...data,
+          startDate: start,
+          endDate: end
         })
-        setSchocat(list);
-        setListAcademicRenewal(res.data)
-        setShowBackdrop(false);
-        
-      } catch (error) {
-        console.error('Error fetching data:', error);
-      }
-    };
+      })
+      setSchocat(list);
+      setListAcademicRenewal(res.data)
+      setShowBackdrop(false);
+      
+    } catch (error) {
+      console.error('Error fetching data:', error);
+    }
+  };
+  useEffect(() => {
+
   
     fetchData()
   }, []);
@@ -338,11 +348,35 @@ const handleCreateRenewal = async(e) =>{
   const res =await GenerateRenewalAcademicYear.CREATE(formData)
   if(res.data){
     alert('Created Success')
+    fetchData()
   }
 }
+let rowData;
 const handleChangeTabsAca = (event,data) =>{
   setSelectedTabs(data)
+  rowData= listAcademicRenewal[data]
+  const req = JSON.parse(rowData?.requirements);
+  setOldData({
+    ...oldData,
+    title:rowData?.title,
+    dateStart: new Date(rowData?.dateStart).toLocaleDateString(),
+    dateEnd:new Date(rowData?.dateEnd).toLocaleDateString(),
+    status: rowData?.status,
+    scholars: rowData?.Scholars,
+    requirements: req
+  })
 }
+const addReq = () =>{
+  setRenewFrm(prev =>({...prev,requirements:[...prev.requirements,inputValue]}))
+  setInputValue('');
+}
+const removeReq = (value) =>{
+  let requirements = [...renewFrm.requirements];
+  setRenewFrm(prev=> ({...prev ,requirements : requirements.filter((req)=> req !== value)}));
+}
+const handleInputChange = (event) => {
+  setInputValue(event.target.value);
+};
 
 
 const columns = [
@@ -411,7 +445,7 @@ const columns1 =[
     headerName: 'Name',
     width: 150,
     renderCell: (params) => (
-      <p>
+      <p style={{margin:0}}>
         {params.row.profile[0].Name}
       </p>
     ),
@@ -421,7 +455,7 @@ const columns1 =[
     headerName: 'Scholarship',
     width: 150,
     renderCell: (params) => (
-      <p>
+      <p style={{margin:0}}>
         {params.row.profile[0].ScholarshipApplied}
       </p>
     ),
@@ -431,7 +465,7 @@ const columns1 =[
     headerName: 'Academic Year',
     width: 150,
     renderCell: (params) => (
-      <p>
+      <p style={{margin:0}}>
         {params.row.profile[0].academicYear}
       </p>
     ),
@@ -441,7 +475,7 @@ const columns1 =[
     headerName: 'Year Level',
     width: 150,
     renderCell: (params) => (
-      <p>
+      <p style={{margin:0}}>
         {params.row.profile[0].yearLevel}
       </p>
     ),
@@ -451,14 +485,37 @@ const columns1 =[
     headerName: 'Grade Level',
     width: 150,
     renderCell: (params) => (
-      <p>
+      <p style={{margin:0}}>
         {params.row.profile[0].gradeLevel}
       </p>
     ),
   },
+  {
+    field: 'status',
+    headerName: 'Status',
+    width: 150,
+    renderCell: (params) => (
+      <div>
+        <p style={{margin:0}}>{params.row.status}</p>
+      </div>
+    ),
+  },
+  {
+    field: 'action',
+    headerName: 'Action',
+    width: 150,
+    renderCell: (params) => (
+      <div>
+        {params.row.status === 'Respond' ? 
+        <button>
+          View Details
+        </button> : <button>Notify Scholar</button>}
+      </div>
+    ),
+  },
 ]
-  const rowData= listAcademicRenewal[selectedTabs];
-  console.log(rowData)
+
+  console.log(oldData)
   return (
     <>
   <StyledBackdrop open={showBackdrop}>
@@ -830,6 +887,28 @@ const columns1 =[
           </Select>
         </FormControl>
         </div>
+        <div>
+          
+          <TextField 
+            sx={{marginTop:'6px',width:'100%'}} value={inputValue} onChange={handleInputChange} size="small" id="outlined-basic" label="Requirement Name" variant="outlined"/>
+          <button style={{marginTop:'10px'}}
+          type="button" onClick={() =>addReq()}>
+            Add Requirements
+          </button>
+        </div>
+        <p style={{margin:0}}>List of Requriements:</p>
+        <div style={{display:'flex',flexDirection:"column",gap:10}}>
+      
+            {renewFrm.requirements?.map((data,idx) =>{
+              return(
+                <div style={{display:'flex',justifyContent:'space-between',alignItems:'center'}}
+                 key={idx}>
+                  <p style={{margin:0}}>{data}</p>
+                  <button type="button" onClick={() => removeReq(data)}>remove</button>
+                </div>
+              )
+            })}
+          </div>
         <button onClick={handleCreateRenewal}>
           Submit
         </button>
@@ -902,52 +981,21 @@ const columns1 =[
               })}
             </Tabs>                
             </div>
-            <form action="" style={{display:'flex',gap:'14px',flexWrap:'wrap',flexDirection:'column'}}>
+            <form action="" style={{display:'flex',gap:'14px',flexWrap:'wrap',flexDirection:'column',marginTop:"16px",marginBottom:'16px'}}>
               <div style={{display:'flex',alignItems:'center',gap:'10px'}}>
-              <TextField sx={{marginTop:'6px',flex:1}} value={rowData?.title} size="small" id="outlined-basic" label="Program Name" variant="outlined"/>
-              <LocalizationProvider dateAdapter={AdapterDayjs}>
-                <DemoContainer sx={{flex:1}} components={['DateField', 'DateField']}>
-                  <DateField
-                    slotProps={{
-                      textField: {
-                        size: "small",
-                        error: false,
-                      },
-
-                    }}
-                    sx={{width:'100%'}}
-                    label="Start Date"
-                    defaultValue={dayjs.utc(rowData?.dateStart)}
-                    format="MM-DD-YYYY"
-                  />
-                  <DateField
-                    slotProps={{
-                      textField: {
-                        size: "small",
-                        error: false,
-                      },
-                    }}
-                    sx={{width:'100%'}}
-                    label="End Date"
-                    defaultValue={dayjs.utc(rowData?.dateEnd)}
-                    format="MM-DD-YYYY"
-                  />
-                </DemoContainer>
-              </LocalizationProvider>
-              </div>
-              <div style={{display:'flex',gap:10}}>
-              <FormControl fullWidth>
-                <InputLabel id="demo-simple-select-label">Academic Year</InputLabel>
-                <Select
-                  labelId="demo-simple-select-label"
-                  id="demo-simple-select"
-                  label="Academic Year"
-                  size='small'
-                  onChange={handleChange}
-                >
-                  {academicOptions()?.map(items => <MenuItem value={items}>{items}</MenuItem>)}
-                </Select>
-              </FormControl>
+              <TextField InputProps={{
+                  readOnly: true,
+                }}
+               sx={{marginTop:'6px',width:'100%'}} value={oldData?.title} size="small" id="outlined-basic" label="Program Name" variant="outlined"/>
+              <TextField  InputProps={{
+                  readOnly: true,
+                }}
+               sx={{marginTop:'6px',width:'100%'}} value={oldData.dateStart} size="small" id="outlined-basic" label="Date Start" variant="outlined"/>
+              <TextField InputProps={{
+                  readOnly: true,
+                }}
+               sx={{marginTop:'6px',width:'100%'}} value={oldData.dateEnd} size="small" id="outlined-basic" label="Date End" variant="outlined"/>
+              
               <FormControl fullWidth>
                 <InputLabel id="demo-simple-select-label">Status</InputLabel>
                 <Select
@@ -955,6 +1003,7 @@ const columns1 =[
                   id="demo-simple-select"
                   label="Status"
                   size='small'
+                  value={oldData?.status}
                   onChange={handleChange}
                 >
                  <MenuItem value={'Ongoing'}>Ongoing</MenuItem>
@@ -963,29 +1012,37 @@ const columns1 =[
                 </Select>
               </FormControl>
               </div>
+              <h5 style={{margin:0}}>List of Requirements:</h5>
+              <ul>
+                {oldData.requirements?.map((data,idx) =>{
+                  return(
+                    <li style={{margin:0}} key={idx}>{data}</li>
+                  )
+                })}
+              </ul>
             </form>
             <div>
             <DataGrid
-                          rows={rowData?.Scholars ?? []}
-                          columns={columns1}
-                          getRowId={(row) => row.scholarCode}
-                          initialState={{
-                            pagination: {
-                              paginationModel: {
-                                pageSize: 5,
-                              },
-                            },
-                          }}
-                          pageSizeOptions={[5]}
-                          getRowHeight={() => 'auto'}
-                          sx={{
-                            [`& .${gridClasses.cell}`]: {
-                              py: 1,
-                            },
-                          }}
-                          checkboxSelection
-                          disableRowSelectionOnClick
-                        />               
+                rows={oldData.scholars ?? []}
+                columns={columns1}
+                getRowId={(row) => row.scholarCode}
+                initialState={{
+                  pagination: {
+                    paginationModel: {
+                      pageSize: 5,
+                    },
+                  },
+                }}
+                pageSizeOptions={[5]}
+                getRowHeight={() => 'auto'}
+                sx={{
+                  [`& .${gridClasses.cell}`]: {
+                    py: 1,
+                  },
+                }}
+                checkboxSelection
+                disableRowSelectionOnClick
+              />               
             </div>
           </div>
         </TabPanel>

@@ -109,10 +109,22 @@ const Report = () => {
     ScholarshipProgram:'',
     yearLevel:'',
     baranggay:'',
-    appliedDate:null,
-    approvedDate:null,
-    renewedDate:null,
+    dateFor:'Applied',
+    start:null,
+    end:null
   });
+  const [cleared, setCleared] = useState(false);
+
+  useEffect(() => {
+    if (cleared) {
+      const timeout = setTimeout(() => {
+        setCleared(false);
+      }, 1500);
+
+      return () => clearTimeout(timeout);
+    }
+    return () => {};
+  }, [cleared]);
 
 
 
@@ -156,19 +168,35 @@ useEffect(() =>{
   };
   const handleOptionChange = (data) => {
     const { name, value } = data; 
-  
-    setFilterCriteria((prevCriteria) => ({
-      ...prevCriteria,
-      [name]: value,
-    }));
+    if(name === 'Status'){
+      const dateFor = value === 'Applicant' ? 'Applied' : 'Approve';
+      setFilterCriteria((prevCriteria) => ({
+        ...prevCriteria,
+        [name]: value,
+        dateFor: dateFor
+      }));
+    }else{
+      setFilterCriteria((prevCriteria) => ({
+        ...prevCriteria,
+        [name]: value,
+      }));
+    }
+
   
   };
   const filtered = () => {
     const filtered = allData.filter((data) => {
-      const itemDate = dayjs(data.date);
-      const itemDate1 = dayjs(data.approveDate);
-      const itemDate2 = dayjs(data.renewedDate);
-
+      const itemDate = new Date(data.date);
+      const itemDate1 = new Date(data.approveDate);
+      let Daterange;
+      if(filterCriteria.start && filterCriteria.end){
+        if(filterCriteria.dateFor === 'Applied'){
+          Daterange = itemDate >= new Date(filterCriteria.start) && itemDate <= new Date(filterCriteria.end);
+        }
+        if(filterCriteria.dateFor === 'Approved'){
+          Daterange = itemDate1 >= new Date(filterCriteria.start) && itemDate1 <= new Date(filterCriteria.end);
+        }
+      }
       return (
         (filterCriteria.Status === '' || data.UserProfileStatus === filterCriteria.Status) &&
         (filterCriteria.Gender === '' || data.gender === filterCriteria.Gender) &&
@@ -178,13 +206,10 @@ useEffect(() =>{
         (filterCriteria.Batch === '' || data.Batch === filterCriteria.Batch) &&
         (filterCriteria.Remarks === '' || data.Remarks === filterCriteria.Remarks) && 
         (school === '' || data.school.toLocaleLowerCase().includes(school.toLocaleLowerCase())) && 
-        (filterCriteria.appliedDate ? itemDate.isSame(filterCriteria.appliedDate, 'day') : true) && 
-        (filterCriteria.approvedDate ? itemDate1.isSame(filterCriteria.approvedDate, 'day') : true) && 
-        (filterCriteria.renewedDate ? itemDate2.isSame(filterCriteria.renewedDate, 'day') : true)
+        ((!filterCriteria.start && !filterCriteria.end) || Daterange)
       );
     });
     setFilteredData(filtered);
-
   };
 
   const clearFilter = () =>{
@@ -196,22 +221,20 @@ useEffect(() =>{
       ScholarshipProgram:'',
       yearLevel:'',
       baranggay:'',
-      appliedDate:null,
-      approvedDate:null,
-      renewedDate:null
+      
     });
   }
 
   const handleDateChange = (data) =>{
     setFilterCriteria((prev) =>({
       ...prev,
-      appliedDate: data
+      start: data
     }))
   }
   const handleDateChange1 = (data) =>{
     setFilterCriteria((prev) =>({
       ...prev,
-      approvedDate: data
+      end:data
     }))
   }
   const handleDateChange2 = (data) =>{
@@ -362,46 +385,29 @@ useEffect(() =>{
                                   size: "small",
                                   error: false,
                                 },
+                                field: { clearable: true, onClear: () => setCleared(true) },
                             }}  
                             sx={{backgroundColor:'white'}}                      
-                            label="Applied Date"
-                            value={filterCriteria.appliedDate}
+                            label="From:"
+                            value={filterCriteria.start ?? ''}
                             onChange={(newValue) => handleDateChange(newValue)}
                           />
-                        </DemoContainer>
-                      </LocalizationProvider>
-                      <LocalizationProvider dateAdapter={AdapterDayjs}>
-                        <DemoContainer components={['DatePicker']}>
                           <DatePicker
-                                slotProps={{
-                                  textField: {
-                                  size: "small",
-                                  error: false,
-                                },
+                            slotProps={{
+                              textField: {
+                              size: "small",
+                              error: false,
+                            },
+                            field: { clearable: true, onClear: () => setCleared(true) },
                             }}  
                             sx={{backgroundColor:'white'}}                      
-                            label="Approved Date"
-                            value={filterCriteria.approvedDate}
+                            label="To:"
+                            value={filterCriteria.end ?? ''}
                             onChange={(newValue) => handleDateChange1(newValue)}
                           />
                         </DemoContainer>
                       </LocalizationProvider>
-                      <LocalizationProvider dateAdapter={AdapterDayjs}>
-                        <DemoContainer components={['DatePicker']}>
-                          <DatePicker
-                                slotProps={{
-                                  textField: {
-                                  size: "small",
-                                  error: false,
-                                },
-                            }}  
-                            sx={{backgroundColor:'white'}}                      
-                            label="Renewed Date"
-                            value={filterCriteria.renewedDate}
-                            onChange={(newValue) => handleDateChange2(newValue)}
-                          />
-                        </DemoContainer>
-                      </LocalizationProvider>
+
                       <div style={{marginTop:'8px'}}>
                         <input 
                         style={{hieght:'50px',padding:'5px',borderRadius:'5px',borderColor:'gray',width:'max-content'}}
