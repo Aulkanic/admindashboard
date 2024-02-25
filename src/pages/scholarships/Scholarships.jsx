@@ -150,8 +150,6 @@ const Scholarships = () => {
     }
   };
   useEffect(() => {
-
-  
     fetchData()
   }, []);
 
@@ -507,15 +505,18 @@ const columns1 =[
     renderCell: (params) => (
       <div>
         {params.row.status === 'Respond' ? 
-        <button>
+        <button style={{backgroundColor:'#2f96db',border:'none',padding:'4px 8px',borderRadius:'4px',color:'white',width:'max-content',display:'flex',alignItems:'center'}}
+        
+        >
           View Details
-        </button> : <button>Notify Scholar</button>}
+        </button> : <button style={{backgroundColor:'#2f96db',border:'none',padding:'4px 8px',borderRadius:'4px',color:'white',width:'max-content',display:'flex',alignItems:'center'}}
+        
+        >Notify Scholar</button>}
       </div>
     ),
   },
 ]
 
-  console.log(oldData)
   return (
     <>
   <StyledBackdrop open={showBackdrop}>
@@ -821,99 +822,104 @@ const columns1 =[
       </Box>
       </Modal>
       <CustomModal
-      open={openModal}
-      handleClose={() => setOpenModal(false)}
-      title={'Create Payout'}
-      content={
-        <form action="" style={{display:'flex',gap:'14px',flexWrap:'wrap',flexDirection:'column'}}>
-        <div style={{display:'flex',alignItems:'center',gap:'10px',flexDirection:'column'}}>
-        <TextField  onChange={(e) => {setRenewFrm(prev =>({...prev,title:e.target.value}))}}
-        fullWidth sx={{marginTop:'6px',flex:1}} size="small" id="outlined-basic" label="Program Name" variant="outlined"/>
-        <LocalizationProvider dateAdapter={AdapterDayjs}>
-          <DemoContainer sx={{flex:1,width:'100%'}} components={['DateField', 'DateField']}>
-            <DateField
-              slotProps={{
-                textField: {
-                  size: "small",
-                  error: false,
-                },
+        open={openModal}
+        handleClose={() => setOpenModal(false)}
+        title={'Create Payout'}
+        content={
+          <form action="" style={{display:'flex',gap:'14px',flexWrap:'wrap',flexDirection:'column'}}>
+          <div style={{display:'flex',alignItems:'center',gap:'10px',flexDirection:'column'}}>
+          <TextField  onChange={(e) => {setRenewFrm(prev =>({...prev,title:e.target.value}))}}
+          fullWidth sx={{marginTop:'6px',flex:1}} size="small" id="outlined-basic" label="Program Name" variant="outlined"/>
+          <LocalizationProvider dateAdapter={AdapterDayjs}>
+            <DemoContainer sx={{flex:1,width:'100%'}} components={['DateField', 'DateField']}>
+              <DateField
+                slotProps={{
+                  textField: {
+                    size: "small",
+                    error: false,
+                  },
 
-              }}
-              sx={{width:'100%'}}
-              label="Start Date"
-              onChange={(val) =>{setRenewFrm(prev =>({...prev,dateStart:dayjs(val)}))}}
-              format="MM-DD-YYYY"
-            />
-            <DateField
-              slotProps={{
-                textField: {
-                  size: "small",
-                  error: false,
-                },
-              }}
-              sx={{width:'100%'}}
-              label="End Date"
-              onChange={(val) =>{setRenewFrm(prev =>({...prev,dateEnd:dayjs(val)}))}}
-              format="MM-DD-YYYY"
-            />
-          </DemoContainer>
-        </LocalizationProvider>
-        </div>
-        <div style={{display:'flex',gap:10}}>
-        <FormControl fullWidth>
-          <InputLabel id="demo-simple-select-label">Academic Year</InputLabel>
-          <Select
-            labelId="demo-simple-select-label"
-            id="demo-simple-select"
-            label="Academic Year"
-            size='small'
-            onChange={(e) => {setRenewFrm(prev =>({...prev,academicYear:e.target.value}))}}
-          >
-            {academicOptions()?.map(items => <MenuItem value={items}>{items}</MenuItem>)}
-          </Select>
-        </FormControl>
-        <FormControl fullWidth>
-          <InputLabel id="demo-simple-select-label">Status</InputLabel>
-          <Select
-            labelId="demo-simple-select-label"
-            id="demo-simple-select"
-            label="Status"
-            size='small'
-            onChange={(e) => {setRenewFrm(prev =>({...prev,status:e.target.value}))}}
-          >
-           <MenuItem value={'Ongoing'}>Ongoing</MenuItem>
-           <MenuItem value={'End'}>End</MenuItem>
-           <MenuItem value={'Paused'}>Paused</MenuItem>
-          </Select>
-        </FormControl>
-        </div>
-        <div>
-          
-          <TextField 
-            sx={{marginTop:'6px',width:'100%'}} value={inputValue} onChange={handleInputChange} size="small" id="outlined-basic" label="Requirement Name" variant="outlined"/>
-          <button style={{marginTop:'10px'}}
-          type="button" onClick={() =>addReq()}>
-            Add Requirements
-          </button>
-        </div>
-        <p style={{margin:0}}>List of Requriements:</p>
-        <div style={{display:'flex',flexDirection:"column",gap:10}}>
-      
-            {renewFrm.requirements?.map((data,idx) =>{
-              return(
-                <div style={{display:'flex',justifyContent:'space-between',alignItems:'center'}}
-                 key={idx}>
-                  <p style={{margin:0}}>{data}</p>
-                  <button type="button" onClick={() => removeReq(data)}>remove</button>
-                </div>
-              )
-            })}
+                }}
+                sx={{width:'100%'}}
+                label="Start Date"
+                onChange={(val) =>{setRenewFrm(prev =>({...prev,dateStart:dayjs(val)}))}}
+                format="MM-DD-YYYY"
+              />
+              <DateField
+                slotProps={{
+                  textField: {
+                    size: "small",
+                    error: false,
+                  },
+                }}
+                sx={{width:'100%'}}
+                label="End Date"
+                onChange={(val) =>{setRenewFrm(prev =>({...prev,dateEnd:dayjs(val)}))}}
+                format="MM-DD-YYYY"
+              />
+            </DemoContainer>
+          </LocalizationProvider>
           </div>
-        <button onClick={handleCreateRenewal}>
-          Submit
-        </button>
-      </form>}
-    />
+          <div style={{display:'flex',gap:10}}>
+          <FormControl fullWidth>
+            <InputLabel id="demo-simple-select-label">Academic Year</InputLabel>
+            <Select
+              labelId="demo-simple-select-label"
+              id="demo-simple-select"
+              label="Academic Year"
+              size='small'
+              onChange={(e) => {setRenewFrm(prev =>({...prev,academicYear:e.target.value}))}}
+            >
+              {academicOptions()?.map(items => <MenuItem value={items}>{items}</MenuItem>)}
+            </Select>
+          </FormControl>
+          <FormControl fullWidth>
+            <InputLabel id="demo-simple-select-label">Status</InputLabel>
+            <Select
+              labelId="demo-simple-select-label"
+              id="demo-simple-select"
+              label="Status"
+              size='small'
+              onChange={(e) => {setRenewFrm(prev =>({...prev,status:e.target.value}))}}
+            >
+            <MenuItem value={'Ongoing'}>Ongoing</MenuItem>
+            <MenuItem value={'End'}>End</MenuItem>
+            <MenuItem value={'Paused'}>Paused</MenuItem>
+            </Select>
+          </FormControl>
+          </div>
+          <div>
+            
+            <TextField 
+              sx={{marginTop:'6px',width:'100%'}} value={inputValue} onChange={handleInputChange} size="small" id="outlined-basic" label="Requirement Name" variant="outlined"/>
+            <button style={{backgroundColor:'#2f96db',border:'none',padding:'4px 8px',borderRadius:'4px',color:'white',width:'max-content',display:'flex',alignItems:'center',margin:4}}
+            type="button" onClick={() =>addReq()}>
+              Add Requirements
+            </button>
+          </div>
+          <p style={{margin:0}}>List of Requriements:</p>
+          <div style={{display:'flex',flexDirection:"column",gap:10}}>
+        
+              {renewFrm.requirements?.map((data,idx) =>{
+                return(
+                  <div style={{display:'flex',justifyContent:'space-between',alignItems:'center'}}
+                  key={idx}>
+                    <p style={{margin:0}}>{data}</p>
+                    <button style={{backgroundColor:'#2f96db',border:'none',padding:'4px 8px',borderRadius:'4px',color:'white',width:'max-content',display:'flex',alignItems:'center'}}
+                    type="button" onClick={() => removeReq(data)}>remove</button>
+                  </div>
+                )
+              })}
+            </div>
+          <button style={{backgroundColor:'#2f96db',border:'none',padding:'4px 8px',borderRadius:'4px',color:'white',width:'100%',textAlign:'center'}}
+          onClick={handleCreateRenewal}>
+            Submit
+          </button>
+        </form>}
+      />
+      <CustomModal
+
+      />
     <div className="scholarships">
         <Sidebar/>
     <div className="scholarshipsContainer">
@@ -959,7 +965,8 @@ const columns1 =[
        
             <div>
             <h2>Renewal Application</h2>
-            <button onClick={() => {setOpenModal(true)}}>Create Renewal</button>
+            <button style={{backgroundColor:'#2f96db',border:'none',padding:'4px 8px',borderRadius:'4px',color:'white',width:'max-content',display:'flex',alignItems:'center'}}
+             onClick={() => {setOpenModal(true)}}>Create Renewal</button>
             </div>
             <div>
             <Tabs

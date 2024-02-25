@@ -409,13 +409,11 @@ export const PayrollAppoint = () => {
     }
    };
    const ReappointPayee = async(data) =>{
-    console.log(data)
       const details ={
         scholarid:data.scholarCode,
         batch:selectedPay.Batchlist.batch,
         academicYear:selectedPay.academicYear  
       }
-      console.log(details)
       const formData = createFormData(details)
       const res = await ReschedPayScho.RESCHED(formData);
       if(res.data){
@@ -434,9 +432,9 @@ export const PayrollAppoint = () => {
           <TextField onChange={(e) =>{setPayDet({...payDet,tbName:e.target.value})}} value={payDet.tbName} id="outlined-basic" label="Title" variant="outlined" />
           <TextField onChange={(e) =>{setPayDet({...payDet,academicYear:e.target.value})}} value={payDet.academicYear} id="outlined-basic" label="Academic Year" variant="outlined" />
         </div>
-        <button style={{backgroundColor:'#2f96db',border:'none',padding:'4px 8px',borderRadius:'4px',color:'white'}}
+        <button disabled={loading} style={{backgroundColor:'#2f96db',border:'none',padding:'4px 8px',borderRadius:'4px',color:'white'}}
         type='submit'>
-          Create
+          {loading ? 'Submitting...' : 'Create'}
         </button>
       </form>}
     />
@@ -454,9 +452,9 @@ export const PayrollAppoint = () => {
           <TextField disabled value={payBatch.totalFunds} id="outlined-basic" label="Total Funds" variant="outlined" />
           <TextField disabled value={payBatch.TotalBeneficiaries} id="outlined-basic" label="Total Benefeciaries" variant="outlined" />
         </div>
-        <button style={{backgroundColor:'#2f96db',border:'none',padding:'4px 8px',borderRadius:'4px',color:'white'}}
+        <button disabled={loading} style={{backgroundColor:'#2f96db',border:'none',padding:'4px 8px',borderRadius:'4px',color:'white'}}
         type='submit'>
-          Create
+          {loading ? 'Creating...' : 'Create'}
         </button>
       </form>
     }
