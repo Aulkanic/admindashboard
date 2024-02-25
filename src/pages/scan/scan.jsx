@@ -33,6 +33,8 @@ export default function Scan() {
     siblings:[],form:[]
   })
   const [list,setList] = useState([])
+  const [loading,setLoading] = useState(false)
+  const [loading1,setLoading1] = useState(false)
   async function Fecth(){
     const res = await AllScanned.GET();
     setList(res.data)
@@ -84,6 +86,7 @@ export default function Scan() {
     formData.append('Guardian',first[3].Guardian.value)
     formData.append('Siblings',first[4].Siblings.value)
     formData.append('Q&A',qaFile.file)
+    setLoading(true)
     await ScanFile.SCANFILE(formData)
     .then((res) =>{
       const apiData = res.data;
@@ -101,42 +104,43 @@ export default function Scan() {
 
       setScannedData((prev) =>({
         ...prev,
-        schoID: personal[0]['scholarship Type'],
-        firstName: personal[1]['First Name'],
-        lastName: personal[3]['Last Name'],
-        middleName: personal[2]['Middle Name'],
+        schoID: personal[0]['scholarship Type'] || '',
+        firstName: personal[1]['First Name'] || '',
+        lastName: personal[3]['Last Name'] || '',
+        middleName: personal[2]['Middle Name'] || '',
         gender: personal[5]['Gender'],
-        age: personal[4]['Age'],
-        birthdate: personal[6]['Birth Date'],
-        placeBirth: personal[7]['Birth Place'],
-        houseNum: personal[8]['House No/ Street'],
-        baranggay: personal[10]['Barangay'],
-        contactNum: personal[9]['Mobile Number'],
-        email: personal[13]['Email'],
-        prevSchool: Educational[0]['Last school Attended'],
-        schoAddress: Educational[1]['school Address'],
-        yearLevel: Educational[2]['Year Level'],
-        gradeLevel: Educational[3]['Grade/ Year'],
-        course: Educational[4]['Course'],
-        fatherFirstName: Family[0][`Father's First Name`],
-        fatherLastName: Family[2][`Father's Last Name`],
-        fatherMiddleName: Family[1][`Father's Middle Name`],
-        fatherEduc: Family[3][`Highest Educational Attainment`],
-        fatherOccu: Family[4]['Occupation'],
-        motherFirstName: Family[5][`Mother's First Name`],
-        motherLastName: Family[7][`Mother's Last Name`],
-        motherMiddleName: Family[6][`Mother's Middle Name`],
-        motherEduc: Family[8]['Highest Educational Attainment'],
-        motherOcc: Family[9]['Occupation'] ,
-        guardianFirstName: Guardian[0]['Guardian First Name'],
-        guardianLastName: Guardian[2]['Guardian Last Name'],
-        guardianMiddleName: Guardian[1]['Guardian Middle Name'],
-        relationship: Guardian[4]['Relationship with Guardian'],
-        guardianContact: Guardian[5]['Mobile Number'],
-        guardianAddr: Guardian[3]['Guardian Address'],
-        siblings: Siblings,
-        form: qA
+        age: personal[4]['Age'] || '',
+        birthdate: personal[6]['Birth Date'] || '',
+        placeBirth: personal[7]['Birth Place'] || '',
+        houseNum: personal[8]['House No/ Street'] || '',
+        baranggay: personal[10]['Barangay'] || '',
+        contactNum: personal[9]['Mobile Number'] || '',
+        email: personal[13]['Email'] || '',
+        prevSchool: Educational[0]['Last school Attended'] || '',
+        schoAddress: Educational[1]['school Address'] || '',
+        yearLevel: Educational[2]['Year Level'] || '',
+        gradeLevel: Educational[3]['Grade/ Year'] || '',
+        course: Educational[4]['Course'] || '',
+        fatherFirstName: Family[0][`Father's First Name`] || '',
+        fatherLastName: Family[2][`Father's Last Name`] || '',
+        fatherMiddleName: Family[1][`Father's Middle Name`] || '',
+        fatherEduc: Family[3][`Highest Educational Attainment`] || '',
+        fatherOccu: Family[4]['Occupation'] || '',
+        motherFirstName: Family[5][`Mother's First Name`] || '',
+        motherLastName: Family[7][`Mother's Last Name`] || '',
+        motherMiddleName: Family[6][`Mother's Middle Name`] || '',
+        motherEduc: Family[8]['Highest Educational Attainment'] || '',
+        motherOcc: Family[9]['Occupation'] || '' ,
+        guardianFirstName: Guardian[0]['Guardian First Name'] || '',
+        guardianLastName: Guardian[2]['Guardian Last Name'] || '',
+        guardianMiddleName: Guardian[1]['Guardian Middle Name'] || '',
+        relationship: Guardian[4]['Relationship with Guardian'] || '',
+        guardianContact: Guardian[5]['Mobile Number'] || '',
+        guardianAddr: Guardian[3]['Guardian Address'] || '',
+        siblings: Siblings || [],
+        form: qA || []
       }))
+      setLoading(false)
     })
   }
   const handleChangeActive = (name,value) =>{
@@ -212,6 +216,7 @@ export default function Scan() {
   const handleSaveScan = async() =>{
     const address = `${scannedData.houseNum},${scannedData.baranggay} Marilao, Bulacan`
     const formData = new FormData();
+    setLoading1(true)
     formData.append('schoType',scannedData.schoID);
     formData.append('fname',scannedData.firstName);
     formData.append('lname',scannedData.lastName);
@@ -248,6 +253,7 @@ export default function Scan() {
     formData.append('form',JSON.stringify(scannedData.form))
     const res = await SaveScanData.SAVE(formData)
     if(res.data){
+      setLoading1(false)
       alert('Submitted Successfully')
     }
   }
@@ -370,7 +376,7 @@ export default function Scan() {
                 <div style={{display:'flex',justifyContent:'center',margin:'10px 0px 10px 0px'}}>
                 <button onClick={startScanning}
                 style={{backgroundColor:'#2f96db',border:'none',padding:'4px 8px',borderRadius:'4px',color:'white'}}
-                >Start Scanning!</button>
+                >{loading ? 'Scanning...' : 'Start Scanning!'}</button>
                 </div>
               </div>
               <div style={{flex:1,display:'flex',flexDirection:'column'}}>
@@ -493,7 +499,7 @@ export default function Scan() {
                 <button onClick={handleSaveScan}
                 style={{backgroundColor:'#2f96db',border:'none',padding:'4px 8px',borderRadius:'4px',color:'white'}}
                 >
-                  Submit Details
+                  {loading1 ? 'Saving details...' : 'Submit Details'}
                 </button>
               </div>
             </div>
