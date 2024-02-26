@@ -431,7 +431,7 @@ export const PayrollAppoint = () => {
     { id: 'cashier', label: 'Cashier' },
     { id: 'benefit', label: 'Benefits' }
   ];
-  const data = listOFSchoApp.filter(item => item.batch === selectedPay.Batchlist.batch).map((item) =>({
+  const data = listOFSchoApp?.map((item) =>({
     lastName:item.lname,
     firstName:item.fname,
     middleName:item.mname,
