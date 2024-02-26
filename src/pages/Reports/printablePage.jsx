@@ -15,6 +15,7 @@ import { TbWorldWww } from 'react-icons/tb';
 import { FiMail } from 'react-icons/fi';
 import { BsFacebook } from 'react-icons/bs';
 import convertToWords from './word';
+import numberToWords from 'number-to-words';
 
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
     [`&.${tableCellClasses.head}`]: {
@@ -51,7 +52,7 @@ const PrintablePage = (val) => {
     const title = val.head ? val.head : '';
     const fundsTotal = val.funds ? val.funds : '';
     const totalnum = val.total ? val.total : 0
-    const wordTotal = convertToWords(totalnum)
+    const wordTotal = numberToWords.toWords(totalnum)
     const pageNum = val.page;
     const totalRow = val.row ? val.row : [];
     const YearLevel = val.level?.toUpperCase();

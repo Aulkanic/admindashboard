@@ -399,3 +399,9 @@ export const SaveScanData ={
 export const AllScanned ={
     GET:() => axiosInstance.get(Endpoints.ALLSCAN)
 }
+export const ScholarDetailsForRenewal ={
+    GET:(data) => axiosInstance.get(Endpoints.SCHO_DETAILSRENEW+data)
+}
+export const UpateRenewScholarAcadmic ={
+    UPDATE:(data) => axiosInstance.post(Endpoints.UPDATE_RENEWSCHO,data)
+}

@@ -3,7 +3,7 @@ import Sidebar from "../../components/sidebar/Sidebar"
 import "./scholarships.scss"
 import { Box, Modal,Button,TextField, Typography, InputLabel} from "@mui/material"; 
 import './scholarship.css'
-import { FetchingSchoProg, CreateSchoProg, UpdateSchoProg, GenerateRenewalAcademicYear, ListOfRenewal } from "../../api/request";
+import { FetchingSchoProg, CreateSchoProg, UpdateSchoProg, GenerateRenewalAcademicYear, ListOfRenewal, ScholarDetailsForRenewal, UpateRenewScholarAcadmic } from "../../api/request";
 import { useEffect } from "react";
 import { useState } from "react";
 import Radio from '@mui/material/Radio';
@@ -14,6 +14,7 @@ import { DemoContainer } from '@mui/x-date-pickers/internals/demo';
 import Tabs, { tabsClasses } from '@mui/material/Tabs';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
+import { FcRight } from "react-icons/fc";
 import { DateField } from '@mui/x-date-pickers/DateField';
 import swal from "sweetalert";
 import {
@@ -54,6 +55,7 @@ const CustomDataGrid = styled(DataGrid)({
 const Scholarships = () => {
     const [schocat, setSchocat] = useState([]);
     const [showBackdrop, setShowBackdrop] = useState(false);
+    const [page,setPage] = useState(0)
     const [open, setOpen] = useState(false);
     const [open1, setOpen1] = useState(false);
     const [icon, setSchoimg] = useState(null);
@@ -75,6 +77,7 @@ const Scholarships = () => {
     const [value, setValue] = useState('1');
     const [openModal,setOpenModal] = useState(false)
     const [inputValue, setInputValue] = useState('');
+    const [renewalDetails,setRenewalDetails] = useState([])
     const [renewFrm,setRenewFrm] = useState({
       academicYear:'',
       title:'',
@@ -441,7 +444,7 @@ const columns1 =[
   {
     field: 'Name',
     headerName: 'Name',
-    width: 150,
+    width: 200,
     renderCell: (params) => (
       <p style={{margin:0}}>
         {params.row.profile[0].Name}
@@ -451,7 +454,7 @@ const columns1 =[
   {
     field: 'Scho',
     headerName: 'Scholarship',
-    width: 150,
+    width: 200,
     renderCell: (params) => (
       <p style={{margin:0}}>
         {params.row.profile[0].ScholarshipApplied}
@@ -506,7 +509,7 @@ const columns1 =[
       <div>
         {params.row.status === 'Respond' ? 
         <button style={{backgroundColor:'#2f96db',border:'none',padding:'4px 8px',borderRadius:'4px',color:'white',width:'max-content',display:'flex',alignItems:'center'}}
-        
+        onClick={() =>handleViewDetails(params.row)}
         >
           View Details
         </button> : <button style={{backgroundColor:'#2f96db',border:'none',padding:'4px 8px',borderRadius:'4px',color:'white',width:'max-content',display:'flex',alignItems:'center'}}
@@ -516,6 +519,29 @@ const columns1 =[
     ),
   },
 ]
+  const handleViewDetails = async(data) =>{
+    console.log(data)
+    const scholarCode = data.scholarCode;
+    const res = await ScholarDetailsForRenewal.GET(scholarCode)
+    if(res.data){
+      setPage(1)
+      console.log(res.data)
+      setRenewalDetails(res.data)
+    }
+    
+  }
+  const handleBack = () =>{
+    setPage(0)
+    setValue('1')
+  }
+  const handleRenewed = async() =>{
+    const formData = new FormData();
+    formData.append('scholarCode',renewalDetails?.OldData.scholarCode);
+    const res =await UpateRenewScholarAcadmic.UPDATE(formData)
+    if(res.data){
+      alert('Renewed Success')
+    }
+  }
 
   return (
     <>
@@ -926,135 +952,279 @@ const columns1 =[
         <Navbar/>
         <div>
         <Box sx={{ width: '100%', typography: 'body1' }}>
-      <TabContext value={value}>
-        <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
-          <TabList onChange={handleChange} aria-label="lab API tabs example">
-            <Tab label="Scholarship Application" value="1" />
-            <Tab label="Renewal Application" value="2" />
-          </TabList>
-        </Box>
-        <TabPanel value="1">
-        <div style={{width:'100%',display:'flex',justifyContent:'space-between',alignItems:'center',padding:'10px 10px 0px 10px'}}>
-                <p className="scorecardh">Scholarships Program 
-                </p>
-                <button className='btnofficials1' onClick={handleOpen}>Add</button>
+          <TabContext value={value}>
+            <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
+              <TabList onChange={handleChange} aria-label="lab API tabs example">
+                <Tab label="Scholarship Application" value="1" />
+                <Tab label="Renewal Application" value="2" />
+              </TabList>
+            </Box>
+            <TabPanel value="1">
+            <div style={{width:'100%',display:'flex',justifyContent:'space-between',alignItems:'center',padding:'10px 10px 0px 10px'}}>
+                    <p className="scorecardh">Scholarships Program 
+                    </p>
+                    <button className='btnofficials1' onClick={handleOpen}>Add</button>
+                    </div>
+                    <div className="dataGridCon">
+                    <CustomDataGrid
+                      sx={{height:'100%'}}
+                      rows={schocat}
+                      columns={columns}
+                      getRowId={(row) => row.schoProgId}
+                      initialState={{
+                        pagination: {
+                          paginationModel: {
+                            pageSize: 25,
+                          },
+                        },
+                      }}
+                      slots={{
+                        noRowsOverlay: CustomNoRowsOverlay,
+                      }}
+                      pageSizeOptions={[25]}  
+                      disableRowSelectionOnClick
+                    />
+                    </div>         
+            </TabPanel>
+            <TabPanel value="2">
+              {page === 0 ? (<div>
+                <div>
+                <h2>Renewal Application</h2>
+                <button style={{backgroundColor:'#2f96db',border:'none',padding:'4px 8px',borderRadius:'4px',color:'white',width:'max-content',display:'flex',alignItems:'center'}}
+                onClick={() => {setOpenModal(true)}}>Create Renewal</button>
                 </div>
-                <div className="dataGridCon">
-                <CustomDataGrid
-                  sx={{height:'100%'}}
-                  rows={schocat}
-                  columns={columns}
-                  getRowId={(row) => row.schoProgId}
-                  initialState={{
-                    pagination: {
-                      paginationModel: {
-                        pageSize: 25,
-                      },
+                <div>
+                <Tabs
+                  variant="scrollable"
+                  value={selectedTabs}
+                  onChange={handleChangeTabsAca}
+                  scrollButtons
+                  aria-label="visible arrows tabs example"
+                  sx={{
+                    [`& .${tabsClasses.scrollButtons}`]: {
+                      '&.Mui-disabled': { opacity: 0.3 },
                     },
                   }}
-                  slots={{
-                    noRowsOverlay: CustomNoRowsOverlay,
-                  }}
-                  pageSizeOptions={[25]}  
-                  disableRowSelectionOnClick
-                />
-                </div>         
-        </TabPanel>
-        <TabPanel value="2">
-          <div>
-       
-            <div>
-            <h2>Renewal Application</h2>
-            <button style={{backgroundColor:'#2f96db',border:'none',padding:'4px 8px',borderRadius:'4px',color:'white',width:'max-content',display:'flex',alignItems:'center'}}
-             onClick={() => {setOpenModal(true)}}>Create Renewal</button>
-            </div>
-            <div>
-            <Tabs
-              variant="scrollable"
-              value={selectedTabs}
-              onChange={handleChangeTabsAca}
-              scrollButtons
-              aria-label="visible arrows tabs example"
-              sx={{
-                [`& .${tabsClasses.scrollButtons}`]: {
-                  '&.Mui-disabled': { opacity: 0.3 },
-                },
-              }}
-            >
-              {listAcademicRenewal.length > 0 && listAcademicRenewal.map((data,idx) =>{
-                return(
-                  <Tab key={idx} label={data.AcademicYear} />
-                )
-              })}
-            </Tabs>                
-            </div>
-            <form action="" style={{display:'flex',gap:'14px',flexWrap:'wrap',flexDirection:'column',marginTop:"16px",marginBottom:'16px'}}>
-              <div style={{display:'flex',alignItems:'center',gap:'10px'}}>
-              <TextField InputProps={{
-                  readOnly: true,
-                }}
-               sx={{marginTop:'6px',width:'100%'}} value={oldData?.title} size="small" id="outlined-basic" label="Program Name" variant="outlined"/>
-              <TextField  InputProps={{
-                  readOnly: true,
-                }}
-               sx={{marginTop:'6px',width:'100%'}} value={oldData.dateStart} size="small" id="outlined-basic" label="Date Start" variant="outlined"/>
-              <TextField InputProps={{
-                  readOnly: true,
-                }}
-               sx={{marginTop:'6px',width:'100%'}} value={oldData.dateEnd} size="small" id="outlined-basic" label="Date End" variant="outlined"/>
-              
-              <FormControl fullWidth>
-                <InputLabel id="demo-simple-select-label">Status</InputLabel>
-                <Select
-                  labelId="demo-simple-select-label"
-                  id="demo-simple-select"
-                  label="Status"
-                  size='small'
-                  value={oldData?.status}
-                  onChange={handleChange}
                 >
-                 <MenuItem value={'Ongoing'}>Ongoing</MenuItem>
-                 <MenuItem value={'End'}>End</MenuItem>
-                 <MenuItem value={'Paused'}>Paused</MenuItem>
-                </Select>
-              </FormControl>
-              </div>
-              <h5 style={{margin:0}}>List of Requirements:</h5>
-              <ul>
-                {oldData.requirements?.map((data,idx) =>{
+                  {listAcademicRenewal.length > 0 && listAcademicRenewal.map((data,idx) =>{
+                    return(
+                      <Tab key={idx} label={data.AcademicYear} />
+                    )
+                  })}
+                </Tabs>                
+                </div>
+                <form action="" style={{display:'flex',gap:'14px',flexWrap:'wrap',flexDirection:'column',marginTop:"16px",marginBottom:'16px'}}>
+                  <div style={{display:'flex',alignItems:'center',gap:'10px'}}>
+                  <TextField InputProps={{
+                      readOnly: true,
+                    }}
+                  sx={{marginTop:'6px',width:'100%'}} value={oldData?.title} size="small" id="outlined-basic" label="Program Name" variant="outlined"/>
+                  <TextField  InputProps={{
+                      readOnly: true,
+                    }}
+                  sx={{marginTop:'6px',width:'100%'}} value={oldData.dateStart} size="small" id="outlined-basic" label="Date Start" variant="outlined"/>
+                  <TextField InputProps={{
+                      readOnly: true,
+                    }}
+                  sx={{marginTop:'6px',width:'100%'}} value={oldData.dateEnd} size="small" id="outlined-basic" label="Date End" variant="outlined"/>
+                  
+                  <FormControl fullWidth>
+                    <InputLabel id="demo-simple-select-label">Status</InputLabel>
+                    <Select
+                      labelId="demo-simple-select-label"
+                      id="demo-simple-select"
+                      label="Status"
+                      size='small'
+                      value={oldData?.status}
+                      onChange={handleChange}
+                    >
+                    <MenuItem value={'Ongoing'}>Ongoing</MenuItem>
+                    <MenuItem value={'End'}>End</MenuItem>
+                    <MenuItem value={'Paused'}>Paused</MenuItem>
+                    </Select>
+                  </FormControl>
+                  </div>
+                  <h5 style={{margin:0}}>List of Requirements:</h5>
+                  <ul>
+                    {oldData.requirements?.map((data,idx) =>{
+                      return(
+                        <li style={{margin:0}} key={idx}>{data}</li>
+                      )
+                    })}
+                  </ul>
+                </form>
+                <div>
+                <DataGrid
+                    rows={oldData.scholars ?? []}
+                    columns={columns1}
+                    getRowId={(row) => row.scholarCode}
+                    initialState={{
+                      pagination: {
+                        paginationModel: {
+                          pageSize: 5,
+                        },
+                      },
+                    }}
+                    pageSizeOptions={[5]}
+                    getRowHeight={() => 'auto'}
+                    sx={{
+                      [`& .${gridClasses.cell}`]: {
+                        py: 1,
+                      },
+                    }}
+                    checkboxSelection
+                    disableRowSelectionOnClick
+                  />               
+                </div>
+              </div>) : (
+              <Box sx={{width:'100%',padding:'10px',height:'max-content',display:'flex',backgroundColor:'whitesmoke',flexWrap:'wrap',position:'relative',flexDirection:'column'}}>
+                <button style={{width:'max-content'}}
+                onClick={() =>handleBack()}>
+                  Go Back
+                </button>
+              <h1 style={{position:'absolute',left:'25px',top:'48px',fontSize:'20px',fontWeight:'bold',lineHeight:'17.57px',color:'#043F97'}}>
+                Requirements Submitted
+              </h1>
+              <div style={{width:'100%'}}>
+              <div className='formpersona3' style={{height:'max-content',padding:'20px',backgroundColor:'white',borderRadius:'5px',paddingTop:'40px'}}>
+              {renewalDetails.Docs?.map((data,index) =>{
+                if(!data){return null;}else{
                   return(
-                    <li style={{margin:0}} key={idx}>{data}</li>
-                  )
-                })}
-              </ul>
-            </form>
-            <div>
-            <DataGrid
-                rows={oldData.scholars ?? []}
-                columns={columns1}
-                getRowId={(row) => row.scholarCode}
-                initialState={{
-                  pagination: {
-                    paginationModel: {
-                      pageSize: 5,
-                    },
-                  },
-                }}
-                pageSizeOptions={[5]}
-                getRowHeight={() => 'auto'}
-                sx={{
-                  [`& .${gridClasses.cell}`]: {
-                    py: 1,
-                  },
-                }}
-                checkboxSelection
-                disableRowSelectionOnClick
-              />               
-            </div>
-          </div>
-        </TabPanel>
-      </TabContext>
-    </Box>         
+                    <div  style={{cursor:'pointer'}} key={index} className='formpersonaChild4'>
+                      <p style={{position:'absolute',margin:0,top:'-18px',fontWeight:'700'}}>
+                        {data.reqName}
+                      </p>
+                      <img
+                      style={{height:'100%',width:'100%',objectFit:'contain'}} 
+                      src={data.url} 
+                      alt="" />
+                    </div>
+                  )}
+              })}
+              </div>
+              </div>
+
+              <div style={{width:'100%',backgroundColor:'white',display:'flex',flexWrap:'wrap',justifyContent:'space-between',marginBottom:'50px',position:'relative'}}>
+                <h1 style={{position:'absolute',top:'-10px',fontSize:'20px',fontWeight:'bold',lineHeight:'17.57px',backgroundColor:'#043F97',color:'white',padding:'10px',borderRadius:'5px'}}>
+                  OLD SCHOLAR DATA
+                </h1>
+                <div className='formpersona4' style={{height:'max-content',backgroundColor:'white',borderRadius:'5px',paddingTop:'15px'}}>
+                    <div className='formpersonaChild5'>
+                        <label htmlFor="">Name</label>
+                        <input 
+                        type="text" 
+                        value={renewalDetails.OldData.Name} disabled />
+                    </div>
+                    <div className='formpersonaChild5'>
+                        <label htmlFor="">Barangay</label>
+                        <input 
+                        type="text" 
+                        value={renewalDetails.OldData.baranggay} disabled />
+                    </div>
+                    <div className='formpersonaChild5'>
+                        <label htmlFor="">Email</label>
+                        <input 
+                        type="text" 
+                        value={renewalDetails.OldData.email} disabled />
+                    </div>
+                    <div className='formpersonaChild5'>
+                        <label htmlFor="">Phone Number</label>
+                        <input 
+                        type="text" 
+                        value={renewalDetails.OldData.phoneNum} disabled />
+                    </div>
+                    <div className='formpersonaChild5'>
+                        <label htmlFor="">Year Level</label>
+                        <input 
+                        type="text" 
+                        value={renewalDetails.OldData.yearLevel} disabled />
+                    </div>
+                    <div className='formpersonaChild5'>
+                        <label htmlFor="">Grade Level</label>
+                        <input 
+                        type="text" 
+                        value={renewalDetails.OldData.gradeLevel} disabled />
+                    </div>
+                    <div className='formpersonaChild5'>
+                        <label htmlFor="">Old School</label>
+                        <input 
+                        type="text" 
+                        value={renewalDetails.OldData.school} disabled />
+                    </div>
+                    <div className='formpersonaChild5'>
+                        <label htmlFor="">Guardian</label>
+                        <input 
+                        type="text" 
+                        value={renewalDetails.OldData.guardian} disabled />
+                    </div>
+                </div>
+                <div style={{position:'relative',display:'flex',justifyContent:'center',alignItems:'center'}}>
+                    <FcRight style={{fontSize:'65px'}}/>
+                </div>
+                <h1 style={{position:'absolute',top:'-10px',right:'26%',fontSize:'20px',fontWeight:'bold',lineHeight:'17.57px',backgroundColor:'#043F97',color:'white',padding:'10px',borderRadius:'5px'}}>
+                  UPDATED SCHOLAR DATA
+                </h1>
+                <div className='formpersona4' style={{height:'max-content',backgroundColor:'white',borderRadius:'5px',paddingTop:'15px'}}>
+                <div className='formpersonaChild5'>
+                        <label htmlFor="">Name</label>
+                        <input 
+                        type="text" 
+                        value={renewalDetails.OldData.Name} disabled />
+                </div>
+                    <div className='formpersonaChild5'>
+                        <label htmlFor="">Barangay</label>
+                        <input 
+                        type="text" 
+                        value={renewalDetails.UpdatedData.updtBaranggay} disabled />
+                    </div>
+                    <div className='formpersonaChild5'>
+                        <label htmlFor="">Email</label>
+                        <input 
+                        type="text" 
+                        value={renewalDetails.UpdatedData.updtEmail} disabled />
+                    </div>
+                    <div className='formpersonaChild5'>
+                        <label htmlFor="">Phone Number</label>
+                        <input 
+                        type="text" 
+                        value={renewalDetails.UpdatedData.updtPhoneNum} disabled />
+                    </div>
+                    <div className='formpersonaChild5'>
+                        <label htmlFor="">Year Level</label>
+                        <input 
+                        type="text" 
+                        value={renewalDetails.UpdatedData.updtYearLevel} disabled />
+                    </div>
+                    <div className='formpersonaChild5'>
+                        <label htmlFor="">Grade Level</label>
+                        <input 
+                        type="text" 
+                        value={renewalDetails.UpdatedData.updtGradeLevel} disabled />
+                    </div>
+                    <div className='formpersonaChild5'>
+                        <label htmlFor="">Current School</label>
+                        <input 
+                        type="text" 
+                        value={renewalDetails.UpdatedData.updtSchool} disabled />
+                    </div>
+                    <div className='formpersonaChild5'>
+                        <label htmlFor="">Guardian</label>
+                        <input 
+                        type="text" 
+                        value={renewalDetails.UpdatedData.updtGuardian} disabled />
+                    </div>
+                </div>
+              </div>
+              <div style={{display:'flex',justifyContent:'flex-end'}}>
+                <button onClick={() =>handleRenewed()}>
+                  Approve renewal
+                </button>
+              </div>
+              </Box>
+              )}
+            </TabPanel>
+          </TabContext>
+        </Box>         
 
           </div>
         </div>

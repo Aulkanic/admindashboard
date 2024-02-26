@@ -107,6 +107,8 @@ const Endpoints = {
     FETCH_RENEW:'RenewalForm/',
     FETCH_RENEWINF:'RenewalForm/Renewal',
     SET_RENEWINF:'RenewalForm/SetRenewal',
+    SCHO_DETAILSRENEW:'RenewalForm/scholar_renewal_details/',
+    UPDATE_RENEWSCHO:'RenewalForm/renewedSchoAcademicYear',
     FETCH_RENEWCODE:'RenewalForm/RenewCode/',
     FETCH_RENEWSCHO:'RenewalForm/Scho',
     RENEWED:'RenewalForm/Renewed',
