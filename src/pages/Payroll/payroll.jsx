@@ -330,7 +330,7 @@ export const PayrollAppoint = () => {
      {
        field: 'actions',
        headerName: 'Time',
-       width: 120,
+       width: 150,
        editable: false,
        renderCell: (params) => (
          <>
@@ -370,7 +370,7 @@ export const PayrollAppoint = () => {
      {
        field: 'action',
        headerName: 'Actions',
-       width: 200,
+       width: 250,
        editable: false,
        renderCell: (params) =>{
        return(
@@ -444,7 +444,7 @@ export const PayrollAppoint = () => {
   const handleGeneratePDF = () => {
     generatePDF(<PayoutReport data={data} columns={tblcolumns} details={{ title: 'Payout Report', Date: new Date().toLocaleDateString(), amount: 9000 }} />, 'PayoutAttendance.pdf');
   };
-  
+  console.log(listOFSchoApp)
   return (
     <>
     <CustomModal
@@ -540,14 +540,14 @@ export const PayrollAppoint = () => {
                                   </div>
                                 )
                               })}
-                              </div>
-
-                            </div>
-                          )
-                        })}
                               <div style={{width:'150px',height:'50px',justifyContent:'center',alignItems:'center',display:'flex',borderRadius:'6px',padding:'8px',backgroundColor:'white',cursor:'pointer',color:'#0768a8'}}>
                                  <p style={{margin:0,cursor:'pointer'}} onClick={() => {handleModalOpen('frmBatch',true,data)}}>+Add Batch </p>
                               </div>
+                              </div>
+                            </div>
+                          )
+                        })}
+
                       </div>
                     </div>
                 </TabPanel>
@@ -680,11 +680,12 @@ export const PayrollAppoint = () => {
                         })}
                       </Tabs>   
                       <div>
-                        <button onClick={() =>handleGeneratePDF()}>
+                        <button style={{backgroundColor:'#2f96db',border:'none',padding:'4px 8px',borderRadius:'4px',color:'white',margin:8}}
+                         onClick={() =>handleGeneratePDF()}>
                           Print Attendance
                         </button>
                       <DataGrid
-                          rows={listOFSchoApp.filter(item => item.batch === selectedPay.Batchlist.batch) ?? []}
+                          rows={listOFSchoApp ?? []}
                           columns={columns1}
                           getRowId={(row) => row.scholarCode}
                           initialState={{
