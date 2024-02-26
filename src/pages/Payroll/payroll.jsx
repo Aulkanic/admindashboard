@@ -520,7 +520,7 @@ export const PayrollAppoint = () => {
                          onClick={() => {handleModalOpen('frmAca',true)}}>Create Payout Now!</button>
                       </div>
                       <div>
-                        {tblPaylist?.map((data,idx) =>{
+                        {tblPaylist.length > 0 && tblPaylist?.map((data,idx) =>{
                           return(
                             <div key={idx} style={{borderRadius:'5px',padding:'8px',width:'45%',backgroundColor:'#2f96db'}}>
                               <div style={{display:'flex',justifyContent:'space-between'}}>
@@ -540,14 +540,14 @@ export const PayrollAppoint = () => {
                                   </div>
                                 )
                               })}
-                              <div style={{width:'150px',height:'50px',justifyContent:'center',alignItems:'center',display:'flex',borderRadius:'6px',padding:'8px',backgroundColor:'white',cursor:'pointer',color:'#0768a8'}}>
-                                 <p style={{margin:0,cursor:'pointer'}} onClick={() => {handleModalOpen('frmBatch',true,data)}}>+Add Batch </p>
-                              </div>
                               </div>
 
                             </div>
                           )
                         })}
+                              <div style={{width:'150px',height:'50px',justifyContent:'center',alignItems:'center',display:'flex',borderRadius:'6px',padding:'8px',backgroundColor:'white',cursor:'pointer',color:'#0768a8'}}>
+                                 <p style={{margin:0,cursor:'pointer'}} onClick={() => {handleModalOpen('frmBatch',true,data)}}>+Add Batch </p>
+                              </div>
                       </div>
                     </div>
                 </TabPanel>
@@ -672,7 +672,7 @@ export const PayrollAppoint = () => {
                           },
                         }}
                       >
-                        {listPayScho.length > 0 && listPayScho.map((data,idx) =>{
+                        {listPayScho.length > 0 && listPayScho?.map((data,idx) =>{
                           const date = new Date(data.appointement_date).toLocaleDateString();
                           return(
                             <Tab key={idx} label={date} />
