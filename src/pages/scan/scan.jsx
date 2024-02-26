@@ -35,6 +35,13 @@ export default function Scan() {
   const [list,setList] = useState([])
   const [loading,setLoading] = useState(false)
   const [loading1,setLoading1] = useState(false)
+  const [images, setImages] = useState([]);
+
+  const handleImageChange = (e) => {
+    const files = Array.from(e.target.files);
+    setImages(files);
+  };
+
   async function Fecth(){
     const res = await AllScanned.GET();
     setList(res.data)
@@ -75,7 +82,7 @@ export default function Scan() {
       swal("Please upload all the required documents")
       return
     }
-    if(!Object.values(qaFile).every(v=> v!== null)){
+    if(images.length === 0){
       swal('No Q&A File Uploaded')
       return
     }
@@ -85,7 +92,7 @@ export default function Scan() {
     formData.append('Family',first[2].Family.value)
     formData.append('Guardian',first[3].Guardian.value)
     formData.append('Siblings',first[4].Siblings.value)
-    formData.append('Q&A',qaFile.file)
+    images?.map((item) => formData.append(`Q&A`,item))
     setLoading(true)
     await ScanFile.SCANFILE(formData)
     .then((res) =>{
@@ -96,7 +103,7 @@ export default function Scan() {
       const Guardian = apiData.Guardian;
       const Siblings = apiData.Siblings;
       const qA = apiData['Q&A'];
-      console.log('personal',personal)
+      console.log('personal',personal[5]['AGE'])
       console.log('Educational',Educational)
       console.log('Family',Family)
       console.log('Guardian',Guardian)
@@ -104,39 +111,39 @@ export default function Scan() {
 
       setScannedData((prev) =>({
         ...prev,
-        schoID: personal[0]['scholarship Type'] || '',
-        firstName: personal[1]['First Name'] || '',
-        lastName: personal[3]['Last Name'] || '',
-        middleName: personal[2]['Middle Name'] || '',
-        gender: personal[5]['Gender'],
-        age: personal[4]['Age'] || '',
-        birthdate: personal[6]['Birth Date'] || '',
-        placeBirth: personal[7]['Birth Place'] || '',
-        houseNum: personal[8]['House No/ Street'] || '',
-        baranggay: personal[10]['Barangay'] || '',
-        contactNum: personal[9]['Mobile Number'] || '',
-        email: personal[13]['Email'] || '',
-        prevSchool: Educational[0]['Last school Attended'] || '',
-        schoAddress: Educational[1]['school Address'] || '',
-        yearLevel: Educational[2]['Year Level'] || '',
-        gradeLevel: Educational[3]['Grade/ Year'] || '',
-        course: Educational[4]['Course'] || '',
-        fatherFirstName: Family[0][`Father's First Name`] || '',
-        fatherLastName: Family[2][`Father's Last Name`] || '',
-        fatherMiddleName: Family[1][`Father's Middle Name`] || '',
-        fatherEduc: Family[3][`Highest Educational Attainment`] || '',
-        fatherOccu: Family[4]['Occupation'] || '',
-        motherFirstName: Family[5][`Mother's First Name`] || '',
-        motherLastName: Family[7][`Mother's Last Name`] || '',
-        motherMiddleName: Family[6][`Mother's Middle Name`] || '',
-        motherEduc: Family[8]['Highest Educational Attainment'] || '',
-        motherOcc: Family[9]['Occupation'] || '' ,
-        guardianFirstName: Guardian[0]['Guardian First Name'] || '',
-        guardianLastName: Guardian[2]['Guardian Last Name'] || '',
-        guardianMiddleName: Guardian[1]['Guardian Middle Name'] || '',
-        relationship: Guardian[4]['Relationship with Guardian'] || '',
-        guardianContact: Guardian[5]['Mobile Number'] || '',
-        guardianAddr: Guardian[3]['Guardian Address'] || '',
+        schoID: personal[0]['SCHOLARSHIP TYPE'] || '',
+        firstName: personal[1]['FIRST NAME'] || '',
+        lastName: personal[3]['LAST NAME'] || '',
+        middleName: personal[2]['MIDDLE NAME'] || '',
+        gender: personal[6]['GENDER'],
+        age: personal[5]['AGE'] || '',
+        birthdate: personal[7]['BIRTH DATE'] || '',
+        placeBirth: personal[8]['BIRTH PLACE'] || '',
+        houseNum: personal[9]['HOUSE NOJ/ STREET'] || '',
+        baranggay: personal[11]['BARANGAY'] || '',
+        contactNum: personal[10]['MOBILE NUMBER'] || '',
+        email: personal[14]['EMAIL'] ?? '',
+        prevSchool: Educational[0]['LAST SCHOOL ATTENDED'] || '',
+        schoAddress: Educational[1]['SCHOOL ADDRESS'] || '',
+        yearLevel: Educational[2]['YEAR LEVEL'] || '',
+        gradeLevel: Educational[3]['GRADE/ YEAR'] || '',
+        course: Educational[4]['COURSE'] || '',
+        fatherFirstName: Family[0][`FATHER FIRST NAME`] || '',
+        fatherLastName: Family[2][`FATHER LAST NAME`] || '',
+        fatherMiddleName: Family[1][`FATHER MIDDLE NAME`] || '',
+        fatherEduc: Family[3][`HIGHEST EDUCATIONAL ATTAINMENT`] || '',
+        fatherOccu: Family[4]['OCCUPATION'] || '',
+        motherFirstName: Family[5][`MOTHER FIRST NAME`] || '',
+        motherLastName: Family[6][`MOTHER MIDDLE NAME`] || '',
+        motherMiddleName: Family[7][`MOTHER LAST NAME`] || '',
+        motherEduc: Family[8]['HIGHEST EDUCATIONAL ATTAINMENT'] || '',
+        motherOcc: Family[9]['OCCUPATION'] || '' ,
+        guardianFirstName: Guardian[0]['GUARDIAN FIRST NAME'] || '',
+        guardianLastName: Guardian[2]['GUARDIAN LAST NAME'] || '',
+        guardianMiddleName: Guardian[1]['GUARDIAN MIDDLE NAME'] || '',
+        relationship: Guardian[4]['RELATIONSHIP WITH GUARDIAN'] || '',
+        guardianContact: Guardian[5]['MOBILE NUMBER'] || '',
+        guardianAddr: Guardian[3]['GUARDIAN ADDRESS'] || '',
         siblings: Siblings || [],
         form: qA || []
       }))
@@ -362,19 +369,19 @@ export default function Scan() {
                   </div>
                   <div style={{display:'flex',flexDirection:'column'}}>
                     <label htmlFor="">2nd Part of Form:</label>
-                    {qaFile.preview && 
-                    <img style={{height:'150px',objectFit:'fill',cursor:'pointer'}}
-                      onClick={() =>{viewPrev(qaFile.preview)}}
-                      src={qaFile.preview} alt='No preview' />}
+                    {images.map((image, index) => (
+                      <img style={{height:'150px',objectFit:'fill',cursor:'pointer'}}
+                      key={index} src={URL.createObjectURL(image)} alt={`File ${index}`} />
+                    ))}
                     <label style={{display:'flex',flexDirection:'column',margin:4,flex:1,backgroundColor:'gray',width:'max-content',padding:'4px',borderRadius:'4px',color:'white'}}
                     htmlFor="">Q&A
-                    <input name='file' onChange={handleInputChange}
+                    <input name='file' multiple onChange={handleImageChange}
                      accept=".jpg, .jpeg, .png" type="file" />
                     </label>
                   </div>
                 </div>
                 <div style={{display:'flex',justifyContent:'center',margin:'10px 0px 10px 0px'}}>
-                <button onClick={startScanning}
+                <button onClick={() =>{startScanning()}}
                 style={{backgroundColor:'#2f96db',border:'none',padding:'4px 8px',borderRadius:'4px',color:'white'}}
                 >{loading ? 'Scanning...' : 'Start Scanning!'}</button>
                 </div>
@@ -496,7 +503,7 @@ export default function Scan() {
 
                   </div>}
                 </div>
-                <button onClick={handleSaveScan}
+                <button onClick={() =>{handleSaveScan()}}
                 style={{backgroundColor:'#2f96db',border:'none',padding:'4px 8px',borderRadius:'4px',color:'white'}}
                 >
                   {loading1 ? 'Saving details...' : 'Submit Details'}

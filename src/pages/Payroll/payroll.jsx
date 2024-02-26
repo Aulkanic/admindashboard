@@ -23,6 +23,8 @@ import TextField from '@mui/material/TextField';
 import { CustomModal } from '../../components/modal/customModal';
 import { useSelector } from "react-redux";
 import createFormData from '../../utility/formData';
+import { PayoutReport } from '../../printContents/payout';
+import { generatePDF } from '../../utility/generatePDf';
 
 
   const currencyFormat = (num) => {
@@ -371,7 +373,6 @@ export const PayrollAppoint = () => {
        width: 200,
        editable: false,
        renderCell: (params) =>{
-        console.log(params.row)
        return(
         <div style={{display:'flex',gap:4}}>
           {Boolean(params.row.isReceived.data[0]) ? (<p style={{margin:0}}>Received At: {new Date(params.row.receivedAt).toLocaleDateString()}</p>): <>
@@ -420,6 +421,30 @@ export const PayrollAppoint = () => {
         Fetch()
       }
    };
+   const tblcolumns = [
+    { id: 'lastName', label: 'Last Name' },
+    { id: 'firstName', label: 'First Name' },
+    { id: 'middleName', label: 'Middle Name' },
+    { id: 'yearLevel', label: 'Year Level' },
+    { id: 'baranggay', label: 'Barangay' },
+    { id: 'time', label: 'Time' },
+    { id: 'cashier', label: 'Cashier' },
+    { id: 'benefit', label: 'Benefits' }
+  ];
+  const data = listOFSchoApp.filter(item => item.batch === selectedPay.Batchlist.batch).map((item) =>({
+    lastName:item.lname,
+    firstName:item.fname,
+    middleName:item.mname,
+    yearLevel:item.yearLevel,
+    baranggay:item.baranggay,
+    time:`${new Date(item.timeStart).toLocaleTimeString()} to ${new Date(item.timeEnd).toLocaleTimeString()}`,
+    cashier:item.cashierId,
+    benefit:currencyFormat(item.total)
+  }))
+  const handleGeneratePDF = () => {
+    generatePDF(<PayoutReport data={data} columns={tblcolumns} details={{ title: 'Payout Report', Date: new Date().toLocaleDateString(), amount: 9000 }} />, 'PayoutAttendance.pdf');
+  };
+  
   return (
     <>
     <CustomModal
@@ -655,6 +680,9 @@ export const PayrollAppoint = () => {
                         })}
                       </Tabs>   
                       <div>
+                        <button onClick={() =>handleGeneratePDF()}>
+                          Print Attendance
+                        </button>
                       <DataGrid
                           rows={listOFSchoApp.filter(item => item.batch === selectedPay.Batchlist.batch) ?? []}
                           columns={columns1}
