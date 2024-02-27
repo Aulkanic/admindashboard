@@ -415,8 +415,10 @@ export const PayrollAppoint = () => {
         batch:selectedPay.Batchlist.batch,
         academicYear:selectedPay.academicYear  
       }
+      console.log(details)
       const formData = createFormData(details)
       const res = await ReschedPayScho.RESCHED(formData);
+      console.log(res)
       if(res.data){
         Fetch()
       }

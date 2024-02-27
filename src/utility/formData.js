@@ -4,14 +4,6 @@ export default function createFormData(data){
     for (const key in data){
         if(data.hasOwnProperty(key)){
             let value = data[key];
-            if (typeof value === 'string') {
-                // Attempt to parse the string as a date
-                const parsedDate = Date.parse(value);
-                if (!isNaN(parsedDate)) {
-                    // If the parsing is successful, convert it to a Date object
-                    value = new Date(parsedDate);
-                }
-            }
             if (value instanceof Date) {
                 // If the value is a Date object, convert it to a localized date string
                 formData.append(key, value.toLocaleDateString());
