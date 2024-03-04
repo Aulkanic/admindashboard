@@ -191,9 +191,14 @@ useEffect(() =>{
       let Daterange;
       if(filterCriteria.start && filterCriteria.end){
         if(filterCriteria.dateFor === 'Applied'){
+          console.log('here')
           Daterange = itemDate >= new Date(filterCriteria.start) && itemDate <= new Date(filterCriteria.end);
+          console.log(itemDate)
+          console.log(new Date(filterCriteria.start))   
+          console.log(new Date(filterCriteria.end))
         }
         if(filterCriteria.dateFor === 'Approved'){
+          console.log('here1')
           Daterange = itemDate1 >= new Date(filterCriteria.start) && itemDate1 <= new Date(filterCriteria.end);
         }
       }
