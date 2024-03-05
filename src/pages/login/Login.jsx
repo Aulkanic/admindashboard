@@ -13,6 +13,7 @@ import { styled, ThemeProvider, createTheme, Link, TextField } from '@mui/materi
 import { Backdrop, CircularProgress,Button } from '@mui/material';
 import { setAdmin, setAuthenticated } from "../../Redux/loginSlice";
 import { useDispatch } from 'react-redux';
+import Mydo from '../../Images/mydo.jpg'
 
 const theme = createTheme({
   typography: {
@@ -122,7 +123,7 @@ const Login = () => {
       <div className="container">
 
         <div className="toplogin">
-        <img className="mydo" src="https://drive.google.com/uc?id=1HsYAs1azfEEjkJDjPKQaWjhorcW1W0T6" 
+        <img className="mydo" src={Mydo} 
          alt=""/>
         </div>
         

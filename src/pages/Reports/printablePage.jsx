@@ -14,7 +14,6 @@ import { FaLocationDot } from 'react-icons/fa6';
 import { TbWorldWww } from 'react-icons/tb';
 import { FiMail } from 'react-icons/fi';
 import { BsFacebook } from 'react-icons/bs';
-import convertToWords from './word';
 import numberToWords from 'number-to-words';
 
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
